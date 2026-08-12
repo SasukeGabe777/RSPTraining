@@ -644,6 +644,7 @@ function render(){
 /* ── admin: Video pages bar + quiz drop zone ── */
 function renderAdminControls(quizReady){
   document.getElementById('videoPageBar').classList.add('show');
+  renderAdminKeyNotice();
 
   // Codeword
   const cwInput=document.getElementById('codewordInput');
@@ -701,6 +702,38 @@ function renderAdminControls(quizReady){
 
   // PDF flipbook upload
   renderFlipbookAdmin();
+}
+
+/**
+ * Content edits (codewords, quiz uploads, PDF flipbooks, video pages) write
+ * module_config, which the public key can no longer touch after
+ * supabase-migration-v12.sql. Admins elevate this tab by pasting the
+ * service_role key — held in memory only, forgotten when the tab closes.
+ */
+function renderAdminKeyNotice(){
+  const bar=document.getElementById('videoPageBar');
+  if(!bar)return;
+  let note=document.getElementById('adminKeyNotice');
+  const elevated=!!(window.RSPCloud&&window.RSPCloud.hasAdminKey&&window.RSPCloud.hasAdminKey());
+  if(elevated){ if(note)note.remove(); return; }
+  if(note)return;
+  note=document.createElement('div');
+  note.id='adminKeyNotice';
+  note.style.cssText='background:rgba(250,204,21,.08);border:1px solid rgba(250,204,21,.3);border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:#FCD34D;display:flex;align-items:center;gap:10px;flex-wrap:wrap';
+  note.innerHTML='<span>🔒 Saving content changes requires the Supabase service key for this tab.</span>';
+  const btn=document.createElement('button');
+  btn.className='save-btn';
+  btn.textContent='Enter key';
+  btn.addEventListener('click',async function(){
+    const svc=prompt('Paste the Supabase service_role key (Project Settings → API).\n\nHeld in memory for this tab only:');
+    if(svc==null||!svc.trim())return;
+    try{
+      await window.RSPCloud.verifyAdminKey(svc.trim());
+      renderAdminKeyNotice();
+    }catch(e){ alert(e.message||'Key rejected.'); }
+  });
+  note.appendChild(btn);
+  bar.insertBefore(note,bar.firstChild);
 }
 
 function renderInlineVideoPages(){

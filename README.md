@@ -140,6 +140,36 @@ progress and XP are never affected.
 Files: `paths.js` (rules), `path.html` (learner page), plus the Paths tab in
 `admin.html`.
 
+## Security model
+
+Run `supabase-migration-v12.sql` once. After it, the two keys split cleanly:
+
+**The anon key** (in `config.local.js`, served to every browser) is public by
+design and is constrained by row-level security to the learner surface:
+read the portal, save progress, send kudos, heartbeat presence. It is granted
+**no DELETE on anything**, cannot write `module_config` (quiz banks, answer
+keys, codewords, publish flags) or `paths`, cannot read admin columns
+(`employee_id`, `notes`, `status`), and cannot self-assign roles. Someone who
+extracts it from the site can read names/XP and write progress — not destroy
+or tamper.
+
+**The service_role key** (Supabase → Project Settings → API) bypasses all
+policies. The admin dashboard prompts for it at unlock; `training.html`'s
+inline editors prompt when needed. It is held in memory only and dies with
+the tab — never committed, never in local/session storage. The dashboard
+shows 🔓 Full access / 🔒 Read-only so you always know which mode you're in.
+Don't paste it on a machine you don't trust.
+
+Verify the lockdown end to end with `node tests/rls-verify.js` — it proves
+17 destructive/tampering operations are denied while the learner flow works.
+
+Known gaps (accepted until real per-learner auth):
+- Learner names and XP are readable via the anon key (the leaderboard needs
+  them), and a learner can write progress under another name.
+- A quiz being taken has its answers in the browser — grading is client-side.
+  v12 stops bulk-downloading every module's answer key, not this. Fixing it
+  means server-side grading (Supabase Edge Function).
+
 ## How storage works
 
 All modules share the same `localStorage` keys so the portal can read

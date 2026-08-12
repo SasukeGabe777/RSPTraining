@@ -285,6 +285,14 @@ table tr.clickable{cursor:pointer}
     <h2>Admin Access</h2>
     <p>Enter the admin password to manage the training portal.</p>
     <input type="password" id="adminPwd" placeholder="Admin password" autocomplete="off">
+    <input type="password" id="adminServiceKey" placeholder="Supabase service_role key" autocomplete="off" style="margin-top:8px">
+    <p style="font-size:11px;color:#64748B;text-align:left;margin-top:6px;line-height:1.5">
+      The service key unlocks destructive and content-editing operations
+      (learner deletion, wipes, quiz/codeword/path edits). Find it in
+      Supabase → Project Settings → API → <code>service_role</code>.
+      It is held in memory only and forgotten when this tab closes.
+      Leave blank for read-only mode.
+    </p>
     <div class="gate-err" id="gateErr"></div>
     <button id="gateBtn">Unlock →</button>
     <p style="margin-top:16px"><a href="index.html" style="color:#64748B;font-size:11px">← Back to portal</a></p>
@@ -641,28 +649,93 @@ function visibleModules(){
 }
 
 /* ── gate ── */
-function unlock(){
+async function unlock(){
   const pw=document.getElementById('adminPwd').value;
+  const errEl=document.getElementById('gateErr');
   // Never unlock on an unset password: without config.local.js ADMIN_PW is
   // '', and a blank input would otherwise compare equal and let anyone in.
   if(!ADMIN_PW){
-    document.getElementById('gateErr').textContent='No admin password configured. Copy config.example.js to config.local.js and set adminPassword.';
+    errEl.textContent='No admin password configured. Copy config.example.js to config.local.js and set adminPassword.';
     return;
   }
-  if(pw===ADMIN_PW){
-    ssSet(ADMIN_SESSION_KEY,'true');
-    document.getElementById('gate').classList.add('hidden');
-    document.getElementById('dash').classList.add('show');
-    load();
+  if(pw!==ADMIN_PW){
+    errEl.textContent='Incorrect password.';
+    return;
+  }
+  // Optional elevation. The service key is verified against a column only the
+  // service role can read, so a wrong paste is caught here rather than as a
+  // confusing failure mid-delete. It lives in memory only (see cloud.js) —
+  // that is why a page refresh re-prompts for it while the password gate
+  // stays open via sessionStorage: persisting the key would defeat the point.
+  const svc=document.getElementById('adminServiceKey').value.trim();
+  if(svc){
+    const btn=document.getElementById('gateBtn');
+    btn.disabled=true;btn.textContent='Verifying key…';
+    try{
+      await window.RSPCloud.verifyAdminKey(svc);
+    }catch(e){
+      errEl.textContent=e.message||'Service key rejected.';
+      btn.disabled=false;btn.textContent='Unlock →';
+      return;
+    }
+    btn.disabled=false;btn.textContent='Unlock →';
+  }
+  ssSet(ADMIN_SESSION_KEY,'true');
+  document.getElementById('gate').classList.add('hidden');
+  document.getElementById('dash').classList.add('show');
+  renderElevationBadge();
+  load();
+}
+
+/**
+ * Standing indicator of this session's privilege level, next to the top
+ * actions. Read-only mode is expected after any refresh — clicking the badge
+ * lets the admin paste the key again without re-entering the password.
+ */
+function renderElevationBadge(){
+  let el=document.getElementById('elevationBadge');
+  if(!el){
+    el=document.createElement('button');
+    el.id='elevationBadge';
+    el.className='btn btn-sm';
+    const actions=document.querySelector('.top-actions');
+    if(actions)actions.insertBefore(el,actions.firstChild);
+  }
+  const elevated=window.RSPCloud&&window.RSPCloud.hasAdminKey&&window.RSPCloud.hasAdminKey();
+  if(elevated){
+    el.style.cssText='background:#065F46;color:#A7F3D0;border:1px solid #10B981';
+    el.textContent='🔓 Full access';
+    el.title='Service key loaded for this tab. Click to drop back to read-only.';
+    el.onclick=function(){
+      if(confirm('Drop the service key for this tab? Destructive and content-editing operations will be disabled until it is entered again.')){
+        window.RSPCloud.clearAdminKey();
+        renderElevationBadge();
+      }
+    };
   } else {
-    document.getElementById('gateErr').textContent='Incorrect password.';
+    el.style.cssText='background:#1E293B;color:#94A3B8;border:1px solid #334155';
+    el.textContent='🔒 Read-only';
+    el.title='No service key this session. Click to enter it and enable deletes, wipes, and content editing.';
+    el.onclick=async function(){
+      const svc=prompt('Paste the Supabase service_role key (Project Settings → API).\n\nHeld in memory for this tab only:');
+      if(svc==null||!svc.trim())return;
+      try{
+        await window.RSPCloud.verifyAdminKey(svc.trim());
+        renderElevationBadge();
+      }catch(e){
+        alert(e.message||'Key rejected.');
+      }
+    };
   }
 }
+
 document.getElementById('gateBtn').addEventListener('click',unlock);
 document.getElementById('adminPwd').addEventListener('keydown',e=>{if(e.key==='Enter')unlock()});
+document.getElementById('adminServiceKey').addEventListener('keydown',e=>{if(e.key==='Enter')unlock()});
 if(ssGet(ADMIN_SESSION_KEY)==='true'){
   document.getElementById('gate').classList.add('hidden');
   document.getElementById('dash').classList.add('show');
+  renderElevationBadge();
   load();
 }
 

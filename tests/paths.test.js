@@ -180,7 +180,13 @@ for(const fn of ['listPaths', 'getPath', 'upsertPath', 'deletePath', 'setUserRol
 }
 // Roles are admin-assigned: the learner-facing upsert must never write them
 // back, or a learner could grant themselves a role from local storage.
-const upsertUserBody = cloud.slice(cloud.indexOf('async function upsertUser'), cloud.indexOf('async function listUsers'));
+// Slice exactly the upsertUser function: from its declaration to the next
+// top-level declaration (a const or async function at column 2), so unrelated
+// neighbors like USER_PUBLIC_COLUMNS don't leak into the check.
+const upsertStart = cloud.indexOf('async function upsertUser');
+const afterUpsert = cloud.slice(upsertStart + 1).search(/\n  (?:const [A-Z_]+|async function )/);
+const upsertUserBody = cloud.slice(upsertStart, upsertStart + 1 + afterUpsert);
+assert(/return sb\(/.test(upsertUserBody), 'sliced the whole upsertUser function');
 assert(!/roles/.test(upsertUserBody), 'upsertUser never writes the roles column');
 assert(/localUser\.roles\s*=/.test(cloud), 'syncDown pulls roles down to the learner');
 

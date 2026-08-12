@@ -42,13 +42,57 @@ const KUDOS_TO_PUMBLE = true;
     .replace(/\/+$/, '')         // trailing slashes
     .replace(/\/rest\/v1$/, ''); // accidentally pasted /rest/v1
 
+  // ============================================================
+  // ADMIN KEY — elevated credential, memory only
+  // ============================================================
+  // After supabase-migration-v12.sql the public anon key can read the learner
+  // surface and write progress, but cannot delete anything or modify quizzes,
+  // module config, or paths. Those operations need the service-role key, which
+  // the admin dashboard prompts for once per session.
+  //
+  // It is deliberately held in a closure variable and NEVER written to
+  // localStorage or sessionStorage: persisting it would leave an all-powerful
+  // credential on disk for any later visitor to the same browser profile. It
+  // dies with the tab.
+  let adminKey = null;
+
+  function setAdminKey(key){
+    const trimmed = String(key || '').trim();
+    adminKey = trimmed || null;
+    return !!adminKey;
+  }
+  function hasAdminKey(){ return !!adminKey; }
+  function clearAdminKey(){ adminKey = null; }
+
+  /** The credential to send: the elevated key when set, otherwise the public one. */
+  function activeKey(){ return adminKey || SUPABASE_KEY; }
+
+  /**
+   * Confirm an elevated key really is elevated before the UI trusts it.
+   * Reads a column the anon role is not granted; anon gets a 401/403 while
+   * the service role succeeds. Restores the previous key on failure so a bad
+   * paste cannot leave the dashboard in a half-authenticated state.
+   */
+  async function verifyAdminKey(key){
+    const previous = adminKey;
+    if(!setAdminKey(key)) { adminKey = previous; throw new Error('No key provided'); }
+    try{
+      await sb('/users?select=notes&limit=1', { cache:'no-store' });
+      return true;
+    }catch(e){
+      adminKey = previous;
+      throw new Error('That key was rejected. Paste the service_role key from Project Settings → API.');
+    }
+  }
+
   // Tiny REST wrapper — no need to load the full Supabase JS client.
   async function sb(path, opts){
     if(!isConfigured) throw new Error('Supabase not configured');
     opts = opts || {};
+    const key = activeKey();
     const headers = Object.assign({
-      'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'apikey': key,
+      'Authorization': 'Bearer ' + key,
       'Content-Type': 'application/json',
       'Prefer': opts.prefer || 'return=representation'
     }, opts.headers || {});
@@ -76,7 +120,10 @@ const KUDOS_TO_PUMBLE = true;
       name: user.name,
       last_active: new Date().toISOString()
     };
-    if(user.id) body.employee_id = user.id;
+    // employee_id is an admin-managed column: the anon grant does not include
+    // it (v12), so sending it from a learner session would reject the whole
+    // upsert. Only include it when the elevated key is loaded.
+    if(user.id && hasAdminKey()) body.employee_id = user.id;
     // Only include avatar in the upsert when the user has actually picked one.
     // If we always sent a default like 'sparky', the column-default would mask
     // the "brand new user, no avatar picked yet" state for the avatar prompt
@@ -89,12 +136,21 @@ const KUDOS_TO_PUMBLE = true;
     });
   }
 
+  // Columns the public key is granted (see supabase-migration-v12.sql).
+  // employee_id, notes and status are administrative and withheld from anon,
+  // so learner-facing reads must name their columns rather than use `select=*`
+  // — a narrowed grant makes `SELECT *` fail outright.
+  const USER_PUBLIC_COLUMNS = 'id,name,avatar,started_at,last_active,created_at,earned_tiers,earned_badges,roles';
+
+  /** `*` only when an elevated key is loaded; the public column list otherwise. */
+  function userColumns(){ return adminKey ? '*' : USER_PUBLIC_COLUMNS; }
+
   async function listUsers(){
-    return sb('/users?select=*&order=last_active.desc');
+    return sb('/users?select=' + userColumns() + '&order=last_active.desc');
   }
 
   async function getUser(name){
-    const result = await sb('/users?select=*&name=eq.' + encodeURIComponent(name));
+    const result = await sb('/users?select=' + userColumns() + '&name=eq.' + encodeURIComponent(name));
     return result && result[0];
   }
 
@@ -200,7 +256,7 @@ const KUDOS_TO_PUMBLE = true;
   async function getUserDetail(userName){
     if(!isConfigured) return null;
     const [user, progress, kudosReceived, kudosSent, grants] = await Promise.all([
-      sb('/users?select=*&name=eq.' + encodeURIComponent(userName)).then(r => r && r[0]).catch(()=>null),
+      sb('/users?select=' + userColumns() + '&name=eq.' + encodeURIComponent(userName)).then(r => r && r[0]).catch(()=>null),
       sb('/progress?select=*&user_name=eq.' + encodeURIComponent(userName) + '&order=last_update.desc').catch(()=>[]),
       sb('/kudos?select=*&to_user=eq.' + encodeURIComponent(userName) + '&order=created_at.desc').catch(()=>[]),
       sb('/kudos?select=*&from_user=eq.' + encodeURIComponent(userName) + '&order=created_at.desc').catch(()=>[]),
@@ -542,12 +598,14 @@ const KUDOS_TO_PUMBLE = true;
    */
   async function uploadFlipbookAsset(path, body, contentType){
     if(!isConfigured) throw new Error('Supabase not configured');
+    // Storage writes are service-role only after v12 — reads stay public.
+    const key = activeKey();
     const url = BASE_URL + '/storage/v1/object/' + FLIPBOOK_BUCKET + '/' + path;
     const res = await fetch(url, {
       method: 'POST',
       headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'apikey': key,
+        'Authorization': 'Bearer ' + key,
         'Content-Type': contentType || (body && body.type) || 'application/octet-stream',
         'x-upsert': 'true',
         'cache-control': 'public, max-age=31536000'
@@ -732,6 +790,11 @@ const KUDOS_TO_PUMBLE = true;
   // ============================================================
   window.RSPCloud = {
     isConfigured: isConfigured,
+    // Admin elevation — memory only, dies with the tab (see setAdminKey above)
+    setAdminKey: setAdminKey,
+    verifyAdminKey: verifyAdminKey,
+    hasAdminKey: hasAdminKey,
+    clearAdminKey: clearAdminKey,
     upsertUser: upsertUser,
     listUsers: listUsers,
     getUser: getUser,
