@@ -69,29 +69,44 @@ const KUDOS_TO_PUMBLE = true;
   // USERS
   // ============================================================
   async function upsertUser(user){
-    const body = {
-      name: user.name,
-      employee_id: user.id || null,
-      last_active: new Date().toISOString()
-    };
+    // PATCH-then-INSERT rather than a merge-duplicates upsert: after the v12
+    // RLS lockdown the public key has no UPDATE grant on `name` (so it cannot
+    // rename user records) and cannot write employee_id, and ON CONFLICT DO
+    // UPDATE needs both. `select=name` keeps RETURNING inside the granted
+    // columns. Mirrors the current portal's cloud.js.
+    const patch = { last_active: new Date().toISOString() };
     // Only include avatar in the upsert when the user has actually picked one.
     // If we always sent a default like 'sparky', the column-default would mask
     // the "brand new user, no avatar picked yet" state for the avatar prompt
     // logic on the portal hub.
-    if(user.avatar) body.avatar = user.avatar;
-    return sb('/users?on_conflict=name', {
-      method: 'POST',
-      prefer: 'return=representation,resolution=merge-duplicates',
-      body: body
+    if(user.avatar) patch.avatar = user.avatar;
+    const updated = await sb('/users?name=eq.' + encodeURIComponent(user.name) + '&select=name', {
+      method: 'PATCH',
+      body: patch
     });
+    if(Array.isArray(updated) && updated.length) return updated;
+    try{
+      return await sb('/users?select=name', {
+        method: 'POST',
+        body: Object.assign({ name: user.name }, patch)
+      });
+    }catch(e){
+      if(/409|23505|duplicate/i.test(String(e && e.message))){
+        return sb('/users?name=eq.' + encodeURIComponent(user.name) + '&select=name', {
+          method: 'PATCH',
+          body: patch
+        });
+      }
+      throw e;
+    }
   }
 
   async function listUsers(){
-    return sb('/users?select=*&order=last_active.desc');
+    return sb('/users?select=id,name,avatar,started_at,last_active,created_at,earned_tiers,earned_badges,roles&order=last_active.desc');
   }
 
   async function getUser(name){
-    const result = await sb('/users?select=*&name=eq.' + encodeURIComponent(name));
+    const result = await sb('/users?select=id,name,avatar,started_at,last_active,created_at,earned_tiers,earned_badges,roles&name=eq.' + encodeURIComponent(name));
     return result && result[0];
   }
 
@@ -261,7 +276,9 @@ const KUDOS_TO_PUMBLE = true;
     if(tiersToAdd.length)   body.earned_tiers  = [...existingTiers,  ...tiersToAdd];
     if(badgesToAdd.length)  body.earned_badges = [...existingBadges, ...badgesToAdd];
 
-    return sb('/users?name=eq.' + encodeURIComponent(userName), {
+    // select=name keeps RETURNING inside anon's granted columns — a bare
+    // PATCH RETURNs *, including admin columns anon cannot read (v12).
+    return sb('/users?name=eq.' + encodeURIComponent(userName) + '&select=name', {
       method: 'PATCH',
       body: body
     });

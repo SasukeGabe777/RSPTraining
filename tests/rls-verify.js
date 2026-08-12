@@ -46,7 +46,11 @@ async function probe(method, pathq, body){
   return res.status;
 }
 
-const denied = s => s === 401 || s === 403 || s === 404 || s === 405;
+// 400 counts as denied for the DENY probes: PostgREST surfaces some
+// privilege rejections as 400 (e.g. a PATCH naming a column outside the
+// UPDATE grant), and every DENY probe filters on a sentinel no row matches,
+// so a 4xx of any kind means nothing was touched.
+const denied = s => s >= 400 && s < 500;
 const ok = s => s >= 200 && s < 300;
 
 const CHECKS = [
@@ -83,7 +87,29 @@ const CHECKS = [
   ['ALLOW', 'read paths',                 () => probe('GET', '/paths?select=*&limit=1'), ok],
   ['ALLOW', 'read kudos',                 () => probe('GET', '/kudos?select=*&limit=1'), ok],
   ['ALLOW', 'read presence',              () => probe('GET', '/presence?select=*&limit=1'), ok],
-  ['ALLOW', 'heartbeat presence upsert',  () => probe('POST', '/presence?on_conflict=user_name', {user_name: SENTINEL, last_ping: new Date().toISOString()}), ok],
+  // ── the login flow (the v12 rollout broke exactly this — see cloud.js
+  // upsertUser). PATCH-first against a sentinel that matches nothing: 200 +
+  // empty proves the UPDATE grant on the learner columns without writing.
+  ['ALLOW', 'login update path (PATCH avatar/last_active)',
+    () => probe('PATCH', `/users?name=eq.${SENTINEL}&select=name`, {avatar: 'sparky', last_active: new Date().toISOString()}), ok],
+  // INSERT privilege probed without creating an undeletable user row: an
+  // empty body fails the name NOT NULL constraint, and constraint errors
+  // (400) only happen AFTER the privilege check passes. 401 = grant missing.
+  ['ALLOW', 'login insert privilege (constraint probe)',
+    () => probe('POST', '/users', {}).then(s => s === 400 ? 200 : s), ok],
+  // The full merge-duplicates upsert shape quiz submissions use, against the
+  // sentinel presence row so the ON CONFLICT DO UPDATE path really executes.
+  ['ALLOW', 'quiz-style upsert (ON CONFLICT DO UPDATE)',
+    async () => {
+      const res = await fetch(BASE + '/rest/v1/presence?on_conflict=user_name', {
+        method: 'POST',
+        headers: {apikey: supabaseKey, Authorization: 'Bearer ' + supabaseKey,
+                  'Content-Type': 'application/json',
+                  Prefer: 'return=representation,resolution=merge-duplicates'},
+        body: JSON.stringify({user_name: SENTINEL, last_ping: new Date().toISOString()})
+      });
+      return res.status;
+    }, ok],
   ['ALLOW', 'read a flipbook page (storage)', async () => {
       const res = await fetch(BASE + '/storage/v1/object/public/training-flipbooks/no-such-object.png', {
         headers: {apikey: supabaseKey}

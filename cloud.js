@@ -116,24 +116,47 @@ const KUDOS_TO_PUMBLE = true;
   // USERS
   // ============================================================
   async function upsertUser(user){
-    const body = {
-      name: user.name,
-      last_active: new Date().toISOString()
-    };
+    // NOT a PostgREST merge-duplicates upsert. That compiles to
+    // INSERT ... ON CONFLICT DO UPDATE SET <every payload column>, which
+    // needs UPDATE privilege on `name` — deliberately withheld from anon
+    // (v12) so the public key cannot rename user records. Instead: PATCH
+    // the granted columns first (the common, returning-user case), and only
+    // INSERT when no row matched. `select=name` keeps RETURNING inside the
+    // granted column list — a bare write RETURNs *, including admin columns
+    // anon cannot read, and the whole request would 401.
+    const patch = { last_active: new Date().toISOString() };
     // employee_id is an admin-managed column: the anon grant does not include
     // it (v12), so sending it from a learner session would reject the whole
-    // upsert. Only include it when the elevated key is loaded.
-    if(user.id && hasAdminKey()) body.employee_id = user.id;
-    // Only include avatar in the upsert when the user has actually picked one.
-    // If we always sent a default like 'sparky', the column-default would mask
-    // the "brand new user, no avatar picked yet" state for the avatar prompt
-    // logic on the portal hub.
-    if(user.avatar) body.avatar = user.avatar;
-    return sb('/users?on_conflict=name', {
-      method: 'POST',
-      prefer: 'return=representation,resolution=merge-duplicates',
-      body: body
+    // write. Only include it when the elevated key is loaded.
+    if(user.id && hasAdminKey()) patch.employee_id = user.id;
+    // Only include avatar when the user has actually picked one. If we always
+    // sent a default like 'sparky', the column-default would mask the "brand
+    // new user, no avatar picked yet" state for the avatar prompt logic.
+    if(user.avatar) patch.avatar = user.avatar;
+
+    const updated = await sb('/users?name=eq.' + encodeURIComponent(user.name) + '&select=name', {
+      method: 'PATCH',
+      body: patch
     });
+    if(Array.isArray(updated) && updated.length) return updated;
+
+    // No existing row — create it.
+    try{
+      return await sb('/users?select=name', {
+        method: 'POST',
+        body: Object.assign({ name: user.name }, patch)
+      });
+    }catch(e){
+      // Lost a create race (unique violation on name) — the row exists now,
+      // so the PATCH that just found nothing will succeed.
+      if(/\b409\b|23505|duplicate/i.test(String(e && e.message))){
+        return sb('/users?name=eq.' + encodeURIComponent(user.name) + '&select=name', {
+          method: 'PATCH',
+          body: patch
+        });
+      }
+      throw e;
+    }
   }
 
   // Columns the public key is granted (see supabase-migration-v12.sql).
@@ -350,7 +373,9 @@ const KUDOS_TO_PUMBLE = true;
     if(tiersToAdd.length)   body.earned_tiers  = [...existingTiers,  ...tiersToAdd];
     if(badgesToAdd.length)  body.earned_badges = [...existingBadges, ...badgesToAdd];
 
-    return sb('/users?name=eq.' + encodeURIComponent(userName), {
+    // select=name keeps RETURNING inside anon's granted columns (see
+    // upsertUser) — this PATCH runs from learner sessions after every quiz.
+    return sb('/users?name=eq.' + encodeURIComponent(userName) + '&select=name', {
       method: 'PATCH',
       body: body
     });

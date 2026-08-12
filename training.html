@@ -946,8 +946,14 @@ async function startSession(u){
   render(); // render immediately from local data — no flash
   if(window.RSPCloud&&window.RSPCloud.isConfigured){
     try{
-      await window.RSPCloud.upsertUser(user);
-      await window.RSPCloud.syncDown(user.name);
+      // Identity sync is best-effort: if it fails (network, permissions),
+      // module content must still load. Before this guard, a failed
+      // upsertUser aborted the whole cloud block below and every module
+      // page rendered without its config — "modules won't load".
+      try{
+        await window.RSPCloud.upsertUser(user);
+        await window.RSPCloud.syncDown(user.name);
+      }catch(e){ console.warn('identity sync (non-fatal):', e); }
       const settled=await Promise.allSettled([
         window.RSPCloud.getModuleConfig(training.id),
         window.RSPCloud.getAllModuleConfigs()

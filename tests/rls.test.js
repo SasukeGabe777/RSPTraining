@@ -61,6 +61,25 @@ assert(!/\/users\?select=\*/.test(cloud), 'no unconditional select=* against use
 // The learner login upsert must not send admin-only columns.
 const upsert = cloud.slice(cloud.indexOf('async function upsertUser'), cloud.indexOf('const USER_PUBLIC_COLUMNS'));
 assert(/hasAdminKey\(\)/.test(upsert), 'employee_id is only sent when elevated');
+// ...and must not be a merge-duplicates upsert: that compiles to INSERT ... ON
+// CONFLICT DO UPDATE SET <every payload column>, which needs UPDATE on `name`
+// — withheld from anon. This exact mismatch took every module page down on
+// the v12 rollout (the failed upsert aborted startSession before module
+// config loaded).
+assert(!/on_conflict=name/.test(upsert), 'upsertUser is PATCH-then-INSERT, not ON CONFLICT');
+assert(/select=name/.test(upsert), 'user writes constrain RETURNING to granted columns');
+// awardEarned (the tier/badge ratchet, run from learner sessions after every
+// quiz) must constrain RETURNING the same way — a bare PATCH RETURNs *, which
+// anon cannot read. updateUserStatus / setUserRoles are service-role-only and
+// exempt.
+const award = cloud.slice(cloud.indexOf('async function awardEarned'), cloud.indexOf('async function evaluateAndAward'));
+assert(/\/users\?name=eq\.' \+ encodeURIComponent\(userName\) \+ '&select=name'/.test(award),
+  'awardEarned constrains RETURNING to granted columns');
+// Module pages must not let identity sync failure block content loading.
+for(const page of ['training.html', 'quiz.html', 'results.html']){
+  assert(/identity sync \(non-fatal\)/.test(fs.readFileSync(page, 'utf8')),
+    `${page} loads module config even when the user upsert fails`);
+}
 
 // ── the admin surfaces prompt for elevation ──
 const admin = fs.readFileSync('admin.html', 'utf8');
