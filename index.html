@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RSP Training Portal</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F172A; --bg-2:#1E293B; --ink:#0F172A;
+    --bolt:#FACC15; --bolt-deep:#CA8A04;
+    --volt-1:#1E40AF; --volt-2:#3B82F6;
+    --green-1:#10B981; --green-2:#34D399;
+    --orange-1:#F97316; --red:#EF4444;
+    --slate-50:#F8FAFC; --slate-200:#E2E8F0; --slate-500:#64748B; --slate-700:#334155;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:radial-gradient(circle at top right,#1E293B 0%,#0F172A 70%);
+    font-family:'Inter',system-ui,sans-serif;color:#fff;min-height:100vh;
+  }
+  h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;line-height:1.05;letter-spacing:-.01em}
+  .wrap{max-width:1280px;margin:0 auto;padding:40px 32px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+  .pretitle{color:var(--bolt);font-size:11px;letter-spacing:.18em;font-weight:800}
+  .topbar h1{font-size:48px;color:#fff;margin-top:4px}
+  .tagline{color:#CBD5E1;margin-top:6px}
+
+  /* User pill (top right) */
+  .user-pill{
+    background:linear-gradient(135deg,#1E293B,#0F172A);
+    border:2px solid #334155;border-radius:14px;padding:14px 18px;
+    display:flex;align-items:center;gap:14px;min-width:280px;
+  }
+  .user-avatar{width:48px;height:48px;border-radius:50%;flex:0 0 48px;overflow:hidden;background:#0F172A;cursor:pointer;border:2px solid transparent;transition:border-color .15s ease}
+  .user-avatar:hover{border-color:var(--bolt)}
+  .user-avatar svg{display:block;width:100%;height:100%}
+  .user-name{font-weight:800;font-size:14px;color:#fff}
+  .user-meta{font-size:11px;color:#94A3B8;margin-top:1px}
+  .user-tier{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.05em;margin-top:4px;background:#0F172A;border:1px solid #334155}
+  .user-actions{margin-left:auto;display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+  .user-actions a{color:#64748B;font-size:11px;text-decoration:none}
+  .user-actions a:hover{color:var(--bolt)}
+
+  /* Top nav */
+  .topnav{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .nav-link{padding:8px 14px;border-radius:8px;background:#1E293B;color:#94A3B8;text-decoration:none;font-weight:700;font-size:12px;letter-spacing:.05em;border:1px solid #334155}
+  .nav-link:hover{background:#334155;color:#fff}
+  .nav-link.active{background:#FACC15;color:#0F172A;border-color:#FACC15}
+
+  /* Avatar picker modal */
+  #avatarOverlay{
+    position:fixed;inset:0;background:rgba(15,23,42,.96);z-index:9998;
+    display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);
+  }
+  #avatarOverlay.show{display:flex}
+  .avatar-modal{
+    background:linear-gradient(160deg,#1E293B,#0F172A);
+    border:2px solid #312E81;border-radius:24px;padding:34px;
+    max-width:680px;width:100%;max-height:90vh;overflow-y:auto;
+  }
+  .avatar-modal h2{color:#FACC15;font-size:28px;font-family:'Bricolage Grotesque',sans-serif}
+  .avatar-modal .sub{color:#94A3B8;font-size:13px;margin-top:6px}
+  .avatar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:24px}
+  @media(max-width:600px){.avatar-grid{grid-template-columns:repeat(3,1fr)}}
+  .avatar-choice{
+    background:#0F172A;border:2px solid #334155;border-radius:14px;
+    padding:12px 6px;text-align:center;cursor:pointer;transition:all .15s ease;
+  }
+  .avatar-choice:hover{border-color:#FACC15;transform:translateY(-2px)}
+  .avatar-choice.selected{border-color:#FACC15;background:rgba(250,204,21,.1);box-shadow:0 0 24px rgba(250,204,21,.2)}
+  .avatar-choice .av-name{color:#fff;font-weight:800;font-size:11px;margin-top:6px}
+  .avatar-choice .av-tag{color:#64748B;font-size:9px;margin-top:1px;line-height:1.2}
+  .avatar-modal .actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
+  .avatar-modal button.cancel{background:transparent;color:#94A3B8;border:1px solid #475569;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:700;font-family:inherit}
+  .avatar-modal button.confirm{background:linear-gradient(135deg,#FACC15,#CA8A04);color:#0F172A;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-weight:800;font-family:inherit;font-size:13px}
+  .avatar-modal button.confirm:disabled{opacity:.4;cursor:not-allowed}
+
+  /* Hub selection grid */
+  .hub-intro{margin-top:36px;max-width:640px}
+  .hub-intro p{color:#CBD5E1;font-size:14px;line-height:1.6;margin-top:8px}
+  .hub-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:24px;margin-top:28px}
+  .hub-card{
+    --hub-color:#FACC15;
+    background:linear-gradient(160deg,#1E293B,#0F172A);
+    border:2px solid #334155;border-radius:24px;padding:32px;
+    text-decoration:none;color:#fff;position:relative;overflow:hidden;
+    display:flex;flex-direction:column;gap:16px;transition:all .2s ease;
+  }
+  .hub-card::before{
+    content:"";position:absolute;left:0;top:0;right:0;height:5px;
+    background:linear-gradient(90deg,var(--hub-color),transparent 85%);
+  }
+  .hub-card:hover{transform:translateY(-4px);border-color:var(--hub-color);box-shadow:0 16px 48px rgba(0,0,0,.35)}
+  .hub-card .hub-ico{
+    width:64px;height:64px;border-radius:18px;display:grid;place-items:center;
+    font-size:32px;background:rgba(15,23,42,.82);box-shadow:inset 0 0 0 1px var(--hub-color);
+  }
+  .hub-card h2{font-size:26px;color:#fff}
+  .hub-card .hub-desc{color:#94A3B8;font-size:13px;line-height:1.55;flex:1}
+  .hub-card .hub-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
+  .hub-stat{background:rgba(15,23,42,.6);border:1px solid #334155;border-radius:12px;padding:10px 8px;text-align:center}
+  .hub-stat .hs-label{color:#64748B;font-size:9px;font-weight:800;letter-spacing:.1em}
+  .hub-stat .hs-val{font-family:'Bricolage Grotesque';font-size:20px;font-weight:800;color:#fff;margin-top:2px}
+  .hub-card .hub-cta{
+    margin-top:4px;display:inline-flex;align-items:center;gap:6px;
+    color:var(--hub-color);font-weight:800;font-size:13px;letter-spacing:.03em;
+  }
+
+  /* Path cards (learner paths / tags — cross-hub collections) */
+  .section-label{
+    margin-top:44px;display:flex;align-items:baseline;justify-content:space-between;
+    gap:14px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid #1E293B;
+  }
+  .section-label h2{font-size:22px;color:#fff}
+  .section-label .hint{color:#64748B;font-size:12px}
+  .path-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin-top:20px}
+  .path-card{
+    --accent:#8B5CF6;
+    background:linear-gradient(160deg,#1E293B,#0F172A);
+    border:2px solid #334155;border-radius:18px;padding:22px;
+    text-decoration:none;color:#fff;position:relative;overflow:hidden;
+    display:flex;flex-direction:column;gap:12px;transition:all .2s ease;
+  }
+  .path-card::before{
+    content:"";position:absolute;left:0;top:0;right:0;height:4px;
+    background:linear-gradient(90deg,var(--accent),transparent 85%);
+  }
+  .path-card:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+  .path-card .pc-top{display:flex;align-items:center;gap:14px}
+  .path-card .pc-ico{
+    width:48px;height:48px;border-radius:14px;display:grid;place-items:center;
+    font-size:24px;background:rgba(15,23,42,.82);box-shadow:inset 0 0 0 1px var(--accent);flex:0 0 48px;
+  }
+  .path-card h3{font-size:18px;color:#fff;line-height:1.2}
+  .path-card .pc-tag{color:var(--accent);font-size:10px;font-weight:800;letter-spacing:.14em;margin-top:3px}
+  .path-card .pc-desc{color:#94A3B8;font-size:12.5px;line-height:1.5;flex:1}
+  .path-card .pc-bar{display:flex;flex-direction:column;gap:5px}
+  .path-card .pc-meta{color:#94A3B8;font-size:11px;font-weight:700;display:flex;justify-content:space-between}
+  .path-card .pc-track{background:#0F172A;height:9px;border-radius:5px;overflow:hidden;border:1px solid #334155}
+  .path-card .pc-fill{height:100%;background:linear-gradient(90deg,var(--accent),rgba(255,255,255,.3));transition:width .5s ease}
+  .path-card .pc-next{color:#CBD5E1;font-size:12px;border-top:1px solid #1E293B;padding-top:10px}
+  .path-card .pc-next b{color:#fff;font-weight:700}
+  .path-card.done{border-color:#10B981}
+  .path-card.done .pc-fill{background:linear-gradient(90deg,#10B981,#34D399)}
+
+  /* Login modal */
+  #loginOverlay{
+    position:fixed;inset:0;
+    background:radial-gradient(circle at top right,#1E40AF 0%,#0F172A 70%);
+    z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  #loginOverlay.hidden{display:none}
+  .login-card{
+    background:#fff;border-radius:24px;padding:48px 40px;max-width:420px;width:100%;
+    box-shadow:0 30px 80px rgba(0,0,0,.5);text-align:center;color:#0F172A;
+    position:relative;overflow:hidden;
+  }
+  .login-card .bolt-bg{position:absolute;top:-30px;right:-30px;font-size:140px;opacity:.06}
+  .login-card .pretitle{color:#1E40AF;font-size:11px;font-weight:800;letter-spacing:.2em}
+  .login-card h1{font-size:34px;color:#0F172A;margin-top:6px}
+  .login-card .sub{color:#64748B;font-size:14px;margin-top:6px}
+  .login-card label{display:block;text-align:left;margin-top:18px;font-size:11px;font-weight:800;color:#475569;letter-spacing:.1em}
+  .login-card input{
+    width:100%;padding:13px 14px;border:2px solid #E2E8F0;border-radius:10px;
+    font-size:14px;font-family:inherit;margin-top:6px;background:#F8FAFC;
+  }
+  .login-card input:focus{outline:none;border-color:#1E40AF;background:#fff}
+  .login-card .err{color:#EF4444;font-size:12px;font-weight:700;margin-top:8px;min-height:14px;text-align:left}
+  .login-card button{
+    width:100%;padding:14px;background:linear-gradient(135deg,#1E40AF,#3B82F6);
+    color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:800;
+    cursor:pointer;margin-top:14px;letter-spacing:.05em;font-family:inherit;
+  }
+  .login-card button:hover{transform:translateY(-1px)}
+  .login-card button:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+  .login-card .btn-create{background:transparent;color:#64748B;border:2px solid #E2E8F0;margin-top:8px}
+  .login-card .btn-create:hover{border-color:#94A3B8;color:#334155;background:#F8FAFC;transform:none}
+
+  /* Footer */
+  .footer{margin-top:60px;padding:24px 0;border-top:1px solid #1E293B;color:#475569;font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+</style>
+<link rel="stylesheet" href="brand.css">
+</head>
+<body>
+
+<!-- Login overlay -->
+<div id="loginOverlay">
+  <div class="login-card">
+    <div class="rsp-login-logo"><img src="images/rsp-industrial-logo.png" alt="RSP Industrial"></div>
+    <div class="bolt-bg">⚡</div>
+    <div class="pretitle">RSP INDUSTRIAL · TRAINING PORTAL</div>
+    <h1>Welcome.</h1>
+    <p class="sub">Sign in to track your training progress across the portal.</p>
+    <label for="loginFirst">First name</label>
+    <input type="text" id="loginFirst" placeholder="First" autocomplete="given-name"/>
+    <label for="loginLast">Last name</label>
+    <input type="text" id="loginLast" placeholder="Last" autocomplete="family-name"/>
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn">Log In →</button>
+    <button id="createBtn" class="btn-create">Create Account</button>
+  </div>
+</div>
+
+<!-- Avatar picker modal -->
+<div id="avatarOverlay">
+  <div class="avatar-modal">
+    <h2>Pick your avatar</h2>
+    <p class="sub">This is how teammates will see you across the portal. You can change it anytime.</p>
+    <div class="avatar-grid" id="avatarGrid"></div>
+    <div class="actions">
+      <button class="cancel" id="avatarCancel">Cancel</button>
+      <button class="confirm" id="avatarConfirm" disabled>Confirm Avatar →</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" id="portal" style="display:none">
+  <div class="topbar">
+    <div>
+      <img class="rsp-brand-logo" src="images/rsp-industrial-logo.png" alt="RSP Industrial">
+      <div class="pretitle">RSP INDUSTRIAL</div>
+      <h1 id="brandTitle">Training Portal</h1>
+      <p class="tagline" id="brandTagline">Choose a training hub to get started.</p>
+      <div class="topnav">
+        <a class="nav-link active" href="index.html">🏠 All Hubs</a>
+        <a class="nav-link" href="badges.html">🏅 Badges</a>
+        <a class="nav-link" href="mastery.html">🏆 Mastery</a>
+        <a class="nav-link" href="team.html">🤝 Team</a>
+      </div>
+    </div>
+    <div class="user-pill">
+      <div class="user-avatar" id="userAvatar" title="Click to change avatar"></div>
+      <div>
+        <div class="user-name" id="userName">—</div>
+        <div class="user-meta" id="userMeta">—</div>
+        <div class="user-tier" id="userTier" style="display:none"></div>
+      </div>
+      <div class="user-actions">
+        <a href="#" id="changeAvatarLink">Change avatar</a>
+        <a href="#" id="logoutLink">Log out</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assigned role paths — what this learner is required to complete -->
+  <div id="myPathSection" style="display:none">
+    <div class="section-label">
+      <h2 id="myPathHeading">Your path</h2>
+      <span class="hint">Assigned to you — complete these to finish your role training.</span>
+    </div>
+    <div class="path-grid" id="myPathGrid"></div>
+  </div>
+
+  <div class="hub-intro">
+    <div class="pretitle">RSP TRAINING PORTAL</div>
+    <p>Pick a training hub to continue. Your progress, badges, and mastery tiers are tracked separately for each one.</p>
+  </div>
+
+  <!-- Hub cards -->
+  <div class="hub-grid" id="hubGrid"></div>
+
+  <!-- Other published paths (collections that aren't assigned to this learner) -->
+  <div id="otherPathSection" style="display:none">
+    <div class="section-label">
+      <h2>Explore</h2>
+      <span class="hint">Curated collections that pull training from across the hubs.</span>
+    </div>
+    <div class="path-grid" id="otherPathGrid"></div>
+  </div>
+
+  <div class="footer">
+    <div>RSP Industrial · Training Portal · v1</div>
+    <div><a href="admin.html?admin=true" style="color:#64748B;text-decoration:none">Admin →</a></div>
+  </div>
+</div>
+
+<script src="manifest.js"></script>
+<script src="avatars.js"></script>
+<script src="badges.js"></script>
+<script src="paths.js"></script>
+<script src="config.local.js"></script>
+<script src="cloud.js"></script>
+<script src="welcome.js"></script>
+<script>
+(function(){
+  const KEY_USER = 'rsp_user';
+  const KEY_LEDGER = 'rsp_ledger';
+  let mem = {};
+  function lsGet(k){try{return localStorage.getItem(k)}catch(e){return mem[k]||null}}
+  function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){mem[k]=v}}
+  function lsDel(k){try{localStorage.removeItem(k)}catch(e){delete mem[k]}}
+  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+  // Master / admin usernames — kept for parity with the hub dashboards
+  // (this page itself has no prerequisite locks to bypass).
+  // 'admin rsp' covers the First/Last name login ("Admin" / "RSP") since
+  // the login form now always normalizes to a two-word "First Last" name.
+  function isAdminUser(u){
+    return !!(window.RSP_MANIFEST && window.RSP_MANIFEST.isAdminUser(u));
+  }
+
+  let user = null;
+  let ledger = {};
+  let pendingAvatar = null;
+  let avatarPickerFirstTime = false;
+  let moduleConfigs = window.RSP_MANIFEST.readModuleConfigCache ? window.RSP_MANIFEST.readModuleConfigCache() : {};
+  let paths = window.RSPPaths ? window.RSPPaths.readCache() : [];
+
+  function init(){
+    const m = window.RSP_MANIFEST;
+    if(!m){ alert('Manifest not loaded'); return; }
+    const u = lsGet(KEY_USER);
+    if(u){
+      try{
+        user = JSON.parse(u);
+        if(!user.avatar){ enterPortal(); openAvatarPicker(true); return; }
+        enterPortal();
+        return;
+      }catch(e){}
+    }
+    showLogin();
+  }
+
+  function showLogin(){
+    document.getElementById('loginOverlay').classList.remove('hidden');
+    document.getElementById('portal').style.display = 'none';
+    setTimeout(() => document.getElementById('loginFirst').focus(), 100);
+  }
+
+  async function enterPortal(){
+    document.getElementById('loginOverlay').classList.add('hidden');
+    document.getElementById('portal').style.display = 'block';
+    loadLedger();
+    renderUser();
+    renderHubs();
+    renderPaths();
+
+    if(window.RSPCloud && window.RSPCloud.isConfigured){
+      // Module configuration, paths, and learner progress are fetched
+      // independently so one failing cannot block the others. renderHubs()
+      // reads the curriculum through hubModulesSorted(), which already merges
+      // admin-created custom modules — nothing is pushed into
+      // RSP_MANIFEST.modules here.
+      const moduleSync = window.RSP_MANIFEST.loadModuleConfigs({current: moduleConfigs})
+        .then(function(map){
+          moduleConfigs = map;
+          renderHubs();
+          renderPaths();
+        })
+        .catch(function(e){
+          console.warn('Module config refresh failed; using last-known-good configuration:', e);
+        });
+      const pathSync = window.RSPPaths.loadPaths({current: paths})
+        .then(function(rows){
+          paths = rows;
+          renderPaths();
+        })
+        .catch(function(e){
+          console.warn('Path refresh failed; using last-known-good paths:', e);
+        });
+      const progressSync = (async function(){
+        await window.RSPCloud.upsertUser(user);
+        await window.RSPCloud.syncDown(user.name);
+        // syncDown refreshes the admin-assigned roles on the user record.
+        try{ const refreshed = JSON.parse(lsGet(KEY_USER) || 'null'); if(refreshed) user = refreshed; }catch(e){}
+        loadLedger();
+        renderUser();
+        renderHubs();
+        renderPaths();
+        await window.RSPCloud.syncUp(user.name);
+      })().catch(function(e){
+        console.warn('Cloud sync failed (portal still works locally):', e);
+      });
+      await Promise.all([moduleSync, pathSync, progressSync]);
+      renderPaths();
+    }
+  }
+
+  function loadLedger(){
+    try{
+      ledger = JSON.parse(lsGet(KEY_LEDGER) || '{}');
+    }catch(e){ ledger = {}; }
+    if(!ledger[user.name]){
+      ledger[user.name] = { name: user.name, id: user.id, startedAt: user.startedAt, modules: {} };
+      lsSet(KEY_LEDGER, JSON.stringify(ledger));
+    }
+  }
+
+  function renderUser(){
+    document.getElementById('userName').textContent = user.name;
+    document.getElementById('userMeta').textContent = user.id || 'No ID provided';
+    const av = document.getElementById('userAvatar');
+    if(user.avatar && window.renderAvatar){
+      av.innerHTML = window.renderAvatar(user.avatar, 48);
+    } else {
+      av.textContent = (user.name.trim().charAt(0).toUpperCase() || '?');
+    }
+    const tEl = document.getElementById('userTier');
+    if(isAdminUser(user)){
+      tEl.style.display = 'inline-block';
+      tEl.style.color = '#FACC15';
+      tEl.style.borderColor = '#FACC15';
+      tEl.textContent = '🛡️ ADMIN MODE';
+    } else {
+      tEl.style.display = 'none';
+    }
+  }
+
+  function renderHubs(){
+    const m = window.RSP_MANIFEST;
+    const hubs = window.RSP_HUBS || {};
+    const learner = ledger[user.name] || { modules: {} };
+    const grid = document.getElementById('hubGrid');
+    grid.innerHTML = '';
+
+    Object.keys(hubs).forEach(function(hubId){
+      const hubCfg = hubs[hubId];
+      // Published modules in this hub, manifest + admin-created, in display
+      // order. Uses the cached configuration on first paint so a hub built
+      // entirely from custom modules never flashes "0 / 0".
+      const hubModules = m.hubModulesSorted(hubId, moduleConfigs);
+      const completed = hubModules.filter(function(mod){
+        const p = (learner.modules||{})[mod.id];
+        return p && p.completedAt;
+      }).length;
+      const xp = window.hubScopedXP ? window.hubScopedXP(hubId, learner.modules, moduleConfigs) : 0;
+      const badgeCount = window.badgesOwnedBy ? window.badgesOwnedBy(hubId, learner, m, learner.earnedBadges||[], moduleConfigs).length : 0;
+      const tier = window.computeTier ? window.computeTier(hubId, xp, learner.earnedTiers||[]) : {current:null};
+      const tierLabel = tier.current ? (tier.current.icon + ' ' + tier.current.name) : '— UNRANKED';
+
+      const card = document.createElement('a');
+      card.className = 'hub-card';
+      card.href = hubCfg.route;
+      card.style.setProperty('--hub-color', hubCfg.accent || '#FACC15');
+      card.innerHTML =
+        '<div class="hub-ico">'+(hubCfg.icon||'📘')+'</div>'+
+        '<h2>'+esc(hubCfg.label)+'</h2>'+
+        '<p class="hub-desc">'+esc(hubCfg.description||'')+'</p>'+
+        '<div class="hub-stats">'+
+          '<div class="hub-stat"><div class="hs-label">MODULES</div><div class="hs-val">'+completed+' / '+hubModules.length+'</div></div>'+
+          '<div class="hub-stat"><div class="hs-label">BADGES</div><div class="hs-val">'+badgeCount+'</div></div>'+
+          '<div class="hub-stat"><div class="hs-label">TIER</div><div class="hs-val" style="font-size:13px">'+esc(tierLabel)+'</div></div>'+
+        '</div>'+
+        '<span class="hub-cta">Enter hub →</span>';
+      grid.appendChild(card);
+    });
+  }
+
+  /**
+   * Path cards. A path is a cross-hub collection, so its progress is counted
+   * over its own module list — the hub cards above still own XP and tiers.
+   * Assigned role paths render first under "Your path"; everything else
+   * flagged show_on_home renders under "Explore".
+   */
+  function renderPaths(){
+    if(!window.RSPPaths) return;
+    const learner = ledger[user.name] || { modules: {} };
+    const assigned = window.RSPPaths.assignedPaths(user, paths);
+    const assignedIds = {};
+    assigned.forEach(function(p){ assignedIds[p.id] = true; });
+    const others = window.RSPPaths.homePaths(paths).filter(function(p){ return !assignedIds[p.id]; });
+
+    function card(path){
+      const resolved = window.RSPPaths.resolvePath(path, moduleConfigs);
+      const progress = window.RSPPaths.pathProgress(resolved, learner.modules);
+      const accent = path.accent || '#8B5CF6';
+      const node = document.createElement('a');
+      node.className = 'path-card' + (progress.complete ? ' done' : '');
+      node.href = 'path.html?id=' + encodeURIComponent(path.id);
+      node.style.setProperty('--accent', accent);
+      let next = '';
+      if(progress.complete){
+        next = '<div class="pc-next">🎉 <b>Path complete.</b> Every module here is done.</div>';
+      } else if(progress.nextModule){
+        next = '<div class="pc-next">Next up: <b>' + esc(progress.nextModule.name) + '</b></div>';
+      } else if(!progress.total){
+        next = '<div class="pc-next">No modules added to this path yet.</div>';
+      }
+      node.innerHTML =
+        '<div class="pc-top">' +
+          '<div class="pc-ico">' + esc(path.icon || '🎯') + '</div>' +
+          '<div><h3>' + esc(path.label) + '</h3>' +
+          '<div class="pc-tag">' + (path.is_role ? 'ROLE PATH' : 'COLLECTION') +
+            (path.sequential ? ' · STEP BY STEP' : '') + '</div></div>' +
+        '</div>' +
+        (path.description ? '<p class="pc-desc">' + esc(path.description) + '</p>' : '<p class="pc-desc"></p>') +
+        '<div class="pc-bar">' +
+          '<div class="pc-meta"><span>' + progress.completed + ' of ' + progress.total + ' complete</span><span>' + progress.pct + '%</span></div>' +
+          '<div class="pc-track"><div class="pc-fill" style="width:' + progress.pct + '%"></div></div>' +
+        '</div>' + next;
+      return node;
+    }
+
+    const mySection = document.getElementById('myPathSection');
+    const myGrid = document.getElementById('myPathGrid');
+    myGrid.innerHTML = '';
+    assigned.forEach(function(p){ myGrid.appendChild(card(p)); });
+    mySection.style.display = assigned.length ? 'block' : 'none';
+    document.getElementById('myPathHeading').textContent =
+      assigned.length > 1 ? 'Your paths' : 'Your path';
+
+    const otherSection = document.getElementById('otherPathSection');
+    const otherGrid = document.getElementById('otherPathGrid');
+    otherGrid.innerHTML = '';
+    others.forEach(function(p){ otherGrid.appendChild(card(p)); });
+    otherSection.style.display = others.length ? 'block' : 'none';
+  }
+
+  function openAvatarPicker(isFirstTime){
+    avatarPickerFirstTime = !!isFirstTime;
+    pendingAvatar = user.avatar || null;
+    const grid = document.getElementById('avatarGrid');
+    grid.innerHTML = '';
+    window.RSP_AVATARS.forEach(av => {
+      const node = document.createElement('div');
+      node.className = 'avatar-choice' + (av.id === pendingAvatar ? ' selected' : '');
+      node.dataset.id = av.id;
+      node.innerHTML = window.renderAvatar(av.id, 70) +
+        '<div class="av-name">'+av.name+'</div>'+
+        '<div class="av-tag">'+av.tagline+'</div>';
+      node.addEventListener('click', () => {
+        pendingAvatar = av.id;
+        Array.from(grid.children).forEach(c => c.classList.remove('selected'));
+        node.classList.add('selected');
+        document.getElementById('avatarConfirm').disabled = false;
+      });
+      grid.appendChild(node);
+    });
+    document.getElementById('avatarConfirm').disabled = !pendingAvatar;
+    document.getElementById('avatarCancel').style.display = isFirstTime ? 'none' : 'inline-block';
+    document.getElementById('avatarOverlay').classList.add('show');
+  }
+
+  function closeAvatarPicker(){
+    document.getElementById('avatarOverlay').classList.remove('show');
+  }
+
+  function saveAvatar(){
+    if(!pendingAvatar) return;
+    const showWelcome = avatarPickerFirstTime;
+    avatarPickerFirstTime = false;
+    user.avatar = pendingAvatar;
+    lsSet(KEY_USER, JSON.stringify(user));
+    if(ledger[user.name]){
+      ledger[user.name].avatar = pendingAvatar;
+      lsSet(KEY_LEDGER, JSON.stringify(ledger));
+    }
+    closeAvatarPicker();
+    renderUser();
+    if(window.RSPCloud && window.RSPCloud.isConfigured){
+      window.RSPCloud.upsertUser(user).catch(e => console.warn('avatar sync failed:', e));
+    }
+    if(showWelcome && window.RSPWelcome) window.RSPWelcome.show(user);
+  }
+
+  // Login flow
+  document.getElementById('loginBtn').addEventListener('click', () => doLogin('login'));
+  document.getElementById('createBtn').addEventListener('click', () => doLogin('create'));
+  document.getElementById('loginFirst').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('loginLast').focus(); });
+  document.getElementById('loginLast').addEventListener('keydown', e => { if(e.key==='Enter') doLogin('login'); });
+
+  function normalizeName(first, last){
+    function tc(s){ return s.trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase()); }
+    return tc(first) + ' ' + tc(last);
+  }
+
+  async function doLogin(mode){
+    const first = document.getElementById('loginFirst').value.trim();
+    const last  = document.getElementById('loginLast').value.trim();
+    const errEl = document.getElementById('loginErr');
+    if(!first || !last){
+      errEl.textContent = 'Please enter your first and last name to continue.';
+      return;
+    }
+    const name = normalizeName(first, last);
+    errEl.textContent = '';
+    document.getElementById('loginBtn').disabled = true;
+    document.getElementById('createBtn').disabled = true;
+
+    try{
+      let priorAvatar = null;
+      let priorStartedAt = Date.now();
+      let localExists = false;
+      try{
+        const existingLedger = JSON.parse(lsGet(KEY_LEDGER) || '{}');
+        const existingEntry  = existingLedger[name];
+        if(existingEntry){
+          localExists = true;
+          if(existingEntry.avatar) priorAvatar = existingEntry.avatar;
+          if(existingEntry.startedAt) priorStartedAt = existingEntry.startedAt;
+        }
+      }catch(e){}
+
+      let cloudHadUser = false;
+      if(window.RSPCloud && window.RSPCloud.isConfigured){
+        try{
+          const existing = await window.RSPCloud.getUser(name);
+          cloudHadUser = !!(existing && existing.name);
+        }catch(e){}
+      }
+
+      const accountExists = cloudHadUser || localExists;
+
+      if(mode === 'login' && !accountExists){
+        errEl.textContent = 'No account found for "' + name + '". Use "Create Account" to register.';
+        return;
+      }
+      if(mode === 'create' && accountExists){
+        errEl.textContent = 'An account for "' + name + '" already exists. Please log in instead.';
+        return;
+      }
+
+      user = { name: name, startedAt: priorStartedAt };
+      if(priorAvatar) user.avatar = priorAvatar;
+      lsSet(KEY_USER, JSON.stringify(user));
+
+      await enterPortal();
+
+      try{
+        const refreshed = JSON.parse(lsGet(KEY_USER) || 'null');
+        if(refreshed) user = refreshed;
+      }catch(e){}
+
+      const isBrandNewUser = !priorAvatar && !cloudHadUser;
+      if(!user.avatar || isBrandNewUser){
+        openAvatarPicker(true);
+      }
+    } finally {
+      document.getElementById('loginBtn').disabled = false;
+      document.getElementById('createBtn').disabled = false;
+    }
+  }
+
+  document.getElementById('logoutLink').addEventListener('click', function(e){
+    e.preventDefault();
+    if(confirm('Log out? Your progress is saved on this device under your name.')){
+      lsDel(KEY_USER);
+      location.reload();
+    }
+  });
+
+  document.getElementById('changeAvatarLink').addEventListener('click', function(e){
+    e.preventDefault();
+    openAvatarPicker(false);
+  });
+  document.getElementById('userAvatar').addEventListener('click', function(){
+    openAvatarPicker(false);
+  });
+  document.getElementById('avatarConfirm').addEventListener('click', saveAvatar);
+  document.getElementById('avatarCancel').addEventListener('click', closeAvatarPicker);
+
+  init();
+})();
+</script>
+</body>
+</html>

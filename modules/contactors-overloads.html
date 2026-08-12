@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Contactors & Overload Relays — RSP Industrial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/module.css?v=editor-blocks-1">
+<style>
+  /* === CONTACTORS & OVERLOAD RELAYS · ROSE / CRIMSON THEME === */
+  :root{
+    --theme-primary:#BE123C;
+    --theme-primary-deep:#881337;
+    --theme-accent:#FECDD3;
+    --theme-obj-num:#BE123C;
+    --theme-login-btn-1:#BE123C;
+    --theme-login-btn-2:#E11D48;
+    --theme-login-pretitle:#BE123C;
+    --theme-login-focus:#BE123C;
+    --theme-side-bg:#881337;
+    --theme-side-border:#9F1239;
+    --theme-side-toggle:#9F1239;
+    --theme-loot-border:#BE123C;
+    --theme-loot-bg-1:#FFF1F2;
+    --theme-loot-bg-2:#FFE4E6;
+    --theme-loot-h3:#BE123C;
+    --theme-admin-btn:#BE123C;
+    --theme-admin-loginbox-border:#9F1239;
+  }
+
+  /* === MODULE-SPECIFIC COMPONENTS === */
+
+  /* Device card (used for contactor / overload anatomy) */
+  .dev-card{background:var(--slate-50);border:2px solid var(--slate-200);border-radius:14px;padding:16px;margin-bottom:10px}
+  .dev-card .dc-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .dev-card .dc-name{font-family:'Bricolage Grotesque';font-size:18px;font-weight:800;color:#881337}
+  .dev-card .dc-tag{font-size:10px;font-weight:700;color:#64748B;letter-spacing:.08em;text-transform:uppercase}
+  .dev-card .dc-sect{font-size:11px;font-weight:800;letter-spacing:.05em;color:#881337;margin-top:8px;text-transform:uppercase}
+  .dev-card .dc-list{font-size:12.5px;color:#334155;margin-top:4px;line-height:1.5}
+  .dev-card .dc-list li{margin-left:18px}
+
+  /* Two-column "does / doesn't" grid */
+  .does-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .does-col{border-radius:14px;padding:18px}
+  .does-col.yes{background:linear-gradient(160deg,#D1FAE5,#A7F3D0);border:2px solid #047857}
+  .does-col.no{background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #DC2626}
+  .does-col h3{font-size:16px}
+  .does-col.yes h3{color:#065F46}
+  .does-col.no h3{color:#7F1D1D}
+  .does-col ul{margin-top:8px;list-style:none}
+  .does-col li{font-size:12.5px;font-weight:600;line-height:1.45;padding:6px 0;border-bottom:1px dashed rgba(0,0,0,.08);display:flex;gap:8px;align-items:flex-start}
+  .does-col.yes li{color:#065F46}
+  .does-col.no li{color:#7F1D1D}
+  .does-col li:last-child{border-bottom:none}
+
+  /* Matrix tables (rose palette) */
+  .matrix{width:100%;border-collapse:collapse;margin-top:12px;font-size:11.5px}
+  .matrix th{background:#FFE4E6;color:#881337;text-align:center;padding:10px 6px;font-weight:800;border:1px solid #FECDD3;letter-spacing:.05em}
+  .matrix th.row-h{background:#F1F5F9;color:#0F172A;text-align:left;width:160px}
+  .matrix td{padding:10px 8px;border:1px solid #E2E8F0;color:#1E293B;font-weight:600}
+  .matrix td.lbl{background:#F8FAFC;font-weight:800;color:#0F172A;font-size:12px}
+  .matrix td.best{background:#FFE4E6;color:#881337;font-weight:800}
+
+  /* "AHA" callout — power-flow visual on the work-together page */
+  .aha-card{background:linear-gradient(160deg,#FFF1F2,#FFE4E6);border:3px solid #BE123C;border-radius:18px;padding:24px;margin-top:14px}
+  .aha-card h3{color:#881337;font-size:22px}
+  .aha-card .flow{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .aha-card .node{background:#fff;border:2px solid #BE123C;border-radius:12px;padding:14px 18px;font-weight:800;color:#881337;font-size:13px;text-align:center;min-width:128px;line-height:1.3}
+  .aha-card .node .sub{display:block;font-size:10px;color:#64748B;font-weight:700;letter-spacing:.05em;margin-top:3px;text-transform:uppercase}
+  .aha-card .arrow{font-size:28px;color:#BE123C;line-height:1}
+
+  /* Trip class / starter callout */
+  .callout{background:linear-gradient(160deg,#FFF1F2,#FFE4E6);border:2px solid #BE123C;border-radius:14px;padding:16px;margin-top:10px}
+  .callout h3{color:#881337;font-size:16px}
+  .callout p{color:#881337;font-size:13px;margin-top:6px;line-height:1.5}
+
+  /* Customer translation rose accent (override shared .says/.means/.quote-it for rose palette) */
+  .translate-row .says{background:#FFE4E6;color:#881337}
+  .translate-row .means{background:#FEF3C7;color:#78350F}
+  .translate-row .quote-it{background:#D1FAE5;color:#065F46}
+</style>
+</head>
+<body>
+
+<a href="../index.html" id="portalLink" class="interactive-only">← PORTAL</a>
+
+<aside id="sideMap" class="interactive-only">
+  <button class="map-toggle" id="mapToggle" title="Toggle map">‹</button>
+  <div class="map-title">🔌 STARTER MAP</div>
+  <div class="map-hint">YOUR JOURNEY</div>
+  <div class="map-path" id="mapPath"></div>
+</aside>
+
+<div id="minibossOverlay" class="interactive-only">
+  <div class="miniboss-modal" id="minibossModal"></div>
+</div>
+
+<div id="loginOverlay" class="interactive-only">
+  <div class="login-card">
+    <div class="bolt-bg">🔌</div>
+    <div class="pretitle">RSP INDUSTRIAL · PRODUCT MASTERY</div>
+    <h1>Contactors &amp;<br>Overload Relays</h1>
+    <p class="sub">Sign in to track your XP and unlock the Boss Fight.</p>
+    <label for="loginName">Your name</label>
+    <input type="text" id="loginName" placeholder="e.g. Gabe Ebmeyer" autocomplete="off"/>
+    <label for="loginId">Employee ID <span style="font-weight:500;color:#94A3B8;letter-spacing:0">(optional)</span></label>
+    <input type="text" id="loginId" placeholder="e.g. RSP-1234" autocomplete="off"/>
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn">Begin Training →</button>
+    <p class="footer-note">Your progress is saved on this device. No data leaves your browser.</p>
+  </div>
+</div>
+
+<div id="xpTracker" class="interactive-only">
+  <div>
+    <div class="username" id="trackerUser">🔌 READY</div>
+    <div class="label">XP EARNED</div>
+    <div><span class="num" id="trackerXP">0</span><span style="color:#475569;font-size:14px"> / 280</span></div>
+    <span class="reset-link" id="resetProgress">↻ Reset</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+    <div style="display:flex;gap:10px;font-size:10px;color:#94A3B8;white-space:nowrap;flex-wrap:wrap">
+      <span>📖&nbsp;<b style="color:#fff"><span id="trackerPages">0</span>/14</b></span>
+      <span>🎯&nbsp;<b style="color:#fff"><span id="trackerAnswered">0</span>/30</b></span>
+      <span>✓&nbsp;<b style="color:#34D399"><span id="trackerCorrect">0</span></b></span>
+    </div>
+    <div class="bar"><div class="fill" id="trackerFill"></div></div>
+  </div>
+</div>
+
+<!-- ============= PAGE 1 — COVER ============= -->
+<section class="page cover">
+  <div class="ribbon">
+    <span class="badge">RSP INDUSTRIAL</span>
+    <span class="badge">PRODUCT MASTERY · MODULE 05</span>
+  </div>
+  <svg width="500" height="500" viewBox="0 0 500 500" style="position:absolute;right:-60px;top:120px;opacity:.95">
+    <defs>
+      <linearGradient id="contactorg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FECDD3"/>
+        <stop offset="100%" stop-color="#BE123C"/>
+      </linearGradient>
+    </defs>
+    <!-- Stylized contactor body -->
+    <g transform="translate(250 250)">
+      <rect x="-90" y="-110" width="180" height="220" rx="14" fill="url(#contactorg)" stroke="#FECDD3" stroke-width="3"/>
+      <!-- coil window -->
+      <rect x="-58" y="-78" width="116" height="56" fill="#0F172A" stroke="#FECDD3" stroke-width="2"/>
+      <text x="0" y="-44" text-anchor="middle" font-size="22" fill="#FECDD3" font-weight="800" font-family="Bricolage Grotesque">COIL</text>
+      <!-- three main power poles -->
+      <g fill="#0F172A" stroke="#FECDD3" stroke-width="2">
+        <rect x="-66" y="0" width="32" height="92" rx="3"/>
+        <rect x="-16" y="0" width="32" height="92" rx="3"/>
+        <rect x="34" y="0" width="32" height="92" rx="3"/>
+      </g>
+      <!-- pole labels -->
+      <g fill="#FECDD3" font-size="14" font-weight="800" text-anchor="middle">
+        <text x="-50" y="50">L1</text>
+        <text x="0" y="50">L2</text>
+        <text x="50" y="50">L3</text>
+      </g>
+    </g>
+  </svg>
+  <div style="position:absolute;bottom:2.4in;left:.5in;right:.5in">
+    <div class="pill" style="background:rgba(254,205,211,.25);color:#FECDD3;border:1px solid rgba(254,205,211,.4);margin-bottom:18px">PRODUCT MASTERY · MOTOR CONTROL</div>
+    <h1>CONTACTORS &amp;<br>OVERLOAD RELAYS</h1>
+    <div class="sub">Switch it. Protect it. Sell the starter.</div>
+  </div>
+  <div class="tagline">
+    <div>The two building blocks of every motor control circuit.</div>
+    <div>RSP · PROD 05</div>
+  </div>
+</section>
+
+<!-- ============= PAGE 2 — MISSION ============= -->
+<section class="page">
+  <div class="page-tag">▸ THE PROMISE</div>
+  <div style="display:flex;gap:30px;margin-top:.5in;height:8.6in">
+    <div style="flex:1;display:flex;flex-direction:column">
+      <h2>Understand the<br>building blocks.</h2>
+      <p class="lead" style="margin-top:14px">By the last page you will be able to:</p>
+      <ul class="objectives" style="margin-top:18px">
+        <li><span class="obj-num">1</span><span>Explain what a <b>contactor</b> does — and the three things it cannot do.</span></li>
+        <li><span class="obj-num">2</span><span>Explain what an <b>overload relay</b> does — and what it cannot do.</span></li>
+        <li><span class="obj-num">3</span><span>Pick a contactor by <b>coil voltage, HP, AC-3 duty,</b> and pole count.</span></li>
+        <li><span class="obj-num">4</span><span>Size an overload by motor <b>FLA</b> and choose the right <b>trip class</b>.</span></li>
+        <li><span class="obj-num">5</span><span>Define a <b>motor starter</b> and locate where short-circuit protection lives.</span></li>
+        <li><span class="obj-num">6</span><span>Pass the 30-question Boss Fight at 80%+ to earn the badge.</span></li>
+      </ul>
+      <div class="powerup" style="margin-top:20px">
+        💡 <b>The promise:</b> Master these two devices and starters, soft starters, and motor control centers all start to make sense.
+      </div>
+    </div>
+    <div style="flex:0 0 2.4in;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="100" fill="none" stroke="#BE123C" stroke-width="6"/>
+        <circle cx="110" cy="110" r="75" fill="none" stroke="#BE123C" stroke-width="6" opacity=".6"/>
+        <circle cx="110" cy="110" r="50" fill="none" stroke="#BE123C" stroke-width="6" opacity=".4"/>
+        <circle cx="110" cy="110" r="25" fill="#BE123C"/>
+        <text x="110" y="118" text-anchor="middle" font-size="22" fill="#fff" font-weight="800" font-family="Bricolage Grotesque">XP</text>
+      </svg>
+      <div style="background:var(--ink);color:#FCD34D;padding:10px 18px;border-radius:999px;font-weight:800;font-size:13px;letter-spacing:.1em">EARN: 🔌 STARTER MASTER</div>
+    </div>
+  </div>
+  <div class="page-num">02</div>
+</section>
+
+<!-- ============= PAGE 3 — HOW TO PLAY ============= -->
+<section class="page">
+  <div class="page-tag">▸ HOW TO PLAY</div>
+  <h2 style="margin-top:.4in">Three levels.<br>Two mini-bosses.<br>One badge.</h2>
+  <div style="display:flex;gap:14px;margin-top:30px">
+    <div class="level-card learn">
+      <div class="num">01</div>
+      <h3>LEARN</h3>
+      <p>8 pages. What a contactor is, what an overload is, how they each work, and what each one cannot do.</p>
+      <div class="xp-pill">+10 XP / page</div>
+    </div>
+    <div class="level-card apply">
+      <div class="num">02</div>
+      <h3>APPLY</h3>
+      <p>6 pages. Sizing by FLA, trip classes, how the two devices work together, the customer translation table, and 5 sales mistakes.</p>
+      <div class="xp-pill">+15 XP / page</div>
+    </div>
+    <div class="level-card test">
+      <div class="num">03</div>
+      <h3>TEST</h3>
+      <p>30-question Boss Fight. Score 80%+ for the 🔌 Starter Mastery badge.</p>
+      <div class="xp-pill">+2 XP / correct</div>
+    </div>
+  </div>
+  <div class="powerup" style="margin-top:30px">
+    💡 <b>Two Mini-Bosses block the path.</b> The Coil Phantom guards contactor knowledge; the Overload Oracle guards overload sizing. Each is worth +25 XP.
+  </div>
+  <div class="page-num">03</div>
+</section>
+
+<!-- ============= PAGE 4 — LEARN 01: STARTER ≠ CONTACTOR ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 01 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🔌 WHY THIS TRAINING MATTERS</div>
+  <h2 style="margin-top:14px">A starter is NOT<br>a single device.</h2>
+  <p class="lead" style="margin-top:6px">Most of the confusion in motor-control sales comes from one mistake: treating a <b>starter</b> as a single part. It isn't. A starter is an <b>assembly</b> of components — and the two most important are the <b>contactor</b> and the <b>overload relay</b>.</p>
+
+  <div class="aha-card" style="margin-top:18px">
+    <h3 style="text-align:center">STARTER = CONTACTOR + OVERLOAD</h3>
+    <div class="flow">
+      <div class="node">🔌 CONTACTOR<span class="sub">switches the motor</span></div>
+      <div class="arrow">+</div>
+      <div class="node">🛡️ OVERLOAD RELAY<span class="sub">protects the motor</span></div>
+      <div class="arrow">=</div>
+      <div class="node" style="background:#BE123C;color:#fff;border-color:#FECDD3">⚙️ MOTOR STARTER<span class="sub" style="color:#FECDD3">the assembly</span></div>
+    </div>
+    <p style="font-size:12.5px;color:#881337;margin-top:14px;text-align:center;font-weight:600">Short-circuit protection (breaker or fuse) lives <b>upstream</b> of the starter, never inside it.</p>
+  </div>
+
+  <p style="margin-top:14px;font-size:13px;color:var(--slate-700)">This training breaks each device down individually first, then shows how they work together. After this you'll never call a contactor a starter again — and you'll know exactly what each customer is really asking for when they say "I need a starter."</p>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> If you understand contactors and overloads individually, starters, soft starters, and even VFD packages all become easier.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">04</div>
+</section>
+
+<!-- ============= PAGE 5 — LEARN 02: WHAT IS A CONTACTOR ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 02 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🔌 WHAT A CONTACTOR IS</div>
+  <h2 style="margin-top:14px">An electrically<br>controlled switch.</h2>
+  <p class="lead" style="margin-top:6px">A <b>contactor</b> is an electrically controlled switch used to do one job, three ways:</p>
+
+  <ul class="biglist" style="margin-top:14px">
+    <li><span class="bullet">▸</span>Turn a motor <b>ON</b></li>
+    <li><span class="bullet">▸</span>Turn a motor <b>OFF</b></li>
+    <li><span class="bullet">▸</span>Do it <b>remotely</b> and <b>repeatedly</b></li>
+  </ul>
+
+  <div class="callout" style="margin-top:16px">
+    <h3>📌 The one-line description</h3>
+    <p>A contactor is basically a <b>heavy-duty relay designed for motors.</b> Same idea as a control relay — a coil moves a set of contacts — but built to carry motor-level current thousands of times a day without burning out.</p>
+  </div>
+
+  <div class="factbox" style="margin-top:16px;background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #EF4444">
+    <h3 style="color:#7F1D1D;font-size:16px">🚨 What it does NOT do</h3>
+    <p style="color:#7F1D1D;margin-top:6px;font-size:13px">A contactor's job is <b>switching</b>, not <b>protection</b>. It will happily switch power to a motor that's seconds away from burning up. That's why <b>another device is always required</b> — the overload relay.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "The contactor handles switching the motor on and off." That single sentence makes you sound knowledgeable on every motor-control call.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">05</div>
+</section>
+
+<!-- ============= PAGE 6 — LEARN 03: INSIDE A CONTACTOR ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 03 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🔌 INSIDE A CONTACTOR</div>
+  <h2 style="margin-top:14px">Coil. Contacts.<br>That's the whole magic trick.</h2>
+  <p class="lead" style="margin-top:6px">Every contactor — from a tiny IEC mini to a giant 500A NEMA Size 6 — has the same three internal parts.</p>
+
+  <div style="margin-top:18px">
+    <div class="dev-card">
+      <div class="dc-head"><span style="font-size:22px">🧲</span><div class="dc-name">THE COIL</div></div>
+      <div class="dc-tag">CONTROL CIRCUIT INPUT · LOW POWER</div>
+      <div class="dc-list">An electromagnet. Energize the coil with control voltage (24V, 120V, 230V, etc.) and it pulls the main contacts closed. De-energize it and a spring pulls them open. <b>The coil's only job is to move the contacts.</b></div>
+    </div>
+    <div class="dev-card">
+      <div class="dc-head"><span style="font-size:22px">⚡</span><div class="dc-name">THE MAIN CONTACTS</div></div>
+      <div class="dc-tag">POWER CIRCUIT · HIGH CURRENT</div>
+      <div class="dc-list">Big, beefy contacts that carry the motor's actual current. Sized in amps and HP. Three contacts for a three-phase motor — one for each line.</div>
+    </div>
+    <div class="dev-card">
+      <div class="dc-head"><span style="font-size:22px">🔁</span><div class="dc-name">AUXILIARY CONTACTS</div></div>
+      <div class="dc-tag">CONTROL CIRCUIT · SIGNALING</div>
+      <div class="dc-list">Small, signal-only contacts that open or close in sync with the main contacts. Used for: seal-in logic, pilot lights, "running" feedback to a PLC, and interlocking with the overload relay.</div>
+    </div>
+  </div>
+
+  <div class="aha-card" style="margin-top:8px;padding:18px">
+    <h3 style="font-size:18px;text-align:center">⚡ THE SEQUENCE</h3>
+    <div class="flow" style="margin-top:12px">
+      <div class="node">COIL ENERGIZED<span class="sub">control voltage in</span></div>
+      <div class="arrow">→</div>
+      <div class="node">MAIN CONTACTS CLOSE<span class="sub">power flows</span></div>
+      <div class="arrow">→</div>
+      <div class="node">MOTOR RUNS<span class="sub">until coil drops out</span></div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Coil pulls in, contacts close, motor runs. Coil drops out, contacts open, motor stops." That's the entire mental model.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">06</div>
+</section>
+
+<!-- ============= PAGE 7 — LEARN 04: CONTACTOR RATINGS ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 04 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🔌 CONTACTOR RATINGS THAT MATTER</div>
+  <h2 style="margin-top:14px">Four numbers.<br>Every quote.</h2>
+  <p class="lead" style="margin-top:6px">When selecting or selling a contactor, four ratings drive the SKU. Miss any one and the part is wrong — even if everything else fits.</p>
+
+  <table class="matrix" style="margin-top:18px">
+    <thead><tr><th class="row-h">Rating</th><th>What it means</th><th>Question to ask</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Coil voltage</td><td>Voltage that energizes the coil (24V, 120V, 230V, 480V — AC or DC)</td><td class="best">"What's your control circuit voltage?"</td></tr>
+      <tr><td class="lbl">Current / HP</td><td>How much motor current the main contacts can switch — usually listed by HP at a given voltage</td><td class="best">"What's the motor HP and FLA?"</td></tr>
+      <tr><td class="lbl">Duty rating</td><td>How the contactor is used — see AC-1, AC-3, AC-4 below</td><td class="best">"Standard motor starting? Any plugging or jogging?"</td></tr>
+      <tr><td class="lbl">Poles</td><td>Number of switched conductors — most three-phase motors use 3-pole</td><td class="best">"Three-phase or single-phase?"</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>📋 Duty rating cheat sheet</h3>
+    <p><b>AC-1</b> — non-inductive / resistive loads (heaters, lighting). <b>AC-3</b> — standard squirrel-cage motor starting. <b>The default for almost every motor call.</b> <b>AC-4</b> — heavy-duty: plugging, jogging, rapid reversing. Costs more.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Coil voltage is the most common mis-quote. <b>Always confirm it.</b> A 120V coil on a 24V control circuit will sit there cold and do nothing.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">07</div>
+</section>
+
+<!-- ============= PAGE 8 — LEARN 05: WHAT A CONTACTOR DOES NOT DO ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 05 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🔌 WHAT A CONTACTOR DOES NOT DO</div>
+  <h2 style="margin-top:14px">A switch is not<br>a guardian.</h2>
+  <p class="lead" style="margin-top:6px">This is the single most-confused point in motor-control sales. A contactor handles <b>switching</b>. It does not handle <b>protection</b>. Anyone who tells you otherwise is wrong, and a customer who buys "just a contactor" is buying an unfinished system.</p>
+
+  <div class="does-grid">
+    <div class="does-col yes">
+      <h3>✅ WHAT IT DOES</h3>
+      <ul>
+        <li>✓ Switches motor power ON and OFF</li>
+        <li>✓ Switches the motor remotely (control coil)</li>
+        <li>✓ Switches the motor repeatedly without wear</li>
+        <li>✓ Sized to carry rated motor current</li>
+      </ul>
+    </div>
+    <div class="does-col no">
+      <h3>🚫 WHAT IT DOES NOT</h3>
+      <ul>
+        <li>✗ Does NOT protect against overloads</li>
+        <li>✗ Does NOT interrupt short circuits</li>
+        <li>✗ Does NOT sense motor temperature</li>
+        <li>✗ Does NOT detect phase loss</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:18px;background:linear-gradient(160deg,#FEF3C7,#FDE68A);border:2px solid #F59E0B">
+    <h3 style="color:#78350F;font-size:16px">🧠 Why this matters in sales</h3>
+    <p style="color:#78350F;margin-top:6px;font-size:13px">If a customer says "I need a starter, just send me the contactor," <b>stop and ask the follow-up.</b> They either need the overload too (most likely), or they already have one and you should confirm the existing overload is sized correctly for the new contactor.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "The contactor switches. The overload protects. They're a pair." Use this line every time someone calls a contactor a starter.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">08</div>
+</section>
+
+<!-- ============= PAGE 9 — LEARN 06: WHAT IS AN OVERLOAD RELAY ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 06 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🛡️ WHAT AN OVERLOAD RELAY IS</div>
+  <h2 style="margin-top:14px">The motor's<br>thermal bodyguard.</h2>
+  <p class="lead" style="margin-top:6px">An <b>overload relay</b> is a motor-protection device. Its job is to keep the motor from cooking itself when something downstream goes wrong — a jammed conveyor, a seized bearing, a lost phase. It watches motor current and trips when current stays too high for too long.</p>
+
+  <div class="dev-card" style="margin-top:18px">
+    <div class="dc-head"><span style="font-size:22px">🛡️</span><div class="dc-name">OVERLOAD RELAY · WHAT IT PROTECTS AGAINST</div></div>
+    <div class="dc-sect">Three kinds of trouble</div>
+    <ul class="dc-list">
+      <li><b>Mechanical overloads</b> — jam, drag, oversized load. Motor pulls too much current trying to push the work.</li>
+      <li><b>Phase loss</b> — one of three phases drops out. Motor draws huge current on the remaining phases and overheats fast. (Electronic overloads detect this directly; thermals catch it via the current rise.)</li>
+      <li><b>Sustained overcurrent</b> — any condition where the motor is drawing above its rated amps for an extended period.</li>
+    </ul>
+  </div>
+
+  <div class="factbox" style="margin-top:16px;background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #EF4444">
+    <h3 style="color:#7F1D1D;font-size:16px">🚨 What it does NOT do</h3>
+    <p style="color:#7F1D1D;margin-top:6px;font-size:13px">An overload relay does <b>NOT</b> interrupt short circuits. That's a different problem — different physics, different device. Short-circuit protection is the breaker or fuse <b>upstream</b> of the starter. If you forget that, the overload contacts will weld shut during a fault and the motor will burn anyway.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "The overload protects against slow-cooker problems. The breaker protects against blow-up problems. Both have to be there."
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">09</div>
+</section>
+
+<!-- ============= PAGE 10 — LEARN 07: INVERSE TIME ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 07 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🛡️ INVERSE-TIME PROTECTION</div>
+  <h2 style="margin-top:14px">Why overloads<br>don't trip at startup.</h2>
+  <p class="lead" style="margin-top:6px">Every motor draws <b>6–8× its full-load amps</b> for the first few seconds of starting. If an overload tripped on that, no motor would ever run. So overloads are built to be <b>patient</b> — they trip on the <i>combination</i> of how much over-current and how long it lasts.</p>
+
+  <div class="factbox" style="margin-top:18px;background:linear-gradient(160deg,#FFF1F2,#FFE4E6);border:2px solid #BE123C">
+    <h3 style="color:#881337">⏱ The inverse-time idea</h3>
+    <p style="color:#881337;margin-top:6px;font-size:13px">Mild overload (110% of FLA) → may take <b>minutes</b> to trip.<br>Heavy overload (300% of FLA) → trips in <b>seconds</b>.<br>Short circuit (5000% of FLA) → the overload <b>does not respond fast enough</b>. That's why the upstream breaker has to handle it.</p>
+  </div>
+
+  <svg width="100%" height="200" viewBox="0 0 700 200" style="margin-top:14px">
+    <defs>
+      <linearGradient id="trip" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#10B981"/>
+        <stop offset="60%" stop-color="#FACC15"/>
+        <stop offset="100%" stop-color="#EF4444"/>
+      </linearGradient>
+    </defs>
+    <line x1="60" y1="160" x2="660" y2="160" stroke="#475569" stroke-width="2"/>
+    <line x1="60" y1="20" x2="60" y2="160" stroke="#475569" stroke-width="2"/>
+    <text x="360" y="190" text-anchor="middle" font-size="12" fill="#475569" font-weight="800">% OF FULL-LOAD AMPS →</text>
+    <text x="30" y="90" text-anchor="middle" font-size="12" fill="#475569" font-weight="800" transform="rotate(-90 30 90)">TRIP TIME</text>
+    <path d="M 80 30 Q 200 80 320 130 T 660 158" fill="none" stroke="url(#trip)" stroke-width="4"/>
+    <circle cx="120" cy="50" r="5" fill="#EF4444"/>
+    <text x="120" y="42" text-anchor="middle" font-size="10" fill="#7F1D1D" font-weight="800">600% · trips fast</text>
+    <circle cx="320" cy="128" r="5" fill="#F97316"/>
+    <text x="320" y="120" text-anchor="middle" font-size="10" fill="#9A3412" font-weight="800">200% · trips in seconds</text>
+    <circle cx="540" cy="155" r="5" fill="#10B981"/>
+    <text x="540" y="147" text-anchor="middle" font-size="10" fill="#065F46" font-weight="800">110% · trips in minutes</text>
+  </svg>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Inverse-time means "the bigger the overload, the faster the trip." It's why a motor can start without nuisance-tripping but won't run with a jammed shaft.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">10</div>
+</section>
+
+<!-- ============= PAGE 11 — LEARN 08: THERMAL vs ELECTRONIC + COIL PHANTOM ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 08 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🛡️ THERMAL vs ELECTRONIC OVERLOADS</div>
+  <h2 style="margin-top:14px">Two flavors.<br>Two price points.</h2>
+  <p class="lead" style="margin-top:6px">Almost every overload on the market is one of these two. Pick by application, not by price.</p>
+
+  <table class="matrix" style="margin-top:18px">
+    <thead><tr><th class="row-h">Property</th><th>Thermal</th><th>Electronic</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Sensing method</td><td>Bimetal strip heats and bends</td><td>Current transformers + IC</td></tr>
+      <tr><td class="lbl">Trip behavior</td><td>Mechanical, inverse-time</td><td>Programmable, inverse-time</td></tr>
+      <tr><td class="lbl">Accuracy</td><td>Good</td><td class="best">Excellent</td></tr>
+      <tr><td class="lbl">Phase-loss detection</td><td>Indirect (via current rise)</td><td class="best">Direct, fast</td></tr>
+      <tr><td class="lbl">Adjustable trip class</td><td>Limited (often fixed Class 10)</td><td class="best">10 / 20 / 30 dial</td></tr>
+      <tr><td class="lbl">Communications</td><td>None</td><td class="best">Modbus, EtherNet/IP, etc.</td></tr>
+      <tr><td class="lbl">Cost</td><td class="best">$</td><td>$$ – $$$</td></tr>
+      <tr><td class="lbl">Best for</td><td>Standard motors, no comms needed</td><td>VFD/process plants, remote diagnostics, high-inertia loads</td></tr>
+    </tbody>
+  </table>
+
+  <div class="powerup" style="margin-top:14px">
+    🏅 <b>LEARN LEVEL CLEARED — +80 XP · BADGE EARNED: 🧠 "BUILDING BLOCKS LOCKED."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="coil-phantom" style="margin-top:14px;padding:18px">
+    <div class="icon">🧲</div>
+    <h3>The Coil Phantom blocks the path!</h3>
+    <div class="sub">5 questions on contactor basics &amp; ratings · Defeat to unlock APPLY level</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">11</div>
+</section>
+
+<!-- ============= PAGE 12 — APPLY 01: SIZING AN OVERLOAD ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 01 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ OVERLOAD SIZING · CRITICAL SALES KNOWLEDGE</div>
+  <h2 style="margin-top:14px">Size by FLA.<br>Never by HP alone.</h2>
+  <p class="lead" style="margin-top:6px">This is the most-asked, most-mis-answered sizing question on the phone. Memorize the rule, memorize the steps, and your overload quotes stop coming back.</p>
+
+  <div class="callout" style="margin-top:18px">
+    <h3>📋 The 3-step rule</h3>
+    <p><b>1.</b> Find the motor's <b>Full Load Amps (FLA)</b> on the nameplate.<br><b>2.</b> Pick an overload whose <b>adjustable range covers that FLA</b>.<br><b>3.</b> Set the dial to the FLA reading — and confirm the <b>trip class</b> matches the load type.</p>
+  </div>
+
+  <div class="does-grid" style="margin-top:18px">
+    <div class="does-col no">
+      <h3>🚫 UNDERSIZED</h3>
+      <ul>
+        <li>✗ Trips on every motor start ("nuisance trips")</li>
+        <li>✗ Reps swap to a bigger overload to make it stop</li>
+        <li>✗ Motor is now under-protected — back to square one</li>
+        <li>✗ Customer thinks the part is defective</li>
+      </ul>
+    </div>
+    <div class="does-col" style="background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #DC2626">
+      <h3 style="color:#7F1D1D">🔥 OVERSIZED</h3>
+      <ul style="color:#7F1D1D">
+        <li>✗ Motor cooks before the overload notices</li>
+        <li>✗ Insurance / warranty argument afterwards</li>
+        <li>✗ "I sized it to be safe" is the cause</li>
+        <li>✗ The most expensive mistake in motor control</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FEF3C7,#FDE68A);border:2px solid #F59E0B">
+    <h3 style="color:#78350F;font-size:16px">⚠️ Why "size by HP alone" fails</h3>
+    <p style="color:#78350F;margin-top:6px;font-size:13px">Two motors with the same HP can have <b>different FLA</b> depending on voltage, phase, efficiency, and service factor. The nameplate tells the truth. The HP rating only narrows the range.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Send me the motor nameplate" beats "send me the HP" every time. Get the FLA.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">12</div>
+</section>
+
+<!-- ============= PAGE 13 — APPLY 02: TRIP CLASSES ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 02 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ TRIP CLASSES</div>
+  <h2 style="margin-top:14px">Class 10. Class 20.<br>Class 30.</h2>
+  <p class="lead" style="margin-top:6px">Trip class tells you <b>how long</b> the overload will tolerate a 600% over-current before it trips. Higher class = more patience = better for loads that take a long time to come up to speed.</p>
+
+  <table class="matrix" style="margin-top:18px">
+    <thead><tr><th class="row-h">Class</th><th>Trip @ 600% FLA in…</th><th>Use it for</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Class 10</td><td class="best">≤ 10 seconds</td><td>Standard motors. Pumps, fans, conveyors with normal start. <b>The default.</b></td></tr>
+      <tr><td class="lbl">Class 20</td><td>≤ 20 seconds</td><td>Higher inertia loads. Long-shaft fans, loaded conveyors, mixer/agitator loads.</td></tr>
+      <tr><td class="lbl">Class 30</td><td>≤ 30 seconds</td><td>Very high inertia or long acceleration. Centrifuges, large fans, hammer mills.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>📞 Customer signals</h3>
+    <p><b>"It nuisance-trips every time we start it"</b> with the load type matching a higher-inertia application → step up the trip class. Class 10 → Class 20 is the most common fix. <b>"We have a long-shaft fan"</b> or <b>"big centrifuge"</b> → start at Class 20 or 30. Don't wait for the customer to come back angry.</p>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #EF4444">
+    <h3 style="color:#7F1D1D;font-size:16px">🚨 The trap</h3>
+    <p style="color:#7F1D1D;margin-top:6px;font-size:13px">Class 30 looks "safer" — it never trips on startup. But it also takes <b>three times longer</b> to react to a real overload. Don't put a Class 30 on a standard pump just because Class 10 was nuisance-tripping. <b>Find the real cause first</b> (FLA mis-set, bearings, voltage drop, etc.).</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Class 10 standard · Class 20 high inertia · Class 30 very high inertia. Three numbers, one matched answer.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">13</div>
+</section>
+
+<!-- ============= PAGE 14 — APPLY 03: HOW THEY WORK TOGETHER ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 03 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ HOW THE TWO DEVICES WORK TOGETHER</div>
+  <h2 style="margin-top:14px">The "aha" moment.</h2>
+  <p class="lead" style="margin-top:6px">Once you see the power-flow diagram, every motor circuit you'll ever quote makes sense. Pay attention to the <b>two paths</b> — the power path and the control path.</p>
+
+  <div class="aha-card" style="margin-top:18px">
+    <h3 style="text-align:center;font-size:20px">⚡ POWER PATH (the high-current side)</h3>
+    <div class="flow" style="margin-top:14px">
+      <div class="node">SOURCE<span class="sub">480 / 240 / 120 VAC</span></div>
+      <div class="arrow">→</div>
+      <div class="node">🛡️ BREAKER / FUSE<span class="sub">short-circuit protection (UPSTREAM)</span></div>
+      <div class="arrow">→</div>
+      <div class="node">🔌 CONTACTOR<span class="sub">switching</span></div>
+      <div class="arrow">→</div>
+      <div class="node">🛡️ OVERLOAD<span class="sub">current sensing</span></div>
+      <div class="arrow">→</div>
+      <div class="node">⚙️ MOTOR<span class="sub">load</span></div>
+    </div>
+  </div>
+
+  <div class="aha-card" style="margin-top:14px;background:linear-gradient(160deg,#EFF6FF,#DBEAFE);border-color:#1E40AF">
+    <h3 style="text-align:center;font-size:20px;color:#1E40AF">🔄 CONTROL PATH (what makes it trip)</h3>
+    <div class="flow" style="margin-top:14px">
+      <div class="node" style="background:#fff;border-color:#1E40AF;color:#1E40AF">OVERLOAD TRIPS<span class="sub">sustained overcurrent</span></div>
+      <div class="arrow" style="color:#1E40AF">→</div>
+      <div class="node" style="background:#fff;border-color:#1E40AF;color:#1E40AF">OL CONTACT OPENS<span class="sub">in series with coil</span></div>
+      <div class="arrow" style="color:#1E40AF">→</div>
+      <div class="node" style="background:#fff;border-color:#1E40AF;color:#1E40AF">COIL DROPS OUT<span class="sub">no holding current</span></div>
+      <div class="arrow" style="color:#1E40AF">→</div>
+      <div class="node" style="background:#1E40AF;color:#fff;border-color:#1E40AF">MOTOR STOPS<span class="sub" style="color:#BFDBFE">safely</span></div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Power flows through the contactor and overload to the motor. But the overload <b>controls the contactor's coil</b> — that's how a sensing device shuts off a switching device.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">14</div>
+</section>
+
+<!-- ============= PAGE 15 — APPLY 04: WHAT A STARTER REALLY IS ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 04 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ WHAT A STARTER REALLY IS</div>
+  <h2 style="margin-top:14px">Two devices, three jobs,<br>one assembly.</h2>
+  <p class="lead" style="margin-top:6px">Now that you understand each piece, the definition of a motor starter falls right out of the parts list.</p>
+
+  <div class="aha-card" style="margin-top:18px">
+    <h3 style="text-align:center">⚙️ MOTOR STARTER = CONTACTOR + OVERLOAD RELAY</h3>
+    <p style="text-align:center;color:#881337;font-size:13px;margin-top:6px">(with short-circuit protection always living upstream)</p>
+  </div>
+
+  <h3 style="margin-top:18px;font-size:18px">A "starter" may also include:</h3>
+  <ul class="biglist" style="margin-top:10px">
+    <li><span class="bullet">▸</span><b>Disconnect switch</b> — a means to isolate the assembly for service.</li>
+    <li><span class="bullet">▸</span><b>Fuses or circuit breaker</b> — the short-circuit protection mentioned above, often packaged in the same enclosure.</li>
+    <li><span class="bullet">▸</span><b>Enclosure</b> — NEMA 1, 4, 4X, 7, 12 depending on environment.</li>
+    <li><span class="bullet">▸</span><b>Control transformer</b> — to drop service voltage down to the contactor's coil voltage (e.g. 480 → 120 VAC).</li>
+    <li><span class="bullet">▸</span><b>Operator devices</b> — Start/Stop pushbuttons, pilot lights, selector switches.</li>
+  </ul>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FFF1F2,#FFE4E6);border:2px solid #BE123C">
+    <h3 style="color:#881337;font-size:16px">📌 At the core</h3>
+    <p style="color:#881337;margin-top:6px;font-size:13px"><b>Contactor = switching.</b> <b>Overload = motor protection.</b> Everything else on a starter (disconnect, breaker, enclosure, transformer, operator devices) is convenience packaging around those two functions.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> When a customer says "I need a starter," ask: "Combo unit with disconnect and breaker, or just the contactor + overload?" That one follow-up tells you whether it's a $200 quote or a $2,000 quote.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">15</div>
+</section>
+
+<!-- ============= PAGE 16 — APPLY 05: CUSTOMER TRANSLATION TABLE ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 05 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ CUSTOMER PHRASE TRANSLATION</div>
+  <h2 style="margin-top:14px">What they say.<br>What you ask. What you sell.</h2>
+  <p class="lead" style="margin-top:6px">Customers describe symptoms. You translate to the underlying problem and quote the fix.</p>
+
+  <div style="margin-top:18px">
+    <div class="translate-row" style="font-weight:800;font-size:11px;letter-spacing:.05em;text-transform:uppercase"><div style="background:transparent;color:#64748B">Customer says</div><div style="background:transparent;color:#64748B">It means</div><div style="background:transparent;color:#64748B">You quote / ask</div></div>
+    <div class="translate-row"><div class="says">"I need a starter"</div><div class="means">Could be contactor + OL, or full combo</div><div class="quote-it">"Disconnect &amp; breaker in the same box, or separate upstream?"</div></div>
+    <div class="translate-row"><div class="says">"Just send me the contactor"</div><div class="means">May be missing overload protection</div><div class="quote-it">"Do you already have a sized OL, or do you need both?"</div></div>
+    <div class="translate-row"><div class="says">"My motor keeps tripping"</div><div class="means">Likely OL trip — check FLA setting</div><div class="quote-it">"Is it the overload or the breaker? What's the FLA setting vs. nameplate?"</div></div>
+    <div class="translate-row"><div class="says">"Nuisance-trips on every start"</div><div class="means">Trip class too low for the load</div><div class="quote-it">Move from Class 10 → Class 20 (or check FLA dial)</div></div>
+    <div class="translate-row"><div class="says">"Hard-starting pump / big fan"</div><div class="means">High-inertia load</div><div class="quote-it">Class 20 or 30 overload</div></div>
+    <div class="translate-row"><div class="says">"Want to know when it trips"</div><div class="means">Needs remote diagnostics</div><div class="quote-it">Electronic overload with comms (Modbus / EtherNet/IP)</div></div>
+    <div class="translate-row"><div class="says">"Coil doesn't pull in"</div><div class="means">Coil voltage mismatch or burned coil</div><div class="quote-it">"What's your control circuit voltage? Verify it matches the coil rating."</div></div>
+    <div class="translate-row"><div class="says">"Rebuilding an old starter"</div><div class="means">Need exact replacement spec</div><div class="quote-it">"IEC or NEMA? Photo of the existing nameplate?"</div></div>
+    <div class="translate-row"><div class="says">"Contacts welded shut"</div><div class="means">Short-circuit fault, OL too slow</div><div class="quote-it">Replace the contactor + verify upstream breaker AIC rating</div></div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Three steps every call: repeat the symptom, name the underlying problem, quote the fix. That's how reps sound like engineers.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">16</div>
+</section>
+
+<!-- ============= PAGE 17 — APPLY 06: 5 SALES MISTAKES + OVERLOAD ORACLE ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 06 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ 5 SALES MISTAKES TO AVOID</div>
+  <h2 style="margin-top:14px">Each one costs<br>a callback.</h2>
+  <p class="lead" style="margin-top:6px">Every mistake on this list has cost a rep an order, a returned part, or — worst case — a burned-up motor. Memorize and avoid.</p>
+
+  <div style="margin-top:18px">
+    <div class="mistake">
+      <span class="x">1</span>
+      <div><h3>Calling a contactor a starter.</h3><p>A contactor is one piece of a starter. The customer might still need the overload, the disconnect, and the breaker. Ask before you ship.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">2</span>
+      <div><h3>Forgetting overload protection.</h3><p>If the customer only orders a contactor and runs it as a starter, the motor is unprotected. The first jam burns it up. Always confirm the overload story.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">3</span>
+      <div><h3>Oversizing the overload "to be safe."</h3><p>An oversized overload reads "safe" and acts <i>unsafe</i> — it won't trip until the motor is cooked. Size to FLA. Period.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">4</span>
+      <div><h3>Ignoring trip class.</h3><p>Selling a Class 10 to a centrifuge customer means nuisance trips for life. Selling a Class 30 to a small pump means the motor's gone before the OL notices.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">5</span>
+      <div><h3>Mixing IEC and NEMA without checking.</h3><p>The mounting and current ratings don't match 1-for-1. Swapping brands or formats without verifying the cross-reference gets the install wrong every time.</p></div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    🏅 <b>APPLY LEVEL CLEARED — +90 XP · BADGE EARNED: 💼 "STARTER-READY."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="overload-oracle">
+    <div class="icon">🔮</div>
+    <h3>The Overload Oracle blocks the path!</h3>
+    <div class="sub">5 questions on sizing, trip classes &amp; overload behavior · Defeat to unlock the Boss Fight</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">17</div>
+</section>
+
+<!-- ============= PAGE 18 — BOSS INTRO ============= -->
+<section class="page boss-page" data-section-id="finalboss" style="display:flex;flex-direction:column;align-items:center;text-align:center">
+  <div class="page-tag" style="color:#34D399">▸ TEST · BOSS FIGHT</div>
+  <div style="margin-top:.6in"><div class="level-banner lvl-test" style="margin:0 auto">🎯 TEST LEVEL</div></div>
+  <h2 style="margin-top:20px;font-size:54px">The Starter<br>Gauntlet.</h2>
+  <svg width="320" height="320" viewBox="0 0 320 320" style="margin-top:14px">
+    <defs>
+      <linearGradient id="bossC" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FECDD3"/>
+        <stop offset="100%" stop-color="#7F1D1D"/>
+      </linearGradient>
+      <filter id="bossglow5"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <g transform="translate(160 160)">
+      <!-- big contactor body -->
+      <rect x="-110" y="-110" width="220" height="220" rx="16" fill="url(#bossC)" stroke="#FCD34D" stroke-width="3" filter="url(#bossglow5)"/>
+      <!-- coil window -->
+      <rect x="-72" y="-78" width="144" height="56" fill="#0F172A" stroke="#FCD34D" stroke-width="2"/>
+      <!-- evil eyes -->
+      <circle cx="-30" cy="-50" r="9" fill="#EF4444"/>
+      <circle cx="30" cy="-50" r="9" fill="#EF4444"/>
+      <circle cx="-28" cy="-52" r="3" fill="#FCD34D"/>
+      <circle cx="32" cy="-52" r="3" fill="#FCD34D"/>
+      <!-- snarl -->
+      <path d="M -40 -30 L -25 -40 L -10 -30 L 5 -40 L 20 -30 L 35 -40 L 50 -30" fill="none" stroke="#FCD34D" stroke-width="2"/>
+      <!-- three power poles -->
+      <g fill="#0F172A" stroke="#FCD34D" stroke-width="2">
+        <rect x="-70" y="10" width="36" height="90" rx="4"/>
+        <rect x="-18" y="10" width="36" height="90" rx="4"/>
+        <rect x="34" y="10" width="36" height="90" rx="4"/>
+      </g>
+    </g>
+  </svg>
+  <div style="width:80%;margin-top:14px">
+    <div style="display:flex;justify-content:space-between;color:#FACC15;font-weight:800;font-size:11px;letter-spacing:.1em;margin-bottom:6px">
+      <span>STARTER GAUNTLET · 60 HP</span><span>STATUS: HOSTILE</span>
+    </div>
+    <div class="hp-bar"><div class="fill"></div></div>
+  </div>
+  <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:18px 24px;margin-top:24px;width:80%">
+    <p style="color:#fff;font-size:14px"><b>30 questions · 2 XP each · 80%+ to win</b></p>
+    <p style="color:#94A3B8;font-size:13px;margin-top:8px">No peeking. Score honest. 24/30 = 🔌 Starter Mastery badge.</p>
+  </div>
+  <div class="page-num" style="color:#64748B">18</div>
+</section>
+
+<!-- ============= PAGE 19 — ROUND 1 (Q1-6) CONTACTOR FUNDAMENTALS ============= -->
+<section class="page boss-page" data-quiz-page="1" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 1 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 1 · CONTACTOR FUNDAMENTALS</div>
+    <div style="color:#34D399;font-weight:800;font-size:11px;letter-spacing:.1em">Q 1 → 6</div>
+  </div>
+  <div class="hp-bar" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="1"></div><div class="qcard" data-q="2"></div>
+    <div class="qcard" data-q="3"></div><div class="qcard" data-q="4"></div>
+    <div class="qcard" data-q="5"></div><div class="qcard" data-q="6"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">19</div>
+</section>
+
+<!-- ============= PAGE 20 — ROUND 2 (Q7-12) OVERLOAD RELAYS ============= -->
+<section class="page boss-page" data-quiz-page="2" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 2 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 2 · OVERLOAD RELAYS</div>
+    <div style="color:#34D399;font-weight:800;font-size:11px;letter-spacing:.1em">Q 7 → 12</div>
+  </div>
+  <div class="hp-bar r2" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="7"></div><div class="qcard" data-q="8"></div>
+    <div class="qcard" data-q="9"></div><div class="qcard" data-q="10"></div>
+    <div class="qcard" data-q="11"></div><div class="qcard" data-q="12"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">20</div>
+</section>
+
+<!-- ============= PAGE 21 — ROUND 3 (Q13-18) TRIP CLASSES & SIZING ============= -->
+<section class="page boss-page" data-quiz-page="3" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 3 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 3 · TRIP CLASSES &amp; SIZING</div>
+    <div style="color:#FBBF24;font-weight:800;font-size:11px;letter-spacing:.1em">Q 13 → 18</div>
+  </div>
+  <div class="hp-bar r3" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="13"></div><div class="qcard" data-q="14"></div>
+    <div class="qcard" data-q="15"></div><div class="qcard" data-q="16"></div>
+    <div class="qcard" data-q="17"></div><div class="qcard" data-q="18"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">21</div>
+</section>
+
+<!-- ============= PAGE 22 — ROUND 4 (Q19-24) STARTER ANATOMY & SELECTION ============= -->
+<section class="page boss-page" data-quiz-page="4" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 4 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 4 · STARTER ANATOMY &amp; SELECTION</div>
+    <div style="color:#F97316;font-weight:800;font-size:11px;letter-spacing:.1em">Q 19 → 24</div>
+  </div>
+  <div class="hp-bar r4" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="19"></div><div class="qcard" data-q="20"></div>
+    <div class="qcard" data-q="21"></div><div class="qcard" data-q="22"></div>
+    <div class="qcard" data-q="23"></div><div class="qcard" data-q="24"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">22</div>
+</section>
+
+<!-- ============= PAGE 23 — ROUND 5 (Q25-30) SALES & SCENARIOS ============= -->
+<section class="page boss-page" data-quiz-page="5" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 5 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 FINAL ROUND · SALES &amp; SCENARIOS</div>
+    <div style="color:#EF4444;font-weight:800;font-size:11px;letter-spacing:.1em">Q 25 → 30 · KILL SHOT</div>
+  </div>
+  <div class="hp-bar r5" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="25"></div><div class="qcard" data-q="26"></div>
+    <div class="qcard" data-q="27"></div><div class="qcard" data-q="28"></div>
+    <div class="qcard" data-q="29"></div><div class="qcard" data-q="30"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">23</div>
+</section>
+
+<!-- ============= PAGE 24 — ANSWER KEY / RESULTS ============= -->
+<section class="page" id="resultsPage" data-section-id="results">
+  <div class="page-tag" style="color:#10B981">▸ FINAL BOSS · RESULTS</div>
+  <div class="level-banner lvl-test" style="margin-top:.4in">🎯 ANSWER KEY · YOUR RESULTS</div>
+  <h2 style="margin-top:14px">🗝️ The Key.</h2>
+  <p class="lead print-only" style="display:none">Score yourself. Tier yourself. Earn the badge.</p>
+
+  <div id="liveResults" class="interactive-only" style="margin-top:18px;background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:18px;padding:24px;color:#fff">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+      <div>
+        <p style="color:#94A3B8;font-size:11px;letter-spacing:.18em;font-weight:800;margin:0">▸ YOUR LIVE SCORE</p>
+        <p style="font-family:'Bricolage Grotesque';font-size:54px;font-weight:800;color:#FACC15;margin-top:4px;line-height:1">
+          <span id="scoreCorrect">0</span><span style="color:#475569">/30</span>
+        </p>
+        <p style="font-size:13px;color:#CBD5E1;margin-top:4px">Total XP: <b id="scoreXP" style="color:#34D399">0</b> <span style="color:#475569">/ 280</span></p>
+      </div>
+      <div id="tierBadge" style="text-align:center"></div>
+    </div>
+    <div style="margin-top:14px;background:#334155;height:14px;border-radius:7px;overflow:hidden;border:1px solid #475569">
+      <div id="scoreBar" style="height:100%;width:0%;background:linear-gradient(90deg,#10B981,#34D399);transition:width .4s ease"></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button id="submitBtn" style="background:linear-gradient(135deg,#10B981,#047857);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📤 SUBMIT TO TRAINER</button>
+      <button id="copyBtn" style="background:#BE123C;color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📋 COPY RESULTS</button>
+      <button id="resetBtn" style="background:#1E293B;color:#FACC15;border:1px solid #475569;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">↻ RESTART QUIZ</button>
+    </div>
+    <div id="submitStatus" style="margin-top:10px;font-size:12px;font-weight:700;color:#94A3B8;min-height:18px;white-space:pre-wrap"></div>
+  </div>
+
+  <div class="answer-key-static">
+  <div class="key-grid">
+    <div class="key-cell"><span>Q1</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q2</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q3</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q4</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q5</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q6</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q7</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q8</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q9</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q10</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q11</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q12</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q13</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q14</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q15</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q16</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q17</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q18</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q19</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q20</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q21</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q22</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q23</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q24</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q25</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q26</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q27</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q28</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q29</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q30</span><span class="a">C</span></div>
+  </div>
+
+  <h3 style="margin-top:24px">🏆 Scoring tiers</h3>
+  <div class="tier tier-gold"><div class="medal">🥇</div><div><b>24–30 correct → STARTER MASTERY.</b> Earn the 🔌 badge. You quote starters like an engineer.</div></div>
+  <div class="tier tier-silver"><div class="medal">🥈</div><div><b>18–23 correct → STARTER-READY.</b> Re-run the APPLY level and re-fight.</div></div>
+  <div class="tier tier-bronze"><div class="medal">🥉</div><div><b>0–17 correct → BACK TO THE BLOCKS.</b> Re-read LEARN. The Oracle waits.</div></div>
+  </div><!-- /answer-key-static -->
+  <div class="page-num">24</div>
+</section>
+
+<!-- ============= PAGE 25 — LOOT DROP / CHEAT SHEET ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ LOOT DROP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">💎 POCKET CHEAT SHEET</div>
+  <h2 style="margin-top:14px">Tear-out card.</h2>
+  <p class="lead">Print it. Tape it next to your phone. Reference forever.</p>
+
+  <div class="loot" style="margin-top:18px">
+    <div class="stamp">✂ TEAR HERE</div>
+
+    <h3>🔌 What each device does</h3>
+    <p><b>Contactor</b> = switches motor ON/OFF (does NOT protect). <b>Overload relay</b> = protects motor from overheating (does NOT interrupt short circuits). <b>Breaker/fuse</b> = upstream short-circuit protection.</p>
+
+    <h3>⚙️ What a starter really is</h3>
+    <p><b>STARTER = CONTACTOR + OVERLOAD</b>, with short-circuit protection upstream. May also include disconnect, breaker, enclosure, control transformer, operator devices.</p>
+
+    <h3>📞 The 5 first questions</h3>
+    <p>1) Motor voltage, HP, FLA · 2) Control coil voltage · 3) Load type (normal / high inertia) · 4) Start frequency · 5) NEMA or IEC preference</p>
+
+    <h3>🛠️ Contactor selection</h3>
+    <p>✔ Coil voltage = control circuit voltage · ✔ HP &amp; current rating ≥ motor · ✔ AC-3 duty for standard motors · ✔ 3 poles for three-phase. ❌ Never assume coil voltage.</p>
+
+    <h3>🛡️ Overload selection</h3>
+    <p>✔ Size to <b>motor FLA</b> (not HP) · ✔ Trip class matches the load (10 / 20 / 30) · ✔ Adjustable range covers the FLA. ❌ Never oversize "to be safe."</p>
+
+    <h3>⏱ Trip class quick guide</h3>
+    <p><b>Class 10</b> standard motors (default) · <b>Class 20</b> higher inertia · <b>Class 30</b> very high inertia / long start.</p>
+
+    <h3>🌡️ Thermal vs Electronic</h3>
+    <p><b>Thermal</b> = simple, reliable, bimetal, no diagnostics. <b>Electronic</b> = precise, phase-loss detection, adjustable trip class, comms options.</p>
+
+    <h3>🚨 5 Mistakes to Avoid</h3>
+    <p>Calling a contactor a starter · Forgetting overload protection · Oversizing overloads · Ignoring trip class · Mixing IEC and NEMA without checking equivalency.</p>
+
+    <h3>🧠 The Memory Hook</h3>
+    <p style="font-size:16px;font-weight:800;color:#BE123C">The contactor switches it. The overload protects it. Together they make the starter.</p>
+  </div>
+  <div class="page-num">25</div>
+</section>
+
+<!-- ============= PAGE 26 — TROPHY CASE ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ FINAL XP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">🏅 TROPHY CASE</div>
+  <h2 style="margin-top:14px">Your earned XP.</h2>
+
+  <div class="trophy-grid">
+    <div class="trophy"><div class="icon">🧠</div><h3>BUILDING BLOCKS LOCKED</h3><div class="xp-num">+80 XP</div></div>
+    <div class="trophy"><div class="icon">🧲</div><h3>MINI BOSSES</h3><div class="xp-num">+50 XP</div></div>
+    <div class="trophy"><div class="icon">💼</div><h3>STARTER-READY</h3><div class="xp-num">+90 XP</div></div>
+    <div class="trophy"><div class="icon">🔌</div><h3>STARTER MASTERY</h3><div class="xp-num">+60 XP</div></div>
+  </div>
+
+  <div class="factbox" style="margin-top:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="font-size:16px">TOTAL POSSIBLE XP</h3>
+      <div style="font-family:'Bricolage Grotesque';font-size:46px;font-weight:800;color:#CA8A04">280</div>
+    </div>
+    <hr class="faint">
+    <p style="font-size:12px;color:var(--slate-500)">Five product-mastery volumes cleared. Up next: Soft Starters · VFDs · Motor Control Centers · Pump Controls — all of which build on what you just learned here.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:18px">
+    🔓 <b>NEXT UNLOCKS:</b> Soft starters and VFDs are essentially fancy contactor + overload assemblies with electronics in between. The building blocks stay the same.
+  </div>
+  <div class="page-num">26</div>
+</section>
+
+<!-- ============= PAGE 27 — CLOSING ============= -->
+<section class="page closing-page" data-section-id="results">
+  <h1 style="font-size:84px">🔌</h1>
+  <h1 style="margin-top:14px">Switch it.<br>Protect it.<br>Sell the starter.</h1>
+  <p style="font-size:20px;max-width:5.5in;margin:24px auto 0">Contactors and overload relays are the two building blocks behind every motor starter, soft starter, motor control center, and VFD package. Master them once and the rest of motor control gets a lot easier.</p>
+
+  <div style="margin-top:40px;display:flex;gap:18px;flex-wrap:wrap;justify-content:center">
+    <div style="background:rgba(254,205,211,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(254,205,211,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#FECDD3">🧠 LEARN the blocks</div>
+    <div style="background:rgba(254,205,211,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(254,205,211,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#FECDD3">🛠️ APPLY the sizing</div>
+    <div style="background:rgba(254,205,211,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(254,205,211,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#FECDD3">🎯 TEST your starters</div>
+  </div>
+
+  <div style="margin-top:auto;padding-top:30px;text-align:center">
+    <p style="color:#FACC15;font-size:13px;letter-spacing:.18em;font-weight:800">▸ NEXT UP</p>
+    <p style="font-size:14px;color:#fff;margin-top:6px">Soft Starters · VFDs &amp; Drives · Motor Control Centers · Pump Controls</p>
+    <p style="margin-top:30px;color:#FECDD3;font-size:12px;font-weight:800;letter-spacing:.18em">RSP INDUSTRIAL · PRODUCT MASTERY · VOL 05</p>
+  </div>
+</section>
+
+<!-- ADMIN OVERLAY (browser only) -->
+<div id="adminOverlay" class="interactive-only"></div>
+
+<script src="../shared/module.js?v=editor-blocks-2-page-delete"></script>
+<script>
+RSPModule.init({
+  moduleId:   "contactors-overloads",
+  moduleName: "Contactors & Overload Relays",
+  moduleIcon: "🔌",
+
+  totalQuestions: 30,
+  passGold:       24,
+  passSilver:     18,
+  pageXpTotal:    170,   // 8 LEARN × 10 + 6 APPLY × 15
+  minibossXpTotal: 50,
+  adminPassword:  (window.RSP_CONFIG && window.RSP_CONFIG.adminPassword) || "",
+  pumbleWebhookUrl: "",
+  storageKey: "rsp_contactors_progress",
+
+  tierBadges: {
+    gold:   { name:"STARTER MASTERY",   msg:"Quote starters like an engineer." },
+    silver: { name:"STARTER-READY",     msg:"Re-run APPLY level and re-fight." },
+    bronze: { name:"BACK TO THE BLOCKS", msg:"Re-read LEARN. The Oracle waits." }
+  },
+  tierSubmitText: {
+    gold:   "🥇 Starter Mastery",
+    silver: "🥈 Starter-Ready — Re-run APPLY level",
+    bronze: "🥉 Needs Re-do — Back to LEARN"
+  },
+
+  // -------- THE 30-QUESTION BOSS FIGHT --------
+  quiz: [
+    // ROUND 1 — Contactor Fundamentals
+    {n:1,  q:"What is the primary function of a contactor?", opts:{A:"Protect a motor from overheating",B:"Interrupt short-circuit faults",C:"Switch motor power on and off",D:"Control motor speed"}, c:"C"},
+    {n:2,  q:"A contactor is best described as a:", opts:{A:"Circuit breaker",B:"Heavy-duty relay for motor loads",C:"Motor protection device",D:"Variable speed controller"}, c:"B"},
+    {n:3,  q:"Which component energizes a contactor?", opts:{A:"Main contacts",B:"Overload relay",C:"Control coil",D:"Trip unit"}, c:"C"},
+    {n:4,  q:"When a contactor coil is energized, what happens?", opts:{A:"The overload trips",B:"The motor speed changes",C:"The main contacts close",D:"Short-circuit protection activates"}, c:"C"},
+    {n:5,  q:"Which function does a contactor NOT perform?", opts:{A:"Switching",B:"Remote control",C:"Overload protection",D:"Repeated motor starting"}, c:"C"},
+    {n:6,  q:"Most three-phase motors require how many contactor poles?", opts:{A:"One",B:"Two",C:"Three",D:"Four"}, c:"C"},
+
+    // ROUND 2 — Overload Relays
+    {n:7,  q:"What is the primary purpose of an overload relay?", opts:{A:"Switch motor power",B:"Protect against short circuits",C:"Protect the motor from overheating",D:"Control motor direction"}, c:"C"},
+    {n:8,  q:"Overload relays protect motors primarily against:", opts:{A:"Instantaneous short-circuit faults",B:"Sustained overcurrent conditions",C:"Voltage spikes",D:"Ground faults"}, c:"B"},
+    {n:9,  q:"Why don't overload relays trip during motor startup?", opts:{A:"They are disabled during startup",B:"Motors don't draw current at startup",C:"Overloads are inverse-time devices",D:"Startup current is lower than running current"}, c:"C"},
+    {n:10, q:"Which device protects against short-circuit faults?", opts:{A:"Contactor",B:"Overload relay",C:"Circuit breaker or fuse",D:"Auxiliary contact"}, c:"C"},
+    {n:11, q:"Which overload type uses bimetal strips that bend with heat?", opts:{A:"Electronic overload",B:"Solid-state overload",C:"Thermal overload",D:"Digital overload"}, c:"C"},
+    {n:12, q:"Which overload type offers phase-loss detection and remote diagnostics?", opts:{A:"Thermal",B:"Mechanical",C:"Electronic",D:"Manual"}, c:"C"},
+
+    // ROUND 3 — Trip Classes & Sizing
+    {n:13, q:"How should an overload relay be sized?", opts:{A:"By horsepower only",B:"By contactor frame size",C:"By motor full-load amps (FLA)",D:"By contactor rating"}, c:"C"},
+    {n:14, q:"What happens if an overload relay is oversized?", opts:{A:"It trips faster",B:"No impact on motor",C:"Reduced motor protection — motor can cook before the OL trips",D:"Increased efficiency"}, c:"C"},
+    {n:15, q:"What happens if an overload relay is undersized?", opts:{A:"Motor damage on the first start",B:"Nuisance tripping during normal starts",C:"Increased motor torque",D:"Higher motor efficiency"}, c:"B"},
+    {n:16, q:"What does a trip class define?", opts:{A:"Coil voltage rating",B:"Short-circuit rating",C:"How fast the overload trips under sustained overcurrent",D:"Number of poles"}, c:"C"},
+    {n:17, q:"Which trip class is most common for standard motors?", opts:{A:"Class 5",B:"Class 10",C:"Class 20",D:"Class 30"}, c:"B"},
+    {n:18, q:"Higher-inertia loads (large fans, centrifuges) typically require:", opts:{A:"A lower trip class",B:"A higher trip class (20 or 30)",C:"A smaller overload",D:"Faster tripping"}, c:"B"},
+
+    // ROUND 4 — Starter Anatomy & Selection
+    {n:19, q:"Where is an overload relay typically installed in a motor circuit?", opts:{A:"Upstream of the breaker",B:"In series with the motor, after the contactor",C:"Across the motor terminals",D:"Inside the PLC"}, c:"B"},
+    {n:20, q:"When an overload trips, what typically happens?", opts:{A:"The upstream breaker trips",B:"The contactor coil de-energizes and the motor stops",C:"The motor speeds up",D:"Voltage to the motor increases"}, c:"B"},
+    {n:21, q:"What best describes a motor starter?", opts:{A:"A contactor only",B:"An overload relay only",C:"A contactor and overload relay combined",D:"A circuit breaker"}, c:"C"},
+    {n:22, q:"What is the main purpose of auxiliary contacts on a contactor?", opts:{A:"Carry motor power current",B:"Control logic, signaling, and seal-in",C:"Protect against overloads",D:"Interrupt short circuits"}, c:"B"},
+    {n:23, q:"Which device senses motor current continuously?", opts:{A:"Contactor",B:"Circuit breaker",C:"Overload relay",D:"Disconnect switch"}, c:"C"},
+    {n:24, q:"Which contactor parameter MUST match the control circuit?", opts:{A:"Main contact current rating",B:"Coil voltage",C:"Number of auxiliary contacts",D:"Mounting style"}, c:"B"},
+
+    // ROUND 5 — Sales & Customer Scenarios
+    {n:25, q:"Which rating is critical when selecting a contactor?", opts:{A:"Enclosure color",B:"Coil voltage",C:"Handle style",D:"Wire insulation color"}, c:"B"},
+    {n:26, q:"What does AC-3 duty rating indicate?", opts:{A:"Lighting loads",B:"Resistive heating loads",C:"Standard squirrel-cage motor starting",D:"DC motor control"}, c:"C"},
+    {n:27, q:"Which mistake is MOST common in contactor sales?", opts:{A:"Oversizing contactors",B:"Ignoring coil voltage",C:"Using three-pole contactors on three-phase motors",D:"Matching HP ratings to the motor"}, c:"B"},
+    {n:28, q:"Mixing IEC and NEMA components in the same starter requires:", opts:{A:"No consideration — they're interchangeable",B:"Matching frame size only",C:"Checking ratings and equivalency carefully",D:"Same enclosure color"}, c:"C"},
+    {n:29, q:"Best first question when quoting contactors and overload relays?", opts:{A:"What brand do you want?",B:"What color enclosure?",C:"Motor voltage, HP, and FLA — plus the control coil voltage?",D:"What is your budget?"}, c:"C"},
+    {n:30, q:"Which statement is TRUE?", opts:{A:"Contactors protect motors from overloads",B:"Overload relays interrupt short circuits",C:"A starter is a contactor plus an overload relay",D:"Breakers replace overload relays"}, c:"C"}
+  ],
+
+  // -------- MINI-BOSSES --------
+  minibosses: {
+    'coil-phantom': {
+      name: 'COIL PHANTOM',
+      icon: '🧲',
+      tagline: 'Guardian of the Contactor',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"A contactor's primary job is to:", opts:{A:"Protect against overloads",B:"Interrupt short circuits",C:"Switch motor power on and off",D:"Step down voltage"}, c:"C"},
+        {q:"What energizes a contactor?", opts:{A:"Main contacts",B:"Overload relay",C:"Control coil",D:"Auxiliary contact"}, c:"C"},
+        {q:"AC-3 duty rating is used for:", opts:{A:"Resistive heaters",B:"Lighting loads",C:"Standard squirrel-cage motor starting",D:"DC braking"}, c:"C"},
+        {q:"Most three-phase motors use a contactor with how many poles?", opts:{A:"One",B:"Two",C:"Three",D:"Four"}, c:"C"},
+        {q:"A contactor by itself does NOT:", opts:{A:"Switch motor power",B:"Use a control coil",C:"Protect the motor from overheating",D:"Have main contacts"}, c:"C"}
+      ]
+    },
+    'overload-oracle': {
+      name: 'OVERLOAD ORACLE',
+      icon: '🔮',
+      tagline: 'Keeper of the Trip Class',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"How should an overload relay be sized?", opts:{A:"By horsepower only",B:"By motor FLA (full-load amps)",C:"By the contactor's rating",D:"By the enclosure size"}, c:"B"},
+        {q:"Most common trip class for standard motors:", opts:{A:"Class 5",B:"Class 10",C:"Class 20",D:"Class 30"}, c:"B"},
+        {q:"Overloads don't trip during motor startup because:", opts:{A:"They are disabled at startup",B:"Startup current is lower than running current",C:"Overloads are inverse-time devices",D:"They reset automatically"}, c:"C"},
+        {q:"When an overload trips, what happens?", opts:{A:"The breaker trips",B:"The contactor coil de-energizes and the motor stops",C:"The motor speeds up",D:"Voltage increases"}, c:"B"},
+        {q:"An oversized overload causes:", opts:{A:"Faster tripping",B:"No impact",C:"Reduced motor protection — motor can cook",D:"Higher motor efficiency"}, c:"C"}
+      ]
+    }
+  },
+
+  // -------- SIDE MAP --------
+  mapSections: [
+    {id:'intro',      name:'Start',           icon:'🏁', meta:'Pages 1–3',     firstPage:1},
+    {id:'contactors', name:'Contactors',      icon:'🔌', meta:'Pages 4–8',     firstPage:4},
+    {id:'overloads',  name:'Overload Relays', icon:'🛡️', meta:'Pages 9–11',    firstPage:9},
+    {id:'mb1',        name:'Coil Phantom',    icon:'🧲', meta:'Mini Boss',     firstPage:11, isBoss:true, bossId:'coil-phantom'},
+    {id:'sizing',     name:'Sizing & Trips',  icon:'⏱', meta:'Pages 12–13',    firstPage:12},
+    {id:'starter',    name:'Starter Anatomy', icon:'⚙️', meta:'Pages 14–15',   firstPage:14},
+    {id:'apply',      name:'Sales Skills',    icon:'💼', meta:'Pages 16–17',   firstPage:16},
+    {id:'mb2',        name:'Overload Oracle', icon:'🔮', meta:'Mini Boss',     firstPage:17, isBoss:true, bossId:'overload-oracle'},
+    {id:'finalboss',  name:'Starter Gauntlet',icon:'🐲', meta:'30 Questions',  firstPage:18, isBoss:true, isFinal:true},
+    {id:'results',    name:'Results',         icon:'🏆', meta:'Trophy Case',   firstPage:24}
+  ],
+
+  pageRanges: [
+    {section:'intro',      from:1,  to:3},
+    {section:'contactors', from:4,  to:8},
+    {section:'overloads',  from:9,  to:11},
+    {section:'sizing',     from:12, to:13},
+    {section:'starter',    from:14, to:15},
+    {section:'apply',      from:16, to:17},
+    {section:'finalboss',  from:18, to:23},
+    {section:'results',    from:24, to:27}
+  ]
+});
+</script>
+
+</body>
+</html>

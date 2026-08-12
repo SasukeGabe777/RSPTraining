@@ -1,0 +1,205 @@
+/* ============================================================
+   RSP TRAINING PORTAL — FLIPBOOK VIEWER STYLES
+   Styling for the StPageFlip-based PDF training viewer.
+   Scoped under .rsp-flipbook so it can't bleed into the portal.
+   ============================================================ */
+
+.rsp-flipbook{
+  --fb-bg:#091722;
+  --fb-panel:#102332;
+  --fb-accent:#D98245;
+  --fb-accent-deep:#B75B28;
+  --fb-slate:#365F7D;
+  --fb-slate9:#94A3B8;
+  display:flex;
+  flex-direction:column;
+  background:var(--fb-bg);
+  border-radius:14px;
+  overflow:hidden;
+}
+
+/* ── stage where the book is mounted ── */
+.rsp-flipbook-stage{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px 16px;
+  min-height:320px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(229,114,37,.05), transparent 60%),
+    linear-gradient(160deg,#163247,#091722);
+}
+.rsp-flipbook-book{ margin:0 auto; width:100%; touch-action:pan-y; }
+/* StPageFlip injects .stf__parent / .stf__block — keep them centered */
+.rsp-flipbook-book .stf__parent{ margin:0 auto; }
+
+/* page image fills its leaf; soft inner shadow at the spine for depth */
+.rsp-flipbook-page{
+  background:#fff;
+  width:100%;
+  height:100%;
+  position:relative;
+  overflow:hidden;
+}
+.rsp-flipbook-page img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  background:#fff;
+  -webkit-user-drag:none;
+  user-select:none;
+}
+.rsp-flipbook-page--right::before,
+.rsp-flipbook-page--left::after{
+  content:"";
+  position:absolute;
+  top:0;bottom:0;
+  width:28px;
+  pointer-events:none;
+}
+.rsp-flipbook-page--right::before{ left:0; background:linear-gradient(to right, rgba(0,0,0,.22), transparent); }
+.rsp-flipbook-page--left::after{ right:0; background:linear-gradient(to left, rgba(0,0,0,.22), transparent); }
+
+/* hard cover treatment */
+.rsp-flipbook-page--cover{
+  background:linear-gradient(135deg,#1E293B,#0F172A);
+}
+.rsp-flipbook-page--cover img{ background:transparent; }
+
+/* ── loading / empty states ── */
+.rsp-flipbook-loading,
+.rsp-flipbook-msg{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  text-align:center;
+  padding:56px 28px;
+  color:var(--fb-slate9);
+  min-height:320px;
+}
+.rsp-flipbook-msg .fb-ico{ font-size:46px; line-height:1; }
+.rsp-flipbook-msg h4{ color:#fff; font-size:18px; margin:0; }
+.rsp-flipbook-msg p{ font-size:13px; line-height:1.5; max-width:420px; margin:0; }
+.rsp-flipbook-spinner{
+  width:42px;height:42px;border-radius:50%;
+  border:4px solid rgba(148,163,184,.25);
+  border-top-color:var(--fb-accent);
+  animation:rspfb-spin .9s linear infinite;
+}
+@keyframes rspfb-spin{ to{ transform:rotate(360deg); } }
+.rsp-flipbook-progress-text{ font-size:12px; color:var(--fb-slate9); }
+.rsp-flipbook-bar{
+  width:min(320px,80%);height:6px;border-radius:999px;
+  background:rgba(148,163,184,.2);overflow:hidden;
+}
+.rsp-flipbook-bar > span{
+  display:block;height:100%;width:0;border-radius:999px;
+  background:linear-gradient(90deg,var(--fb-accent),var(--fb-accent-deep));
+  transition:width .3s ease;
+}
+
+/* ── controls bar ── */
+.rsp-flipbook-controls{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 16px;
+  background:var(--fb-panel);
+  border-top:1px solid var(--fb-slate);
+  flex-wrap:wrap;
+}
+.rsp-fb-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 14px;border-radius:9px;border:1px solid var(--fb-slate);
+  background:#1E293B;color:#fff;font:inherit;font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .15s;line-height:1;
+}
+.rsp-fb-btn:hover:not(:disabled){ background:var(--fb-slate); }
+.rsp-fb-btn:disabled{ opacity:.35;cursor:not-allowed; }
+.rsp-fb-counter{
+  font-size:12px;font-weight:700;color:var(--fb-slate9);
+  min-width:96px;text-align:center;letter-spacing:.04em;
+}
+.rsp-fb-track{
+  flex:1;height:6px;border-radius:999px;background:rgba(148,163,184,.2);
+  min-width:120px;overflow:hidden;
+}
+.rsp-fb-track > span{
+  display:block;height:100%;width:0;border-radius:999px;
+  background:linear-gradient(90deg,var(--fb-accent),var(--fb-accent-deep));
+  transition:width .25s ease;
+}
+.rsp-fb-spacer{ flex:1; }
+
+/* completion button: dim until the learner reaches the last page */
+.rsp-fb-complete{
+  background:linear-gradient(135deg,var(--fb-accent),var(--fb-accent-deep));
+  color:#0F172A;border:none;
+}
+.rsp-fb-complete:hover:not(:disabled){ transform:translateY(-1px); }
+.rsp-fb-complete.is-done{
+  background:#065F46;color:#A7F3D0;cursor:default;transform:none;
+}
+
+/* ── video pages ── */
+.rsp-flipbook-page--video{
+  background:#0B1220;
+  display:flex;
+  align-items:stretch;
+}
+.rsp-fb-video-page{
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  height:100%;
+  padding:20px 16px 16px;
+  gap:10px;
+}
+.rsp-fb-video-title{
+  color:#fff;
+  font-weight:800;
+  font-size:13px;
+  text-align:center;
+  letter-spacing:.02em;
+  flex-shrink:0;
+  padding:0 8px;
+  line-height:1.3;
+}
+.rsp-fb-video-iframe{
+  flex:1;
+  width:100%;
+  border:none;
+  border-radius:10px;
+  background:#000;
+  min-height:0;
+}
+
+/* ── fullscreen ── */
+.rsp-flipbook:fullscreen{ border-radius:0; }
+.rsp-flipbook:fullscreen .rsp-flipbook-stage{ flex:1; padding:4px; }
+
+/* simulated fullscreen — iOS Safari and any browser without native support */
+.rsp-flipbook.rsp-fs-sim{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:9999 !important;
+  border-radius:0 !important;
+  width:100% !important;
+  height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+}
+.rsp-flipbook.rsp-fs-sim .rsp-flipbook-stage{ flex:1; padding:4px; }
+
+/* ── mobile single-page: nothing special needed — StPageFlip handles the
+   portrait/single mode; we just keep the stage padding tighter. ── */
+@media(max-width:600px){
+  .rsp-flipbook-stage{ padding:14px 6px; min-height:380px; }
+  .rsp-flipbook-controls{ padding:10px; gap:8px; }
+  .rsp-fb-btn{ padding:8px 11px;font-size:12px; }
+  .rsp-fb-counter{ min-width:78px; }
+}

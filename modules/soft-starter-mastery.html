@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Soft Starter Mastery — RSP Industrial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/module.css?v=editor-blocks-2-page-delete">
+<style>
+  /* === SOFT STARTER MASTERY · CRIMSON THEME === */
+  :root{
+    --theme-primary:#DC2626;
+    --theme-primary-deep:#7F1D1D;
+    --theme-accent:#FCA5A5;
+    --theme-obj-num:#DC2626;
+    --theme-login-btn-1:#DC2626;
+    --theme-login-btn-2:#EF4444;
+    --theme-login-pretitle:#DC2626;
+    --theme-login-focus:#DC2626;
+    --theme-side-bg:#7F1D1D;
+    --theme-side-border:#991B1B;
+    --theme-side-toggle:#991B1B;
+    --theme-loot-border:#DC2626;
+    --theme-loot-bg-1:#FEF2F2;
+    --theme-loot-bg-2:#FEE2E2;
+    --theme-loot-h3:#7F1D1D;
+    --theme-admin-btn:#DC2626;
+    --theme-admin-loginbox-border:#991B1B;
+  }
+
+  .ss-card{background:var(--slate-50);border:2px solid var(--slate-200);border-radius:14px;padding:16px;margin-bottom:10px}
+  .ss-card .sc-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .ss-card .sc-name{font-family:'Bricolage Grotesque';font-size:18px;font-weight:800;color:#7F1D1D}
+  .ss-card .sc-tag{font-size:10px;font-weight:700;color:#64748B;letter-spacing:.08em;text-transform:uppercase}
+  .ss-card .sc-body,.ss-card .sc-list{font-size:12.5px;color:#334155;line-height:1.5;margin-top:4px}
+  .ss-card .sc-list li{margin-left:18px}
+
+  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .compare-card{border-radius:14px;padding:18px;border:2px solid}
+  .compare-card h3{font-size:16px}
+  .compare-card p,.compare-card li{font-size:12.5px;line-height:1.5}
+  .compare-card ul{margin-top:8px}
+  .compare-card li{margin-left:18px}
+  .compare-card.atl{background:linear-gradient(160deg,#F8FAFC,#E2E8F0);border-color:#64748B;color:#0F172A}
+  .compare-card.soft{background:linear-gradient(160deg,#FEF2F2,#FEE2E2);border-color:#DC2626;color:#7F1D1D}
+  .compare-card.vfd{background:linear-gradient(160deg,#FFF7ED,#FED7AA);border-color:#F97316;color:#9A3412}
+  .compare-card.good{background:linear-gradient(160deg,#F0FDF4,#DCFCE7);border-color:#16A34A;color:#14532D}
+  .compare-card.bad{background:linear-gradient(160deg,#F8FAFC,#E2E8F0);border-color:#64748B;color:#334155}
+
+  .aha-card{background:linear-gradient(160deg,#FEF2F2,#FEE2E2);border:3px solid #DC2626;border-radius:18px;padding:24px;margin-top:14px}
+  .aha-card h3{color:#7F1D1D;font-size:22px}
+  .signal-flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .signal-flow .node{background:#fff;border:2px solid #FCA5A5;border-radius:12px;padding:14px 16px;min-width:118px;text-align:center;font-size:13px;font-weight:800;color:#7F1D1D;line-height:1.3}
+  .signal-flow .node .sub{display:block;font-size:10px;color:#64748B;font-weight:700;letter-spacing:.05em;margin-top:3px;text-transform:uppercase}
+  .signal-flow .node.dark{background:#7F1D1D;border-color:#FCA5A5;color:#fff}
+  .signal-flow .arrow{font-size:26px;color:#DC2626;line-height:1}
+
+  .method-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .method-card{background:#fff;border:2px solid #FCA5A5;border-radius:16px;padding:16px}
+  .method-card .tag{font-size:10px;font-weight:800;letter-spacing:.1em;color:#DC2626;text-transform:uppercase}
+  .method-card h3{font-size:18px;color:#7F1D1D;margin-top:8px}
+  .method-card p{font-size:12.5px;color:#334155;line-height:1.5;margin-top:6px}
+
+  .heat-gauge{margin-top:16px}
+  .heat-gauge .meta{display:flex;justify-content:space-between;color:#64748B;font-size:11px;font-weight:800;letter-spacing:.06em}
+  .heat-gauge .track{display:flex;height:22px;border-radius:999px;overflow:hidden;border:1px solid #FCA5A5;margin-top:8px}
+  .heat-gauge .seg{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;letter-spacing:.05em}
+  .heat-gauge .light{flex:1;background:#DCFCE7;color:#166534}
+  .heat-gauge .medium{flex:1.2;background:#FEF3C7;color:#92400E}
+  .heat-gauge .heavy{flex:1.3;background:#FED7AA;color:#9A3412}
+  .heat-gauge .extreme{flex:1.5;background:#FCA5A5;color:#7F1D1D}
+
+  .matrix{width:100%;border-collapse:collapse;margin-top:12px;font-size:11.5px}
+  .matrix th{background:#FEE2E2;color:#7F1D1D;text-align:center;padding:10px 6px;font-weight:800;border:1px solid #FCA5A5;letter-spacing:.05em}
+  .matrix th.row-h{background:#F1F5F9;color:#0F172A;text-align:left;width:170px}
+  .matrix td{padding:10px 8px;border:1px solid #E2E8F0;color:#1E293B;font-weight:600;vertical-align:top}
+  .matrix td.lbl{background:#F8FAFC;font-weight:800;color:#0F172A;font-size:12px}
+  .matrix td.best{background:#DCFCE7;color:#166534;font-weight:800}
+  .matrix td.warn{background:#FEF3C7;color:#92400E;font-weight:800}
+  .matrix td.bad{background:#FEE2E2;color:#991B1B;font-weight:800}
+
+  .callout{background:linear-gradient(160deg,#FEF2F2,#FEE2E2);border:2px solid #DC2626;border-radius:14px;padding:16px;margin-top:10px}
+  .callout h3{color:#7F1D1D;font-size:16px}
+  .callout p{color:#7F1D1D;font-size:13px;margin-top:6px;line-height:1.5}
+
+  .question-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .question-pill{background:#fff;border:2px solid #FCA5A5;border-radius:14px;padding:14px}
+  .question-pill .num{font-size:11px;font-weight:800;letter-spacing:.08em;color:#DC2626}
+  .question-pill .ask{font-size:13px;font-weight:800;color:#0F172A;line-height:1.35;margin-top:6px}
+  .question-pill .why{font-size:12px;color:#475569;line-height:1.45;margin-top:6px}
+
+  .decision-card{background:#fff;border:2px solid #FCA5A5;border-radius:14px;padding:14px 16px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start}
+  .decision-card .q{flex:0 0 220px;font-size:12.5px;font-weight:800;color:#7F1D1D}
+  .decision-card .y,.decision-card .n{flex:1;font-size:12px;font-weight:700;padding:8px 10px;border-radius:8px}
+  .decision-card .y{background:#FEE2E2;color:#991B1B}
+  .decision-card .n{background:#FEF3C7;color:#92400E}
+
+  .translate-row .says{background:#FEE2E2;color:#991B1B}
+  .translate-row .means{background:#FEF3C7;color:#92400E}
+  .translate-row .quote-it{background:#DBEAFE;color:#1E40AF}
+
+  .mistake{display:flex;gap:14px;background:#fff;border:2px solid #E2E8F0;border-left:6px solid #DC2626;border-radius:12px;padding:14px;margin-top:10px}
+  .mistake .x{flex:0 0 38px;width:38px;height:38px;border-radius:50%;background:#FEE2E2;color:#7F1D1D;font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque'}
+  .mistake h3{font-size:15px;color:#0F172A}
+  .mistake p{font-size:12.5px;color:#475569;margin-top:4px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<a href="../index.html" id="portalLink" class="interactive-only">← PORTAL</a>
+
+<aside id="sideMap" class="interactive-only">
+  <button class="map-toggle" id="mapToggle" title="Toggle map">‹</button>
+  <div class="map-title">📈 RAMP MAP</div>
+  <div class="map-hint">YOUR JOURNEY</div>
+  <div class="map-path" id="mapPath"></div>
+</aside>
+
+<div id="minibossOverlay" class="interactive-only">
+  <div class="miniboss-modal" id="minibossModal"></div>
+</div>
+
+<div id="loginOverlay" class="interactive-only">
+  <div class="login-card">
+    <div class="bolt-bg">📈</div>
+    <div class="pretitle">RSP INDUSTRIAL · PRODUCT MASTERY</div>
+    <h1>Soft Starter<br>Mastery</h1>
+    <p class="sub">Sign in to track your XP and unlock the Boss Fight.</p>
+    <label for="loginName">Your name</label>
+    <input type="text" id="loginName" placeholder="e.g. Gabe Ebmeyer" autocomplete="off"/>
+    <label for="loginId">Employee ID <span style="font-weight:500;color:#94A3B8;letter-spacing:0">(optional)</span></label>
+    <input type="text" id="loginId" placeholder="e.g. RSP-1234" autocomplete="off"/>
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn">Begin Training →</button>
+    <p class="footer-note">Your progress is saved on this device. No data leaves your browser.</p>
+  </div>
+</div>
+
+<div id="xpTracker" class="interactive-only">
+  <div>
+    <div class="username" id="trackerUser">📈 READY</div>
+    <div class="label">XP EARNED</div>
+    <div><span class="num" id="trackerXP">0</span><span style="color:#475569;font-size:14px"> / 280</span></div>
+    <span class="reset-link" id="resetProgress">↻ Reset</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+    <div style="display:flex;gap:10px;font-size:10px;color:#94A3B8;white-space:nowrap;flex-wrap:wrap">
+      <span>📖&nbsp;<b style="color:#fff"><span id="trackerPages">0</span>/14</b></span>
+      <span>🎯&nbsp;<b style="color:#fff"><span id="trackerAnswered">0</span>/30</b></span>
+      <span>✓&nbsp;<b style="color:#fff"><span id="trackerCorrect">0</span></b></span>
+    </div>
+    <div class="bar"><div class="fill" id="trackerFill"></div></div>
+  </div>
+</div>
+
+<!-- ============= PAGE 1 — COVER ============= -->
+<section class="page cover">
+  <div class="ribbon">
+    <span class="badge">RSP INDUSTRIAL</span>
+    <span class="badge">PRODUCT MASTERY · MODULE 11</span>
+  </div>
+  <svg width="520" height="430" viewBox="0 0 520 430" style="position:absolute;right:-10px;top:90px;opacity:.96">
+    <defs>
+      <linearGradient id="ssg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FCA5A5"/>
+        <stop offset="100%" stop-color="#DC2626"/>
+      </linearGradient>
+      <linearGradient id="rampg" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#FCA5A5"/>
+        <stop offset="100%" stop-color="#7F1D1D"/>
+      </linearGradient>
+    </defs>
+    <g transform="translate(280 215)">
+      <rect x="-58" y="-108" width="116" height="216" rx="16" fill="url(#ssg)" stroke="#FEE2E2" stroke-width="3"/>
+      <rect x="-44" y="-90" width="88" height="18" rx="4" fill="#7F1D1D"/>
+      <text x="0" y="-77" text-anchor="middle" font-size="10" fill="#FCA5A5" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="1.5">SOFT START</text>
+      <rect x="-38" y="-56" width="76" height="46" rx="8" fill="#0F172A" stroke="#FCA5A5" stroke-width="2"/>
+      <path d="M -26 20 L -8 20 L 6 -10 L 22 -10 L 38 -42" fill="none" stroke="#FCA5A5" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="0" y="56" text-anchor="middle" font-size="11" fill="#fff" font-weight="800" font-family="JetBrains Mono">RAMP</text>
+      <circle cx="-26" cy="86" r="10" fill="#7F1D1D" stroke="#FEE2E2" stroke-width="2"/>
+      <circle cx="26" cy="86" r="10" fill="#7F1D1D" stroke="#FEE2E2" stroke-width="2"/>
+      <line x1="-26" y1="64" x2="-26" y2="102" stroke="#FEE2E2" stroke-width="3"/>
+      <line x1="26" y1="64" x2="26" y2="102" stroke="#FEE2E2" stroke-width="3"/>
+
+      <path d="M -220 68 L -184 68 L -184 -34 L -148 -34" fill="none" stroke="#EF4444" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="-182" y="106" text-anchor="middle" font-size="10" fill="#FCA5A5" font-weight="800" letter-spacing="1">ATL HIT</text>
+
+      <path d="M 58 68 C 86 68 96 60 112 44 S 146 10 166 -6 S 202 -22 224 -22" fill="none" stroke="url(#rampg)" stroke-width="8" stroke-linecap="round"/>
+      <text x="162" y="106" text-anchor="middle" font-size="10" fill="#FCA5A5" font-weight="800" letter-spacing="1">SOFT RAMP</text>
+
+      <circle cx="246" cy="-10" r="38" fill="#334155" stroke="#94A3B8" stroke-width="2.5"/>
+      <text x="246" y="-14" text-anchor="middle" font-size="12" fill="#fff" font-weight="800" font-family="Bricolage Grotesque">MTR</text>
+      <text x="246" y="4" text-anchor="middle" font-size="9" fill="#CBD5E1" font-weight="700">SMOOTHER</text>
+    </g>
+  </svg>
+  <div style="position:absolute;bottom:2.4in;left:.5in;right:.5in">
+    <div class="pill" style="background:rgba(252,165,165,.25);color:#FCA5A5;border:1px solid rgba(252,165,165,.4);margin-bottom:18px">PRODUCT MASTERY · MOTOR CONTROL</div>
+    <h1>SOFT STARTER<br>MASTERY</h1>
+    <div class="sub">Start smooth. Protect the mechanics. Quote the right ramp.</div>
+  </div>
+  <div class="tagline">
+    <div>The reduced-voltage answer when across-the-line hits too hard and a VFD is more than the job needs.</div>
+    <div>RSP · PROD 11</div>
+  </div>
+  <div class="page-num">1</div>
+</section>
+
+<!-- ============= PAGE 2 — THE PROMISE ============= -->
+<section class="page" data-section-id="intro">
+  <div class="page-tag">▸ THE PROMISE</div>
+  <div style="display:flex;gap:30px;margin-top:.5in;height:8.6in">
+    <div style="flex:1;display:flex;flex-direction:column">
+      <h2>Quote the right<br>soft start<br>every time.</h2>
+      <p class="lead" style="margin-top:14px">By the last page you will be able to:</p>
+      <ul class="objectives" style="margin-top:18px">
+        <li><span class="obj-num">1</span><span>Explain that a <b>soft starter controls voltage during startup and sometimes stop</b> — then bypasses itself once the motor is at speed.</span></li>
+        <li><span class="obj-num">2</span><span>Distinguish <b>ATL vs soft starter vs VFD</b> without confusing smoother starts with true speed control.</span></li>
+        <li><span class="obj-num">3</span><span>Choose the right start method: <b>voltage ramp, current limit, kick start, or soft stop</b>.</span></li>
+        <li><span class="obj-num">4</span><span>Size by <b>motor FLA, starts per hour, load inertia, and enclosure heat</b> instead of guessing off horsepower alone.</span></li>
+        <li><span class="obj-num">5</span><span>Hear the difference between a <b>soft-start problem</b> and a <b>VFD problem</b> before you quote the wrong product.</span></li>
+        <li><span class="obj-num">6</span><span>Pass the 30-question Boss Fight at 80%+ to earn the badge.</span></li>
+      </ul>
+      <div class="powerup" style="margin-top:20px">
+        💡 <b>The promise:</b> Most hard-start pain is not a speed-control problem. Once you hear inrush, water hammer, jerk, and weak-source clues, the right ramp solution gets obvious fast.
+      </div>
+    </div>
+    <div style="flex:0 0 2.4in;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="100" fill="none" stroke="#DC2626" stroke-width="6"/>
+        <circle cx="110" cy="110" r="75" fill="none" stroke="#DC2626" stroke-width="6" opacity=".6"/>
+        <circle cx="110" cy="110" r="50" fill="none" stroke="#DC2626" stroke-width="6" opacity=".4"/>
+        <circle cx="110" cy="110" r="25" fill="#DC2626"/>
+        <text x="110" y="115" text-anchor="middle" font-family="JetBrains Mono" font-size="13" fill="#fff" font-weight="800">RAMP</text>
+      </svg>
+      <div style="text-align:center">
+        <div style="font-family:'Bricolage Grotesque';font-size:28px;font-weight:800;color:#7F1D1D">280 XP</div>
+        <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.1em;text-transform:uppercase">Total reward</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">02</div>
+</section>
+
+<!-- ============= PAGE 3 — HOW TO PLAY ============= -->
+<section class="page" data-section-id="intro">
+  <div class="page-tag">▸ HOW TO PLAY</div>
+  <h2 style="margin-top:.4in">Three levels.<br>Two mini-bosses.<br>One badge.</h2>
+  <div style="display:flex;gap:14px;margin-top:30px">
+    <div class="level-card learn">
+      <div class="num">01</div>
+      <h3>LEARN</h3>
+      <p>8 pages. What soft starters do, how they compare to ATL and VFDs, SCR logic, best applications, start methods, sizing, heat, bypass, and protection.</p>
+      <div class="xp-pill">+10 XP / page</div>
+    </div>
+    <div class="level-card apply">
+      <div class="num">02</div>
+      <h3>APPLY</h3>
+      <p>6 pages. Pain-signal translation, qualifying questions, customer language, VFD upsell logic, substitution rules, and the decision path that closes the right quote.</p>
+      <div class="xp-pill">+15 XP / page</div>
+    </div>
+    <div class="level-card test">
+      <div class="num">03</div>
+      <h3>TEST</h3>
+      <p>30-question Boss Fight. Score 80%+ for the 📈 Soft Starter Master badge.</p>
+      <div class="xp-pill">+2 XP / correct</div>
+    </div>
+  </div>
+  <div class="powerup" style="margin-top:30px">
+    💡 <b>Two Mini-Bosses block the path.</b> The Inrush Ogre guards the startup fundamentals; the Speed Specter guards the sales logic that separates soft starters from VFDs. Each is worth +25 XP.
+  </div>
+  <div class="page-num">03</div>
+</section>
+
+<!-- ============= PAGE 4 — LEARN 01 ============= -->
+<section class="page" data-section-id="foundation">
+  <div class="page-tag" style="color:#F87171">▸ LEARN · 01 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 FOUNDATION · WHAT IT DOES</div>
+  <h2 style="margin-top:14px">A smoother start<br>for a fixed-speed motor.</h2>
+  <p class="lead" style="margin-top:6px">A soft starter reduces the electrical and mechanical shock of startup by controlling <b>voltage</b> as the motor accelerates. Some also control stop. What they do <b>not</b> do is run the motor at adjustable speed all day.</p>
+
+  <div class="aha-card">
+    <h3>The plain-English flow</h3>
+    <div class="signal-flow">
+      <div class="node">Incoming Power<span class="sub">full voltage available</span></div>
+      <div class="arrow">→</div>
+      <div class="node dark">SCR Ramp<span class="sub">controlled start</span></div>
+      <div class="arrow">→</div>
+      <div class="node">Reduced Inrush<span class="sub">less line hit</span></div>
+      <div class="arrow">→</div>
+      <div class="node">Bypass at Speed<span class="sub">runs full speed</span></div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px">
+    <div class="ss-card">
+      <div class="sc-head"><span style="font-size:22px">⚡</span><div><div class="sc-name">Less Inrush</div></div></div>
+      <div class="sc-body">Reduces the brutal current hit that ATL starting dumps onto the line.</div>
+    </div>
+    <div class="ss-card">
+      <div class="sc-head"><span style="font-size:22px">🪛</span><div><div class="sc-name">Less Shock</div></div></div>
+      <div class="sc-body">Belts, couplings, gearboxes, and piping take a gentler mechanical punch.</div>
+    </div>
+    <div class="ss-card">
+      <div class="sc-head"><span style="font-size:22px">🫀</span><div><div class="sc-name">Longer Life</div></div></div>
+      <div class="sc-body">Reducing heat, slam, and torque shock helps motors and equipment live longer.</div>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">4</div>
+</section>
+
+<!-- ============= PAGE 5 — LEARN 02 ============= -->
+<section class="page" data-section-id="foundation">
+  <div class="page-tag" style="color:#F87171">▸ LEARN · 02 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 FOUNDATION · ATL VS SOFT START</div>
+  <h2 style="margin-top:14px">ATL slams.<br>Soft starter ramps.</h2>
+  <p class="lead" style="margin-top:6px">Across-the-line is still the default on many jobs because it is simple and cheap. The trade-off is the motor sees full voltage instantly — and the rest of the system feels it too.</p>
+
+  <div class="compare-grid" style="margin-top:16px">
+    <div class="compare-card atl">
+      <h3>Across-the-Line (ATL)</h3>
+      <ul>
+        <li>Full voltage applied instantly</li>
+        <li>High inrush current and strong torque shock</li>
+        <li>Cheap and simple when the system can tolerate the hit</li>
+        <li>Common source of startup trips, belt slap, and light dimming</li>
+      </ul>
+    </div>
+    <div class="compare-card soft">
+      <h3>Soft Starter</h3>
+      <ul>
+        <li>Voltage ramps up over time</li>
+        <li>Lower inrush and smoother mechanical takeoff</li>
+        <li>Great when startup pain matters but speed control does not</li>
+        <li>Still runs the motor at full speed after the ramp is over</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:16px">
+    <h3>💬 Memory Hook</h3>
+    <p>"ATL is a punch. Soft start is a handshake. Same destination — very different way of getting there."</p>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">5</div>
+</section>
+
+<!-- ============= PAGE 6 — LEARN 03 ============= -->
+<section class="page" data-section-id="foundation">
+  <div class="page-tag" style="color:#F87171">▸ LEARN · 03 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 FOUNDATION · SOFT STARTER VS VFD</div>
+  <h2 style="margin-top:14px">Smooth start is not<br>speed control.</h2>
+  <p class="lead" style="margin-top:6px">This is the sales line that matters most. Soft starters help the motor <b>start and stop better</b>. VFDs help the motor <b>run at different speeds</b>.</p>
+
+  <div class="compare-grid" style="margin-top:16px">
+    <div class="compare-card soft">
+      <h3>Soft Starter Territory</h3>
+      <ul>
+        <li>Fixed-speed operation after startup</li>
+        <li>Reduce inrush, jerk, and water hammer</li>
+        <li>Simpler, lower-cost answer than a VFD</li>
+        <li>Good when the process only cares about smoother starts and stops</li>
+      </ul>
+    </div>
+    <div class="compare-card vfd">
+      <h3>VFD Territory</h3>
+      <ul>
+        <li>Adjustable speed during normal run</li>
+        <li>Energy savings on variable-torque loads</li>
+        <li>Low-speed control or changing process demands</li>
+        <li>More functionality, more setup, and usually more cost</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:16px">
+    <h3>🔑 Sales Rule</h3>
+    <p>If speed control is <b>not</b> required, a soft starter may be ideal. If the customer needs to run 30%, 60%, 90%, or change speed on command, you are in VFD territory immediately.</p>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">6</div>
+</section>
+
+<!-- ============= PAGE 7 — LEARN 04 ============= -->
+<section class="page" data-section-id="foundation">
+  <div class="page-tag" style="color:#F87171">▸ LEARN · 04 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 FOUNDATION · HOW IT WORKS</div>
+  <h2 style="margin-top:14px">SCRs first.<br>Bypass later.</h2>
+  <p class="lead" style="margin-top:6px">Soft starters use <b>SCRs</b> to control how much voltage reaches the motor during start. Once the motor is up to speed, most units close a bypass contactor so the SCRs stop carrying run current and the unit runs cooler.</p>
+
+  <div style="margin-top:14px">
+    <div class="ss-card">
+      <div class="sc-head"><span style="font-size:22px">🎚️</span><div><div class="sc-name">SCR Ramp</div><div class="sc-tag">Startup Stage</div></div></div>
+      <div class="sc-body">SCRs phase-control the voltage so the motor does not see the full hit all at once. That limits current and softens the torque ramp.</div>
+    </div>
+    <div class="ss-card">
+      <div class="sc-head"><span style="font-size:22px">🔁</span><div><div class="sc-name">Bypass Contactor</div><div class="sc-tag">Run Stage</div></div></div>
+      <div class="sc-body">When full speed is reached, a bypass path typically closes. That removes heat and losses from the soft starter during normal running.</div>
+    </div>
+    <div class="ss-card">
+      <div class="sc-head"><span style="font-size:22px">🌊</span><div><div class="sc-name">Soft Stop</div><div class="sc-tag">Selective Use</div></div></div>
+      <div class="sc-body">Some applications benefit on the way down too. Pumps are the classic case because controlled deceleration helps reduce water hammer.</div>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">7</div>
+</section>
+
+<!-- ============= PAGE 8 — LEARN 05 ============= -->
+<section class="page" data-section-id="methods">
+  <div class="page-tag" style="color:#F87171">▸ LEARN · 05 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 METHODS · BEST APPLICATIONS</div>
+  <h2 style="margin-top:14px">Great for start stress.<br>Wrong for speed problems.</h2>
+  <p class="lead" style="margin-top:6px">Soft starters shine when the pain is all about <b>how the motor starts or stops</b>. They lose fast when the process needs <b>variable speed</b> or precise low-speed torque.</p>
+
+  <div class="compare-grid" style="margin-top:14px">
+    <div class="compare-card good">
+      <h3>Ideal Applications</h3>
+      <ul>
+        <li>Pumps</li>
+        <li>Fans</li>
+        <li>Compressors</li>
+        <li>Light / medium conveyors</li>
+        <li>Mixers, crushers, and saws</li>
+      </ul>
+    </div>
+    <div class="compare-card bad">
+      <h3>Poor Applications</h3>
+      <ul>
+        <li>Processes requiring speed control</li>
+        <li>Applications needing precise low-speed torque</li>
+        <li>Continuous speed adjustment</li>
+        <li>Positioning or motion-control tasks</li>
+        <li>Jobs where smoother start alone will not solve the process need</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:16px">
+    <h3>💬 Fast Framing</h3>
+    <p>"Soft starters are for smoother fixed-speed starts. VFDs are for living at different speeds."</p>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">8</div>
+</section>
+
+<!-- ============= PAGE 9 — LEARN 06 ============= -->
+<section class="page" data-section-id="methods">
+  <div class="page-tag" style="color:#F87171">▸ LEARN · 06 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 METHODS · START MODES</div>
+  <h2 style="margin-top:14px">Four start methods.<br>Four different jobs.</h2>
+  <p class="lead" style="margin-top:6px">The method matters almost as much as the product. Ask what the system is struggling with, then match the start mode to the real pain.</p>
+
+  <div class="method-grid">
+    <div class="method-card">
+      <div class="tag">DEFAULT</div>
+      <h3>Voltage Ramp</h3>
+      <p>The general-purpose answer. Gradually increases voltage over time for a smoother, softer start.</p>
+    </div>
+    <div class="method-card">
+      <div class="tag">WEAK SOURCE</div>
+      <h3>Current Limit</h3>
+      <p>Best when the line or generator cannot tolerate a big current spike. Common on weaker power systems.</p>
+    </div>
+    <div class="method-card">
+      <div class="tag">HIGH FRICTION</div>
+      <h3>Kick Start</h3>
+      <p>Briefly punches through static friction so sticky or stubborn loads can get moving before the ramp takes over.</p>
+    </div>
+    <div class="method-card">
+      <div class="tag">PUMPING</div>
+      <h3>Soft Stop</h3>
+      <p>Reduces water hammer and mechanical slam on shutdown by decelerating the load more gently.</p>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">9</div>
+</section>
+
+<!-- ============= PAGE 10 — LEARN 07 ============= -->
+<section class="page" data-section-id="methods">
+  <div class="page-tag" style="color:#F87171">▸ LEARN · 07 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 METHODS · SIZING & HEAT</div>
+  <h2 style="margin-top:14px">Size by amps.<br>Respect the heat.</h2>
+  <p class="lead" style="margin-top:6px">The source pack is blunt on this: size by <b>motor FLA, not just HP</b>. Then layer in load inertia, starts per hour, duty cycle, and enclosure heat so you do not underquote the job.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+    <div class="ss-card">
+      <div class="sc-head"><span style="font-size:22px">🧮</span><div><div class="sc-name">FLA First</div></div></div>
+      <div class="sc-body">Horsepower gets you in the neighborhood. Full-load amps is what keeps the quote honest.</div>
+    </div>
+    <div class="ss-card">
+      <div class="sc-head"><span style="font-size:22px">🔁</span><div><div class="sc-name">Starts per Hour</div></div></div>
+      <div class="sc-body">Frequent starts build more thermal stress. More starts means more heat and sometimes a bigger frame.</div>
+    </div>
+    <div class="ss-card">
+      <div class="sc-head"><span style="font-size:22px">🏋️</span><div><div class="sc-name">Load Inertia</div></div></div>
+      <div class="sc-body">Heavy loads may need different ramp settings or stronger current handling to accelerate cleanly.</div>
+    </div>
+    <div class="ss-card">
+      <div class="sc-head"><span style="font-size:22px">🧰</span><div><div class="sc-name">Enclosure Heat</div></div></div>
+      <div class="sc-body">Soft starters generate heat. Closed enclosures and hotter environments need attention to ventilation or bypass.</div>
+    </div>
+  </div>
+
+  <div class="heat-gauge">
+    <div class="meta"><span>THERMAL STRESS</span><span>MORE STARTS / HOUR = MORE HEAT</span></div>
+    <div class="track">
+      <div class="seg light">LIGHT</div>
+      <div class="seg medium">MODERATE</div>
+      <div class="seg heavy">HEAVY</div>
+      <div class="seg extreme">PUNISHING</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>💬 The sizing line</h3>
+    <p>"Do not let a soft starter get undersized because the horsepower looked close. Give me the motor FLA, how often it starts, and whether the enclosure can shed the heat."</p>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">10</div>
+</section>
+
+<!-- ============= PAGE 11 — LEARN 08 + MINI-BOSS ============= -->
+<section class="page" data-section-id="methods">
+  <div class="page-tag" style="color:#F87171">▸ LEARN · 08 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 METHODS · BYPASS & PROTECTION</div>
+  <h2 style="margin-top:14px">Bypass, protection,<br>and long life.</h2>
+  <p class="lead" style="margin-top:6px">Bypass strategy affects heat. Protection features affect how complete the solution is. These are two of the easiest places to accidentally quote a unit that looks right but behaves wrong in the field.</p>
+
+  <div class="compare-grid" style="margin-top:14px">
+    <div class="compare-card soft">
+      <h3>Internal Bypass</h3>
+      <ul>
+        <li>Built in and compact</li>
+        <li>Most common for everyday applications</li>
+        <li>Cleaner package, simpler install</li>
+      </ul>
+    </div>
+    <div class="compare-card atl">
+      <h3>External Bypass</h3>
+      <ul>
+        <li>Common at higher horsepower</li>
+        <li>Less heat inside the starter during run</li>
+        <li>Can support longer life in harder-duty installations</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="ss-card" style="margin-top:12px">
+    <div class="sc-head"><span style="font-size:22px">🛡️</span><div><div class="sc-name">Protection Features to Look For</div></div></div>
+    <div class="sc-list">
+      <ul>
+        <li>Overload protection</li>
+        <li>Phase loss and phase imbalance</li>
+        <li>Underload or stall protection</li>
+        <li>Thermal modeling</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    🏅 <b>LEARN LEVEL CLEARED — +80 XP · BADGE EARNED: 📈 "RAMP LITERATE."</b>
+  </div>
+
+  <div class="miniboss-gate interactive-only" data-miniboss="inrush-ogre">
+    <div class="icon">🧌</div>
+    <h3>The Inrush Ogre blocks the path!</h3>
+    <div class="sub">5 questions on startup fundamentals, methods, and sizing · Defeat to unlock APPLY</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">11</div>
+</section>
+
+<!-- ============= PAGE 12 — APPLY 01 ============= -->
+<section class="page" data-section-id="application">
+  <div class="page-tag" style="color:#EF4444">▸ APPLY · 01 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ APPLICATION · ATL PAIN SIGNALS</div>
+  <h2 style="margin-top:14px">When ATL is hitting<br>too hard.</h2>
+  <p class="lead" style="margin-top:6px">Customers rarely call and say "I need a reduced-voltage starter." They describe startup pain. Your job is to hear the clue and translate it into soft-starter logic.</p>
+
+  <div class="question-grid">
+    <div class="question-pill"><div class="num">HEAR THIS</div><div class="ask">"The lights dim and the generator groans when it starts."</div><div class="why">That is a classic soft-starter or current-limit conversation.</div></div>
+    <div class="question-pill"><div class="num">HEAR THIS</div><div class="ask">"The pump slams the piping when it stops."</div><div class="why">Soft stop is suddenly part of the quote.</div></div>
+    <div class="question-pill"><div class="num">HEAR THIS</div><div class="ask">"The conveyor jerks so hard it shocks the belt."</div><div class="why">Mechanical stress is the problem, not speed control.</div></div>
+    <div class="question-pill"><div class="num">HEAR THIS</div><div class="ask">"The breaker trips right when the motor takes off."</div><div class="why">Startup current management belongs in the conversation immediately.</div></div>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>💬 Customer line</h3>
+    <p>"If the machine runs at one speed just fine and the only pain is the way it starts or stops, a soft starter is often the cleaner answer than jumping straight to a VFD."</p>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">12</div>
+</section>
+
+<!-- ============= PAGE 13 — APPLY 02 ============= -->
+<section class="page" data-section-id="application">
+  <div class="page-tag" style="color:#EF4444">▸ APPLY · 02 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ APPLICATION · QUALIFYING QUESTIONS</div>
+  <h2 style="margin-top:14px">Six questions to ask<br>before you quote.</h2>
+  <p class="lead" style="margin-top:6px">These six questions uncover most of the soft-starter decision in under a minute.</p>
+
+  <div class="question-grid">
+    <div class="question-pill"><div class="num">QUESTION 1</div><div class="ask">What is the load type?</div><div class="why">Pump, fan, compressor, conveyor, or mixer each hints at the startup pain and whether soft stop matters.</div></div>
+    <div class="question-pill"><div class="num">QUESTION 2</div><div class="ask">Is speed control required during run?</div><div class="why">If yes, stop talking soft starter and move to VFD logic.</div></div>
+    <div class="question-pill"><div class="num">QUESTION 3</div><div class="ask">What is the motor FLA?</div><div class="why">Sizing starts here, not with a casual HP guess.</div></div>
+    <div class="question-pill"><div class="num">QUESTION 4</div><div class="ask">How many starts per hour?</div><div class="why">Frequent starts raise heat and may push frame size or bypass decisions.</div></div>
+    <div class="question-pill"><div class="num">QUESTION 5</div><div class="ask">Weak utility or generator source?</div><div class="why">That makes current-limit logic much more important.</div></div>
+    <div class="question-pill"><div class="num">QUESTION 6</div><div class="ask">Do you need soft stop or special protection features?</div><div class="why">Pump shutdown and protection expectations can separate good quotes from field problems.</div></div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">13</div>
+</section>
+
+<!-- ============= PAGE 14 — APPLY 03 ============= -->
+<section class="page" data-section-id="application">
+  <div class="page-tag" style="color:#EF4444">▸ APPLY · 03 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ APPLICATION · CUSTOMER TRANSLATION</div>
+  <h2 style="margin-top:14px">Hear the clue.<br>Sell the ramp.</h2>
+  <p class="lead" style="margin-top:6px">Translate what the customer says into what the quote should do.</p>
+
+  <div class="translate-row" style="display:flex;gap:10px;margin-top:14px;font-size:11.5px">
+    <div class="says" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🗣️ "The pump hits the line hard and the pipes bang."</div>
+    <div class="means" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🧠 Startup current + shutdown shock are both painful.</div>
+    <div class="quote-it" style="flex:1;padding:12px;border-radius:10px;font-weight:700">💬 "Let's look at a soft starter with soft stop."</div>
+  </div>
+  <div class="translate-row" style="display:flex;gap:10px;margin-top:10px;font-size:11.5px">
+    <div class="says" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🗣️ "The conveyor jerks every time it starts."</div>
+    <div class="means" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🧠 Mechanical shock is the real problem.</div>
+    <div class="quote-it" style="flex:1;padding:12px;border-radius:10px;font-weight:700">💬 "A soft starter can take the hit out of that startup."</div>
+  </div>
+  <div class="translate-row" style="display:flex;gap:10px;margin-top:10px;font-size:11.5px">
+    <div class="says" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🗣️ "The generator hates this motor starting."</div>
+    <div class="means" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🧠 Weak source needs current-limiting help.</div>
+    <div class="quote-it" style="flex:1;padding:12px;border-radius:10px;font-weight:700">💬 "Let's use a soft starter and current-limit the takeoff."</div>
+  </div>
+  <div class="translate-row" style="display:flex;gap:10px;margin-top:10px;font-size:11.5px">
+    <div class="says" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🗣️ "We need to slow this machine down during production."</div>
+    <div class="means" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🧠 This is not a startup-only problem.</div>
+    <div class="quote-it" style="flex:1;padding:12px;border-radius:10px;font-weight:700">💬 "That's VFD territory — you need running speed control."</div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">14</div>
+</section>
+
+<!-- ============= PAGE 15 — APPLY 04 ============= -->
+<section class="page" data-section-id="sales">
+  <div class="page-tag" style="color:#EF4444">▸ APPLY · 04 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">💼 SALES LOGIC · SOFT STARTER OR VFD</div>
+  <h2 style="margin-top:14px">Know when to stay<br>soft starter.</h2>
+  <p class="lead" style="margin-top:6px">A lot of lost margin comes from over-quoting VFDs where a soft starter would do the job — or under-quoting soft starters where the process really needs speed control.</p>
+
+  <div class="compare-grid" style="margin-top:14px">
+    <div class="compare-card soft">
+      <h3>Still Soft Starter Territory</h3>
+      <ul>
+        <li>Fixed-speed machine</li>
+        <li>Startup trips, inrush, or weak-source pain</li>
+        <li>Mechanical shock, belt slap, or water hammer</li>
+        <li>No demand for energy tuning through speed changes</li>
+      </ul>
+    </div>
+    <div class="compare-card vfd">
+      <h3>Now You're in VFD Territory</h3>
+      <ul>
+        <li>Speed must change during normal operation</li>
+        <li>Low-speed torque matters</li>
+        <li>Process requires frequent adjustment</li>
+        <li>Energy savings depend on varying motor speed</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>🔑 Fast Rule</h3>
+    <p>If the machine only needs to start smoother and then run at full speed, keep the soft starter conversation alive. If the machine needs to behave differently at different speeds, jump to VFD.</p>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">15</div>
+</section>
+
+<!-- ============= PAGE 16 — APPLY 05 ============= -->
+<section class="page" data-section-id="sales">
+  <div class="page-tag" style="color:#EF4444">▸ APPLY · 05 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">💼 SALES LOGIC · MISTAKES & SUBSTITUTIONS</div>
+  <h2 style="margin-top:14px">Don't make these<br>expensive mistakes.</h2>
+  <p class="lead" style="margin-top:6px">The source pack called these out for a reason: they are the exact misses that create callbacks and bad substitutions.</p>
+
+  <div class="compare-grid" style="margin-top:14px">
+    <div class="compare-card bad">
+      <h3>Common Sales Mistakes</h3>
+      <ul>
+        <li>Thinking soft starter = speed controller</li>
+        <li>Ignoring starts per hour</li>
+        <li>Undersizing off horsepower for cost reasons</li>
+        <li>Missing pump soft-stop needs</li>
+        <li>Forgetting enclosure heat and ventilation</li>
+      </ul>
+    </div>
+    <div class="compare-card good">
+      <h3>Substitution Rules</h3>
+      <ul>
+        <li>Higher current rating is acceptable</li>
+        <li>Same voltage class is required</li>
+        <li>Same or better protection features are required</li>
+        <li>Lower current rating is not acceptable</li>
+        <li>Never replace a VFD with a soft starter when speed control is needed</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mistake">
+    <div class="x">×</div>
+    <div>
+      <h3>Undersizing because the HP looked close</h3>
+      <p>Soft starters are typically rated in amps. If the FLA or starts-per-hour reality is higher than expected, the quote fails even when the horsepower sounded fine.</p>
+    </div>
+  </div>
+  <div class="mistake">
+    <div class="x">×</div>
+    <div>
+      <h3>Replacing VFD logic with soft-starter logic</h3>
+      <p>If the application truly needs speed variation, low-speed torque, or process adjustment, the soft starter is the wrong product no matter how attractive the price looks.</p>
+    </div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">16</div>
+</section>
+
+<!-- ============= PAGE 17 — APPLY 06 + MINI-BOSS ============= -->
+<section class="page" data-section-id="sales">
+  <div class="page-tag" style="color:#EF4444">▸ APPLY · 06 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">💼 SALES LOGIC · DECISION PATH</div>
+  <h2 style="margin-top:14px">Run the path.<br>Close the quote.</h2>
+  <p class="lead" style="margin-top:6px">These few checks tell you whether to stay ATL, move to soft starter, or escalate to VFD.</p>
+
+  <div style="margin-top:18px">
+    <div class="decision-card"><div class="q">1. Does the application need speed control during normal run?</div><div class="y">YES → VFD. Stop treating this like a startup-only problem.</div><div class="n">NO → Continue. Soft starter is still alive.</div></div>
+    <div class="decision-card"><div class="q">2. Is startup causing electrical or mechanical pain?</div><div class="y">YES → Soft starter conversation now: inrush, trips, jerk, belt shock, water hammer.</div><div class="n">NO → ATL may still be enough if the system tolerates the hit.</div></div>
+    <div class="decision-card"><div class="q">3. Weak utility or generator source?</div><div class="y">YES → Current limit or more careful soft-starter sizing matters.</div><div class="n">NO → Default voltage-ramp logic may be fine.</div></div>
+    <div class="decision-card"><div class="q">4. Need soft stop or stronger protection features?</div><div class="y">YES → Favor a more complete soft-starter package.</div><div class="n">NO → Simpler soft-starter selection may work.</div></div>
+  </div>
+
+  <table class="matrix" style="margin-top:14px;font-size:10.8px">
+    <thead><tr><th class="row-h">Scenario</th><th>Best Fit</th><th>Why</th><th>Priority</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">10 HP pump, water hammer on shutdown, fixed speed</td><td class="best">Soft starter with soft stop</td><td>Start/stop stress is the real pain</td><td class="warn">Medium</td></tr>
+      <tr><td class="lbl">40 HP fan, speed must vary with process demand</td><td class="bad">VFD</td><td>Running speed control is required</td><td class="bad">Critical</td></tr>
+      <tr><td class="lbl">75 HP compressor on a weak generator source</td><td class="best">Soft starter with current-limit logic</td><td>Startup current is the main threat</td><td class="bad">High</td></tr>
+      <tr><td class="lbl">Conveyor jerks on startup, runs one speed all day</td><td class="best">Soft starter</td><td>Mechanical shock without speed-control need</td><td class="warn">Medium</td></tr>
+      <tr><td class="lbl">Process must crawl at 30% speed under load</td><td class="bad">VFD</td><td>Low-speed control is outside soft-starter territory</td><td class="bad">Critical</td></tr>
+    </tbody>
+  </table>
+
+  <div class="powerup" style="margin-top:14px">
+    🏅 <b>APPLY LEVEL CLEARED — +90 XP · BADGE EARNED: 📈 "RAMP-READY."</b>
+  </div>
+
+  <div class="miniboss-gate interactive-only" data-miniboss="speed-specter">
+    <div class="icon">👻</div>
+    <h3>The Speed Specter blocks the path!</h3>
+    <div class="sub">5 questions on VFD upsell logic, substitutions, and real-world quoting · Defeat to unlock the Boss Fight</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">17</div>
+</section>
+
+<!-- ============= PAGE 18 — BOSS INTRO ============= -->
+<section class="page boss-page" data-section-id="finalboss" style="display:flex;flex-direction:column;align-items:center;text-align:center">
+  <div class="page-tag" style="color:#FCA5A5">▸ TEST · BOSS FIGHT</div>
+  <div style="margin-top:.6in"><div class="level-banner lvl-test" style="margin:0 auto">🎯 TEST LEVEL</div></div>
+  <h2 style="margin-top:20px;font-size:54px">The Ramp<br>Chamber.</h2>
+  <svg width="320" height="320" viewBox="0 0 320 320" style="margin-top:14px">
+    <defs>
+      <linearGradient id="bossS" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FCA5A5"/>
+        <stop offset="100%" stop-color="#7F1D1D"/>
+      </linearGradient>
+      <filter id="bossglow11"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <g transform="translate(160 160)">
+      <rect x="-110" y="-130" width="220" height="260" rx="18" fill="url(#bossS)" stroke="#FACC15" stroke-width="3" filter="url(#bossglow11)"/>
+      <rect x="-76" y="-110" width="152" height="22" rx="4" fill="#7F1D1D"/>
+      <text x="0" y="-94" text-anchor="middle" font-size="11" fill="#FACC15" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="2">RAMP CHAMBER</text>
+      <rect x="-84" y="-82" width="168" height="54" rx="6" fill="#0F172A" stroke="#FCA5A5" stroke-width="1.5"/>
+      <text x="0" y="-47" text-anchor="middle" font-family="JetBrains Mono" font-size="28" fill="#EF4444" font-weight="800">6× FLA</text>
+      <text x="0" y="-32" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#64748B" letter-spacing="2">HARD START EVENT</text>
+      <path d="M -74 54 L -48 54 L -48 -8 L -20 -8" fill="none" stroke="#EF4444" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 8 54 C 28 54 38 46 54 30 S 86 -2 110 -2" fill="none" stroke="#FEE2E2" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="104" cy="72" r="20" fill="#7F1D1D" stroke="#FCA5A5" stroke-width="3"/>
+      <text x="104" y="77" text-anchor="middle" font-size="12" fill="#fff" font-weight="800" font-family="Bricolage Grotesque">RUN</text>
+      <circle cx="-64" cy="98" r="10" fill="#7F1D1D" stroke="#FCA5A5" stroke-width="2"/>
+      <circle cx="64" cy="98" r="10" fill="#7F1D1D" stroke="#FCA5A5" stroke-width="2"/>
+    </g>
+  </svg>
+  <div style="width:80%;margin-top:14px">
+    <div style="display:flex;justify-content:space-between;color:#FACC15;font-weight:800;font-size:11px;letter-spacing:.1em;margin-bottom:6px">
+      <span>RAMP CHAMBER · 6× FLA</span><span>STATUS: HARD START</span>
+    </div>
+    <div class="hp-bar"><div class="fill"></div></div>
+  </div>
+  <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:18px 24px;margin-top:24px;width:80%">
+    <p style="color:#fff;font-size:14px"><b>30 questions · 2 XP each · 80%+ to win</b></p>
+    <p style="color:#94A3B8;font-size:13px;margin-top:8px">No peeking. Score honest. 24/30 = 📈 Soft Starter Master badge.</p>
+  </div>
+  <div class="page-num" style="color:#64748B">18</div>
+</section>
+
+<!-- ============= PAGE 19 — ROUND 1 ============= -->
+<section class="page boss-page" data-quiz-page="1" data-section-id="finalboss">
+  <div class="page-tag" style="color:#FCA5A5">▸ FINAL BOSS · ROUND 1 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 1 · BASICS</div>
+    <div style="color:#FCA5A5;font-weight:800;font-size:11px;letter-spacing:.1em">Q 1 → 6 · OPENING RAMP</div>
+  </div>
+  <div class="hp-bar r1" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="1"></div><div class="qcard" data-q="2"></div>
+    <div class="qcard" data-q="3"></div><div class="qcard" data-q="4"></div>
+    <div class="qcard" data-q="5"></div><div class="qcard" data-q="6"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">19</div>
+</section>
+
+<!-- ============= PAGE 20 — ROUND 2 ============= -->
+<section class="page boss-page" data-quiz-page="2" data-section-id="finalboss">
+  <div class="page-tag" style="color:#FCA5A5">▸ FINAL BOSS · ROUND 2 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 2 · COMPARISON LOGIC</div>
+    <div style="color:#FCA5A5;font-weight:800;font-size:11px;letter-spacing:.1em">Q 7 → 12 · LINE HIT</div>
+  </div>
+  <div class="hp-bar r2" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="7"></div><div class="qcard" data-q="8"></div>
+    <div class="qcard" data-q="9"></div><div class="qcard" data-q="10"></div>
+    <div class="qcard" data-q="11"></div><div class="qcard" data-q="12"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">20</div>
+</section>
+
+<!-- ============= PAGE 21 — ROUND 3 ============= -->
+<section class="page boss-page" data-quiz-page="3" data-section-id="finalboss">
+  <div class="page-tag" style="color:#FCA5A5">▸ FINAL BOSS · ROUND 3 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 3 · METHODS & SIZING</div>
+    <div style="color:#FCA5A5;font-weight:800;font-size:11px;letter-spacing:.1em">Q 13 → 18 · THERMAL LOAD</div>
+  </div>
+  <div class="hp-bar r3" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="13"></div><div class="qcard" data-q="14"></div>
+    <div class="qcard" data-q="15"></div><div class="qcard" data-q="16"></div>
+    <div class="qcard" data-q="17"></div><div class="qcard" data-q="18"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">21</div>
+</section>
+
+<!-- ============= PAGE 22 — ROUND 4 ============= -->
+<section class="page boss-page" data-quiz-page="4" data-section-id="finalboss">
+  <div class="page-tag" style="color:#FCA5A5">▸ FINAL BOSS · ROUND 4 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 4 · PROTECTION & APPLICATIONS</div>
+    <div style="color:#FCA5A5;font-weight:800;font-size:11px;letter-spacing:.1em">Q 19 → 24 · HOT ENCLOSURE</div>
+  </div>
+  <div class="hp-bar r4" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="19"></div><div class="qcard" data-q="20"></div>
+    <div class="qcard" data-q="21"></div><div class="qcard" data-q="22"></div>
+    <div class="qcard" data-q="23"></div><div class="qcard" data-q="24"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">22</div>
+</section>
+
+<!-- ============= PAGE 23 — ROUND 5 ============= -->
+<section class="page boss-page" data-quiz-page="5" data-section-id="finalboss">
+  <div class="page-tag" style="color:#FCA5A5">▸ FINAL BOSS · ROUND 5 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 FINAL ROUND · SALES & DECISIONS</div>
+    <div style="color:#EF4444;font-weight:800;font-size:11px;letter-spacing:.1em">Q 25 → 30 · WRONG QUOTE</div>
+  </div>
+  <div class="hp-bar r5" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="25"></div><div class="qcard" data-q="26"></div>
+    <div class="qcard" data-q="27"></div><div class="qcard" data-q="28"></div>
+    <div class="qcard" data-q="29"></div><div class="qcard" data-q="30"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">23</div>
+</section>
+
+<!-- ============= PAGE 24 — ANSWER KEY ============= -->
+<section class="page" id="resultsPage" data-section-id="results">
+  <div class="page-tag" style="color:#DC2626">▸ FINAL BOSS · RESULTS</div>
+  <div class="level-banner lvl-test" style="margin-top:.4in">🎯 ANSWER KEY · YOUR RESULTS</div>
+  <h2 style="margin-top:14px">🗝️ The Key.</h2>
+  <p class="lead print-only" style="display:none">Score yourself. Tier yourself. Earn the badge.</p>
+
+  <div id="liveResults" class="interactive-only" style="margin-top:18px;background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:18px;padding:24px;color:#fff">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+      <div>
+        <p style="color:#94A3B8;font-size:11px;letter-spacing:.18em;font-weight:800;margin:0">▸ YOUR LIVE SCORE</p>
+        <p style="font-family:'Bricolage Grotesque';font-size:54px;font-weight:800;color:#FACC15;margin-top:4px;line-height:1">
+          <span id="scoreCorrect">0</span><span style="color:#475569">/30</span>
+        </p>
+        <p style="font-size:13px;color:#CBD5E1;margin-top:4px">Total XP: <b id="scoreXP" style="color:#86EFAC">0</b> <span style="color:#475569">/ 280</span></p>
+      </div>
+      <div id="tierBadge" style="text-align:center"></div>
+    </div>
+    <div style="margin-top:14px;background:#334155;height:14px;border-radius:7px;overflow:hidden;border:1px solid #475569">
+      <div id="scoreBar" style="height:100%;width:0%;background:linear-gradient(90deg,#DC2626,#F87171);transition:width .4s ease"></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button id="submitBtn" style="background:linear-gradient(135deg,#DC2626,#7F1D1D);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📤 SUBMIT TO TRAINER</button>
+      <button id="copyBtn" style="background:#DC2626;color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📋 COPY RESULTS</button>
+      <button id="resetBtn" style="background:#1E293B;color:#FACC15;border:1px solid #475569;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">↻ RESTART QUIZ</button>
+    </div>
+    <div id="submitStatus" style="margin-top:10px;font-size:12px;font-weight:700;color:#94A3B8;min-height:18px;white-space:pre-wrap"></div>
+  </div>
+
+  <div class="answer-key-static">
+  <div class="key-grid">
+    <div class="key-cell"><span>Q1</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q2</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q3</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q4</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q5</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q6</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q7</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q8</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q9</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q10</span><span class="a">D</span></div>
+    <div class="key-cell"><span>Q11</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q12</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q13</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q14</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q15</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q16</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q17</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q18</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q19</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q20</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q21</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q22</span><span class="a">A</span></div>
+    <div class="key-cell"><span>Q23</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q24</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q25</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q26</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q27</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q28</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q29</span><span class="a">A</span></div>
+    <div class="key-cell"><span>Q30</span><span class="a">B</span></div>
+  </div>
+
+  <h3 style="margin-top:24px">🏆 Scoring tiers</h3>
+  <div class="tier tier-gold"><div class="medal">🥇</div><div><b>24–30 correct → SOFT STARTER MASTER.</b> Earn the 📈 badge. You quote smooth starts like a pro.</div></div>
+  <div class="tier tier-silver"><div class="medal">🥈</div><div><b>18–23 correct → RAMP-READY.</b> Re-run APPLY level and re-fight.</div></div>
+  <div class="tier tier-bronze"><div class="medal">🥉</div><div><b>0–17 correct → BACK TO THE SCRs.</b> Re-read LEARN. The Specter waits.</div></div>
+  </div>
+  <div class="page-num">24</div>
+</section>
+
+<!-- ============= PAGE 25 — FINAL TAKEAWAYS ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ FINAL TAKEAWAYS</div>
+  <div class="level-banner" style="background:#FEE2E2;color:#7F1D1D;margin-top:.4in">🧠 THE PLAYBOOK</div>
+  <h2 style="margin-top:14px">What you should hear on the next call.</h2>
+  <p class="lead">The real win is quickly separating <b>startup pain</b> from <b>process-speed needs</b>. That is the line between ATL, soft starter, and VFD.</p>
+
+  <div class="compare-grid" style="margin-top:18px">
+    <div class="compare-card soft">
+      <h3>Still Soft Starter Territory</h3>
+      <ul>
+        <li>Fixed-speed machine</li>
+        <li>Water hammer, belt slap, or torque shock</li>
+        <li>Generator or weak-source startup complaints</li>
+        <li>No need to run at multiple speeds during the process</li>
+      </ul>
+    </div>
+    <div class="compare-card vfd">
+      <h3>Now You're in VFD Territory</h3>
+      <ul>
+        <li>The customer wants adjustable speed</li>
+        <li>They need low-speed control under load</li>
+        <li>Energy savings depend on varying motor speed</li>
+        <li>The process must change speed during normal operation</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question-grid" style="margin-top:14px">
+    <div class="question-pill"><div class="num">HEAR THIS</div><div class="ask">"The pump pounds the line when it shuts off."</div><div class="why">Soft stop belongs in the conversation.</div></div>
+    <div class="question-pill"><div class="num">HEAR THIS</div><div class="ask">"The generator bogs when the motor starts."</div><div class="why">Think soft starter and current-limit logic.</div></div>
+    <div class="question-pill"><div class="num">HEAR THIS</div><div class="ask">"They need to slow it down during production."</div><div class="why">That is VFD territory, not a startup-only fix.</div></div>
+    <div class="question-pill"><div class="num">HEAR THIS</div><div class="ask">"The conveyor just jerks too hard when it takes off."</div><div class="why">Mechanical shock with fixed-speed operation fits soft-starter logic.</div></div>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>💬 Best Plain-English Line</h3>
+    <p>"A soft starter makes a fixed-speed motor start and stop more gently. A VFD changes how that motor runs all day."</p>
+  </div>
+  <div class="page-num">25</div>
+</section>
+
+<!-- ============= PAGE 26 — TROPHY CASE ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ FINAL XP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">🏅 TROPHY CASE</div>
+  <h2 style="margin-top:14px">Your earned XP.</h2>
+
+  <div class="trophy-grid">
+    <div class="trophy"><div class="icon">📈</div><h3>SOFT START BASICS LOCKED</h3><div class="xp-num">+80 XP</div></div>
+    <div class="trophy"><div class="icon">🧌</div><h3>MINI BOSSES</h3><div class="xp-num">+50 XP</div></div>
+    <div class="trophy"><div class="icon">🛠️</div><h3>APPLICATION LOGIC</h3><div class="xp-num">+90 XP</div></div>
+    <div class="trophy"><div class="icon">🏆</div><h3>SOFT STARTER MASTER</h3><div class="xp-num">+60 XP</div></div>
+  </div>
+
+  <div class="factbox" style="margin-top:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="font-size:16px">TOTAL POSSIBLE XP</h3>
+      <div style="font-family:'Bricolage Grotesque';font-size:46px;font-weight:800;color:#CA8A04">280</div>
+    </div>
+    <hr class="faint">
+    <p style="font-size:12px;color:var(--slate-500)">You can now separate startup pain from speed-control needs, choose the right ramp method, and keep FLA, heat, and VFD upsell logic straight under pressure.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:18px">
+    🔓 <b>NEXT UNLOCKS:</b> Once smooth starting is clear, VFDs, reactors, and harmonic filters become much easier to sell for the right reasons instead of as random upgrades.
+  </div>
+  <div class="page-num">26</div>
+</section>
+
+<!-- ============= PAGE 27 — CLOSING ============= -->
+<section class="page closing-page" data-section-id="results">
+  <h1 style="font-size:84px">📈</h1>
+  <h1 style="margin-top:14px">Start smooth.<br>Run full speed.<br>Quote the right ramp.</h1>
+  <p style="font-size:20px;max-width:5.5in;margin:24px auto 0">Soft starters are the clean answer when the machine wants a gentler launch, not a whole new speed-control strategy. Ask the right questions, hear the startup pain clearly, and the right quote gets easier every time.</p>
+</section>
+
+<!-- ADMIN OVERLAY (browser only) -->
+<div id="adminOverlay" class="interactive-only"></div>
+
+<script src="../shared/module.js?v=editor-blocks-2-page-delete"></script>
+<script>
+RSPModule.init({
+  moduleId:   "soft-starter-mastery",
+  moduleName: "Soft Starter Mastery",
+  moduleIcon: "📈",
+
+  totalQuestions: 30,
+  passGold:       24,
+  passSilver:     18,
+  pageXpTotal:    170,
+  minibossXpTotal: 50,
+  adminPassword:  (window.RSP_CONFIG && window.RSP_CONFIG.adminPassword) || "",
+  pumbleWebhookUrl: "",
+  storageKey: "rsp_soft_starter_mastery_progress",
+
+  tierBadges: {
+    gold:   { name:"SOFT STARTER MASTER", msg:"You quote smooth starts like a pro." },
+    silver: { name:"RAMP-READY",          msg:"Re-run APPLY level and re-fight." },
+    bronze: { name:"BACK TO THE SCRs",    msg:"Re-read LEARN. The Specter waits." }
+  },
+  tierSubmitText: {
+    gold:   "🥇 Soft Starter Master",
+    silver: "🥈 Ramp-Ready — Re-run APPLY level",
+    bronze: "🥉 Needs Re-do — Back to LEARN"
+  },
+
+  quiz: [
+    {n:1,  q:"What does a soft starter primarily control?", opts:{A:"Speed",B:"Voltage during startup",C:"Frequency",D:"Torque continuously"}, c:"B"},
+    {n:2,  q:"Soft starters are best described as:", opts:{A:"Speed controllers",B:"Energy-saving devices",C:"Reduced-voltage starters",D:"Motor brakes"}, c:"C"},
+    {n:3,  q:"Once a motor reaches full speed, a soft starter typically:", opts:{A:"Continues controlling speed",B:"Increases frequency",C:"Bypasses itself",D:"Reduces torque"}, c:"C"},
+    {n:4,  q:"What key limitation must reps remember about soft starters?", opts:{A:"They permanently reduce motor voltage",B:"They do not control speed during normal operation",C:"They require a VFD in parallel to run",D:"They remove the need for overload protection"}, c:"B"},
+    {n:5,  q:"Which application benefits MOST from a soft starter?", opts:{A:"Variable-speed conveyor",B:"Pump with water hammer",C:"Servo positioning axis",D:"Process needing constant speed adjustment"}, c:"B"},
+    {n:6,  q:"Which device should be quoted when the customer needs speed control during normal operation?", opts:{A:"Soft starter",B:"ATL starter",C:"VFD",D:"Overload relay"}, c:"C"},
+
+    {n:7,  q:"Soft starters reduce:", opts:{A:"Voltage permanently",B:"Inrush current",C:"Motor RPM",D:"Motor frequency"}, c:"B"},
+    {n:8,  q:"An across-the-line starter applies:", opts:{A:"Reduced voltage over time",B:"Full voltage instantly across the motor",C:"Variable frequency to the motor",D:"A controlled shutdown ramp"}, c:"B"},
+    {n:9,  q:"Soft starters reduce mechanical stress by:", opts:{A:"Slowing speed during run",B:"Ramping voltage",C:"Cutting frequency",D:"Increasing resistance permanently"}, c:"B"},
+    {n:10, q:"Which application is NOT ideal for a soft starter?", opts:{A:"Fan",B:"Pump",C:"Compressor",D:"Variable-speed process"}, c:"D"},
+    {n:11, q:"Which sales rule is correct?", opts:{A:"If speed is needed, a soft starter replaces a VFD",B:"If speed control is NOT required, a soft starter may be ideal",C:"If startup is rough, always quote a VFD first",D:"Fixed-speed loads should always stay ATL"}, c:"B"},
+    {n:12, q:"Soft starters are commonly used to replace:", opts:{A:"VFDs",B:"Servo drives",C:"Across-the-line starters",D:"Brake resistors"}, c:"C"},
+
+    {n:13, q:"Kick start is used for:", opts:{A:"Energy savings",B:"Soft shutdown",C:"Breaking static friction",D:"Speed control"}, c:"C"},
+    {n:14, q:"Soft stop is commonly used for:", opts:{A:"Crushers",B:"Saws",C:"Pumps",D:"Fans only"}, c:"C"},
+    {n:15, q:"Which start method is commonly chosen for a weak generator or power source?", opts:{A:"Voltage ramp",B:"Current limit",C:"Bypass run",D:"Reverse braking"}, c:"B"},
+    {n:16, q:"Which factor MOST affects soft starter sizing?", opts:{A:"Motor HP only",B:"Motor FLA",C:"Frame size",D:"Paint color"}, c:"B"},
+    {n:17, q:"Which condition most often requires upsizing or extra thermal attention?", opts:{A:"Low starts per hour",B:"High starts per hour",C:"Short cables",D:"Low inertia"}, c:"B"},
+    {n:18, q:"Soft starters are typically rated in:", opts:{A:"Volts only",B:"Horsepower only",C:"Current (amps)",D:"Torque"}, c:"C"},
+
+    {n:19, q:"What type of component controls voltage inside a soft starter?", opts:{A:"IGBTs",B:"SCRs",C:"Relays",D:"Fuses"}, c:"B"},
+    {n:20, q:"Internal bypass mainly does what?", opts:{A:"Adds speed control",B:"Reduces voltage more deeply",C:"Reduces heat during run",D:"Limits torque permanently"}, c:"C"},
+    {n:21, q:"When is external bypass usually preferred?", opts:{A:"Low horsepower",B:"Higher horsepower applications",C:"Single-phase motors only",D:"When speed control is required"}, c:"B"},
+    {n:22, q:"Which is a common soft starter protection feature?", opts:{A:"Phase loss",B:"Encoder feedback",C:"Torque vectoring",D:"Servo tuning"}, c:"A"},
+    {n:23, q:"Which factor directly impacts enclosure size and ventilation needs?", opts:{A:"Ramp time only",B:"Heat dissipation",C:"Cable color",D:"Motor brand"}, c:"B"},
+    {n:24, q:"Which load is a better fit for a soft starter than a VFD?", opts:{A:"Process requiring constant speed adjustment",B:"Fixed-speed pump with water hammer and hard starts",C:"Low-speed constant torque application",D:"Servo indexing table"}, c:"B"},
+
+    {n:25, q:"Best first sales question on a soft-starter call?", opts:{A:"Budget",B:"Load type",C:"Brand preference",D:"Panel paint color"}, c:"B"},
+    {n:26, q:"What must be verified BEFORE the sale is finalized?", opts:{A:"Logo preference",B:"Start method required",C:"Wire color",D:"Shipping carton size"}, c:"B"},
+    {n:27, q:"Which customer clue most strongly points to a soft starter rather than ATL?", opts:{A:"They want speed changes during production",B:"They want smoother starts and less shock on a fixed-speed pump",C:"They need low-speed torque at 30% speed",D:"They need process speed adjustment all shift"}, c:"B"},
+    {n:28, q:"Which is a poor selling assumption?", opts:{A:"No speed control is needed",B:"Startup mechanical stress matters",C:"A soft starter can replace a VFD when speed variation is required",D:"The site is cost sensitive"}, c:"C"},
+    {n:29, q:"Which substitution is acceptable?", opts:{A:"Higher current rating, same voltage class, and same or better protection features",B:"Lower current rating if the horsepower sounds close",C:"Wrong voltage class if the enclosure fits",D:"Replacing a VFD with a soft starter when speed control is required"}, c:"A"},
+    {n:30, q:"Soft starters are MOST valuable when:", opts:{A:"Speed control is required",B:"Mechanical stress must be minimized",C:"Frequency must change during run",D:"Servo positioning is needed"}, c:"B"}
+  ],
+
+  minibosses: {
+    'inrush-ogre': {
+      name: 'INRUSH OGRE',
+      icon: '🧌',
+      tagline: 'Breaker of the Line',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"A soft starter primarily controls:", opts:{A:"Motor speed during run",B:"Voltage during startup",C:"Output frequency",D:"Shaft position"}, c:"B"},
+        {q:"Which statement is TRUE?", opts:{A:"A soft starter controls speed all day",B:"A soft starter replaces overload protection every time",C:"A soft starter runs the motor at full speed after the ramp",D:"A soft starter is only for single-phase motors"}, c:"C"},
+        {q:"Which start method is commonly used on a weak generator source?", opts:{A:"Soft stop",B:"Current limit",C:"Reverse brake",D:"Coast to stop"}, c:"B"},
+        {q:"Soft stop is especially useful on:", opts:{A:"Servo tables",B:"CNC spindles",C:"Pump systems",D:"Encoder feedback loops"}, c:"C"},
+        {q:"Soft starters should be sized from:", opts:{A:"Only horsepower",B:"Motor FLA",C:"Only frame size",D:"Motor color"}, c:"B"}
+      ]
+    },
+    'speed-specter': {
+      name: 'SPEED SPECTER',
+      icon: '👻',
+      tagline: 'Whisperer of the Wrong Quote',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"If the customer needs variable speed during normal operation, you should quote:", opts:{A:"ATL starter",B:"Soft starter",C:"Overload relay",D:"VFD"}, c:"D"},
+        {q:"Which substitution is acceptable?", opts:{A:"Higher current rating with same voltage class and same or better protection",B:"Lower current rating if budget is tight",C:"Wrong voltage class if the motor HP matches",D:"Replacing a VFD with a soft starter when speed control is needed"}, c:"A"},
+        {q:"Best first question on a soft-starter call?", opts:{A:"Which color do you want?",B:"What is the load type?",C:"Which logo do you like?",D:"Which carrier frequency do you want?"}, c:"B"},
+        {q:"A customer says, 'The conveyor jerks hard at startup, but it runs one speed all day.' Best fit:", opts:{A:"Soft starter",B:"Servo drive",C:"Manual starter",D:"Harmonic filter"}, c:"A"},
+        {q:"A customer says, 'We need this machine to run at 30% speed during production.' Best fit:", opts:{A:"Soft starter",B:"ATL starter",C:"VFD",D:"Contactor only"}, c:"C"}
+      ]
+    }
+  },
+
+  mapSections: [
+    {id:'intro',       name:'Start',        icon:'🏁', meta:'Pages 1–3',   firstPage:1},
+    {id:'foundation',  name:'Basics',       icon:'📈', meta:'Pages 4–7',   firstPage:4},
+    {id:'methods',     name:'Methods',      icon:'⚙️', meta:'Pages 8–11',  firstPage:8},
+    {id:'mb1',         name:'Inrush Ogre',  icon:'🧌', meta:'Mini Boss',   firstPage:11, isBoss:true, bossId:'inrush-ogre'},
+    {id:'application', name:'Application',  icon:'🛠️', meta:'Pages 12–14', firstPage:12},
+    {id:'sales',       name:'Sales Logic',  icon:'💼', meta:'Pages 15–17', firstPage:15},
+    {id:'mb2',         name:'Speed Specter',icon:'👻', meta:'Mini Boss',   firstPage:17, isBoss:true, bossId:'speed-specter'},
+    {id:'finalboss',   name:'Ramp Chamber', icon:'🐉', meta:'30 Questions',firstPage:18, isBoss:true, isFinal:true},
+    {id:'results',     name:'Results',      icon:'🏆', meta:'Trophy Case', firstPage:24}
+  ],
+
+  pageRanges: [
+    {section:'intro',       from:1,  to:3},
+    {section:'foundation',  from:4,  to:7},
+    {section:'methods',     from:8,  to:11},
+    {section:'application', from:12, to:14},
+    {section:'sales',       from:15, to:17},
+    {section:'finalboss',   from:18, to:23},
+    {section:'results',     from:24, to:27}
+  ]
+});
+</script>
+
+</body>
+</html>

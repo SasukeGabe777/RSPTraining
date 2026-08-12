@@ -1,0 +1,16 @@
+.git/
+.agents/
+.artifacts/
+.backups/
+.chrome-qa/
+.edge-qa/
+.claude/
+index.backup.html
+handoff.md
+tests/
+*.ps1
+*.sql
+*_clean.csv
+modules/
+legacy/portal-v1/modules/*-old.html
+legacy/portal-v1/modules/* - Copy.html

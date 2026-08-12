@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RSP Training · Badge Gallery</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:radial-gradient(circle at top right,#1E293B 0%,#0F172A 70%);
+    font-family:'Inter',system-ui,sans-serif;color:#fff;min-height:100vh;
+  }
+  h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;line-height:1.05}
+  .wrap{max-width:1280px;margin:0 auto;padding:30px 32px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding-bottom:24px;border-bottom:1px solid #1E293B}
+  .pretitle{color:#FACC15;font-size:11px;letter-spacing:.18em;font-weight:800}
+  h1{font-size:42px;color:#fff;margin-top:4px}
+  .tagline{color:#CBD5E1;margin-top:6px}
+  .navbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .nav-link{padding:8px 14px;border-radius:8px;background:#1E293B;color:#94A3B8;text-decoration:none;font-weight:700;font-size:12px;letter-spacing:.05em;border:1px solid #334155}
+  .nav-link:hover{background:#334155;color:#fff}
+  .nav-link.active{background:#FACC15;color:#0F172A;border-color:#FACC15}
+
+  .summary{margin-top:30px;background:linear-gradient(160deg,#1E293B,#0F172A);border:2px solid #312E81;border-radius:18px;padding:24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+  .summary .num{font-family:'Bricolage Grotesque';font-size:48px;font-weight:800;color:#FACC15;line-height:1}
+  .summary .lbl{color:#94A3B8;font-size:11px;letter-spacing:.18em;font-weight:800}
+
+  .section{margin-top:36px}
+  .section h2{font-size:22px;color:#fff;display:flex;align-items:center;gap:10px}
+  .section .ico{font-size:24px}
+  .count{margin-left:auto;color:#64748B;font-size:11px;font-weight:800;letter-spacing:.1em}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:14px}
+  .badge-card{
+    background:linear-gradient(160deg,#1E293B,#0F172A);
+    border:2px solid #334155;border-radius:18px;padding:22px;text-align:center;
+    position:relative;transition:all .2s ease;
+  }
+  .badge-card.earned{border-color:#FACC15;box-shadow:0 0 30px rgba(250,204,21,.15)}
+  .badge-card.locked{opacity:.45}
+  .badge-card .icon{font-size:56px;line-height:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4))}
+  .badge-card.locked .icon{filter:grayscale(1)}
+  .badge-card h3{font-size:15px;color:#fff;margin-top:8px}
+  .badge-card .desc{color:#94A3B8;font-size:12px;line-height:1.4;margin-top:6px}
+  .badge-card .status{position:absolute;top:10px;right:10px;font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;letter-spacing:.05em}
+  .badge-card.earned .status{background:#FACC15;color:#0F172A}
+  .badge-card.locked .status{background:#334155;color:#94A3B8}
+
+  .footer{margin-top:60px;padding:20px 0;border-top:1px solid #1E293B;color:#64748B;font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap}
+  .footer a{color:#64748B;text-decoration:none}
+  .footer a:hover{color:#FACC15}
+
+  .empty{text-align:center;padding:60px 20px;color:#64748B}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <div class="pretitle">RSP INDUSTRIAL · TRAINING PORTAL</div>
+      <h1>🏅 Badge Gallery</h1>
+      <p class="tagline">Every badge you can earn. Locked = waiting for you to unlock it.</p>
+      <div class="navbar">
+        <a class="nav-link" href="index.html">← Hub</a>
+        <a class="nav-link active" href="badges.html">🏅 Badges</a>
+        <a class="nav-link" href="mastery.html">🏆 Mastery</a>
+        <a class="nav-link" href="team.html">🤝 Team</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div>
+      <div class="lbl">EARNED</div>
+      <div><span class="num" id="earnedCount">0</span> <span style="color:#475569;font-size:18px">/ <span id="totalCount">0</span></span></div>
+    </div>
+    <div style="flex:1;min-width:200px">
+      <div class="lbl" style="margin-bottom:6px">PROGRESS</div>
+      <div style="background:#0F172A;height:14px;border-radius:7px;overflow:hidden;border:1px solid #334155">
+        <div id="badgeFill" style="height:100%;background:linear-gradient(90deg,#FACC15,#CA8A04);width:0%;transition:width .4s ease"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="ico">🏆</span>Mastery Tiers <span class="count" id="tierCount">0 / 7 EARNED</span></h2>
+    <p style="color:#94A3B8;font-size:13px;margin-top:6px">Earn the next tier by accumulating lifetime XP across all modules.</p>
+    <div class="grid" id="tierGrid"></div>
+  </div>
+
+  <div class="section">
+    <h2><span class="ico">⭐</span>Achievements <span class="count" id="achCount">0 / 8 EARNED</span></h2>
+    <p style="color:#94A3B8;font-size:13px;margin-top:6px">Special badges for hitting milestones across the curriculum.</p>
+    <div class="grid" id="achGrid"></div>
+  </div>
+
+  <div class="section">
+    <h2><span class="ico">📦</span>Module Mastery <span class="count" id="modCount">0 / 0 EARNED</span></h2>
+    <p style="color:#94A3B8;font-size:13px;margin-top:6px">One badge per module — earn by completing the final boss with a Mastery score (32+).</p>
+    <div class="grid" id="modGrid"></div>
+  </div>
+
+  <div class="footer">
+    <div>RSP Industrial · Training Portal</div>
+    <div><a href="admin.html?admin=true">Admin →</a></div>
+  </div>
+</div>
+
+<script src="manifest.js"></script>
+<script src="badges.js"></script>
+<script>
+(function(){
+  const KEY_USER = 'rsp_user';
+  const KEY_LEDGER = 'rsp_ledger';
+  function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+
+  const user = JSON.parse(lsGet(KEY_USER) || 'null');
+  if(!user){ location.href = 'index.html'; return; }
+  const ledger = JSON.parse(lsGet(KEY_LEDGER) || '{}');
+  const learner = ledger[user.name] || { name: user.name, modules: {} };
+  const manifest = window.RSP_MANIFEST;
+
+  const lifetimeXP = Object.values(learner.modules || {}).reduce((s,m) => s + (m.totalXP || 0), 0);
+  const earnedTiersRecord  = learner.earnedTiers  || [];
+  const earnedBadgesRecord = learner.earnedBadges || [];
+
+  // Combined "earned" check: locked-in record OR currently meets threshold
+  const earnedTierIdSet = new Set(earnedTiersRecord.map(e => e.tier_id));
+  window.tiersByThreshold(lifetimeXP).forEach(t => earnedTierIdSet.add(t.id));
+  const earnedBadgeIdSet = new Set(earnedBadgesRecord.map(e => e.badge_id));
+  // Also pick up entitled-but-not-yet-recorded badges (in case sync hasn't fired)
+  window.entitledBadges(learner, manifest).forEach(b => earnedBadgeIdSet.add(b.id));
+
+  let earnedTotal = 0, totalTotal = 0;
+
+  // ===== TIER BADGES =====
+  let earnedTiersCount = 0;
+  const tierGrid = document.getElementById('tierGrid');
+  window.RSP_TIERS.forEach(tier => {
+    const earned = earnedTierIdSet.has(tier.id);
+    if(earned) earnedTiersCount++;
+    totalTotal++;
+    if(earned) earnedTotal++;
+    const card = document.createElement('div');
+    card.className = 'badge-card ' + (earned ? 'earned' : 'locked');
+    card.innerHTML = '<div class="status">' + (earned ? '✓ EARNED' : '🔒 LOCKED') + '</div>'+
+      '<div class="icon">'+tier.icon+'</div>'+
+      '<h3>'+tier.name+(tier.extreme ? ' (Extreme)' : '')+'</h3>'+
+      '<div class="desc">'+tier.blurb+'</div>'+
+      '<div class="desc" style="margin-top:8px;color:#FACC15;font-weight:700">'+tier.minXP.toLocaleString()+' XP</div>';
+    tierGrid.appendChild(card);
+  });
+  document.getElementById('tierCount').textContent = earnedTiersCount + ' / 7 EARNED';
+
+  // ===== ACHIEVEMENT BADGES =====
+  let earnedAch = 0;
+  const achGrid = document.getElementById('achGrid');
+  window.RSP_SPECIAL_BADGES.forEach(b => {
+    const earned = earnedBadgeIdSet.has(b.id);
+    if(earned) earnedAch++;
+    totalTotal++;
+    if(earned) earnedTotal++;
+    const card = document.createElement('div');
+    card.className = 'badge-card ' + (earned ? 'earned' : 'locked');
+    card.innerHTML = '<div class="status">' + (earned ? '✓ EARNED' : '🔒 LOCKED') + '</div>'+
+      '<div class="icon">'+b.icon+'</div>'+
+      '<h3>'+b.name+'</h3>'+
+      '<div class="desc">'+b.desc+'</div>';
+    achGrid.appendChild(card);
+  });
+  document.getElementById('achCount').textContent = earnedAch + ' / ' + window.RSP_SPECIAL_BADGES.length + ' EARNED';
+
+  // ===== MODULE MASTERY BADGES =====
+  let earnedMod = 0;
+  const modGrid = document.getElementById('modGrid');
+  const publishedMods = manifest.modules.filter(x => x.published);
+  publishedMods.forEach(mod => {
+    const earned = earnedBadgeIdSet.has('module-' + mod.id);
+    if(earned) earnedMod++;
+    totalTotal++;
+    if(earned) earnedTotal++;
+    const card = document.createElement('div');
+    card.className = 'badge-card ' + (earned ? 'earned' : 'locked');
+    card.innerHTML = '<div class="status">' + (earned ? '✓ EARNED' : '🔒 LOCKED') + '</div>'+
+      '<div class="icon">'+mod.icon+'</div>'+
+      '<h3>'+mod.name+'</h3>'+
+      '<div class="desc">Earn by completing this module with a 32+ score.</div>';
+    modGrid.appendChild(card);
+  });
+  document.getElementById('modCount').textContent = earnedMod + ' / ' + publishedMods.length + ' EARNED';
+
+  // ===== SUMMARY =====
+  document.getElementById('earnedCount').textContent = earnedTotal;
+  document.getElementById('totalCount').textContent = totalTotal;
+  const pct = totalTotal > 0 ? Math.round(earnedTotal/totalTotal*100) : 0;
+  document.getElementById('badgeFill').style.width = pct + '%';
+})();
+</script>
+</body>
+</html>

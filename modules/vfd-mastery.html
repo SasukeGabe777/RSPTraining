@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VFD Mastery — RSP Industrial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/module.css?v=editor-blocks-2-page-delete">
+<style>
+  /* === VFD MASTERY · ORANGE THEME === */
+  :root{
+    --theme-primary:#EA580C;
+    --theme-primary-deep:#7C2D12;
+    --theme-accent:#FDBA74;
+    --theme-obj-num:#EA580C;
+    --theme-login-btn-1:#EA580C;
+    --theme-login-btn-2:#F97316;
+    --theme-login-pretitle:#EA580C;
+    --theme-login-focus:#EA580C;
+    --theme-side-bg:#7C2D12;
+    --theme-side-border:#9A3412;
+    --theme-side-toggle:#9A3412;
+    --theme-loot-border:#EA580C;
+    --theme-loot-bg-1:#FFF7ED;
+    --theme-loot-bg-2:#FFEDD5;
+    --theme-loot-h3:#9A3412;
+    --theme-admin-btn:#EA580C;
+    --theme-admin-loginbox-border:#9A3412;
+  }
+
+  /* === MODULE-SPECIFIC COMPONENTS === */
+
+  /* VFD anatomy card */
+  .vfd-card{background:var(--slate-50);border:2px solid var(--slate-200);border-radius:14px;padding:16px;margin-bottom:10px}
+  .vfd-card .vc-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .vfd-card .vc-name{font-family:'Bricolage Grotesque';font-size:18px;font-weight:800;color:#7C2D12}
+  .vfd-card .vc-tag{font-size:10px;font-weight:700;color:#64748B;letter-spacing:.08em;text-transform:uppercase}
+  .vfd-card .vc-sect{font-size:11px;font-weight:800;letter-spacing:.05em;color:#9A3412;margin-top:8px;text-transform:uppercase}
+  .vfd-card .vc-list{font-size:12.5px;color:#334155;margin-top:4px;line-height:1.5}
+  .vfd-card .vc-list li{margin-left:18px}
+  .vfd-card .vc-good{display:inline-block;background:#FFEDD5;color:#9A3412;font-size:10px;font-weight:800;letter-spacing:.05em;padding:2px 8px;border-radius:8px;margin-right:6px;text-transform:uppercase}
+  .vfd-card .vc-bad{display:inline-block;background:#FEE2E2;color:#7F1D1D;font-size:10px;font-weight:800;letter-spacing:.05em;padding:2px 8px;border-radius:8px;margin-right:6px;text-transform:uppercase}
+
+  /* Constant-vs-variable torque grid */
+  .torque-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .torque-col{border-radius:14px;padding:18px}
+  .torque-col.ct{background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #DC2626}
+  .torque-col.vt{background:linear-gradient(160deg,#FFEDD5,#FED7AA);border:2px solid #EA580C}
+  .torque-col h3{font-size:16px}
+  .torque-col.ct h3{color:#7F1D1D}
+  .torque-col.vt h3{color:#9A3412}
+  .torque-col ul{margin-top:8px;list-style:none}
+  .torque-col li{font-size:12.5px;font-weight:600;line-height:1.45;padding:6px 0;border-bottom:1px dashed rgba(0,0,0,.08);display:flex;gap:8px;align-items:flex-start}
+  .torque-col.ct li{color:#7F1D1D}
+  .torque-col.vt li{color:#9A3412}
+  .torque-col li:last-child{border-bottom:none}
+
+  /* Matrix tables (orange palette) */
+  .matrix{width:100%;border-collapse:collapse;margin-top:12px;font-size:11.5px}
+  .matrix th{background:#FFEDD5;color:#9A3412;text-align:center;padding:10px 6px;font-weight:800;border:1px solid #FED7AA;letter-spacing:.05em}
+  .matrix th.row-h{background:#F1F5F9;color:#0F172A;text-align:left;width:150px}
+  .matrix td{padding:10px 8px;border:1px solid #E2E8F0;color:#1E293B;font-weight:600}
+  .matrix td.lbl{background:#F8FAFC;font-weight:800;color:#0F172A;font-size:12px}
+  .matrix td.best{background:#FFEDD5;color:#9A3412;font-weight:800}
+  .matrix td.warn{background:#FEF3C7;color:#78350F;font-weight:800}
+  .matrix td.bad{background:#FEE2E2;color:#7F1D1D;font-weight:800}
+
+  /* AHA power-flow card */
+  .aha-card{background:linear-gradient(160deg,#FFF7ED,#FFEDD5);border:3px solid #EA580C;border-radius:18px;padding:24px;margin-top:14px}
+  .aha-card h3{color:#7C2D12;font-size:20px}
+  .aha-card .flow{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .aha-card .node{background:#fff;border:2px solid #EA580C;border-radius:12px;padding:12px 14px;font-weight:800;color:#7C2D12;font-size:12px;text-align:center;min-width:108px;line-height:1.3}
+  .aha-card .node .sub{display:block;font-size:10px;color:#64748B;font-weight:700;letter-spacing:.05em;margin-top:3px;text-transform:uppercase}
+  .aha-card .arrow{font-size:24px;color:#EA580C;line-height:1}
+
+  /* Sales mistake row */
+  .mistake{display:flex;gap:14px;background:#fff;border:2px solid #E2E8F0;border-left:6px solid #DC2626;border-radius:12px;padding:14px;margin-top:10px}
+  .mistake .x{flex:0 0 38px;width:38px;height:38px;border-radius:50%;background:#FEE2E2;color:#7F1D1D;font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque'}
+  .mistake h3{font-size:15px;color:#0F172A}
+  .mistake p{font-size:12.5px;color:#475569;margin-top:4px;line-height:1.5}
+
+  /* Decision-path card (orange accent) */
+  .decision-card{background:#fff;border:2px solid #FED7AA;border-radius:14px;padding:14px 16px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start}
+  .decision-card .q{flex:0 0 220px;font-size:12.5px;font-weight:800;color:#9A3412}
+  .decision-card .y,.decision-card .n{flex:1;font-size:12px;font-weight:700;padding:8px 10px;border-radius:8px}
+  .decision-card .y{background:#FFEDD5;color:#9A3412}
+  .decision-card .n{background:#FEF3C7;color:#78350F}
+
+  /* Callout box */
+  .callout{background:linear-gradient(160deg,#FFF7ED,#FFEDD5);border:2px solid #EA580C;border-radius:14px;padding:16px;margin-top:10px}
+  .callout h3{color:#7C2D12;font-size:16px}
+  .callout p{color:#7C2D12;font-size:13px;margin-top:6px;line-height:1.5}
+
+  /* Customer translation (orange accent) */
+  .translate-row .says{background:#FFEDD5;color:#9A3412}
+  .translate-row .means{background:#FEF3C7;color:#78350F}
+  .translate-row .quote-it{background:#DBEAFE;color:#1E40AF}
+</style>
+</head>
+<body>
+
+<a href="../index.html" id="portalLink" class="interactive-only">← PORTAL</a>
+
+<aside id="sideMap" class="interactive-only">
+  <button class="map-toggle" id="mapToggle" title="Toggle map">‹</button>
+  <div class="map-title">⚡ VFD MAP</div>
+  <div class="map-hint">YOUR JOURNEY</div>
+  <div class="map-path" id="mapPath"></div>
+</aside>
+
+<div id="minibossOverlay" class="interactive-only">
+  <div class="miniboss-modal" id="minibossModal"></div>
+</div>
+
+<div id="loginOverlay" class="interactive-only">
+  <div class="login-card">
+    <div class="bolt-bg">⚡</div>
+    <div class="pretitle">RSP INDUSTRIAL · PRODUCT MASTERY</div>
+    <h1>VFD<br>Mastery</h1>
+    <p class="sub">Sign in to track your XP and unlock the Boss Fight.</p>
+    <label for="loginName">Your name</label>
+    <input type="text" id="loginName" placeholder="e.g. Gabe Ebmeyer" autocomplete="off"/>
+    <label for="loginId">Employee ID <span style="font-weight:500;color:#94A3B8;letter-spacing:0">(optional)</span></label>
+    <input type="text" id="loginId" placeholder="e.g. RSP-1234" autocomplete="off"/>
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn">Begin Training →</button>
+    <p class="footer-note">Your progress is saved on this device. No data leaves your browser.</p>
+  </div>
+</div>
+
+<div id="xpTracker" class="interactive-only">
+  <div>
+    <div class="username" id="trackerUser">⚡ READY</div>
+    <div class="label">XP EARNED</div>
+    <div><span class="num" id="trackerXP">0</span><span style="color:#475569;font-size:14px"> / 280</span></div>
+    <span class="reset-link" id="resetProgress">↻ Reset</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+    <div style="display:flex;gap:10px;font-size:10px;color:#94A3B8;white-space:nowrap;flex-wrap:wrap">
+      <span>📖&nbsp;<b style="color:#fff"><span id="trackerPages">0</span>/14</b></span>
+      <span>🎯&nbsp;<b style="color:#fff"><span id="trackerAnswered">0</span>/30</b></span>
+      <span>✓&nbsp;<b style="color:#34D399"><span id="trackerCorrect">0</span></b></span>
+    </div>
+    <div class="bar"><div class="fill" id="trackerFill"></div></div>
+  </div>
+</div>
+
+<!-- ============= PAGE 1 — COVER ============= -->
+<section class="page cover">
+  <div class="ribbon">
+    <span class="badge">RSP INDUSTRIAL</span>
+    <span class="badge">PRODUCT MASTERY · MODULE 08</span>
+  </div>
+  <svg width="500" height="500" viewBox="0 0 500 500" style="position:absolute;right:-60px;top:100px;opacity:.95">
+    <defs>
+      <linearGradient id="vfdg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FED7AA"/>
+        <stop offset="100%" stop-color="#EA580C"/>
+      </linearGradient>
+      <radialGradient id="displayg" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#1E293B"/>
+        <stop offset="100%" stop-color="#0F172A"/>
+      </radialGradient>
+    </defs>
+    <g transform="translate(250 250)">
+      <!-- Panel body -->
+      <rect x="-110" y="-155" width="220" height="310" rx="16" fill="url(#vfdg)" stroke="#FED7AA" stroke-width="3"/>
+      <!-- Brand label -->
+      <rect x="-82" y="-136" width="164" height="22" rx="4" fill="#7C2D12"/>
+      <text x="0" y="-120" text-anchor="middle" font-size="10" fill="#FDBA74" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="2">RSP VFD DRIVE</text>
+      <!-- Digital frequency display -->
+      <rect x="-84" y="-106" width="168" height="64" rx="8" fill="url(#displayg)" stroke="#FDBA74" stroke-width="1.5"/>
+      <text x="0" y="-60" text-anchor="middle" font-family="JetBrains Mono" font-size="34" fill="#EA580C" font-weight="800">60.0</text>
+      <text x="0" y="-44" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#64748B" font-weight="700" letter-spacing="3">Hz  OUTPUT</text>
+      <!-- Speed label below display -->
+      <text x="-60" y="-28" text-anchor="start" font-size="9" fill="#7C2D12" font-weight="700">1750 RPM</text>
+      <text x="60" y="-28" text-anchor="end" font-size="9" fill="#7C2D12" font-weight="700">100% SPEED</text>
+      <!-- Rotary frequency pot -->
+      <circle cx="0" cy="26" r="30" fill="#0F172A" stroke="#FDBA74" stroke-width="2"/>
+      <circle cx="0" cy="26" r="22" fill="#1E293B"/>
+      <line x1="0" y1="26" x2="16" y2="10" stroke="#EA580C" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="0" cy="26" r="4" fill="#EA580C"/>
+      <text x="0" y="66" text-anchor="middle" font-size="8" fill="#7C2D12" font-weight="700" letter-spacing="1">SPEED CONTROL</text>
+      <!-- START / STOP buttons -->
+      <rect x="-82" y="78" width="60" height="24" rx="7" fill="#16A34A"/>
+      <text x="-52" y="94" text-anchor="middle" font-size="11" fill="#fff" font-weight="800">START</text>
+      <rect x="-10" y="78" width="60" height="24" rx="7" fill="#DC2626"/>
+      <text x="20" y="94" text-anchor="middle" font-size="11" fill="#fff" font-weight="800">STOP</text>
+      <!-- RUN / FAULT indicator lights -->
+      <circle cx="-52" cy="120" r="7" fill="#34D399"/>
+      <circle cx="-20" cy="120" r="7" fill="#FACC15"/>
+      <circle cx="12" cy="120" r="7" fill="#EF4444"/>
+      <text x="-52" y="136" text-anchor="middle" font-size="8" fill="#7C2D12" font-weight="700">RUN</text>
+      <text x="-20" y="136" text-anchor="middle" font-size="8" fill="#7C2D12" font-weight="700">FAULT</text>
+      <text x="12" y="136" text-anchor="middle" font-size="8" fill="#7C2D12" font-weight="700">READY</text>
+      <!-- Terminal block feet -->
+      <g fill="#0F172A" stroke="#FDBA74" stroke-width="2">
+        <rect x="-72" y="118" width="14" height="26" rx="3"/>
+        <rect x="-10" y="118" width="14" height="26" rx="3"/>
+        <rect x="52" y="118" width="14" height="26" rx="3"/>
+      </g>
+      <text x="-65" y="155" text-anchor="middle" font-size="8" fill="#9A3412" font-weight="700">L1</text>
+      <text x="-3" y="155" text-anchor="middle" font-size="8" fill="#9A3412" font-weight="700">L2</text>
+      <text x="59" y="155" text-anchor="middle" font-size="8" fill="#9A3412" font-weight="700">L3</text>
+    </g>
+  </svg>
+  <div style="position:absolute;bottom:2.4in;left:.5in;right:.5in">
+    <div class="pill" style="background:rgba(253,186,116,.25);color:#FED7AA;border:1px solid rgba(253,186,116,.4);margin-bottom:18px">PRODUCT MASTERY · MOTOR CONTROL</div>
+    <h1>VFD<br>MASTERY</h1>
+    <div class="sub">Control it. Size it. Quote the right drive.</div>
+  </div>
+  <div class="tagline">
+    <div>The complete VFD playbook — from torque type to single-phase derating.</div>
+    <div>RSP · PROD 08</div>
+  </div>
+</section>
+
+<!-- ============= PAGE 2 — MISSION ============= -->
+<section class="page">
+  <div class="page-tag">▸ THE PROMISE</div>
+  <div style="display:flex;gap:30px;margin-top:.5in;height:8.6in">
+    <div style="flex:1;display:flex;flex-direction:column">
+      <h2>Quote the right drive<br>every time.</h2>
+      <p class="lead" style="margin-top:14px">By the last page you will be able to:</p>
+      <ul class="objectives" style="margin-top:18px">
+        <li><span class="obj-num">1</span><span>Explain what a VFD does and how it converts fixed AC power to variable frequency output.</span></li>
+        <li><span class="obj-num">2</span><span>Ask the <b>3 non-negotiable questions</b> on every VFD call: electrical requirements, motor details, and application type.</span></li>
+        <li><span class="obj-num">3</span><span>Distinguish <b>constant torque</b> from <b>variable torque</b> loads and know why it changes sizing.</span></li>
+        <li><span class="obj-num">4</span><span>Apply the <b>single-phase derating rule</b> and select the correct VFD enclosure for the environment.</span></li>
+        <li><span class="obj-num">5</span><span>Recommend the right <b>accessories</b> — line reactors, dv/dt filters, braking resistors — for the application.</span></li>
+        <li><span class="obj-num">6</span><span>Pass the 30-question Boss Fight at 80%+ to earn the ⚡ VFD Mastery badge.</span></li>
+      </ul>
+      <div class="powerup" style="margin-top:20px">
+        💡 <b>The promise:</b> Walk into any drive conversation knowing exactly which VFD to quote, how to size it, and what accessories come with it.
+      </div>
+    </div>
+    <div style="flex:0 0 2.4in;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="100" fill="none" stroke="#EA580C" stroke-width="6"/>
+        <circle cx="110" cy="110" r="75" fill="none" stroke="#EA580C" stroke-width="6" opacity=".6"/>
+        <circle cx="110" cy="110" r="50" fill="none" stroke="#EA580C" stroke-width="6" opacity=".4"/>
+        <circle cx="110" cy="110" r="25" fill="#EA580C"/>
+        <text x="110" y="115" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#fff" font-weight="800">Hz</text>
+      </svg>
+      <div style="text-align:center">
+        <div style="font-family:'Bricolage Grotesque';font-size:28px;font-weight:800;color:#7C2D12">280 XP</div>
+        <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.1em;text-transform:uppercase">Total reward</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">02</div>
+</section>
+
+<!-- ============= PAGE 3 — HOW TO PLAY ============= -->
+<section class="page">
+  <div class="page-tag">▸ HOW TO PLAY</div>
+  <h2 style="margin-top:.4in">Three levels.<br>Two mini-bosses.<br>One badge.</h2>
+  <div style="display:flex;gap:14px;margin-top:30px">
+    <div class="level-card learn">
+      <div class="num">01</div>
+      <h3>LEARN</h3>
+      <p>8 pages. What a VFD does, the 3 questions, constant vs variable torque, derating, motor compatibility, carrier frequency, enclosures, braking, and protection accessories.</p>
+      <div class="xp-pill">+10 XP / page</div>
+    </div>
+    <div class="level-card apply">
+      <div class="num">02</div>
+      <h3>APPLY</h3>
+      <p>6 pages. Accessory selection guide, 5 sales mistakes, substitution rules, customer translation, the decision path, and the application sizing matrix.</p>
+      <div class="xp-pill">+15 XP / page</div>
+    </div>
+    <div class="level-card test">
+      <div class="num">03</div>
+      <h3>TEST</h3>
+      <p>30-question Boss Fight. Score 80%+ for the ⚡ VFD Mastery badge.</p>
+      <div class="xp-pill">+2 XP / correct</div>
+    </div>
+  </div>
+  <div class="powerup" style="margin-top:30px">
+    💡 <b>Two Mini-Bosses block the path.</b> The Frequency Phantom guards VFD fundamentals and torque types; the Derating Demon guards accessories, enclosures, and application sizing. Each is worth +25 XP.
+  </div>
+  <div class="page-num">03</div>
+</section>
+
+<!-- ============= PAGE 4 — LEARN 01: WHAT A VFD DOES ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 01 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ WHAT A VFD DOES</div>
+  <h2 style="margin-top:14px">Control the frequency.<br>Control the speed.</h2>
+  <p class="lead" style="margin-top:6px">A <b>Variable Frequency Drive</b> converts fixed-frequency AC power into variable-frequency, variable-voltage AC output. By changing the frequency, you change the motor speed. That's the whole game.</p>
+
+  <div class="aha-card" style="margin-top:18px">
+    <h3>⚡ The power conversion path</h3>
+    <div class="flow">
+      <div class="node">Utility AC<span class="sub">Fixed Hz, Fixed V</span></div>
+      <div class="arrow">→</div>
+      <div class="node">Rectifier<span class="sub">AC → DC</span></div>
+      <div class="arrow">→</div>
+      <div class="node">DC Bus<span class="sub">Stores energy</span></div>
+      <div class="arrow">→</div>
+      <div class="node">Inverter (PWM)<span class="sub">DC → Variable AC</span></div>
+      <div class="arrow">→</div>
+      <div class="node">Motor<span class="sub">Any Hz you set</span></div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px">
+    <div class="factbox">
+      <h3 style="font-size:14px">📐 Speed formula</h3>
+      <p style="font-size:12.5px;margin-top:6px">RPM ≈ (120 × Hz) / motor poles<br><br>4-pole motor at <b>60 Hz → 1800 RPM</b><br>4-pole motor at <b>30 Hz → 900 RPM</b></p>
+    </div>
+    <div class="factbox">
+      <h3 style="font-size:14px">💰 Why VFDs save energy</h3>
+      <p style="font-size:12.5px;margin-top:6px">For fans and pumps, power drops by the <b>cube</b> of speed. A fan at 50% speed uses only <b>12.5%</b> of full power. That's the sales pitch.</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>📋 What VFDs are used for</h3>
+    <p>Energy savings on fans &amp; pumps · Soft starting (eliminates 6–8× inrush) · Variable speed on conveyors, mixers, compressors · Process control (maintain pressure, flow, tension) · Reduced mechanical stress and longer motor life.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "A VFD controls frequency and voltage — not just speed. Frequency drives the motor shaft; voltage keeps the motor magnetized at the right level."
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">04</div>
+</section>
+
+<!-- ============= PAGE 5 — LEARN 02: THE 3 NON-NEGOTIABLE QUESTIONS ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 02 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ THE 3 NON-NEGOTIABLE QUESTIONS</div>
+  <h2 style="margin-top:14px">Ask these three.<br>Before quoting anything.</h2>
+  <p class="lead" style="margin-top:6px">Every VFD mis-quote traces back to skipping one of these three categories. Stop, ask, confirm — then quote.</p>
+
+  <div class="vfd-card" style="margin-top:16px">
+    <div class="vc-head"><span style="font-size:22px">🔌</span><div><div class="vc-name">1. ELECTRICAL REQUIREMENTS</div><div class="vc-tag">Input power · Control voltage · Short-circuit current</div></div></div>
+    <ul class="vc-list">
+      <li>Input voltage: <b>208 / 230 / 460 / 575 VAC</b></li>
+      <li>Phase: <b>single-phase or three-phase</b> (derating required for single-phase — see Page 7)</li>
+      <li>Available short-circuit current (SCCR requirements)</li>
+      <li>Control voltage needed (24 VDC, 120 VAC, or built-in keypad only?)</li>
+    </ul>
+  </div>
+
+  <div class="vfd-card">
+    <div class="vc-head"><span style="font-size:22px">⚙️</span><div><div class="vc-name">2. MOTOR DETAILS</div><div class="vc-tag">HP · FLA · RPM · Enclosure · Inverter-duty?</div></div></div>
+    <ul class="vc-list">
+      <li>Horsepower (HP) and <b>Full Load Amps (FLA)</b> — FLA drives the sizing</li>
+      <li>Motor RPM and number of poles</li>
+      <li>Motor enclosure: TEFC, ODP, washdown</li>
+      <li>Is it <b>inverter-duty rated?</b> (critical for continuous low-speed operation)</li>
+    </ul>
+  </div>
+
+  <div class="vfd-card">
+    <div class="vc-head"><span style="font-size:22px">🏭</span><div><div class="vc-name">3. APPLICATION TYPE</div><div class="vc-tag">Load type · Environment · Duty cycle · Control needs</div></div></div>
+    <ul class="vc-list">
+      <li><b>Constant torque or variable torque?</b> (most important — see Page 6)</li>
+      <li>Environment: clean, dusty, washdown, outdoor, corrosive</li>
+      <li>Duty cycle: continuous, intermittent, reversing</li>
+      <li>Control sophistication: simple potentiometer speed vs PLC analog input vs fieldbus</li>
+    </ul>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>POWER-UP:</b> "If you don't know all three — stop and ask before quoting. A VFD returned for wrong voltage or wrong torque class costs everyone time and trust."
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">05</div>
+</section>
+
+<!-- ============= PAGE 6 — LEARN 03: CONSTANT vs VARIABLE TORQUE ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 03 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ CONSTANT vs VARIABLE TORQUE</div>
+  <h2 style="margin-top:14px">The single most important<br>VFD concept.</h2>
+  <p class="lead" style="margin-top:6px">Get this wrong and you undersize the drive. Get it right and you save the customer thousands of dollars per year in energy costs.</p>
+
+  <div class="torque-grid">
+    <div class="torque-col ct">
+      <h3>🔴 CONSTANT TORQUE</h3>
+      <p style="font-size:11.5px;margin-top:6px;font-weight:700;color:#7F1D1D">Torque stays constant as speed changes. Motor must deliver full torque even at low speed.</p>
+      <ul style="margin-top:10px">
+        <li>🏭 Conveyors &amp; belts</li>
+        <li>🔩 Extruders</li>
+        <li>🥣 Mixers &amp; agitators</li>
+        <li>💧 Positive displacement pumps</li>
+        <li>🏗️ Hoists &amp; cranes</li>
+      </ul>
+      <div style="margin-top:12px;font-size:12px;font-weight:800;color:#7F1D1D;background:rgba(239,68,68,.1);padding:8px 10px;border-radius:8px">
+        ⚠️ Do NOT undersize · May need to oversize · Inverter-duty motor required for low-speed operation
+      </div>
+    </div>
+    <div class="torque-col vt">
+      <h3>🟠 VARIABLE TORQUE</h3>
+      <p style="font-size:11.5px;margin-top:6px;font-weight:700;color:#9A3412">Torque decreases as speed decreases. Power drops by the cube of speed.</p>
+      <ul style="margin-top:10px">
+        <li>🌬️ Fans &amp; blowers</li>
+        <li>💧 Centrifugal pumps</li>
+        <li>🌀 Centrifugal compressors</li>
+        <li>🌊 Circulators</li>
+      </ul>
+      <div style="margin-top:12px;font-size:12px;font-weight:800;color:#9A3412;background:rgba(234,88,12,.1);padding:8px 10px;border-radius:8px">
+        ✅ Drive may be smaller · Massive energy savings possible · Most HVAC and pump applications
+      </div>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FFF7ED,#FFEDD5);border:2px solid #EA580C">
+    <h3 style="color:#7C2D12;font-size:14px">⚡ The cube law — the most powerful sales fact about VFDs</h3>
+    <p style="color:#7C2D12;margin-top:6px;font-size:13px">A centrifugal pump or fan at <b>50% speed</b> uses only <b>12.5% of full power</b> (0.5³ = 0.125). On a 50 HP fan motor running at 50% speed, that's saving over 43 HP of energy — continuously. This is why VFDs pay for themselves in months on fan and pump applications.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Conveyor = constant torque, size up if in doubt. Fan or pump = variable torque, biggest energy-savings play in the catalog."
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">06</div>
+</section>
+
+<!-- ============= PAGE 7 — LEARN 04: INPUT POWER & DERATING ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 04 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ INPUT POWER &amp; DERATING RULES</div>
+  <h2 style="margin-top:14px">Single phase in.<br>Oversize the drive.</h2>
+  <p class="lead" style="margin-top:6px">Most VFDs are designed and rated for <b>three-phase input</b>. When a customer has only single-phase power available, you must oversize the drive — or it will fail early.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px">
+    <div class="factbox" style="background:linear-gradient(160deg,#F0FDF4,#DCFCE7);border:2px solid #16A34A">
+      <h3 style="color:#166534;font-size:14px">✅ Three-Phase Input</h3>
+      <p style="color:#166534;margin-top:6px;font-size:13px">No derating required. Standard sizing rules apply: match VFD FLA rating to motor FLA. This is the normal case for industrial applications.</p>
+    </div>
+    <div class="factbox" style="background:linear-gradient(160deg,#FEF3C7,#FDE68A);border:2px solid #D97706">
+      <h3 style="color:#78350F;font-size:14px">⚠️ Single-Phase Input</h3>
+      <p style="color:#78350F;margin-top:6px;font-size:13px">DC bus ripple nearly doubles. Heat rises. Most VFDs designed for 3-phase will fail prematurely on single-phase without derating.</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>📐 The Derating Rule of Thumb</h3>
+    <p>For a three-phase VFD on single-phase input: <b>oversize the drive by 1.73× (√3)</b>, or select the next drive size up.<br><br>
+    Example: Customer needs to drive a 10 HP, 28A motor on single-phase 230V. Minimum VFD size = 28A × 1.73 = <b>~48A rated drive</b> (approximately 15–20 HP class).</p>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #DC2626">
+    <h3 style="color:#7F1D1D;font-size:14px">🚨 What happens without derating</h3>
+    <p style="color:#7F1D1D;margin-top:6px;font-size:12.5px">
+      · DC bus capacitors overheat and fail early<br>
+      · Nuisance overcurrent faults at normal loads<br>
+      · Drive lifespan drops from 10+ years to 1–2 years<br>
+      · Warranty voided — manufacturer will find the single-phase cause
+    </p>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>✅ The exception: single-phase-rated VFDs</h3>
+    <p>Some drives are explicitly designed and rated for single-phase input. These have heavier bus capacitors and different thermal management. Always verify the datasheet — "accepts single-phase" and "rated for single-phase" are not the same thing.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Single phase = oversize 1.73× or step up to the next size. This is a hard rule — no exceptions for standard drives."
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">07</div>
+</section>
+
+<!-- ============= PAGE 8 — LEARN 05: MOTOR + VFD COMPATIBILITY ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 05 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ MOTOR + VFD COMPATIBILITY</div>
+  <h2 style="margin-top:14px">Not every motor<br>survives a VFD.</h2>
+  <p class="lead" style="margin-top:6px">The VFD doesn't care what motor you attach — but the motor cares. Continuous low-speed operation, high carrier frequencies, and long cable runs can destroy a motor that isn't rated for VFD service.</p>
+
+  <table class="matrix" style="margin-top:16px">
+    <thead><tr><th class="row-h">Motor Type</th><th>VFD Suitability</th><th>Low-Speed Use</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Inverter-Duty</td><td class="best">✅ Best</td><td class="best">✅ Any speed</td><td>Reinforced insulation, self-cooling at any speed, built for VFD service</td></tr>
+      <tr><td class="lbl">Standard TEFC</td><td class="warn">⚠️ Limited</td><td class="warn">⚠️ Above ~40 Hz only</td><td>Cooling fan slows with motor — risk of overheating below 30 Hz on constant loads</td></tr>
+      <tr><td class="lbl">ODP Motor</td><td class="bad">❌ Poor</td><td class="bad">❌ Avoid</td><td>Cooling depends entirely on shaft speed; open frame admits dust in dirty environments</td></tr>
+      <tr><td class="lbl">Washdown Motor</td><td class="best">✅ If inverter-duty</td><td class="best">✅ Yes</td><td>Common in food/pharma — confirm it is also inverter-duty rated, not just washdown-rated</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>⚡ Long cable runs: the reflected wave problem</h3>
+    <p>VFD output is PWM — fast voltage pulses, not a true sine wave. Cable runs over <b>50–100 ft</b> act like transmission lines. The impedance mismatch at the motor terminals causes voltage to <b>reflect back and double</b>. On a 460V system (DC bus ~650V), the reflected wave can reach <b>1,200–1,300V peak</b> at the motor terminals — far above standard insulation ratings.</p>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FFEDD5,#FED7AA);border:2px solid #EA580C">
+    <h3 style="color:#7C2D12;font-size:14px">🛡️ Solutions for long cable runs</h3>
+    <p style="color:#7C2D12;margin-top:6px;font-size:12.5px">
+      · <b>Load reactor</b> (output reactor): protects motor at runs 50–200 ft<br>
+      · <b>dv/dt filter</b>: limits the rate of voltage rise; best for 100–500 ft<br>
+      · <b>Sine wave filter</b>: produces near-true sine wave output; longest runs and most sensitive motors
+    </p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Inverter-duty motor + VFD = designed pair. Standard TEFC + VFD = workable above 40 Hz. ODP + VFD = avoid. Long leads? Add output accessories."
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">08</div>
+</section>
+
+<!-- ============= PAGE 9 — LEARN 06: CARRIER FREQUENCY & ENCLOSURE TYPES ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 06 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ CARRIER FREQUENCY &amp; ENCLOSURE SELECTION</div>
+  <h2 style="margin-top:14px">How it sounds.<br>Where it lives.</h2>
+  <p class="lead" style="margin-top:6px">Two settings that are often overlooked but matter for every installation: how fast the VFD switches its output, and which enclosure protects the electronics.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px">
+    <div>
+      <div style="font-size:11px;font-weight:800;letter-spacing:.08em;color:#9A3412;margin-bottom:6px;text-transform:uppercase">Carrier Frequency Tradeoff</div>
+      <table class="matrix" style="margin-top:0">
+        <thead><tr><th class="row-h">Setting</th><th>Motor Sound</th><th>Drive Heat</th></tr></thead>
+        <tbody>
+          <tr><td class="lbl">High (&gt;8 kHz)</td><td class="best">Quiet</td><td class="bad">More heat</td></tr>
+          <tr><td class="lbl">Low (2–4 kHz)</td><td class="warn">Audible hum</td><td class="best">Less heat</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:12px;color:#475569;margin-top:8px;line-height:1.5">Lower carrier frequency → longer drive life. Raise it only if motor noise is a customer complaint.</div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:800;letter-spacing:.08em;color:#9A3412;margin-bottom:6px;text-transform:uppercase">VFD Enclosure Selection</div>
+      <table class="matrix" style="margin-top:0">
+        <thead><tr><th class="row-h">Enclosure</th><th>Environment</th></tr></thead>
+        <tbody>
+          <tr><td class="lbl">Open / Chassis</td><td>Inside clean control panels only</td></tr>
+          <tr><td class="lbl">NEMA 1</td><td>Clean indoor — offices, clean rooms</td></tr>
+          <tr><td class="lbl">NEMA 12</td><td>Dusty industrial — machine shops</td></tr>
+          <tr><td class="lbl">NEMA 4</td><td>Washdown, rain-protected outdoor</td></tr>
+          <tr><td class="lbl">NEMA 4X</td><td>Washdown + corrosion resistant (food, chemical)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>🌡️ Heat is the hidden enclosure problem</h3>
+    <p>VFDs generate 3–5% of their rated power as heat. An open chassis VFD in a NEMA 12 panel needs panel fans or heat exchangers — it can't rely on the same ventilation slots the open-frame drive expects. Always confirm the enclosure thermal plan, not just the NEMA rating.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Open chassis = inside another enclosure only. NEMA 12 = dusty plant floor. NEMA 4/4X = the second a hose or rain is involved."
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">09</div>
+</section>
+
+<!-- ============= PAGE 10 — LEARN 07: BRAKING METHODS ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 07 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ BRAKING METHODS</div>
+  <h2 style="margin-top:14px">Stop the motor fast.<br>Three ways to do it.</h2>
+  <p class="lead" style="margin-top:6px">When a motor decelerates, its inertia keeps it spinning — that energy has to go somewhere. The braking method determines <b>where that energy goes</b> and how quickly the motor stops.</p>
+
+  <table class="matrix" style="margin-top:16px">
+    <thead><tr><th class="row-h">Method</th><th>How It Works</th><th>Energy Goes To</th><th>Best For</th><th>Cost</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="lbl">DC Injection</td>
+        <td>Injects DC current into motor windings to create opposing magnetic field</td>
+        <td>Heat in motor windings</td>
+        <td>Light loads, infrequent stops, small motors</td>
+        <td class="best">💲 Low</td>
+      </tr>
+      <tr>
+        <td class="lbl">Dynamic Braking</td>
+        <td>Motor acts as generator during decel; energy dumped into external resistor bank</td>
+        <td>Heat in braking resistor</td>
+        <td>High inertia loads (conveyors, presses, saws, hoists)</td>
+        <td class="warn">💲💲 Medium</td>
+      </tr>
+      <tr>
+        <td class="lbl">Regenerative</td>
+        <td>VFD returns motor braking energy back to the AC supply line as real power</td>
+        <td>Back to utility grid</td>
+        <td>Large systems, frequent stop/start cycles, crane lowering</td>
+        <td class="bad">💲💲💲 High</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>📞 The braking sales question</h3>
+    <p>Ask: "Does the load need to stop quickly, or is a gradual coast-to-stop acceptable?" Fans and centrifugal pumps almost never need braking — they coast down safely. Conveyors, hoists, and presses often do. A loaded conveyor without braking can overspeed the drive on decel and trigger overvoltage faults.</p>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FFEDD5,#FED7AA);border:2px solid #EA580C">
+    <h3 style="color:#7C2D12;font-size:14px">📐 Braking resistor sizing note</h3>
+    <p style="color:#7C2D12;margin-top:6px;font-size:12.5px">Dynamic braking resistors must be sized for the <b>duty cycle</b>, not just peak braking power. A hoist that brakes 20 times per hour needs a much larger (or better-cooled) resistor than one that brakes once per hour at the same load. Always confirm duty cycle before specifying the resistor.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Dynamic braking = resistor dumps the energy as heat. Regenerative = energy goes back to the grid. Fans usually need neither. Hoists usually need dynamic."
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">10</div>
+</section>
+
+<!-- ============= PAGE 11 — LEARN 08: PROTECTION & ACCESSORIES + MINI-BOSS 1 ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 08 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ VFD PROTECTION &amp; ACCESSORIES</div>
+  <h2 style="margin-top:14px">What's built in.<br>What you add.</h2>
+  <p class="lead" style="margin-top:6px">Modern VFDs include significant built-in protection — but the installation often needs additional accessories for reliable long-term operation.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+    <div class="factbox">
+      <h3 style="font-size:14px">🛡️ Built-in protections</h3>
+      <ul style="margin-top:8px;font-size:12.5px;color:#334155;list-style:none">
+        <li style="padding:4px 0;border-bottom:1px dashed #E2E8F0">⚡ Overcurrent (motor &amp; drive)</li>
+        <li style="padding:4px 0;border-bottom:1px dashed #E2E8F0">🔺 Overvoltage (DC bus)</li>
+        <li style="padding:4px 0;border-bottom:1px dashed #E2E8F0">🔻 Undervoltage (brown-out)</li>
+        <li style="padding:4px 0;border-bottom:1px dashed #E2E8F0">🌡️ Overtemperature (drive)</li>
+        <li style="padding:4px 0">⚠️ Ground fault detection</li>
+      </ul>
+    </div>
+    <div class="factbox">
+      <h3 style="font-size:14px">🔧 Common accessories to add</h3>
+      <ul style="margin-top:8px;font-size:12.5px;color:#334155;list-style:none">
+        <li style="padding:4px 0;border-bottom:1px dashed #E2E8F0">📥 Line reactor — input side</li>
+        <li style="padding:4px 0;border-bottom:1px dashed #E2E8F0">📤 Load reactor — output side</li>
+        <li style="padding:4px 0;border-bottom:1px dashed #E2E8F0">📈 dv/dt filter — long leads</li>
+        <li style="padding:4px 0;border-bottom:1px dashed #E2E8F0">🌊 Sine wave filter — cleanest output</li>
+        <li style="padding:4px 0;border-bottom:1px dashed #E2E8F0">🔻 Braking resistor — fast stops</li>
+        <li style="padding:4px 0">⚡ Surge protection — lightning/transients</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    🏅 <b>LEARN LEVEL CLEARED — +80 XP · BADGE EARNED: 🧠 "VFD FOUNDATIONS."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="frequency-phantom">
+    <div class="icon">👻</div>
+    <h3>The Frequency Phantom blocks the path!</h3>
+    <div class="sub">5 questions on VFD fundamentals, torque types &amp; motor compatibility · Defeat to unlock the Apply level</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">11</div>
+</section>
+
+<!-- ============= PAGE 12 — APPLY 01: VFD ACCESSORIES GUIDE ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 01 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ VFD ACCESSORIES — WHEN TO OFFER EACH</div>
+  <h2 style="margin-top:14px">The right accessory<br>at the right time.</h2>
+  <p class="lead" style="margin-top:6px">VFD accessories aren't optional upsells — they're often code requirements or application necessities. Know when each one is needed and offer it proactively.</p>
+
+  <table class="matrix" style="margin-top:16px;font-size:11px">
+    <thead><tr><th class="row-h">Accessory</th><th>Protects</th><th>Offer When…</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="lbl">Line Reactor<br><span style="font-weight:500;font-size:10px">(Input side)</span></td>
+        <td>VFD from utility harmonics, voltage spikes, and inrush during power-up</td>
+        <td>Long power runs · Weak utility · Sensitive downstream equipment · Multiple VFDs on same circuit</td>
+      </tr>
+      <tr>
+        <td class="lbl">Load Reactor<br><span style="font-weight:500;font-size:10px">(Output side)</span></td>
+        <td>Motor from VFD output spikes; reduces reflected wave effect on medium cable runs</td>
+        <td>Motor cable runs 50–200 ft · Standard TEFC motor on VFD · Intermittent overloads</td>
+      </tr>
+      <tr>
+        <td class="lbl">dv/dt Filter<br><span style="font-weight:500;font-size:10px">(Output side)</span></td>
+        <td>Motor insulation from fast voltage rise rate (dv/dt); more aggressive than load reactor</td>
+        <td>Cable runs 100–500 ft · Older motors with standard insulation · High-frequency switching</td>
+      </tr>
+      <tr>
+        <td class="lbl">Sine Wave Filter<br><span style="font-weight:500;font-size:10px">(Output side)</span></td>
+        <td>Motor with near-perfect sine wave output; eliminates virtually all PWM stress</td>
+        <td>Very long runs &gt;500 ft · Non-inverter-duty motors · Audible motor noise complaints · Sensitive machinery</td>
+      </tr>
+      <tr>
+        <td class="lbl">Braking Resistor<br><span style="font-weight:500;font-size:10px">(External)</span></td>
+        <td>N/A — energy dissipation device for fast controlled stops</td>
+        <td>High inertia loads (saws, presses, hoists) · Loaded conveyor decel · Customer says "it needs to stop fast"</td>
+      </tr>
+      <tr>
+        <td class="lbl">EMI/RFI Filter<br><span style="font-weight:500;font-size:10px">(Input side)</span></td>
+        <td>Surrounding equipment from VFD-generated radio frequency interference</td>
+        <td>Near sensors, PLCs, medical equipment · CE compliance required · Customer mentions interference issues</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> The accessories question: "How long are the motor leads?" closes the dv/dt / load reactor conversation every time. Ask it before the customer hangs up.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">12</div>
+</section>
+
+<!-- ============= PAGE 13 — APPLY 02: COMMON SALES MISTAKES ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 02 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ 5 SALES MISTAKES TO AVOID</div>
+  <h2 style="margin-top:14px">Each one costs<br>an order.</h2>
+  <p class="lead" style="margin-top:6px">Every mistake on this list has put a rep in a bad position — returned drive, burned motor, unhappy customer, or missed margin. Memorize and avoid.</p>
+
+  <div style="margin-top:18px">
+    <div class="mistake">
+      <span class="x">1</span>
+      <div><h3>Undersizing the drive.</h3><p>Sizing to HP alone ignores that two motors at the same HP can have different FLAs. Always size to <b>motor FLA</b>. And if the load is constant torque, verify the drive's CT rating — a "10 HP VT-rated drive" may be rated 7.5 HP for constant torque use.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">2</span>
+      <div><h3>Ignoring single-phase derating.</h3><p>Customer mentions single phase — you pull a standard three-phase drive of equal HP. The drive fails in 6 months. Oversize by <b>1.73×</b> or use a drive explicitly rated for single-phase input. This rule has no exceptions for standard drives.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">3</span>
+      <div><h3>Not checking motor duty rating.</h3><p>A standard ODP motor on a VFD in a dusty washdown plant = failed motor within a year. Ask whether the motor is <b>inverter-duty</b>. If it's not — and the application runs it below 40 Hz continuously — that motor needs to be replaced or a forced-cooling blower added.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">4</span>
+      <div><h3>Forgetting heat dissipation.</h3><p>A 20 HP VFD in a sealed NEMA 4X enclosure generates ~300W of heat continuously. Without panel cooling (heat exchanger or AC unit), the drive will thermal-fault. Always ask: "How is the enclosure being cooled?"</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">5</span>
+      <div><h3>Quoting variable torque for a constant torque load.</h3><p>VT-rated drives may be derated or unrated for CT applications. A conveyor VFD quoted as "VT" and run on a constant torque load will trip on overcurrent at low speeds when torque demand is highest. Ask the load type. Every time.</p></div>
+    </div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">13</div>
+</section>
+
+<!-- ============= PAGE 14 — APPLY 03: SUBSTITUTION RULES ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 03 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ VFD SUBSTITUTION RULES</div>
+  <h2 style="margin-top:14px">When a customer<br>asks for "Brand X."</h2>
+  <p class="lead" style="margin-top:6px">VFD substitution is common — customers replace legacy drives or cross to an in-stock equivalent. These rules protect the customer and protect you from a return.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px">
+    <div class="factbox" style="background:linear-gradient(160deg,#F0FDF4,#DCFCE7);border:2px solid #16A34A">
+      <h3 style="color:#166534;font-size:15px">✅ ALLOWED</h3>
+      <ul style="margin-top:10px;font-size:12.5px;color:#166534;list-style:none">
+        <li style="padding:5px 0;border-bottom:1px dashed rgba(22,163,74,.25)">✔ Same or higher HP / current rating</li>
+        <li style="padding:5px 0;border-bottom:1px dashed rgba(22,163,74,.25)">✔ Same or better enclosure rating</li>
+        <li style="padding:5px 0;border-bottom:1px dashed rgba(22,163,74,.25)">✔ Same voltage class (208V, 230V, 460V, 575V)</li>
+        <li style="padding:5px 0;border-bottom:1px dashed rgba(22,163,74,.25)">✔ Same phase (3-phase for 3-phase)</li>
+        <li style="padding:5px 0;border-bottom:1px dashed rgba(22,163,74,.25)">✔ Same or more advanced control features</li>
+        <li style="padding:5px 0">✔ Multi-voltage drives with correct jumper setting</li>
+      </ul>
+    </div>
+    <div class="factbox" style="background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #DC2626">
+      <h3 style="color:#7F1D1D;font-size:15px">❌ NOT ALLOWED</h3>
+      <ul style="margin-top:10px;font-size:12.5px;color:#7F1D1D;list-style:none">
+        <li style="padding:5px 0;border-bottom:1px dashed rgba(239,68,68,.25)">✗ Lower HP or lower current rating</li>
+        <li style="padding:5px 0;border-bottom:1px dashed rgba(239,68,68,.25)">✗ Wrong input voltage (even close voltages fail)</li>
+        <li style="padding:5px 0;border-bottom:1px dashed rgba(239,68,68,.25)">✗ Ignoring single-phase derating requirement</li>
+        <li style="padding:5px 0;border-bottom:1px dashed rgba(239,68,68,.25)">✗ Variable torque-only drive on a constant torque load</li>
+        <li style="padding:5px 0;border-bottom:1px dashed rgba(239,68,68,.25)">✗ Enclosure downgrade (4X → 12 in washdown area)</li>
+        <li style="padding:5px 0">✗ Assuming features carry over (fieldbus, comm cards)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:16px">
+    <h3>📞 The cross-reference call script</h3>
+    <p>When a customer gives you a model number to cross: <b>(1)</b> Confirm input voltage and phase. <b>(2)</b> Confirm HP and FLA rating. <b>(3)</b> Confirm CT or VT rating. <b>(4)</b> Confirm enclosure type. <b>(5)</b> Ask about any special control interface (Profibus, DeviceNet, Modbus) — comm cards rarely swap 1:1. That's the full substitution checklist.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Higher HP is safe. Lower HP is a return. Wrong voltage is a write-off. Verify all five checkpoints before you confirm a cross."
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">14</div>
+</section>
+
+<!-- ============= PAGE 15 — APPLY 04: CUSTOMER TRANSLATION ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 04 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ CUSTOMER PHRASE DECODER</div>
+  <h2 style="margin-top:14px">What they say.<br>What they mean.</h2>
+  <p class="lead" style="margin-top:6px">Customers don't speak VFD spec sheet. Train your ear to translate their language into the right ask-back questions and the right SKU.</p>
+
+  <div style="margin-top:18px">
+    <div class="translate-row">
+      <div class="says">"I need a drive for my fan."</div>
+      <div class="means">Variable torque load · Significant energy savings likely · Usually standard sizing</div>
+      <div class="quote-it">3-phase VFD, variable torque rated · Ask: motor HP, FLA, input voltage · Any special speed range?</div>
+    </div>
+    <div class="translate-row">
+      <div class="says">"My motor keeps tripping."</div>
+      <div class="means">Overcurrent / overload fault · Could be drive undersized, CT load on VT drive, or bad motor</div>
+      <div class="quote-it">Ask: constant or variable torque? Motor FLA vs drive FLA? Current drive model? Is the motor inverter-duty?</div>
+    </div>
+    <div class="translate-row">
+      <div class="says">"I need speed control."</div>
+      <div class="means">Core VFD use case · Could be replacing a throttle valve, damper, or old DC drive</div>
+      <div class="quote-it">Ask: motor HP, FLA, input voltage, single or three phase? CT or VT load? Precise speed control or just range?</div>
+    </div>
+    <div class="translate-row">
+      <div class="says">"It's on single phase."</div>
+      <div class="means">Derating required · Most VFDs need oversizing · May need single-phase-rated drive</div>
+      <div class="quote-it">Oversize by 1.73× · Or use a drive explicitly rated for single-phase input · Confirm voltage (120V, 208V, 230V)</div>
+    </div>
+    <div class="translate-row">
+      <div class="says">"We're replacing a [Brand] drive."</div>
+      <div class="means">Cross-reference needed · Check the 5 substitution checkpoints before quoting</div>
+      <div class="quote-it">Get model number → confirm HP/FLA/voltage/phase/enclosure/CT or VT rating → check comm cards</div>
+    </div>
+    <div class="translate-row">
+      <div class="says">"The motor gets too hot."</div>
+      <div class="means">Motor/VFD compatibility issue — low speed operation with non-inverter motor, or drive overswitching</div>
+      <div class="quote-it">Ask: is the motor inverter-duty? At what speed does it run? Carrier frequency setting? Cable length?</div>
+    </div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">15</div>
+</section>
+
+<!-- ============= PAGE 16 — APPLY 05: VFD DECISION PATH ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 05 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ VFD QUICK DECISION PATH</div>
+  <h2 style="margin-top:14px">Six questions.<br>One VFD spec.</h2>
+  <p class="lead" style="margin-top:6px">Run these six questions in order on every VFD call. Each answer eliminates options and narrows the spec. By the last question you have a drive and accessory list — not just a model number guess.</p>
+
+  <div style="margin-top:18px">
+    <div class="decision-card"><div class="q">1. Is speed control actually needed?</div><div class="y">YES → VFD is the right product</div><div class="n">NO → Soft starter or DOL starter may be sufficient</div></div>
+    <div class="decision-card"><div class="q">2. Constant torque or variable torque?</div><div class="y">CT → Size for full torque at low speed; don't downsize</div><div class="n">VT → Standard sizing; biggest energy-savings play</div></div>
+    <div class="decision-card"><div class="q">3. Single-phase or three-phase input?</div><div class="y">Single-phase → Oversize 1.73× or use single-phase-rated VFD</div><div class="n">Three-phase → Standard sizing applies</div></div>
+    <div class="decision-card"><div class="q">4. Is the motor inverter-duty rated?</div><div class="y">YES → Full speed range, any carrier freq</div><div class="n">NO → Limit low-speed operation; consider load reactor or motor upgrade</div></div>
+    <div class="decision-card"><div class="q">5. Motor cable run over 50 ft?</div><div class="y">YES → Add load reactor (50–200 ft) or dv/dt filter (100–500 ft)</div><div class="n">NO → Standard connection, no output accessories required</div></div>
+    <div class="decision-card"><div class="q">6. Outdoor, washdown, or dusty?</div><div class="y">Washdown/outdoor → NEMA 4 / 4X; plan for drive heat dissipation</div><div class="n">Dusty indoor → NEMA 12; Clean indoor → NEMA 1 or chassis in panel</div></div>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>📌 Bonus question: does it need to stop fast?</h3>
+    <p>If yes — "What is the load?" Conveyors, hoists, or high-inertia machines often need a <b>dynamic braking resistor</b>. Quote it before the customer finds out the hard way after a drive overvoltage fault on first decel test.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>POWER-UP:</b> Print this path. Run it every call. The spec writes itself when you ask the questions first.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">16</div>
+</section>
+
+<!-- ============= PAGE 17 — APPLY 06: APPLICATION MATRIX + DERATING DEMON ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 06 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ VFD APPLICATION MATRIX</div>
+  <h2 style="margin-top:14px">Application first.<br>Spec second.</h2>
+  <p class="lead" style="margin-top:6px">Use this matrix as your first-pass cheat grid when a customer names an application. It gets you to the right torque class, sizing flag, and accessory question in one look.</p>
+
+  <table class="matrix" style="margin-top:14px;font-size:11px">
+    <thead><tr><th class="row-h">Application</th><th>Torque Type</th><th>Sizing Flag</th><th>Braking?</th><th>Key Accessory</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Fan / Blower</td><td class="best">Variable torque</td><td>Standard or smaller</td><td class="best">Rarely</td><td>EMI filter if near sensors</td></tr>
+      <tr><td class="lbl">Centrifugal Pump</td><td class="best">Variable torque</td><td>Standard</td><td class="best">Rarely</td><td>Slow-fill ramp; check pipe pressure rating</td></tr>
+      <tr><td class="lbl">Conveyor</td><td class="warn">Constant torque</td><td>Full size; consider up</td><td class="warn">Often needed</td><td>Braking resistor; inverter-duty motor</td></tr>
+      <tr><td class="lbl">Mixer / Agitator</td><td class="warn">Constant torque</td><td>Full size</td><td>Rarely</td><td>Inverter-duty motor required</td></tr>
+      <tr><td class="lbl">Hoist / Crane</td><td class="bad">Constant torque</td><td>Oversize</td><td class="bad">Always required</td><td>Dynamic braking resistor; safety interlock</td></tr>
+      <tr><td class="lbl">Compressor</td><td class="warn">Application-specific</td><td>Confirm with OEM</td><td>Rarely</td><td>Line reactor; confirm CT/VT with mfr</td></tr>
+      <tr><td class="lbl">Extruder / Press</td><td class="bad">Constant torque</td><td>Oversize</td><td class="warn">Often needed</td><td>Inverter-duty motor; braking if high inertia</td></tr>
+    </tbody>
+  </table>
+
+  <div class="powerup" style="margin-top:14px">
+    🏅 <b>APPLY LEVEL CLEARED — +90 XP · BADGE EARNED: 💼 "VFD-CAPABLE."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="derating-demon">
+    <div class="icon">🔥</div>
+    <h3>The Derating Demon blocks the path!</h3>
+    <div class="sub">5 questions on accessories, enclosures, braking &amp; application sizing · Defeat to unlock the Boss Fight</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">17</div>
+</section>
+
+<!-- ============= PAGE 18 — BOSS INTRO ============= -->
+<section class="page boss-page" data-section-id="finalboss" style="display:flex;flex-direction:column;align-items:center;text-align:center">
+  <div class="page-tag" style="color:#FDBA74">▸ TEST · BOSS FIGHT</div>
+  <div style="margin-top:.6in"><div class="level-banner lvl-test" style="margin:0 auto">🎯 TEST LEVEL</div></div>
+  <h2 style="margin-top:20px;font-size:54px">The VFD<br>Arena.</h2>
+  <svg width="320" height="320" viewBox="0 0 320 320" style="margin-top:14px">
+    <defs>
+      <linearGradient id="bossV" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FED7AA"/>
+        <stop offset="100%" stop-color="#7C2D12"/>
+      </linearGradient>
+      <filter id="bossglow8"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <g transform="translate(160 160)">
+      <!-- Boss VFD panel -->
+      <rect x="-110" y="-130" width="220" height="260" rx="16" fill="url(#bossV)" stroke="#FCD34D" stroke-width="3" filter="url(#bossglow8)"/>
+      <!-- Top label -->
+      <rect x="-78" y="-110" width="156" height="22" rx="4" fill="#7C2D12"/>
+      <text x="0" y="-94" text-anchor="middle" font-size="11" fill="#FCD34D" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="2">VFD ARENA</text>
+      <!-- Evil digital display -->
+      <rect x="-82" y="-82" width="164" height="54" rx="6" fill="#0F172A" stroke="#FCD34D" stroke-width="1.5"/>
+      <text x="0" y="-47" text-anchor="middle" font-family="JetBrains Mono" font-size="28" fill="#EF4444" font-weight="800">666</text>
+      <text x="0" y="-33" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#64748B" letter-spacing="2">Hz  HOSTILE</text>
+      <!-- Evil eyes -->
+      <circle cx="-28" cy="-4" r="11" fill="#EF4444"/>
+      <circle cx="28" cy="-4" r="11" fill="#EF4444"/>
+      <circle cx="-26" cy="-6" r="3" fill="#FCD34D"/>
+      <circle cx="30" cy="-6" r="3" fill="#FCD34D"/>
+      <!-- Snarl -->
+      <path d="M -42 28 L -28 18 L -14 28 L 0 18 L 14 28 L 28 18 L 42 28" fill="none" stroke="#FCD34D" stroke-width="3"/>
+      <!-- Big rotary knob -->
+      <circle cx="0" cy="70" r="32" fill="#0F172A" stroke="#FCD34D" stroke-width="3"/>
+      <line x1="0" y1="70" x2="22" y2="52" stroke="#EF4444" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="0" cy="70" r="6" fill="#EF4444"/>
+      <!-- Terminal feet -->
+      <g fill="#0F172A" stroke="#FCD34D" stroke-width="2">
+        <rect x="-70" y="108" width="14" height="28" rx="3"/>
+        <rect x="-7" y="108" width="14" height="28" rx="3"/>
+        <rect x="56" y="108" width="14" height="28" rx="3"/>
+      </g>
+    </g>
+  </svg>
+  <div style="width:80%;margin-top:14px">
+    <div style="display:flex;justify-content:space-between;color:#FACC15;font-weight:800;font-size:11px;letter-spacing:.1em;margin-bottom:6px">
+      <span>VFD ARENA · 666 Hz</span><span>STATUS: HOSTILE</span>
+    </div>
+    <div class="hp-bar"><div class="fill"></div></div>
+  </div>
+  <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:18px 24px;margin-top:24px;width:80%">
+    <p style="color:#fff;font-size:14px"><b>30 questions · 2 XP each · 80%+ to win</b></p>
+    <p style="color:#94A3B8;font-size:13px;margin-top:8px">No peeking. Score honest. 24/30 = ⚡ VFD Commander badge.</p>
+  </div>
+  <div class="page-num" style="color:#64748B">18</div>
+</section>
+
+<!-- ============= PAGE 19 — ROUND 1 (Q1-6) VFD FOUNDATIONS ============= -->
+<section class="page boss-page" data-quiz-page="1" data-section-id="finalboss">
+  <div class="page-tag" style="color:#FDBA74">▸ FINAL BOSS · ROUND 1 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 1 · VFD FOUNDATIONS</div>
+    <div style="color:#FDBA74;font-weight:800;font-size:11px;letter-spacing:.1em">Q 1 → 6</div>
+  </div>
+  <div class="hp-bar" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="1"></div><div class="qcard" data-q="2"></div>
+    <div class="qcard" data-q="3"></div><div class="qcard" data-q="4"></div>
+    <div class="qcard" data-q="5"></div><div class="qcard" data-q="6"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">19</div>
+</section>
+
+<!-- ============= PAGE 20 — ROUND 2 (Q7-12) MOTOR & COMPATIBILITY ============= -->
+<section class="page boss-page" data-quiz-page="2" data-section-id="finalboss">
+  <div class="page-tag" style="color:#FDBA74">▸ FINAL BOSS · ROUND 2 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 2 · MOTOR &amp; COMPATIBILITY</div>
+    <div style="color:#FDBA74;font-weight:800;font-size:11px;letter-spacing:.1em">Q 7 → 12</div>
+  </div>
+  <div class="hp-bar r2" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="7"></div><div class="qcard" data-q="8"></div>
+    <div class="qcard" data-q="9"></div><div class="qcard" data-q="10"></div>
+    <div class="qcard" data-q="11"></div><div class="qcard" data-q="12"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">20</div>
+</section>
+
+<!-- ============= PAGE 21 — ROUND 3 (Q13-18) BRAKING, PROTECTION & ACCESSORIES ============= -->
+<section class="page boss-page" data-quiz-page="3" data-section-id="finalboss">
+  <div class="page-tag" style="color:#FDBA74">▸ FINAL BOSS · ROUND 3 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 3 · BRAKING, PROTECTION &amp; ACCESSORIES</div>
+    <div style="color:#FBBF24;font-weight:800;font-size:11px;letter-spacing:.1em">Q 13 → 18</div>
+  </div>
+  <div class="hp-bar r3" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="13"></div><div class="qcard" data-q="14"></div>
+    <div class="qcard" data-q="15"></div><div class="qcard" data-q="16"></div>
+    <div class="qcard" data-q="17"></div><div class="qcard" data-q="18"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">21</div>
+</section>
+
+<!-- ============= PAGE 22 — ROUND 4 (Q19-24) SIZING & TECHNICAL ============= -->
+<section class="page boss-page" data-quiz-page="4" data-section-id="finalboss">
+  <div class="page-tag" style="color:#FDBA74">▸ FINAL BOSS · ROUND 4 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 4 · SIZING &amp; TECHNICAL</div>
+    <div style="color:#F97316;font-weight:800;font-size:11px;letter-spacing:.1em">Q 19 → 24</div>
+  </div>
+  <div class="hp-bar r4" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="19"></div><div class="qcard" data-q="20"></div>
+    <div class="qcard" data-q="21"></div><div class="qcard" data-q="22"></div>
+    <div class="qcard" data-q="23"></div><div class="qcard" data-q="24"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">22</div>
+</section>
+
+<!-- ============= PAGE 23 — ROUND 5 (Q25-30) SALES MASTERY ============= -->
+<section class="page boss-page" data-quiz-page="5" data-section-id="finalboss">
+  <div class="page-tag" style="color:#FDBA74">▸ FINAL BOSS · ROUND 5 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 FINAL ROUND · SALES MASTERY</div>
+    <div style="color:#EF4444;font-weight:800;font-size:11px;letter-spacing:.1em">Q 25 → 30 · KILL SHOT</div>
+  </div>
+  <div class="hp-bar r5" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="25"></div><div class="qcard" data-q="26"></div>
+    <div class="qcard" data-q="27"></div><div class="qcard" data-q="28"></div>
+    <div class="qcard" data-q="29"></div><div class="qcard" data-q="30"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">23</div>
+</section>
+
+<!-- ============= PAGE 24 — ANSWER KEY / RESULTS ============= -->
+<section class="page" id="resultsPage" data-section-id="results">
+  <div class="page-tag" style="color:#EA580C">▸ FINAL BOSS · RESULTS</div>
+  <div class="level-banner lvl-test" style="margin-top:.4in">🎯 ANSWER KEY · YOUR RESULTS</div>
+  <h2 style="margin-top:14px">🗝️ The Key.</h2>
+  <p class="lead print-only" style="display:none">Score yourself. Tier yourself. Earn the badge.</p>
+
+  <div id="liveResults" class="interactive-only" style="margin-top:18px;background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:18px;padding:24px;color:#fff">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+      <div>
+        <p style="color:#94A3B8;font-size:11px;letter-spacing:.18em;font-weight:800;margin:0">▸ YOUR LIVE SCORE</p>
+        <p style="font-family:'Bricolage Grotesque';font-size:54px;font-weight:800;color:#FACC15;margin-top:4px;line-height:1">
+          <span id="scoreCorrect">0</span><span style="color:#475569">/30</span>
+        </p>
+        <p style="font-size:13px;color:#CBD5E1;margin-top:4px">Total XP: <b id="scoreXP" style="color:#FDBA74">0</b> <span style="color:#475569">/ 280</span></p>
+      </div>
+      <div id="tierBadge" style="text-align:center"></div>
+    </div>
+    <div style="margin-top:14px;background:#334155;height:14px;border-radius:7px;overflow:hidden;border:1px solid #475569">
+      <div id="scoreBar" style="height:100%;width:0%;background:linear-gradient(90deg,#EA580C,#FDBA74);transition:width .4s ease"></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button id="submitBtn" style="background:linear-gradient(135deg,#EA580C,#9A3412);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📤 SUBMIT TO TRAINER</button>
+      <button id="copyBtn" style="background:#EA580C;color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📋 COPY RESULTS</button>
+      <button id="resetBtn" style="background:#1E293B;color:#FACC15;border:1px solid #475569;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">↻ RESTART QUIZ</button>
+    </div>
+    <div id="submitStatus" style="margin-top:10px;font-size:12px;font-weight:700;color:#94A3B8;min-height:18px;white-space:pre-wrap"></div>
+  </div>
+
+  <div class="answer-key-static">
+  <div class="key-grid">
+    <div class="key-cell"><span>Q1</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q2</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q3</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q4</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q5</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q6</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q7</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q8</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q9</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q10</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q11</span><span class="a">D</span></div>
+    <div class="key-cell"><span>Q12</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q13</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q14</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q15</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q16</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q17</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q18</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q19</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q20</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q21</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q22</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q23</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q24</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q25</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q26</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q27</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q28</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q29</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q30</span><span class="a">C</span></div>
+  </div>
+
+  <h3 style="margin-top:24px">🏆 Scoring tiers</h3>
+  <div class="tier tier-gold"><div class="medal">🥇</div><div><b>24–30 correct → VFD COMMANDER.</b> Earn the ⚡ badge. You quote drives like an engineer.</div></div>
+  <div class="tier tier-silver"><div class="medal">🥈</div><div><b>18–23 correct → VFD-CAPABLE.</b> Re-run the APPLY level and re-fight.</div></div>
+  <div class="tier tier-bronze"><div class="medal">🥉</div><div><b>0–17 correct → BACK TO THE DRIVES.</b> Re-read LEARN. The Demon waits.</div></div>
+  </div><!-- /answer-key-static -->
+  <div class="page-num">24</div>
+</section>
+
+<!-- ============= PAGE 25 — LOOT DROP / POCKET CHEAT SHEET ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ LOOT DROP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">💎 POCKET CHEAT SHEET</div>
+  <h2 style="margin-top:14px">Tear-out card.</h2>
+  <p class="lead">Print it. Tape it next to your phone. Reference forever.</p>
+
+  <div class="loot" style="margin-top:18px">
+    <div class="stamp">✂ TEAR HERE</div>
+
+    <h3>⚡ What a VFD does</h3>
+    <p>Converts fixed-frequency AC → variable-frequency/voltage AC output. Controls motor speed (via Hz) and torque (via V/Hz ratio). Power path: <b>Utility → Rectifier → DC Bus → Inverter (PWM) → Motor.</b></p>
+
+    <h3>🔴🟠 Constant vs Variable Torque — the critical split</h3>
+    <p><b>CT (constant torque):</b> Conveyors, extruders, mixers, PD pumps, hoists → full torque at low speed → don't undersize → inverter-duty motor required.<br><b>VT (variable torque):</b> Fans, centrifugal pumps, blowers → torque drops with speed → huge energy savings (cube law) → may downsize drive.</p>
+
+    <h3>📐 Single-phase derating</h3>
+    <p>3-phase VFD on single-phase input: <b>oversize by 1.73×</b> (or next size up). No exceptions for standard drives. Failure = DC bus overheating and early failure.</p>
+
+    <h3>🔧 Motor compatibility quick guide</h3>
+    <p><b>Inverter-duty:</b> ✅ Any speed, any carrier freq. <b>Standard TEFC:</b> ⚠️ Above ~40 Hz only. <b>ODP:</b> ❌ Avoid on VFD service. Long leads (&gt;50 ft): add output reactor or dv/dt filter.</p>
+
+    <h3>🌡️ VFD enclosures</h3>
+    <p>Open/chassis = inside panel. NEMA 1 = clean indoor. NEMA 12 = dusty plant. NEMA 4/4X = washdown or outdoor. Drives generate heat — plan thermal management in closed enclosures.</p>
+
+    <h3>🛠️ Accessories when to offer</h3>
+    <p><b>Line reactor:</b> Input protection, harmonics. <b>Load reactor:</b> Output, medium cable runs 50–200 ft. <b>dv/dt filter:</b> 100–500 ft or older motors. <b>Sine wave filter:</b> Long runs, sensitive motors. <b>Braking resistor:</b> High inertia, fast stops. <b>EMI filter:</b> Near sensors/PLCs.</p>
+
+    <h3>📞 The 5 first questions</h3>
+    <p>1) Load type (fan, pump, conveyor?)  2) Motor HP and FLA  3) Input voltage and phase  4) Inverter-duty motor?  5) Cable run length?</p>
+
+    <h3>🚨 5 Mistakes to Avoid</h3>
+    <p>Undersizing to HP alone · Ignoring single-phase derating · Non-inverter motor at low speed · No heat plan for sealed enclosure · VT drive on a CT load.</p>
+
+    <h3>🧠 The Memory Hook</h3>
+    <p style="font-size:16px;font-weight:800;color:#9A3412">Fan or pump = variable torque = biggest energy savings. Conveyor or hoist = constant torque = don't undersize. Single phase = oversize. Long leads = add output accessories.</p>
+  </div>
+  <div class="page-num">25</div>
+</section>
+
+<!-- ============= PAGE 26 — TROPHY CASE ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ FINAL XP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">🏅 TROPHY CASE</div>
+  <h2 style="margin-top:14px">Your earned XP.</h2>
+
+  <div class="trophy-grid">
+    <div class="trophy"><div class="icon">🧠</div><h3>VFD FOUNDATIONS LOCKED</h3><div class="xp-num">+80 XP</div></div>
+    <div class="trophy"><div class="icon">🔥</div><h3>MINI BOSSES</h3><div class="xp-num">+50 XP</div></div>
+    <div class="trophy"><div class="icon">💼</div><h3>VFD-CAPABLE</h3><div class="xp-num">+90 XP</div></div>
+    <div class="trophy"><div class="icon">⚡</div><h3>VFD COMMANDER</h3><div class="xp-num">+60 XP</div></div>
+  </div>
+
+  <div class="factbox" style="margin-top:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="font-size:16px">TOTAL POSSIBLE XP</h3>
+      <div style="font-family:'Bricolage Grotesque';font-size:46px;font-weight:800;color:#CA8A04">280</div>
+    </div>
+    <hr class="faint">
+    <p style="font-size:12px;color:var(--slate-500)">Eight product-mastery volumes cleared. Up next on the motor control track: Soft Starters · Line &amp; Load Reactors · Harmonic Filters — each one building on the VFD knowledge you just locked.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:18px">
+    🔓 <b>NEXT UNLOCKS:</b> Soft starters and VFDs are cousins — the motor starts smoothly in both. The difference is VFDs keep running at variable speed while soft starters hand off to full voltage at run speed.
+  </div>
+  <div class="page-num">26</div>
+</section>
+
+<!-- ============= PAGE 27 — CLOSING ============= -->
+<section class="page closing-page" data-section-id="results">
+  <h1 style="font-size:84px">⚡</h1>
+  <h1 style="margin-top:14px">Control it.<br>Size it.<br>Quote the right drive.</h1>
+  <p style="font-size:20px;max-width:5.5in;margin:24px auto 0">VFDs are the most powerful energy-saving and process-control tool in the motor control catalog. Master the torque-type split, the derating rules, and the accessory decision — and every drive call becomes a confident, profitable quote.</p>
+</section>
+
+<!-- ADMIN OVERLAY (browser only) -->
+<div id="adminOverlay" class="interactive-only"></div>
+
+<script src="../shared/module.js?v=editor-blocks-2-page-delete"></script>
+<script>
+RSPModule.init({
+  moduleId:   "vfd-mastery",
+  moduleName: "VFD Mastery",
+  moduleIcon: "⚡",
+
+  totalQuestions: 30,
+  passGold:       24,
+  passSilver:     18,
+  pageXpTotal:    170,   // 8 LEARN × 10 + 6 APPLY × 15
+  minibossXpTotal: 50,
+  adminPassword:  (window.RSP_CONFIG && window.RSP_CONFIG.adminPassword) || "",
+  pumbleWebhookUrl: "",
+  storageKey: "rsp_vfd_mastery_progress",
+
+  tierBadges: {
+    gold:   { name:"VFD COMMANDER",    msg:"You quote drives like an engineer." },
+    silver: { name:"VFD-CAPABLE",      msg:"Re-run APPLY level and re-fight." },
+    bronze: { name:"BACK TO THE DRIVES", msg:"Re-read LEARN. The Demon waits." }
+  },
+  tierSubmitText: {
+    gold:   "🥇 VFD Commander",
+    silver: "🥈 VFD-Capable — Re-run APPLY level",
+    bronze: "🥉 Needs Re-do — Back to LEARN"
+  },
+
+  // -------- THE 30-QUESTION BOSS FIGHT --------
+  quiz: [
+    // ROUND 1 — VFD Foundations
+    {n:1,  q:"A VFD controls motor speed and torque by varying:", opts:{A:"Voltage only",B:"Frequency only",C:"Both frequency and voltage",D:"Current only"}, c:"C"},
+    {n:2,  q:"Which application is a constant torque load?", opts:{A:"Centrifugal pump",B:"Fan or blower",C:"Conveyor or extruder",D:"Water circulator"}, c:"C"},
+    {n:3,  q:"Variable torque loads most commonly include:", opts:{A:"Conveyors and mixers",B:"Extruders and presses",C:"Fans and centrifugal pumps",D:"Hoists and cranes"}, c:"C"},
+    {n:4,  q:"The main reason VFDs save energy on fans and pumps is:", opts:{A:"They reduce voltage spikes on the line",B:"Motor power drops sharply at reduced speeds — a fan at 50% speed uses only ~12.5% of full power",C:"They increase motor torque efficiency",D:"They eliminate harmonic distortion"}, c:"B"},
+    {n:5,  q:"A three-phase-rated VFD is being run on single-phase power. What must the rep do?", opts:{A:"Use a smaller drive",B:"No adjustment needed",C:"Oversize the drive — typically by ~1.73×",D:"Reduce the input voltage"}, c:"C"},
+    {n:6,  q:"Failing to derate a VFD on single-phase power typically causes:", opts:{A:"Audible motor noise",B:"DC bus overheating and shortened drive life",C:"Reduced motor speed",D:"Lower voltage drop"}, c:"B"},
+
+    // ROUND 2 — Motor & Compatibility
+    {n:7,  q:"Which motor type is required for continuous low-speed VFD operation?", opts:{A:"ODP (open drip-proof)",B:"Severe duty washdown",C:"Inverter-duty rated",D:"Any standard TEFC motor"}, c:"C"},
+    {n:8,  q:"Long motor cable runs (>50–100 ft) on VFDs can cause:", opts:{A:"Lower motor efficiency",B:"Voltage reflection and insulation stress at motor terminals",C:"Reduced motor torque",D:"Slower motor acceleration"}, c:"B"},
+    {n:9,  q:"Which accessory specifically limits voltage rise rate (dv/dt) to protect motor insulation on long cable runs?", opts:{A:"Line reactor",B:"Load reactor",C:"dv/dt filter",D:"Surge suppressor"}, c:"C"},
+    {n:10, q:"Increasing the VFD carrier frequency results in:", opts:{A:"Higher motor torque",B:"Lower drive heat output",C:"Quieter motor operation",D:"Higher drive efficiency"}, c:"C"},
+    {n:11, q:"Which VFD enclosure is required for a washdown or outdoor environment?", opts:{A:"Open / chassis",B:"NEMA 1",C:"NEMA 12",D:"NEMA 4 / 4X"}, c:"D"},
+    {n:12, q:"Which braking method dumps regenerated motor energy into a resistor as heat?", opts:{A:"DC injection braking",B:"Regenerative braking",C:"Dynamic braking",D:"Plug braking"}, c:"C"},
+
+    // ROUND 3 — Braking, Protection & Accessories
+    {n:13, q:"Which load type most commonly requires a dynamic braking solution?", opts:{A:"Centrifugal fans",B:"High-inertia loads like conveyors and hoists",C:"Centrifugal pumps",D:"Blowers"}, c:"B"},
+    {n:14, q:"Why are line reactors added to a VFD installation?", opts:{A:"To reduce motor noise",B:"To reduce harmonics fed back to the utility and limit inrush current",C:"To increase motor torque at low speed",D:"To lower motor RPM range"}, c:"B"},
+    {n:15, q:"Constant torque means:", opts:{A:"Torque drops at low speed",B:"Torque stays constant across all operating speeds",C:"Torque increases with speed",D:"Torque decreases proportionally with speed"}, c:"B"},
+    {n:16, q:"For a variable torque load, the VFD may be sized:", opts:{A:"Larger than a constant torque drive for the same HP motor",B:"Smaller than a constant torque drive for the same HP motor",C:"Identically to a constant torque drive",D:"Without regard to motor FLA"}, c:"B"},
+    {n:17, q:"Which VFD parameter controls how quickly the motor accelerates to speed?", opts:{A:"Carrier frequency",B:"Ramp time (accel/decel setting)",C:"Output voltage level",D:"Motor poles setting"}, c:"B"},
+    {n:18, q:"VFDs protect motors primarily by:", opts:{A:"Increasing the motor's steady-state voltage",B:"Providing soft starting that limits inrush current",C:"Boosting motor torque above nameplate",D:"Raising the supply current to the motor"}, c:"B"},
+
+    // ROUND 4 — Sizing & Technical
+    {n:19, q:"If a VFD is undersized for its load, the most likely result is:", opts:{A:"Lower motor noise",B:"Reduced speed only",C:"Drive overcurrent faults or premature failure",D:"Higher energy efficiency"}, c:"C"},
+    {n:20, q:"A standard TEFC motor run at very low speeds on a VFD risks:", opts:{A:"Phase-to-phase short circuit",B:"Voltage reflection spikes",C:"Overheating because the cooling fan slows proportionally with motor speed",D:"Excessive audible noise only"}, c:"C"},
+    {n:21, q:"Regenerative braking works by:", opts:{A:"Dissipating motor energy as heat in a resistor",B:"Feeding motor braking energy back to the AC supply line",C:"Always requiring a braking resistor",D:"Using DC injection to slow the motor"}, c:"B"},
+    {n:22, q:"What is the primary factor for sizing a VFD?", opts:{A:"Motor nameplate HP alone",B:"Motor FLA (full-load amps)",C:"Motor RPM",D:"Motor frame size (NEMA frame)"}, c:"B"},
+    {n:23, q:"PWM stands for:", opts:{A:"Power Wave Modulation",B:"Pulse Width Modulation",C:"Phase Wave Modulation",D:"Power Width Modulation"}, c:"B"},
+    {n:24, q:"Which VFD output accessory produces the cleanest, near-true-sine-wave output to the motor?", opts:{A:"Line reactor",B:"Sine wave filter",C:"Fuse block",D:"Circuit breaker"}, c:"B"},
+
+    // ROUND 5 — Sales Mastery
+    {n:25, q:"What primarily limits a VFD's heat-dissipation capacity in a sealed enclosure?", opts:{A:"Input current rating",B:"Input voltage level",C:"Ambient temperature of the installation location",D:"Output frequency setting"}, c:"C"},
+    {n:26, q:"Which load type achieves the greatest energy savings from speed reduction?", opts:{A:"Constant torque loads — conveyors and extruders",B:"Variable torque loads — fans and centrifugal pumps",C:"Mixed-duty cyclic loads",D:"Static resistive loads"}, c:"B"},
+    {n:27, q:"What happens if a VFD is connected to the wrong input voltage (e.g., 460V drive on a 208V supply)?", opts:{A:"No effect — VFDs are auto-ranging",B:"Higher efficiency at lower voltage",C:"Drive damage or destruction",D:"Only motor speed decreases"}, c:"C"},
+    {n:28, q:"Which VFD feature reduces mechanical stress and extends motor life compared to across-the-line starting?", opts:{A:"High carrier frequency setting",B:"Fast ramp (short accel time)",C:"Programmed soft start — gradual acceleration ramp",D:"Constant output voltage"}, c:"C"},
+    {n:29, q:"Which environment requires a sealed NEMA 4 / 4X VFD enclosure?", opts:{A:"Clean office environment",B:"Indoor data center",C:"Washdown or outdoor installation",D:"Clean-room electronics assembly"}, c:"C"},
+    {n:30, q:"On a VFD sales call, which question should the rep ask FIRST?", opts:{A:"What brand does the customer prefer?",B:"What is the cost target?",C:"What is the load type — fan, pump, conveyor, or other?",D:"What enclosure size does the customer need?"}, c:"C"}
+  ],
+
+  // -------- MINI-BOSSES --------
+  minibosses: {
+    'frequency-phantom': {
+      name: 'FREQUENCY PHANTOM',
+      icon: '👻',
+      tagline: 'Guardian of the Waveform',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"A VFD controls motor speed and torque by varying:", opts:{A:"Voltage only",B:"Current only",C:"Both frequency and voltage",D:"RPM directly via gearbox"}, c:"C"},
+        {q:"A conveyor is which type of torque load?", opts:{A:"Variable torque",B:"No torque concern",C:"Constant torque",D:"Regenerative torque"}, c:"C"},
+        {q:"For continuous low-speed VFD operation, which motor type is required?", opts:{A:"ODP open-frame",B:"Standard TEFC",C:"Inverter-duty rated",D:"Any motor will work"}, c:"C"},
+        {q:"When a three-phase VFD is run on single-phase input, you should:", opts:{A:"Use the same drive size",B:"Use a smaller drive to reduce heat",C:"Oversize the drive by ~1.73× or use the next size up",D:"Reduce input voltage to compensate"}, c:"C"},
+        {q:"The main energy-savings advantage of a VFD on a centrifugal fan is that:", opts:{A:"Fans always run at full load and don't benefit",B:"Fans are constant torque so savings are steady",C:"Fan power drops by the cube of speed — 50% speed = ~12.5% power",D:"VFDs eliminate all harmonic losses"}, c:"C"}
+      ]
+    },
+    'derating-demon': {
+      name: 'DERATING DEMON',
+      icon: '🔥',
+      tagline: 'Keeper of the Current',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"A food processing plant needs a VFD that can be hosed down. Which enclosure is required?", opts:{A:"Open chassis",B:"NEMA 1",C:"NEMA 12",D:"NEMA 4 / 4X"}, c:"D"},
+        {q:"High-inertia loads like presses and hoists most commonly need:", opts:{A:"Smaller VFDs to limit heat",B:"No braking — they coast down safely",C:"Dynamic braking resistors for fast controlled stops",D:"DC injection braking only"}, c:"C"},
+        {q:"What does a line reactor protect in a VFD installation?", opts:{A:"Nothing — it is only decorative",B:"The VFD from utility harmonics, inrush, and voltage transients",C:"The motor from voltage spikes on the output side",D:"The operator from electric shock"}, c:"B"},
+        {q:"A VFD should be sized primarily based on:", opts:{A:"Motor HP nameplate only",B:"Motor FLA (full-load amps)",C:"Motor RPM",D:"Motor NEMA frame size"}, c:"B"},
+        {q:"A non-inverter-duty motor run at low speed on a VFD will most likely:", opts:{A:"Experience over-voltage on the windings",B:"Reverse phase rotation",C:"Overheat because the shaft-driven cooling fan slows with the motor",D:"Only produce excessive noise"}, c:"C"}
+      ]
+    }
+  },
+
+  // -------- SIDE MAP --------
+  mapSections: [
+    {id:'intro',         name:'Start',          icon:'🏁', meta:'Pages 1–3',   firstPage:1},
+    {id:'foundation',    name:'VFD Basics',     icon:'⚡', meta:'Pages 4–6',   firstPage:4},
+    {id:'compatibility', name:'Compatibility',  icon:'🔧', meta:'Pages 7–11',  firstPage:7},
+    {id:'mb1',           name:'Freq. Phantom',  icon:'👻', meta:'Mini Boss',   firstPage:11, isBoss:true, bossId:'frequency-phantom'},
+    {id:'accessories',   name:'Accessories',    icon:'🛠️', meta:'Pages 12–14', firstPage:12},
+    {id:'application',   name:'Application',    icon:'💼', meta:'Pages 15–17', firstPage:15},
+    {id:'mb2',           name:'Derating Demon', icon:'🔥', meta:'Mini Boss',   firstPage:17, isBoss:true, bossId:'derating-demon'},
+    {id:'finalboss',     name:'VFD Arena',      icon:'🐉', meta:'30 Questions',firstPage:18, isBoss:true, isFinal:true},
+    {id:'results',       name:'Results',        icon:'🏆', meta:'Trophy Case', firstPage:24}
+  ],
+
+  pageRanges: [
+    {section:'intro',         from:1,  to:3},
+    {section:'foundation',    from:4,  to:6},
+    {section:'compatibility', from:7,  to:11},
+    {section:'accessories',   from:12, to:14},
+    {section:'application',   from:15, to:17},
+    {section:'finalboss',     from:18, to:23},
+    {section:'results',       from:24, to:27}
+  ]
+});
+</script>
+
+</body>
+</html>

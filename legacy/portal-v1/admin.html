@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RSP Training Portal · Admin</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+   * EDIT THIS: change the admin password before deploying
+   * ============================================================ */
+  /* (password lives in the script section below) */
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:#0F172A;font-family:'Inter',system-ui,sans-serif;color:#fff;min-height:100vh;
+  }
+  h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;line-height:1.05}
+  .wrap{max-width:1400px;margin:0 auto;padding:30px 32px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding-bottom:24px;border-bottom:1px solid #1E293B}
+  .pretitle{color:#FACC15;font-size:11px;letter-spacing:.18em;font-weight:800}
+  h1{font-size:38px;color:#FACC15;margin-top:4px}
+  .actions{display:flex;gap:8px;flex-wrap:wrap}
+  .btn{background:#1E40AF;color:#fff;border:none;padding:10px 16px;border-radius:8px;font-weight:800;cursor:pointer;font-family:inherit;font-size:12px;letter-spacing:.05em;text-decoration:none;display:inline-block}
+  .btn.danger{background:#EF4444}
+  .btn.muted{background:#1E293B;border:1px solid #334155}
+  .btn:hover{transform:translateY(-1px)}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px}
+  .stat{background:linear-gradient(160deg,#1E293B,#0F172A);border:1px solid #334155;border-radius:14px;padding:20px}
+  .stat .label{color:#FACC15;font-size:11px;font-weight:800;letter-spacing:.1em}
+  .stat .num{font-family:'Bricolage Grotesque';font-size:42px;font-weight:800;color:#fff;margin-top:6px;line-height:1}
+  .stat .delta{color:#94A3B8;font-size:11px;margin-top:4px}
+
+  .filter-bar{margin-top:24px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:#1E293B;border-radius:14px;padding:12px 16px;border:1px solid #334155}
+  .filter-bar label{color:#94A3B8;font-size:11px;font-weight:800;letter-spacing:.1em}
+  .filter-bar input,.filter-bar select{
+    background:#0F172A;border:1px solid #334155;color:#fff;padding:8px 12px;border-radius:6px;font-family:inherit;font-size:12px;
+  }
+  .filter-bar input{min-width:240px}
+
+  .panel{background:linear-gradient(160deg,#1E293B,#0F172A);border:1px solid #334155;border-radius:14px;padding:20px;margin-top:18px}
+  .panel h3{color:#FACC15;font-size:14px;font-weight:800;letter-spacing:.1em;margin-bottom:14px}
+  .editor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+  .editor-module{
+    display:flex;gap:12px;align-items:center;justify-content:space-between;
+    background:#0F172A;border:1px solid #334155;border-radius:10px;padding:12px;
+  }
+  .editor-module .meta{min-width:0}
+  .editor-module .name{color:#fff;font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .editor-module .sub{color:#64748B;font-size:10px;font-weight:700;margin-top:2px;text-transform:uppercase;letter-spacing:.08em}
+  .editor-module .tools{display:flex;gap:6px;flex:0 0 auto}
+  .editor-module .tools a{font-size:11px;padding:8px 10px}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  table th{text-align:left;color:#FACC15;padding:10px 8px;border-bottom:1px solid #334155;font-size:10px;letter-spacing:.1em;font-weight:800;cursor:pointer;user-select:none}
+  table th:hover{color:#fff}
+  table td{padding:12px 8px;border-bottom:1px solid #1E293B;color:#E2E8F0;vertical-align:middle}
+  table tr:hover td{background:rgba(255,255,255,.02)}
+  .tier-pill{padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.05em;display:inline-block}
+  .tier-gold{background:#FEF3C7;color:#78350F}
+  .tier-silver{background:#E2E8F0;color:#1E293B}
+  .tier-bronze{background:#FED7AA;color:#7C2D12}
+  .tier-progress{background:#1E40AF;color:#BFDBFE}
+  .tier-new{background:#475569;color:#CBD5E1}
+  .modules-cell{display:flex;gap:3px;flex-wrap:wrap}
+  .module-dot{width:18px;height:18px;border-radius:4px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff}
+  .module-dot.completed{background:#10B981}
+  .module-dot.progress{background:#F59E0B}
+  .module-dot.new{background:#475569}
+
+  .empty{text-align:center;padding:40px;color:#64748B}
+  .empty .ico{font-size:48px;margin-bottom:10px}
+
+  /* User status pills */
+  .status-pill{display:inline-block;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+  .status-active     {background:#065F46;color:#A7F3D0}
+  .status-on_leave   {background:#78350F;color:#FED7AA}
+  .status-trainer    {background:#5B21B6;color:#DDD6FE}
+  .status-inactive   {background:#334155;color:#94A3B8}
+  .status-terminated {background:#7F1D1D;color:#FECACA;text-decoration:line-through;opacity:.7}
+
+  /* Avatar circle in ledger */
+  .lb-avatar{width:36px;height:36px;border-radius:50%;overflow:hidden;flex:0 0 36px;background:#0F172A;display:inline-block;vertical-align:middle;margin-right:8px}
+  .lb-avatar svg{display:block;width:100%;height:100%}
+
+  table tr.row-clickable{cursor:pointer}
+  table tr.row-clickable:hover td{background:rgba(250,204,21,.04)}
+
+  /* Profile drawer (slides in from right) */
+  #drawerOverlay{position:fixed;inset:0;background:rgba(15,23,42,.75);z-index:9000;display:none;backdrop-filter:blur(2px)}
+  #drawerOverlay.show{display:block}
+  #profileDrawer{
+    position:fixed;top:0;right:-560px;width:540px;max-width:100vw;height:100vh;
+    background:linear-gradient(160deg,#1E293B,#0F172A);border-left:1px solid #334155;
+    transition:right .25s ease;z-index:9001;overflow-y:auto;padding:24px 26px;
+    box-shadow:-20px 0 60px rgba(0,0,0,.5);
+  }
+  #profileDrawer.open{right:0}
+  .drawer-close{position:absolute;top:18px;right:18px;background:#0F172A;border:1px solid #334155;color:#94A3B8;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;font-family:inherit}
+  .drawer-close:hover{color:#fff;border-color:#FACC15}
+  .drawer-header{display:flex;align-items:center;gap:16px;padding-bottom:16px;border-bottom:1px solid #334155}
+  .drawer-avatar{width:72px;height:72px;border-radius:50%;overflow:hidden;flex:0 0 72px;background:#0F172A}
+  .drawer-avatar svg{display:block;width:100%;height:100%}
+  .drawer-header h2{color:#fff;font-size:24px;line-height:1.1}
+  .drawer-header .id{color:#94A3B8;font-size:12px;margin-top:2px}
+  .drawer-header .meta-row{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+  .drawer-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}
+  .drawer-stat{background:#0F172A;border:1px solid #334155;border-radius:10px;padding:10px;text-align:center}
+  .drawer-stat .lbl{color:#94A3B8;font-size:9px;letter-spacing:.1em;font-weight:800}
+  .drawer-stat .num{font-family:'Bricolage Grotesque';font-size:22px;color:#FACC15;font-weight:800;margin-top:2px;line-height:1}
+  .drawer-section{margin-top:22px}
+  .drawer-section h3{color:#FACC15;font-size:11px;font-weight:800;letter-spacing:.15em;margin-bottom:10px;text-transform:uppercase}
+  .module-row-d{background:#0F172A;border:1px solid #334155;border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px;font-size:12px}
+  .module-row-d .ico{font-size:18px}
+  .module-row-d .info{flex:1}
+  .module-row-d .info .nm{color:#fff;font-weight:700;font-size:12px}
+  .module-row-d .info .meta-d{color:#64748B;font-size:10px;margin-top:1px}
+  .module-row-d .xp-d{font-family:'Bricolage Grotesque';color:#FACC15;font-weight:800;font-size:13px}
+  .module-row-d.completed{border-color:#10B981}
+  .badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+  .badge-tile{background:#0F172A;border:1px solid #334155;border-radius:10px;padding:12px 8px;text-align:center}
+  .badge-tile .bico{font-size:30px;line-height:1}
+  .badge-tile .bnm{color:#fff;font-size:11px;font-weight:700;margin-top:4px;line-height:1.2}
+  .badge-tile.manual{border-color:#9333EA}
+  .badge-tile .manual-tag{font-size:8px;color:#A78BFA;letter-spacing:.05em;margin-top:2px;font-weight:800}
+  .kudo-row{background:#0F172A;border:1px solid #334155;border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:12px;color:#E2E8F0}
+  .kudo-row .who-k{color:#94A3B8;font-size:10px;font-weight:600;margin-bottom:2px}
+  .drawer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid #334155}
+  .drawer-actions .btn{font-size:11px;padding:8px 12px}
+
+  /* Status edit + Grant badge inline forms */
+  .inline-form{background:#0F172A;border:1px solid #334155;border-radius:10px;padding:14px;margin-top:10px}
+  .inline-form label{display:block;color:#94A3B8;font-size:10px;font-weight:800;letter-spacing:.1em;margin-top:8px}
+  .inline-form select, .inline-form input, .inline-form textarea{
+    width:100%;background:#1E293B;border:1px solid #334155;color:#fff;padding:8px 10px;border-radius:6px;
+    font-family:inherit;font-size:12px;margin-top:4px;
+  }
+  .inline-form textarea{min-height:60px;resize:vertical}
+  .inline-form .form-actions{display:flex;gap:6px;justify-content:flex-end;margin-top:10px}
+
+  /* Login overlay */
+  #loginGate{
+    position:fixed;inset:0;background:radial-gradient(circle at top right,#1E40AF 0%,#0F172A 70%);
+    z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  #loginGate.hidden{display:none}
+  .gate-card{
+    background:#1E293B;border-radius:18px;padding:36px;max-width:420px;width:100%;
+    border:2px solid #312E81;text-align:center;
+  }
+  .gate-card h2{color:#FACC15;font-size:28px}
+  .gate-card p{color:#94A3B8;font-size:13px;margin-top:8px}
+  .gate-card input{width:100%;padding:14px;background:#0F172A;border:2px solid #334155;border-radius:8px;color:#fff;margin-top:16px;font-size:14px;font-family:inherit}
+  .gate-card input:focus{outline:none;border-color:#FACC15}
+  .gate-card button{width:100%;padding:14px;background:linear-gradient(135deg,#FACC15,#CA8A04);color:#0F172A;border:none;border-radius:8px;font-weight:800;cursor:pointer;margin-top:14px;font-family:inherit;font-size:14px}
+  .err{color:#EF4444;font-size:12px;font-weight:700;margin-top:8px;min-height:14px}
+
+  @media(max-width:900px){
+    .stat-grid{grid-template-columns:repeat(2,1fr)}
+  }
+</style>
+</head>
+<body>
+
+<!-- Admin login gate -->
+<div id="loginGate">
+  <div class="gate-card">
+    <div style="font-size:48px">🔒</div>
+    <h2>Admin Access</h2>
+    <p>Enter the admin password to view all learner results across the training portal.</p>
+    <input type="password" id="adminPwd" placeholder="Admin password" autocomplete="off"/>
+    <div class="err" id="adminErr"></div>
+    <button id="adminGo">Unlock →</button>
+    <p style="margin-top:18px"><a href="index.html" style="color:#64748B;font-size:11px;text-decoration:none">← Back to portal</a></p>
+  </div>
+</div>
+
+<div id="dash" style="display:none">
+  <div class="wrap">
+    <div class="topbar">
+      <div>
+        <div class="pretitle">RSP INDUSTRIAL · TRAINING PORTAL ADMIN</div>
+        <h1>⚡ Trainer Dashboard</h1>
+        <p style="color:#94A3B8;margin-top:4px">All learner data on this device. Wipe / export with the actions below.</p>
+      </div>
+      <div class="actions">
+        <a href="index.html" class="btn muted">← Portal</a>
+        <button class="btn" id="exportCsv">⬇ EXPORT CSV</button>
+        <button class="btn" id="copyJson">📋 COPY JSON</button>
+        <button class="btn danger" id="wipeAll">🗑 WIPE ALL</button>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat"><div class="label">TOTAL LEARNERS</div><div class="num" id="sLearners">0</div><div class="delta" id="dLearners"></div></div>
+      <div class="stat"><div class="label">MODULES PUBLISHED</div><div class="num" id="sModules">0</div><div class="delta" id="dModules"></div></div>
+      <div class="stat"><div class="label">COMPLETIONS</div><div class="num" id="sCompletions">0</div><div class="delta" id="dCompletions"></div></div>
+      <div class="stat"><div class="label">AVG SCORE</div><div class="num" id="sAvg">0</div><div class="delta">across completed modules</div></div>
+    </div>
+
+    <div class="panel">
+      <h3>MODULE CONTENT EDITOR</h3>
+      <div class="editor-grid" id="moduleEditorGrid"></div>
+    </div>
+
+    <div class="filter-bar">
+      <label>SEARCH</label>
+      <input id="searchBox" placeholder="Filter by name or employee ID..."/>
+      <label>MODULE</label>
+      <select id="moduleFilter"><option value="">All modules</option></select>
+      <label>PROGRESS</label>
+      <select id="statusFilter">
+        <option value="">Any progress</option>
+        <option value="completed">Completed</option>
+        <option value="progress">In Progress</option>
+        <option value="new">Not started</option>
+      </select>
+      <label>USER STATUS</label>
+      <select id="userStatusFilter">
+        <option value="">All users</option>
+        <option value="active">Active</option>
+        <option value="on_leave">On Leave</option>
+        <option value="trainer">Trainer</option>
+        <option value="inactive">Inactive</option>
+        <option value="terminated">Terminated</option>
+      </select>
+    </div>
+
+    <div class="panel">
+      <h3>📋 LEARNER LEDGER</h3>
+      <table>
+        <thead>
+          <tr>
+            <th data-sort="name">NAME / ID</th>
+            <th data-sort="started">STARTED</th>
+            <th data-sort="modules">MODULES</th>
+            <th data-sort="xp">LIFETIME XP</th>
+            <th data-sort="completions">COMPLETED</th>
+            <th data-sort="avgScore">AVG SCORE</th>
+            <th>LATEST ACTIVITY</th>
+          </tr>
+        </thead>
+        <tbody id="ledgerBody"></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h3>📊 MODULE COMPLETION HEATMAP</h3>
+      <div id="heatmap"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE DRAWER -->
+<div id="drawerOverlay"></div>
+<aside id="profileDrawer">
+  <button class="drawer-close" id="drawerCloseBtn" title="Close">×</button>
+  <div id="drawerContent">Loading…</div>
+</aside>
+
+<script src="manifest.js"></script>
+<script src="avatars.js"></script>
+<script src="badges.js"></script>
+<script src="../../config.local.js"></script>
+<script src="cloud.js"></script>
+<script>
+(function(){
+  // ============================================================
+  // EDIT THIS: admin password
+  // ============================================================
+  // Set in config.local.js at the portal root (git-ignored).
+  const ADMIN_PASSWORD = (window.RSP_CONFIG && window.RSP_CONFIG.adminPassword) || '';
+  const ADMIN_SESSION_KEY = 'rsp_admin_unlocked';
+  // ============================================================
+
+  const KEY_LEDGER = 'rsp_ledger';
+  const KEY_USER = 'rsp_user';
+  let ledger = {};
+  let sortKey = 'xp';
+  let sortDir = -1;
+
+  function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  function lsDel(k){try{localStorage.removeItem(k)}catch(e){}}
+  function ssGet(k){try{return sessionStorage.getItem(k)}catch(e){return null}}
+  function ssSet(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}
+
+  function showDashboard(){
+    document.getElementById('loginGate').classList.add('hidden');
+    document.getElementById('dash').style.display = 'block';
+    load();
+  }
+
+  function unlock(){
+    const pwd = document.getElementById('adminPwd').value;
+    if(ADMIN_PASSWORD && pwd === ADMIN_PASSWORD){
+      ssSet(ADMIN_SESSION_KEY, 'true');
+      showDashboard();
+    } else {
+      document.getElementById('adminErr').textContent = 'Wrong password.';
+    }
+  }
+  document.getElementById('adminGo').addEventListener('click', unlock);
+  document.getElementById('adminPwd').addEventListener('keydown', e => { if(e.key==='Enter') unlock(); });
+  setTimeout(() => document.getElementById('adminPwd').focus(), 100);
+
+  if(ssGet(ADMIN_SESSION_KEY) === 'true'){
+    showDashboard();
+  }
+
+  async function load(){
+    // Fast paint from localStorage first
+    try{ ledger = JSON.parse(lsGet(KEY_LEDGER) || '{}'); }catch(e){ ledger = {}; }
+    populateModuleFilter();
+    renderModuleEditorPanel();
+    renderStats();
+    renderLedger();
+    renderHeatmap();
+
+    // Pull complete cloud data and re-render
+    if(window.RSPCloud && window.RSPCloud.isConfigured){
+      try{
+        const [users, progress] = await Promise.all([
+          window.RSPCloud.listUsers(),
+          window.RSPCloud.getAllProgress()
+        ]);
+        const newLedger = {};
+        (users || []).forEach(u => {
+          newLedger[u.name] = {
+            name: u.name,
+            id: u.employee_id,
+            avatar: u.avatar || 'sparky',
+            status: u.status || 'active',
+            notes: u.notes || '',
+            startedAt: u.started_at ? new Date(u.started_at).getTime() : Date.now(),
+            earnedTiers: u.earned_tiers || [],
+            earnedBadges: u.earned_badges || [],
+            modules: {}
+          };
+        });
+        (progress || []).forEach(p => {
+          if(!newLedger[p.user_name]) return;
+          newLedger[p.user_name].modules[p.module_id] = {
+            moduleId: p.module_id,
+            moduleName: p.module_name,
+            moduleIcon: p.module_icon,
+            answered: p.answered || {},
+            correct: p.correct || 0,
+            total: p.total || 40,
+            viewedPages: p.viewed_pages || [],
+            bossesDefeated: p.bosses_defeated || {},
+            totalXP: p.total_xp || 0,
+            tier: p.tier,
+            completedAt: p.completed_at ? new Date(p.completed_at).getTime() : null,
+            lastUpdate: p.last_update ? new Date(p.last_update).getTime() : Date.now()
+          };
+        });
+        ledger = newLedger;
+        renderStats();
+        renderLedger();
+        renderHeatmap();
+      }catch(e){ console.warn('Cloud load failed:', e); }
+    }
+  }
+
+  function populateModuleFilter(){
+    const sel = document.getElementById('moduleFilter');
+    const m = window.RSP_MANIFEST;
+    m.modules.forEach(mod => {
+      const opt = document.createElement('option');
+      opt.value = mod.id; opt.textContent = mod.icon + ' ' + mod.name;
+      sel.appendChild(opt);
+    });
+  }
+
+  function renderModuleEditorPanel(){
+    const root = document.getElementById('moduleEditorGrid');
+    const m = window.RSP_MANIFEST;
+    if(!root || !m || !m.modules) return;
+    root.innerHTML = m.modules.map(mod => {
+      const editUrl = mod.path + '?edit=true';
+      const previewUrl = mod.path;
+      const status = mod.published ? 'Published' : 'Draft';
+      return '<div class="editor-module">'+
+        '<div class="meta">'+
+          '<div class="name">'+mod.icon+' '+escapeHtml(mod.name)+'</div>'+
+          '<div class="sub">'+escapeHtml(status)+' · '+escapeHtml(mod.category || 'Module')+'</div>'+
+        '</div>'+
+        '<div class="tools">'+
+          '<a class="btn muted" href="'+escapeHtml(previewUrl)+'">Preview</a>'+
+          '<a class="btn" href="'+escapeHtml(editUrl)+'">Edit draft</a>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+  }
+
+  function modStatus(p){
+    if(!p) return 'new';
+    if(p.completedAt) return 'completed';
+    if((p.totalXP || 0) > 0) return 'progress';
+    return 'new';
+  }
+
+  function renderStats(){
+    const learners = Object.values(ledger);
+    const m = window.RSP_MANIFEST;
+    const published = m.modules.filter(x=>x.published);
+
+    let totalCompletions = 0;
+    let scoreSum = 0, scoreCount = 0;
+    learners.forEach(l => {
+      Object.values(l.modules || {}).forEach(p => {
+        if(p.completedAt){
+          totalCompletions++;
+          if(typeof p.correct === 'number' && typeof p.total === 'number'){
+            scoreSum += (p.correct / p.total) * 100;
+            scoreCount++;
+          }
+        }
+      });
+    });
+
+    document.getElementById('sLearners').textContent = learners.length;
+    document.getElementById('sModules').textContent = published.length;
+    document.getElementById('sCompletions').textContent = totalCompletions;
+    document.getElementById('sAvg').textContent = scoreCount > 0 ? Math.round(scoreSum/scoreCount) + '%' : '—';
+  }
+
+  function renderLedger(){
+    const tbody = document.getElementById('ledgerBody');
+    const search = document.getElementById('searchBox').value.toLowerCase();
+    const modFilter = document.getElementById('moduleFilter').value;
+    const statusFilter = document.getElementById('statusFilter').value;
+    const userStatusFilter = document.getElementById('userStatusFilter').value;
+    const m = window.RSP_MANIFEST;
+
+    let learners = Object.values(ledger);
+
+    // Apply filters
+    if(search){
+      learners = learners.filter(l => (l.name||'').toLowerCase().includes(search) || (l.id||'').toLowerCase().includes(search));
+    }
+    if(userStatusFilter){
+      learners = learners.filter(l => (l.status || 'active') === userStatusFilter);
+    }
+    if(modFilter){
+      learners = learners.filter(l => l.modules && l.modules[modFilter]);
+      if(statusFilter){
+        learners = learners.filter(l => modStatus(l.modules[modFilter]) === statusFilter);
+      }
+    } else if(statusFilter){
+      learners = learners.filter(l => {
+        const statuses = m.modules.map(mod => modStatus((l.modules||{})[mod.id]));
+        return statuses.includes(statusFilter);
+      });
+    }
+
+    // Augment with computed fields
+    learners.forEach(l => {
+      const mods = l.modules || {};
+      l._lifetimeXP = Object.values(mods).reduce((s,p) => s + (p.totalXP||0), 0);
+      l._completions = Object.values(mods).filter(p => p.completedAt).length;
+      l._scores = Object.values(mods).filter(p => typeof p.correct === 'number' && typeof p.total === 'number').map(p => p.correct/p.total*100);
+      l._avgScore = l._scores.length ? Math.round(l._scores.reduce((a,b)=>a+b,0)/l._scores.length) : null;
+      l._latest = Math.max(...Object.values(mods).map(p => p.lastUpdate || p.completedAt || 0), 0);
+    });
+
+    // Sort
+    learners.sort((a,b) => {
+      let av, bv;
+      switch(sortKey){
+        case 'name': av = a.name||''; bv = b.name||''; return sortDir * av.localeCompare(bv);
+        case 'started': av = a.startedAt||0; bv = b.startedAt||0; break;
+        case 'modules': av = Object.keys(a.modules||{}).length; bv = Object.keys(b.modules||{}).length; break;
+        case 'xp': av = a._lifetimeXP; bv = b._lifetimeXP; break;
+        case 'completions': av = a._completions; bv = b._completions; break;
+        case 'avgScore': av = a._avgScore||0; bv = b._avgScore||0; break;
+        default: av = 0; bv = 0;
+      }
+      return sortDir * (av - bv);
+    });
+
+    if(learners.length === 0){
+      tbody.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="ico">📋</div><div>No learners match those filters.</div></div></td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = '';
+    learners.forEach(l => {
+      const mods = l.modules || {};
+      const moduleDots = m.modules.map(mod => {
+        const p = mods[mod.id];
+        const status = modStatus(p);
+        const initial = mod.name.charAt(0).toUpperCase();
+        return '<span class="module-dot '+status+'" title="'+escapeHtml(mod.name)+': '+status+'">'+initial+'</span>';
+      }).join('');
+
+      const tier = l._completions === 0 && l._lifetimeXP === 0 ? 'tier-new' :
+                   l._completions === m.modules.filter(x=>x.published).length ? 'tier-gold' :
+                   l._completions > 0 ? 'tier-silver' : 'tier-progress';
+      const tierLabel = l._completions === 0 && l._lifetimeXP === 0 ? 'NEW' :
+                        l._completions === m.modules.filter(x=>x.published).length ? 'COMPLETE' :
+                        l._completions > 0 ? 'PARTIAL' : 'IN PROGRESS';
+
+      const startDate = l.startedAt ? new Date(l.startedAt).toLocaleDateString() : '—';
+      const latest = l._latest ? timeAgo(l._latest) : '—';
+      const userStatus = l.status || 'active';
+      const statusLabel = userStatus.replace('_', ' ').toUpperCase();
+      const avatarSvg = window.renderAvatar ? window.renderAvatar(l.avatar || 'sparky', 36) : '';
+
+      const tr = document.createElement('tr');
+      tr.className = 'row-clickable';
+      tr.dataset.user = l.name;
+      tr.innerHTML =
+        '<td>'+
+          '<span class="lb-avatar">'+avatarSvg+'</span>'+
+          '<b>'+escapeHtml(l.name||'?')+'</b>'+
+          ' <span class="status-pill status-'+userStatus+'">'+statusLabel+'</span>'+
+          '<br><span style="color:#64748B;font-size:11px;margin-left:44px">'+escapeHtml(l.id||'no id')+'</span>'+
+        '</td>'+
+        '<td>'+startDate+'</td>'+
+        '<td><div class="modules-cell">'+moduleDots+'</div></td>'+
+        '<td><b>'+l._lifetimeXP+'</b></td>'+
+        '<td>'+l._completions+' / '+m.modules.filter(x=>x.published).length+'</td>'+
+        '<td>'+(l._avgScore !== null ? l._avgScore+'%' : '—')+'</td>'+
+        '<td><span class="tier-pill '+tier+'">'+tierLabel+'</span><br><span style="color:#64748B;font-size:10px">'+latest+'</span></td>';
+      tr.addEventListener('click', () => openProfile(l.name));
+      tbody.appendChild(tr);
+    });
+  }
+
+  function renderHeatmap(){
+    const root = document.getElementById('heatmap');
+    const m = window.RSP_MANIFEST;
+    const learners = Object.values(ledger);
+    if(learners.length === 0 || m.modules.length === 0){
+      root.innerHTML = '<div class="empty"><div>No completion data yet.</div></div>';
+      return;
+    }
+    let html = '<table style="width:100%"><thead><tr><th>MODULE</th><th>NEW</th><th>IN PROGRESS</th><th>COMPLETED</th><th>COMPLETION %</th></tr></thead><tbody>';
+    m.modules.forEach(mod => {
+      let n=0, p=0, c=0;
+      learners.forEach(l => {
+        const status = modStatus((l.modules||{})[mod.id]);
+        if(status === 'completed') c++;
+        else if(status === 'progress') p++;
+        else n++;
+      });
+      const total = learners.length;
+      const pct = total > 0 ? Math.round(c/total*100) : 0;
+      html += '<tr>'+
+        '<td><b>'+mod.icon+' '+escapeHtml(mod.name)+'</b></td>'+
+        '<td>'+n+'</td><td>'+p+'</td><td>'+c+'</td>'+
+        '<td><div style="background:#0F172A;height:14px;border-radius:7px;overflow:hidden;border:1px solid #334155;width:160px"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,#10B981,#34D399)"></div></div><span style="font-size:11px;color:#94A3B8;margin-left:6px">'+pct+'%</span></td>'+
+      '</tr>';
+    });
+    html += '</tbody></table>';
+    root.innerHTML = html;
+  }
+
+  function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function timeAgo(ts){
+    const diff = Date.now() - ts;
+    const d = Math.floor(diff/86400000);
+    if(d === 0) return 'today';
+    if(d === 1) return '1 day ago';
+    if(d < 30) return d + ' days ago';
+    const mo = Math.floor(d/30);
+    return mo + ' mo ago';
+  }
+
+  // ============================================================
+  // PROFILE DRAWER
+  // ============================================================
+  function openDrawer(){
+    document.getElementById('drawerOverlay').classList.add('show');
+    document.getElementById('profileDrawer').classList.add('open');
+  }
+  function closeDrawer(){
+    document.getElementById('drawerOverlay').classList.remove('show');
+    document.getElementById('profileDrawer').classList.remove('open');
+  }
+  document.getElementById('drawerCloseBtn').addEventListener('click', closeDrawer);
+  document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
+
+  async function openProfile(userName){
+    const content = document.getElementById('drawerContent');
+    content.innerHTML = '<div class="empty"><div>Loading…</div></div>';
+    openDrawer();
+
+    let detail = null;
+    if(window.RSPCloud && window.RSPCloud.isConfigured){
+      try{ detail = await window.RSPCloud.getUserDetail(userName); }catch(e){ console.warn('detail load failed:', e); }
+    }
+    // Fall back to ledger if cloud unavailable
+    const local = ledger[userName] || {};
+    const u = (detail && detail.user) || {
+      name: local.name, employee_id: local.id, avatar: local.avatar || 'sparky',
+      status: local.status || 'active', notes: local.notes || '',
+      started_at: local.startedAt ? new Date(local.startedAt).toISOString() : null,
+      earned_tiers: local.earnedTiers || [], earned_badges: local.earnedBadges || []
+    };
+    const progressList = (detail && detail.progress) || Object.values(local.modules || {}).map(p => ({
+      module_id: p.moduleId, module_name: p.moduleName, module_icon: p.moduleIcon,
+      total_xp: p.totalXP, correct: p.correct, total: p.total, tier: p.tier,
+      completed_at: p.completedAt ? new Date(p.completedAt).toISOString() : null,
+      last_update: p.lastUpdate ? new Date(p.lastUpdate).toISOString() : null
+    }));
+    const kudosReceived = (detail && detail.kudosReceived) || [];
+    const kudosSent     = (detail && detail.kudosSent) || [];
+    const grants        = (detail && detail.grants) || [];
+
+    const lifetimeXP = progressList.reduce((s,p) => s + (p.total_xp || 0), 0);
+    const completions = progressList.filter(p => p.completed_at).length;
+    const earnedBadges = u.earned_badges || [];
+    const earnedTiers  = u.earned_tiers  || [];
+    const tierInfo = window.computeTier ? window.computeTier(lifetimeXP, earnedTiers) : { current: null };
+    const currentTier = tierInfo.current;
+
+    // Build the drawer content
+    let html = '';
+    html += '<div class="drawer-header">';
+    html += '  <div class="drawer-avatar">' + (window.renderAvatar ? window.renderAvatar(u.avatar || 'sparky', 72) : '') + '</div>';
+    html += '  <div style="flex:1">';
+    html += '    <h2>' + escapeHtml(u.name) + '</h2>';
+    html += '    <div class="id">' + escapeHtml(u.employee_id || 'no employee ID') + '</div>';
+    html += '    <div class="meta-row">';
+    html += '      <span class="status-pill status-' + (u.status || 'active') + '">' + ((u.status || 'active').replace('_',' ').toUpperCase()) + '</span>';
+    if(currentTier) html += '      <span class="tier-pill" style="color:' + currentTier.color + ';border:1px solid ' + currentTier.color + ';padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800">' + currentTier.icon + ' ' + currentTier.name.toUpperCase() + '</span>';
+    html += '    </div>';
+    html += '  </div>';
+    html += '</div>';
+
+    // Stats
+    html += '<div class="drawer-stats">';
+    html += '  <div class="drawer-stat"><div class="lbl">XP</div><div class="num">' + lifetimeXP.toLocaleString() + '</div></div>';
+    html += '  <div class="drawer-stat"><div class="lbl">DONE</div><div class="num">' + completions + '</div></div>';
+    html += '  <div class="drawer-stat"><div class="lbl">BADGES</div><div class="num">' + earnedBadges.length + '</div></div>';
+    html += '  <div class="drawer-stat"><div class="lbl">KUDOS</div><div class="num">' + kudosReceived.length + '</div></div>';
+    html += '</div>';
+
+    // Module progress
+    html += '<div class="drawer-section">';
+    html += '  <h3>📦 Module Progress</h3>';
+    if(progressList.length === 0){
+      html += '  <div class="empty" style="padding:20px"><div style="font-size:12px">No module activity yet.</div></div>';
+    } else {
+      progressList.forEach(p => {
+        const pct = p.total > 0 ? Math.round(p.correct/p.total*100) : 0;
+        const lastUp = p.last_update ? timeAgo(new Date(p.last_update).getTime()) : '—';
+        const isDone = !!p.completed_at;
+        html += '<div class="module-row-d ' + (isDone ? 'completed' : '') + '">';
+        html += '  <div class="ico">' + (p.module_icon || '⚡') + '</div>';
+        html += '  <div class="info">';
+        html += '    <div class="nm">' + escapeHtml(p.module_name || p.module_id) + (isDone ? ' ✓' : '') + '</div>';
+        html += '    <div class="meta-d">' + (p.correct || 0) + '/' + (p.total || 40) + ' correct · ' + pct + '% · ' + lastUp + '</div>';
+        html += '  </div>';
+        html += '  <div class="xp-d">' + (p.total_xp || 0) + ' XP</div>';
+        html += '</div>';
+      });
+    }
+    html += '</div>';
+
+    // Earned badges
+    html += '<div class="drawer-section">';
+    html += '  <h3>🏅 Badges Earned</h3>';
+    if(earnedBadges.length === 0){
+      html += '  <div class="empty" style="padding:20px"><div style="font-size:12px">No badges yet.</div></div>';
+    } else {
+      const grantedIds = new Set(grants.map(g => g.badge_id));
+      const allBadges = window.entitledBadges ? window.entitledBadges(local, window.RSP_MANIFEST) : [];
+      const allBadgesMap = {};
+      allBadges.forEach(b => allBadgesMap[b.id] = b);
+      html += '<div class="badges-grid">';
+      earnedBadges.forEach(eb => {
+        const id = eb.badge_id || eb;
+        const b = allBadgesMap[id] || { icon: '🏅', name: id };
+        const isManual = grantedIds.has(id);
+        html += '<div class="badge-tile ' + (isManual ? 'manual' : '') + '">';
+        html += '  <div class="bico">' + b.icon + '</div>';
+        html += '  <div class="bnm">' + escapeHtml(b.name) + '</div>';
+        if(isManual) html += '  <div class="manual-tag">GRANTED</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+
+    // Kudos
+    if(kudosReceived.length || kudosSent.length){
+      html += '<div class="drawer-section">';
+      html += '  <h3>🎉 Kudos</h3>';
+      if(kudosReceived.length){
+        html += '<div style="color:#94A3B8;font-size:11px;margin-bottom:6px">Received (' + kudosReceived.length + ')</div>';
+        kudosReceived.slice(0,5).forEach(k => {
+          html += '<div class="kudo-row"><div class="who-k">From <b style="color:#fff">' + escapeHtml(k.from_user) + '</b> · ' + timeAgo(new Date(k.created_at).getTime()) + '</div>' + (k.emoji||'🎉') + ' ' + escapeHtml(k.message || '(no message)') + '</div>';
+        });
+      }
+      if(kudosSent.length){
+        html += '<div style="color:#94A3B8;font-size:11px;margin:10px 0 6px">Sent (' + kudosSent.length + ')</div>';
+        kudosSent.slice(0,5).forEach(k => {
+          html += '<div class="kudo-row"><div class="who-k">To <b style="color:#fff">' + escapeHtml(k.to_user) + '</b> · ' + timeAgo(new Date(k.created_at).getTime()) + '</div>' + (k.emoji||'🎉') + ' ' + escapeHtml(k.message || '(no message)') + '</div>';
+        });
+      }
+      html += '</div>';
+    }
+
+    // Action buttons
+    html += '<div class="drawer-actions">';
+    html += '  <button class="btn" id="grantBadgeBtn">🏅 Grant Badge</button>';
+    html += '  <button class="btn muted" id="editStatusBtn">✏️ Edit Status</button>';
+    html += '</div>';
+
+    // Hidden inline forms
+    html += '<div id="grantForm" class="inline-form" style="display:none">';
+    html += '  <label>Badge Name</label>';
+    html += '  <input id="grantBadgeName" placeholder="e.g. Trainer of the Quarter"/>';
+    html += '  <label>Badge Icon (emoji)</label>';
+    html += '  <input id="grantBadgeIcon" maxlength="3" placeholder="e.g. 🏆"/>';
+    html += '  <label>Message (optional)</label>';
+    html += '  <textarea id="grantMessage" placeholder="Why are they getting this?"></textarea>';
+    html += '  <div class="form-actions">';
+    html += '    <button class="btn muted" id="grantCancel">Cancel</button>';
+    html += '    <button class="btn" id="grantConfirm">Grant Badge</button>';
+    html += '  </div>';
+    html += '</div>';
+
+    html += '<div id="statusForm" class="inline-form" style="display:none">';
+    html += '  <label>User Status</label>';
+    html += '  <select id="statusValue">';
+    ['active','on_leave','trainer','inactive','terminated'].forEach(s => {
+      const sel = (u.status || 'active') === s ? 'selected' : '';
+      html += '    <option value="' + s + '" ' + sel + '>' + s.replace('_',' ').toUpperCase() + '</option>';
+    });
+    html += '  </select>';
+    html += '  <label>Notes (visible to other admins)</label>';
+    html += '  <textarea id="statusNotes" placeholder="Optional context...">' + escapeHtml(u.notes || '') + '</textarea>';
+    html += '  <div class="form-actions">';
+    html += '    <button class="btn muted" id="statusCancel">Cancel</button>';
+    html += '    <button class="btn" id="statusConfirm">Save</button>';
+    html += '  </div>';
+    html += '</div>';
+
+    content.innerHTML = html;
+
+    // Wire up the action buttons
+    document.getElementById('grantBadgeBtn').addEventListener('click', () => {
+      document.getElementById('grantForm').style.display = 'block';
+      document.getElementById('statusForm').style.display = 'none';
+    });
+    document.getElementById('editStatusBtn').addEventListener('click', () => {
+      document.getElementById('statusForm').style.display = 'block';
+      document.getElementById('grantForm').style.display = 'none';
+    });
+    document.getElementById('grantCancel').addEventListener('click', () => {
+      document.getElementById('grantForm').style.display = 'none';
+    });
+    document.getElementById('statusCancel').addEventListener('click', () => {
+      document.getElementById('statusForm').style.display = 'none';
+    });
+
+    document.getElementById('grantConfirm').addEventListener('click', async () => {
+      const name = document.getElementById('grantBadgeName').value.trim();
+      const icon = document.getElementById('grantBadgeIcon').value.trim() || '🏅';
+      const msg  = document.getElementById('grantMessage').value.trim();
+      if(!name){ alert('Please enter a badge name.'); return; }
+      const badgeId = 'manual-' + name.toLowerCase().replace(/[^a-z0-9]+/g,'-') + '-' + Date.now();
+      try{
+        if(window.RSPCloud && window.RSPCloud.isConfigured){
+          await window.RSPCloud.grantManualBadge(userName, badgeId, 'Admin', icon + ' ' + name + (msg ? ' — ' + msg : ''));
+          alert('✓ Granted "' + name + '" to ' + userName);
+          await load();
+          openProfile(userName);
+        } else {
+          alert('Cloud not configured — manual grants need Supabase.');
+        }
+      }catch(e){
+        alert('Failed: ' + (e.message || e));
+      }
+    });
+
+    document.getElementById('statusConfirm').addEventListener('click', async () => {
+      const newStatus = document.getElementById('statusValue').value;
+      const newNotes  = document.getElementById('statusNotes').value;
+      try{
+        if(window.RSPCloud && window.RSPCloud.isConfigured){
+          await window.RSPCloud.updateUserStatus(userName, newStatus, newNotes);
+          alert('✓ Status updated to ' + newStatus.replace('_',' ').toUpperCase());
+          await load();
+          openProfile(userName);
+        } else {
+          alert('Cloud not configured — status changes need Supabase.');
+        }
+      }catch(e){
+        alert('Failed: ' + (e.message || e));
+      }
+    });
+  }
+
+  // Filters re-render
+  document.getElementById('searchBox').addEventListener('input', renderLedger);
+  document.getElementById('moduleFilter').addEventListener('change', renderLedger);
+  document.getElementById('statusFilter').addEventListener('change', renderLedger);
+  document.getElementById('userStatusFilter').addEventListener('change', renderLedger);
+
+  // Sortable columns
+  document.querySelectorAll('table th[data-sort]').forEach(th => {
+    th.addEventListener('click', () => {
+      const k = th.dataset.sort;
+      if(sortKey === k){ sortDir = -sortDir; }
+      else { sortKey = k; sortDir = -1; }
+      renderLedger();
+    });
+  });
+
+  // Export CSV
+  document.getElementById('exportCsv').addEventListener('click', () => {
+    const m = window.RSP_MANIFEST;
+    const headers = ['Name','Employee ID','Started'].concat(m.modules.map(x => x.name + ' (XP)')).concat(['Total XP','Completions']);
+    const rows = Object.values(ledger).map(l => {
+      const r = [l.name||'', l.id||'', l.startedAt ? new Date(l.startedAt).toISOString() : ''];
+      let totalXP = 0, completions = 0;
+      m.modules.forEach(mod => {
+        const p = (l.modules||{})[mod.id];
+        const xp = p ? (p.totalXP||0) : 0;
+        r.push(xp);
+        totalXP += xp;
+        if(p && p.completedAt) completions++;
+      });
+      r.push(totalXP); r.push(completions);
+      return r;
+    });
+    const csv = [headers, ...rows].map(r => r.map(c => '"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+    const blob = new Blob([csv], {type:'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'rsp_training_portal_' + new Date().toISOString().slice(0,10) + '.csv';
+    a.click();
+  });
+
+  document.getElementById('copyJson').addEventListener('click', () => {
+    const txt = JSON.stringify(ledger, null, 2);
+    navigator.clipboard.writeText(txt).then(() => alert('Ledger copied to clipboard.'));
+  });
+
+  document.getElementById('wipeAll').addEventListener('click', async () => {
+    const cloudConfigured = window.RSPCloud && window.RSPCloud.isConfigured;
+    const scope = cloudConfigured
+      ? 'BOTH the cloud database AND this device'
+      : 'this device only (cloud is not configured)';
+
+    const warning = 'WIPE ALL TRAINING DATA?\n\n' +
+      'This will permanently delete from ' + scope + ':\n' +
+      '  • Every learner profile\n' +
+      '  • Every module progress record\n' +
+      '  • Every kudos message\n' +
+      '  • Every active presence ping\n' +
+      '  • Every earned tier and badge\n\n' +
+      'Configuration (badges, tier thresholds, manifest) is preserved.\n\n' +
+      'Type WIPE EVERYTHING to confirm.';
+
+    const typed = prompt(warning);
+    if(typed !== 'WIPE EVERYTHING'){
+      if(typed !== null) alert('Cancelled — text did not match. Nothing was deleted.');
+      return;
+    }
+
+    // Final guard
+    if(!confirm('Last chance. This cannot be undone. Continue?')) return;
+
+    try{
+      if(cloudConfigured){
+        await window.RSPCloud.wipeAllCloud();
+      }
+      lsDel(KEY_LEDGER);
+      lsDel(KEY_USER);
+      alert('✓ All training data wiped' + (cloudConfigured ? ' from cloud and this device' : ' from this device') + '.');
+      load();
+    }catch(e){
+      alert('⚠ Wipe failed: ' + (e.message || e) + '\n\nCheck the browser console for details. Cloud data may be partially wiped.');
+      console.error('Wipe error:', e);
+    }
+  });
+})();
+</script>
+</body>
+</html>

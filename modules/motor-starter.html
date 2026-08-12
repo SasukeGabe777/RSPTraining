@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Motor Starter Mastery — RSP Industrial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/module.css?v=editor-blocks-1">
+<style>
+  /* === MOTOR STARTER MASTERY · EMERALD THEME === */
+  :root{
+    --theme-primary:#059669;
+    --theme-primary-deep:#064E3B;
+    --theme-accent:#A7F3D0;
+    --theme-obj-num:#059669;
+    --theme-login-btn-1:#059669;
+    --theme-login-btn-2:#10B981;
+    --theme-login-pretitle:#059669;
+    --theme-login-focus:#059669;
+    --theme-side-bg:#064E3B;
+    --theme-side-border:#065F46;
+    --theme-side-toggle:#065F46;
+    --theme-loot-border:#059669;
+    --theme-loot-bg-1:#ECFDF5;
+    --theme-loot-bg-2:#D1FAE5;
+    --theme-loot-h3:#065F46;
+    --theme-admin-btn:#059669;
+    --theme-admin-loginbox-border:#065F46;
+  }
+
+  /* === MODULE-SPECIFIC COMPONENTS === */
+
+  /* Starter-type card (used for DOL / reversing / manual / combo / MCP anatomy) */
+  .starter-card{background:var(--slate-50);border:2px solid var(--slate-200);border-radius:14px;padding:16px;margin-bottom:10px}
+  .starter-card .sc-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .starter-card .sc-name{font-family:'Bricolage Grotesque';font-size:18px;font-weight:800;color:#064E3B}
+  .starter-card .sc-tag{font-size:10px;font-weight:700;color:#64748B;letter-spacing:.08em;text-transform:uppercase}
+  .starter-card .sc-sect{font-size:11px;font-weight:800;letter-spacing:.05em;color:#065F46;margin-top:8px;text-transform:uppercase}
+  .starter-card .sc-list{font-size:12.5px;color:#334155;margin-top:4px;line-height:1.5}
+  .starter-card .sc-list li{margin-left:18px}
+  .starter-card .sc-good{display:inline-block;background:#D1FAE5;color:#065F46;font-size:10px;font-weight:800;letter-spacing:.05em;padding:2px 8px;border-radius:8px;margin-right:6px;text-transform:uppercase}
+  .starter-card .sc-bad{display:inline-block;background:#FEE2E2;color:#7F1D1D;font-size:10px;font-weight:800;letter-spacing:.05em;padding:2px 8px;border-radius:8px;margin-right:6px;text-transform:uppercase}
+
+  /* Two-column "does / doesn't" grid */
+  .does-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .does-col{border-radius:14px;padding:18px}
+  .does-col.yes{background:linear-gradient(160deg,#D1FAE5,#A7F3D0);border:2px solid #047857}
+  .does-col.no{background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #DC2626}
+  .does-col h3{font-size:16px}
+  .does-col.yes h3{color:#065F46}
+  .does-col.no h3{color:#7F1D1D}
+  .does-col ul{margin-top:8px;list-style:none}
+  .does-col li{font-size:12.5px;font-weight:600;line-height:1.45;padding:6px 0;border-bottom:1px dashed rgba(0,0,0,.08);display:flex;gap:8px;align-items:flex-start}
+  .does-col.yes li{color:#065F46}
+  .does-col.no li{color:#7F1D1D}
+  .does-col li:last-child{border-bottom:none}
+
+  /* Matrix tables (emerald palette) */
+  .matrix{width:100%;border-collapse:collapse;margin-top:12px;font-size:11.5px}
+  .matrix th{background:#D1FAE5;color:#065F46;text-align:center;padding:10px 6px;font-weight:800;border:1px solid #A7F3D0;letter-spacing:.05em}
+  .matrix th.row-h{background:#F1F5F9;color:#0F172A;text-align:left;width:160px}
+  .matrix td{padding:10px 8px;border:1px solid #E2E8F0;color:#1E293B;font-weight:600}
+  .matrix td.lbl{background:#F8FAFC;font-weight:800;color:#0F172A;font-size:12px}
+  .matrix td.best{background:#D1FAE5;color:#065F46;font-weight:800}
+
+  /* "AHA" callout — power-flow visual */
+  .aha-card{background:linear-gradient(160deg,#ECFDF5,#D1FAE5);border:3px solid #059669;border-radius:18px;padding:24px;margin-top:14px}
+  .aha-card h3{color:#065F46;font-size:22px}
+  .aha-card .flow{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .aha-card .node{background:#fff;border:2px solid #059669;border-radius:12px;padding:14px 18px;font-weight:800;color:#065F46;font-size:13px;text-align:center;min-width:128px;line-height:1.3}
+  .aha-card .node .sub{display:block;font-size:10px;color:#64748B;font-weight:700;letter-spacing:.05em;margin-top:3px;text-transform:uppercase}
+  .aha-card .arrow{font-size:28px;color:#059669;line-height:1}
+
+  /* Sales-mistake / callout */
+  .callout{background:linear-gradient(160deg,#ECFDF5,#D1FAE5);border:2px solid #059669;border-radius:14px;padding:16px;margin-top:10px}
+  .callout h3{color:#065F46;font-size:16px}
+  .callout p{color:#065F46;font-size:13px;margin-top:6px;line-height:1.5}
+
+  /* Customer translation emerald accent (override shared .says/.means/.quote-it) */
+  .translate-row .says{background:#D1FAE5;color:#065F46}
+  .translate-row .means{background:#FEF3C7;color:#78350F}
+  .translate-row .quote-it{background:#DBEAFE;color:#1E40AF}
+
+  /* Sales mistakes row */
+  .mistake{display:flex;gap:14px;background:#fff;border:2px solid #E2E8F0;border-left:6px solid #DC2626;border-radius:12px;padding:14px;margin-top:10px}
+  .mistake .x{flex:0 0 38px;width:38px;height:38px;border-radius:50%;background:#FEE2E2;color:#7F1D1D;font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque'}
+  .mistake h3{font-size:15px;color:#0F172A}
+  .mistake p{font-size:12.5px;color:#475569;margin-top:4px;line-height:1.5}
+
+  /* Decision-path card */
+  .decision-card{background:#fff;border:2px solid #A7F3D0;border-radius:14px;padding:14px 16px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start}
+  .decision-card .q{flex:0 0 220px;font-size:12.5px;font-weight:800;color:#065F46}
+  .decision-card .y,.decision-card .n{flex:1;font-size:12px;font-weight:700;padding:8px 10px;border-radius:8px}
+  .decision-card .y{background:#D1FAE5;color:#065F46}
+  .decision-card .n{background:#FEF3C7;color:#78350F}
+</style>
+</head>
+<body>
+
+<a href="../index.html" id="portalLink" class="interactive-only">← PORTAL</a>
+
+<aside id="sideMap" class="interactive-only">
+  <button class="map-toggle" id="mapToggle" title="Toggle map">‹</button>
+  <div class="map-title">▶️ STARTER MAP</div>
+  <div class="map-hint">YOUR JOURNEY</div>
+  <div class="map-path" id="mapPath"></div>
+</aside>
+
+<div id="minibossOverlay" class="interactive-only">
+  <div class="miniboss-modal" id="minibossModal"></div>
+</div>
+
+<div id="loginOverlay" class="interactive-only">
+  <div class="login-card">
+    <div class="bolt-bg">▶️</div>
+    <div class="pretitle">RSP INDUSTRIAL · PRODUCT MASTERY</div>
+    <h1>Motor Starter<br>Mastery</h1>
+    <p class="sub">Sign in to track your XP and unlock the Boss Fight.</p>
+    <label for="loginName">Your name</label>
+    <input type="text" id="loginName" placeholder="e.g. Gabe Ebmeyer" autocomplete="off"/>
+    <label for="loginId">Employee ID <span style="font-weight:500;color:#94A3B8;letter-spacing:0">(optional)</span></label>
+    <input type="text" id="loginId" placeholder="e.g. RSP-1234" autocomplete="off"/>
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn">Begin Training →</button>
+    <p class="footer-note">Your progress is saved on this device. No data leaves your browser.</p>
+  </div>
+</div>
+
+<div id="xpTracker" class="interactive-only">
+  <div>
+    <div class="username" id="trackerUser">▶️ READY</div>
+    <div class="label">XP EARNED</div>
+    <div><span class="num" id="trackerXP">0</span><span style="color:#475569;font-size:14px"> / 280</span></div>
+    <span class="reset-link" id="resetProgress">↻ Reset</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+    <div style="display:flex;gap:10px;font-size:10px;color:#94A3B8;white-space:nowrap;flex-wrap:wrap">
+      <span>📖&nbsp;<b style="color:#fff"><span id="trackerPages">0</span>/14</b></span>
+      <span>🎯&nbsp;<b style="color:#fff"><span id="trackerAnswered">0</span>/30</b></span>
+      <span>✓&nbsp;<b style="color:#34D399"><span id="trackerCorrect">0</span></b></span>
+    </div>
+    <div class="bar"><div class="fill" id="trackerFill"></div></div>
+  </div>
+</div>
+
+<!-- ============= PAGE 1 — COVER ============= -->
+<section class="page cover">
+  <div class="ribbon">
+    <span class="badge">RSP INDUSTRIAL</span>
+    <span class="badge">PRODUCT MASTERY · MODULE 07</span>
+  </div>
+  <svg width="500" height="500" viewBox="0 0 500 500" style="position:absolute;right:-60px;top:120px;opacity:.95">
+    <defs>
+      <linearGradient id="starterg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#A7F3D0"/>
+        <stop offset="100%" stop-color="#059669"/>
+      </linearGradient>
+      <radialGradient id="btng" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#34D399"/>
+        <stop offset="70%" stop-color="#059669"/>
+        <stop offset="100%" stop-color="#064E3B"/>
+      </radialGradient>
+    </defs>
+    <!-- Stylized starter panel with big green START button -->
+    <g transform="translate(250 250)">
+      <rect x="-110" y="-130" width="220" height="260" rx="16" fill="url(#starterg)" stroke="#A7F3D0" stroke-width="3"/>
+      <!-- Top label -->
+      <rect x="-78" y="-110" width="156" height="22" rx="4" fill="#064E3B"/>
+      <text x="0" y="-94" text-anchor="middle" font-size="11" fill="#A7F3D0" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="2">RSP STARTER</text>
+      <!-- Big START button -->
+      <circle cx="0" cy="-30" r="56" fill="url(#btng)" stroke="#064E3B" stroke-width="4"/>
+      <circle cx="0" cy="-30" r="40" fill="none" stroke="#A7F3D0" stroke-width="2" opacity=".6"/>
+      <text x="0" y="-22" text-anchor="middle" font-size="20" fill="#fff" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="2">START</text>
+      <!-- Indicator lights -->
+      <circle cx="-60" cy="60" r="9" fill="#34D399"/>
+      <circle cx="-30" cy="60" r="9" fill="#FACC15"/>
+      <circle cx="0" cy="60" r="9" fill="#EF4444"/>
+      <text x="-60" y="84" text-anchor="middle" font-size="9" fill="#064E3B" font-weight="800">RUN</text>
+      <text x="-30" y="84" text-anchor="middle" font-size="9" fill="#064E3B" font-weight="800">FAULT</text>
+      <text x="0" y="84" text-anchor="middle" font-size="9" fill="#064E3B" font-weight="800">STOP</text>
+      <!-- Pushbutton next to lights -->
+      <rect x="20" y="48" width="60" height="24" rx="6" fill="#0F172A" stroke="#A7F3D0" stroke-width="2"/>
+      <text x="50" y="64" text-anchor="middle" font-size="11" fill="#FECACA" font-weight="800">E-STOP</text>
+      <!-- Cable feet -->
+      <g fill="#0F172A" stroke="#A7F3D0" stroke-width="2">
+        <rect x="-70" y="100" width="14" height="30" rx="3"/>
+        <rect x="-7" y="100" width="14" height="30" rx="3"/>
+        <rect x="56" y="100" width="14" height="30" rx="3"/>
+      </g>
+    </g>
+  </svg>
+  <div style="position:absolute;bottom:2.4in;left:.5in;right:.5in">
+    <div class="pill" style="background:rgba(167,243,208,.25);color:#A7F3D0;border:1px solid rgba(167,243,208,.4);margin-bottom:18px">PRODUCT MASTERY · MOTOR CONTROL</div>
+    <h1>MOTOR STARTER<br>MASTERY</h1>
+    <div class="sub">Start it. Protect it. Quote the right starter.</div>
+  </div>
+  <div class="tagline">
+    <div>The full motor-starter playbook — from ATL to MCC bucket.</div>
+    <div>RSP · PROD 07</div>
+  </div>
+</section>
+
+<!-- ============= PAGE 2 — MISSION ============= -->
+<section class="page">
+  <div class="page-tag">▸ THE PROMISE</div>
+  <div style="display:flex;gap:30px;margin-top:.5in;height:8.6in">
+    <div style="flex:1;display:flex;flex-direction:column">
+      <h2>Quote the right<br>starter every time.</h2>
+      <p class="lead" style="margin-top:14px">By the last page you will be able to:</p>
+      <ul class="objectives" style="margin-top:18px">
+        <li><span class="obj-num">1</span><span>Define a <b>motor starter</b> as contactor + overload, and locate short-circuit protection.</span></li>
+        <li><span class="obj-num">2</span><span>Identify the <b>7 starter types</b> on sight: DOL, Reversing, Manual, Magnetic, Combination, MCP, Soft/VFD.</span></li>
+        <li><span class="obj-num">3</span><span>Pick the right starter from a one-sentence application using the <b>decision path</b>.</span></li>
+        <li><span class="obj-num">4</span><span>Size an overload to motor <b>FLA</b> and quote NEMA vs IEC with confidence.</span></li>
+        <li><span class="obj-num">5</span><span>Translate <b>customer phrases</b> ("bucket", "trips on startup", "forward/reverse") into the right SKU.</span></li>
+        <li><span class="obj-num">6</span><span>Pass the 30-question Boss Fight at 80%+ to earn the badge.</span></li>
+      </ul>
+      <div class="powerup" style="margin-top:20px">
+        💡 <b>The promise:</b> Walk into any motor-control conversation knowing exactly which starter to quote, why, and what comes in the box.
+      </div>
+    </div>
+    <div style="flex:0 0 2.4in;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="100" fill="none" stroke="#059669" stroke-width="6"/>
+        <circle cx="110" cy="110" r="75" fill="none" stroke="#059669" stroke-width="6" opacity=".6"/>
+        <circle cx="110" cy="110" r="50" fill="none" stroke="#059669" stroke-width="6" opacity=".4"/>
+        <circle cx="110" cy="110" r="25" fill="#059669"/>
+        <polygon points="103,98 103,122 125,110" fill="#fff"/>
+      </svg>
+      <div style="text-align:center">
+        <div style="font-family:'Bricolage Grotesque';font-size:28px;font-weight:800;color:#065F46">280 XP</div>
+        <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.1em;text-transform:uppercase">Total reward</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">02</div>
+</section>
+
+<!-- ============= PAGE 3 — HOW TO PLAY ============= -->
+<section class="page">
+  <div class="page-tag">▸ HOW TO PLAY</div>
+  <h2 style="margin-top:.4in">Three levels.<br>Two mini-bosses.<br>One badge.</h2>
+  <div style="display:flex;gap:14px;margin-top:30px">
+    <div class="level-card learn">
+      <div class="num">01</div>
+      <h3>LEARN</h3>
+      <p>8 pages. The 7 starter types, what's inside each one, overload sizing, and the contactor-vs-OL split.</p>
+      <div class="xp-pill">+10 XP / page</div>
+    </div>
+    <div class="level-card apply">
+      <div class="num">02</div>
+      <h3>APPLY</h3>
+      <p>6 pages. NEMA vs IEC, sizing by HP, protection matrix, accessories, the decision path, and 5 sales mistakes.</p>
+      <div class="xp-pill">+15 XP / page</div>
+    </div>
+    <div class="level-card test">
+      <div class="num">03</div>
+      <h3>TEST</h3>
+      <p>30-question Boss Fight. Score 80%+ for the ▶️ Starter Mastery badge.</p>
+      <div class="xp-pill">+2 XP / correct</div>
+    </div>
+  </div>
+  <div class="powerup" style="margin-top:30px">
+    💡 <b>Two Mini-Bosses block the path.</b> The Inrush Imp guards starter-type basics; the Bucket Banshee guards combination &amp; MCP knowledge. Each is worth +25 XP.
+  </div>
+  <div class="page-num">03</div>
+</section>
+
+<!-- ============= PAGE 4 — LEARN 01: ACROSS-THE-LINE (DOL) STARTER ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 01 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">▶️ ACROSS-THE-LINE (DOL) STARTER</div>
+  <h2 style="margin-top:14px">Full voltage.<br>Instant start.</h2>
+  <p class="lead" style="margin-top:6px">The <b>Across-the-Line</b> starter — also called <b>DOL</b> (Direct-On-Line) — applies <b>full voltage instantly</b> to the motor. It's the most common starter type, the lowest cost, and the simplest design: a contactor and an overload relay, period.</p>
+
+  <div class="starter-card" style="margin-top:18px">
+    <div class="sc-head"><span style="font-size:22px">⚡</span><div class="sc-name">DOL / ATL STARTER</div></div>
+    <div class="sc-tag">CONTACTOR + OVERLOAD · FULL-VOLTAGE START</div>
+    <div class="sc-sect">What's in the box</div>
+    <ul class="sc-list">
+      <li>Contactor — switches motor power on/off</li>
+      <li>Overload relay — sized to motor FLA</li>
+      <li>(Upstream breaker or fuses live <b>outside</b> the DOL starter)</li>
+    </ul>
+    <div class="sc-sect">Pros · Cons</div>
+    <ul class="sc-list">
+      <li><span class="sc-good">✓ Best for</span>Small to medium motors, low-inertia loads, strong power systems</li>
+      <li><span class="sc-bad">✗ Bad for</span>High inertia, weak power supplies, sensitive mechanical systems</li>
+    </ul>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>⚠️ The inrush trade-off</h3>
+    <p>DOL is cheap and simple — but it hits the motor with <b>6–8× full-load amps</b> at startup. On a small motor this is fine. On a 50 HP pump on a weak transformer, it can dim the lights and trip the upstream breaker. That's when reps reach for a soft starter or VFD.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "DOL = full voltage, instant on." If the customer hasn't mentioned inrush, speed, or reversing — DOL is the default quote.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">04</div>
+</section>
+
+<!-- ============= PAGE 5 — LEARN 02: REVERSING STARTER ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 02 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">▶️ REVERSING STARTER</div>
+  <h2 style="margin-top:14px">Two contactors.<br>One interlock.</h2>
+  <p class="lead" style="margin-top:6px">A <b>reversing starter</b> spins a motor in either direction by swapping any two of the three line phases. The trick: you need <b>two contactors</b> (one for forward, one for reverse) and an <b>interlock</b> that guarantees they can never close at the same time — because closing both means a phase-to-phase short.</p>
+
+  <div class="starter-card" style="margin-top:18px">
+    <div class="sc-head"><span style="font-size:22px">🔄</span><div class="sc-name">REVERSING STARTER</div></div>
+    <div class="sc-tag">2 CONTACTORS + INTERLOCK + OVERLOAD</div>
+    <div class="sc-sect">What's in the box</div>
+    <ul class="sc-list">
+      <li>Forward contactor + reverse contactor (wired to swap two phases)</li>
+      <li><b>Mechanical interlock</b> — physically blocks both from closing at once</li>
+      <li><b>Electrical interlock</b> — extra layer; aux contacts cross-wired into the opposing coil circuit</li>
+      <li>Single overload relay downstream — sized to motor FLA</li>
+    </ul>
+    <div class="sc-sect">Typical applications</div>
+    <ul class="sc-list">
+      <li>Hoists, cranes, gates, conveyors with reversing requirement</li>
+      <li>Machine tools (drill presses, lathes that need reverse jog)</li>
+    </ul>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>📞 The qualifying question</h3>
+    <p>When a customer asks for "forward/reverse," confirm whether they want <b>electrical interlock only</b> (cheaper) or <b>mechanical + electrical</b> (industrial standard, safer). Most quoting mistakes here come from skipping that question.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "FWD/REV means two contactors plus an interlock. Always ask if mechanical interlock is required — it usually is."
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">05</div>
+</section>
+
+<!-- ============= PAGE 6 — LEARN 03: MANUAL & MAGNETIC STARTERS ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 03 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">▶️ MANUAL vs MAGNETIC STARTERS</div>
+  <h2 style="margin-top:14px">Hand on the lever<br>or coil on a wire.</h2>
+  <p class="lead" style="margin-top:6px">Two starter types, same job — switch the motor and protect it from overload. The difference is <b>how</b> the switching happens.</p>
+
+  <div class="starter-card" style="margin-top:18px">
+    <div class="sc-head"><span style="font-size:22px">🖐️</span><div class="sc-name">MANUAL MOTOR STARTER</div></div>
+    <div class="sc-tag">MECHANICAL SWITCH + BUILT-IN OVERLOAD · LOCAL CONTROL ONLY</div>
+    <div class="sc-list">A toggle, rocker, or push-button mechanically opens and closes the motor contacts. Overload protection is built into the switch body. No control coil, no remote start.</div>
+    <div class="sc-sect">Pros · Cons</div>
+    <ul class="sc-list">
+      <li><span class="sc-good">✓ Best for</span>Small fractional-HP motors, single-pole tool circuits, no-automation jobs</li>
+      <li><span class="sc-bad">✗ Bad for</span>Anything PLC-driven, remote start/stop, or interlocked automation</li>
+    </ul>
+  </div>
+
+  <div class="starter-card" style="margin-top:10px">
+    <div class="sc-head"><span style="font-size:22px">🧲</span><div class="sc-name">MAGNETIC MOTOR STARTER</div></div>
+    <div class="sc-tag">CONTACTOR + OVERLOAD · ELECTRICALLY CONTROLLED</div>
+    <div class="sc-list">A control coil (24V / 120V / 230V) pulls a contactor closed. Energize the coil = motor runs. Drop the coil = motor stops. The standard for any system with remote pushbuttons, PLC outputs, interlocks, or automation.</div>
+    <div class="sc-sect">Pros · Cons</div>
+    <ul class="sc-list">
+      <li><span class="sc-good">✓ Best for</span>Remote/PLC control, automated lines, anything requiring seal-in logic</li>
+      <li><span class="sc-bad">✗ Bad for</span>Standalone hand tools where a wall switch is enough</li>
+    </ul>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Manual = hand. Magnetic = coil." If anyone says "PLC" or "remote start," you're quoting magnetic — every time.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">06</div>
+</section>
+
+<!-- ============= PAGE 7 — LEARN 04: COMBINATION & MCP STARTERS ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 04 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">▶️ COMBINATION &amp; MCP STARTERS</div>
+  <h2 style="margin-top:14px">Disconnect.<br>Short-circuit.<br>Start. Protect.</h2>
+  <p class="lead" style="margin-top:6px">When code, panel design, or MCC layout calls for "the complete package," you're quoting a <b>combination starter</b> or its close cousin the <b>MCP starter</b>. Both wrap the four motor-circuit jobs into one device.</p>
+
+  <div class="starter-card" style="margin-top:18px">
+    <div class="sc-head"><span style="font-size:22px">📦</span><div class="sc-name">COMBINATION STARTER</div></div>
+    <div class="sc-tag">DISCONNECT + BREAKER/FUSE + CONTACTOR + OVERLOAD · ONE ASSEMBLY</div>
+    <div class="sc-sect">What's in the box</div>
+    <ul class="sc-list">
+      <li>Disconnect switch — safety isolation for service</li>
+      <li>Short-circuit protection — breaker (MCCB) or fuse block</li>
+      <li>Contactor — motor switching</li>
+      <li>Overload relay — sized to FLA</li>
+    </ul>
+    <div class="sc-sect">Why customers want it</div>
+    <ul class="sc-list">
+      <li>Meets NEC requirements for full motor protection in one UL-listed assembly</li>
+      <li>Simplifies panel design — fewer separate parts, fewer wires</li>
+      <li>Faster installation, cleaner documentation</li>
+    </ul>
+  </div>
+
+  <div class="starter-card" style="margin-top:10px">
+    <div class="sc-head"><span style="font-size:22px">🪣</span><div class="sc-name">MCP STARTER (MOTOR CIRCUIT PROTECTOR)</div></div>
+    <div class="sc-tag">MCP + CONTACTOR + OVERLOAD · MCC BUCKET STANDARD</div>
+    <div class="sc-list">An MCP is a <b>magnetic-only</b> circuit protector — short-circuit protection, no thermal trip. It MUST be paired with a separate overload relay. The classic MCC (Motor Control Center) bucket configuration.</div>
+    <div class="callout" style="margin-top:10px"><h3>🚨 The MCP rule</h3><p>MCP without an overload relay = unprotected motor. Always confirm both are quoted together. "I need a bucket" almost always means MCP + contactor + OL.</p></div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Combination = "all-in-one starter with breaker." MCP = "MCC bucket flavor — magnetic-only, must add OL."
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">07</div>
+</section>
+
+<!-- ============= PAGE 8 — LEARN 05: SOFT STARTER & VFD AS STARTERS ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 05 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">▶️ SOFT STARTER &amp; VFD AS STARTER ALTERNATIVES</div>
+  <h2 style="margin-top:14px">When the starter<br>isn't enough.</h2>
+  <p class="lead" style="margin-top:6px">Three devices can all "start a motor" — but only one of them controls speed. Knowing the difference is the single biggest sales-skill gap in motor control.</p>
+
+  <table class="matrix" style="margin-top:18px">
+    <thead><tr><th class="row-h">Feature</th><th>DOL Starter</th><th>Soft Starter</th><th>VFD</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Start motor</td><td class="best">✅</td><td class="best">✅</td><td class="best">✅</td></tr>
+      <tr><td class="lbl">Reduce inrush</td><td>❌</td><td class="best">✅</td><td class="best">✅</td></tr>
+      <tr><td class="lbl">Speed control</td><td>❌</td><td>❌</td><td class="best">✅</td></tr>
+      <tr><td class="lbl">Cost</td><td class="best">💲</td><td>💲💲</td><td>💲💲💲</td></tr>
+      <tr><td class="lbl">Complexity</td><td class="best">Low</td><td>Medium</td><td>High</td></tr>
+      <tr><td class="lbl">Built-in overload?</td><td>No (external OL)</td><td>Sometimes</td><td class="best">Yes (built-in)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>📞 The sales rule</h3>
+    <p>If the customer needs <b>speed control</b>, a starter — any starter — is not enough. Quote a <b>VFD</b>. If they only need to <b>reduce inrush</b> or smooth out mechanical shock, a <b>soft starter</b> is the right answer. Otherwise, DOL is the default.</p>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #EF4444">
+    <h3 style="color:#7F1D1D;font-size:16px">🚨 The most common mistake</h3>
+    <p style="color:#7F1D1D;margin-top:6px;font-size:13px">Reps assume "starter" reduces inrush. <b>It doesn't.</b> A DOL starter applies full voltage instantly — inrush is unchanged. Reducing inrush requires a soft starter, VFD, or reduced-voltage starter (autotransformer / star-delta / primary resistance).</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Speed = VFD. Soft start = soft starter. Otherwise = starter." Three sentences, every motor-control quote.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">08</div>
+</section>
+
+<!-- ============= PAGE 9 — LEARN 06: INSIDE A STARTER (COMPONENTS) ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 06 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">▶️ COMPONENTS INSIDE A STARTER</div>
+  <h2 style="margin-top:14px">Seven parts.<br>Memorize them.</h2>
+  <p class="lead" style="margin-top:6px">Every starter is built from the same parts kit. Knowing which parts appear in which starter is what separates "rep" from "engineer-grade quote."</p>
+
+  <table class="matrix" style="margin-top:18px">
+    <thead><tr><th class="row-h">Component</th><th>Function</th><th>Appears in</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Contactor</td><td>Switches motor power on/off</td><td>All starters except manual</td></tr>
+      <tr><td class="lbl">Overload Relay (OL)</td><td>Protects motor from sustained overcurrent / heat</td><td>All starters except VFD (built-in)</td></tr>
+      <tr><td class="lbl">Breaker or Fuses</td><td>Short-circuit protection</td><td>Combination starters, MCC feeders</td></tr>
+      <tr><td class="lbl">MCP</td><td>Magnetic-only short-circuit protection</td><td>MCP starters / MCC buckets</td></tr>
+      <tr><td class="lbl">Disconnect</td><td>Safety isolation</td><td>Combination starters, many service starters</td></tr>
+      <tr><td class="lbl">Interlock</td><td>Prevents both contactors closing at once</td><td>Reversing starters</td></tr>
+      <tr><td class="lbl">Control Transformer</td><td>Drops 480V → 120V control voltage</td><td>Industrial magnetic starters</td></tr>
+      <tr><td class="lbl">Aux Contacts</td><td>Status feedback, seal-in, PLC signaling</td><td>Optional add-on; common in industrial starters</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>📌 The two pillars</h3>
+    <p><b>Contactor = switching.</b> <b>Overload = motor protection.</b> Everything else (disconnect, breaker, transformer, aux contacts, interlock) is convenience packaging around those two functions.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Read the parts list off the table when quoting — out loud. It catches the "wait, do they have a control transformer?" question before the customer has to ask.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">09</div>
+</section>
+
+<!-- ============= PAGE 10 — LEARN 07: OVERLOAD RELAYS & SIZING ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 07 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">▶️ OVERLOAD RELAYS · SIZING TO FLA</div>
+  <h2 style="margin-top:14px">Size by FLA.<br>Never by HP alone.</h2>
+  <p class="lead" style="margin-top:6px">This is the most-asked, most-mis-answered sizing question on the phone. The overload protects the motor — and the only number that tells the truth about a motor's current is its <b>nameplate FLA</b>.</p>
+
+  <div class="callout" style="margin-top:18px">
+    <h3>📋 The 3-step rule</h3>
+    <p><b>1.</b> Find the motor's <b>Full Load Amps (FLA)</b> on the nameplate.<br><b>2.</b> Pick an overload whose <b>adjustable range covers that FLA</b>.<br><b>3.</b> Set the dial to the FLA reading — and pick the right <b>trip class</b> (10 for standard, 20–30 for high inertia).</p>
+  </div>
+
+  <div class="does-grid" style="margin-top:18px">
+    <div class="does-col no">
+      <h3>🚫 UNDERSIZED</h3>
+      <ul>
+        <li>✗ Trips on every motor start ("nuisance trips")</li>
+        <li>✗ Reps swap to a bigger overload to silence the alarm</li>
+        <li>✗ Motor is now under-protected — back to square one</li>
+        <li>✗ Customer thinks the part is defective</li>
+      </ul>
+    </div>
+    <div class="does-col" style="background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #DC2626">
+      <h3 style="color:#7F1D1D">🔥 OVERSIZED ("to be safe")</h3>
+      <ul style="color:#7F1D1D">
+        <li>✗ Motor cooks before the overload notices</li>
+        <li>✗ Insurance / warranty fight after the fact</li>
+        <li>✗ "I sized it to be safe" is the actual cause</li>
+        <li>✗ The most expensive mistake in motor control</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FEF3C7,#FDE68A);border:2px solid #F59E0B">
+    <h3 style="color:#78350F;font-size:16px">⚠️ Thermal vs Electronic</h3>
+    <p style="color:#78350F;margin-top:6px;font-size:13px"><b>Thermal OLs</b> use bimetal strips that bend with heat — simple, reliable, no diagnostics, often fixed Class 10. <b>Electronic OLs</b> use current transformers + an IC — programmable trip class, phase-loss detection, comms (Modbus / EtherNet/IP). Use electronic when the customer needs remote diagnostics or has VFD/process loads.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Send me the motor nameplate" beats "send me the HP" every time. Get the FLA.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">10</div>
+</section>
+
+<!-- ============= PAGE 11 — LEARN 08: CUSTOMER TRANSLATION + INRUSH IMP ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 08 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">▶️ CUSTOMER PHRASE TRANSLATION</div>
+  <h2 style="margin-top:14px">What they say.<br>What you sell.</h2>
+  <p class="lead" style="margin-top:6px">Customers describe symptoms. You translate to the underlying starter type and quote the fix.</p>
+
+  <div style="margin-top:18px">
+    <div class="translate-row" style="font-weight:800;font-size:11px;letter-spacing:.05em;text-transform:uppercase"><div style="background:transparent;color:#64748B">Customer says</div><div style="background:transparent;color:#64748B">It means</div><div style="background:transparent;color:#64748B">You quote</div></div>
+    <div class="translate-row"><div class="says">"I need a motor starter"</div><div class="means">Contactor + overload at minimum</div><div class="quote-it">DOL starter (sized to motor FLA)</div></div>
+    <div class="translate-row"><div class="says">"I need full protection"</div><div class="means">Disconnect + breaker + contactor + OL</div><div class="quote-it">Combination starter</div></div>
+    <div class="translate-row"><div class="says">"I need a bucket"</div><div class="means">MCC bucket replacement</div><div class="quote-it">MCP starter (MCP + contactor + OL)</div></div>
+    <div class="translate-row"><div class="says">"I need forward/reverse"</div><div class="means">Two contactors + interlock + OL</div><div class="quote-it">Reversing starter (confirm electrical or mechanical interlock)</div></div>
+    <div class="translate-row"><div class="says">"It trips on startup"</div><div class="means">Inrush is tripping the upstream breaker</div><div class="quote-it">Soft starter, VFD, or D-curve breaker upgrade</div></div>
+    <div class="translate-row"><div class="says">"I need adjustable speed"</div><div class="means">Variable-frequency drive</div><div class="quote-it">VFD package — starter alone won't do it</div></div>
+    <div class="translate-row"><div class="says">"It's a small motor in a workshop"</div><div class="means">Fractional HP, no automation</div><div class="quote-it">Manual starter with built-in OL</div></div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    🏅 <b>LEARN LEVEL CLEARED — +80 XP · BADGE EARNED: 🧠 "STARTER TYPES LOCKED."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="inrush-imp" style="margin-top:14px;padding:18px">
+    <div class="icon">⚡</div>
+    <h3>The Inrush Imp blocks the path!</h3>
+    <div class="sub">5 questions on starter-type basics &amp; the contactor + OL split · Defeat to unlock APPLY level</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">11</div>
+</section>
+
+<!-- ============= PAGE 12 — APPLY 01: NEMA vs IEC ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 01 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ NEMA vs IEC STARTERS</div>
+  <h2 style="margin-top:14px">Two philosophies.<br>Two pricing tiers.</h2>
+  <p class="lead" style="margin-top:6px">Every starter SKU you'll ever quote is either <b>NEMA</b> (North American, conservative, oversized) or <b>IEC</b> (European, compact, precise). Knowing which philosophy fits the application is half the sale.</p>
+
+  <table class="matrix" style="margin-top:18px">
+    <thead><tr><th class="row-h">Category</th><th>NEMA</th><th>IEC</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Sizing</td><td>Broad steps (Size 00, 0, 1, 2, 3, 4, 5, 6)</td><td class="best">Precisely sized to motor FLA</td></tr>
+      <tr><td class="lbl">Durability</td><td class="best">Heavy-duty, built for decades</td><td>Compact, replaceable</td></tr>
+      <tr><td class="lbl">Overload adjustability</td><td class="best">Wide range</td><td>Narrow range (sized to motor)</td></tr>
+      <tr><td class="lbl">Cost</td><td>Higher</td><td class="best">Lower</td></tr>
+      <tr><td class="lbl">Philosophy</td><td>Conservative — safe to oversize</td><td>Precise — must match exact rating</td></tr>
+      <tr><td class="lbl">Common brands</td><td>Eaton, Allen-Bradley, Square D</td><td>Schneider, Siemens, ABB</td></tr>
+      <tr><td class="lbl">Best for</td><td class="best">Harsh North American industrial plants</td><td class="best">OEM panels, export equipment</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>📞 The sales question</h3>
+    <p>"Are you matching an existing NEMA frame, or designing a new panel?" If matching existing → stay NEMA. If new OEM design → IEC saves cost and panel space. Don't mix philosophies in the same starter.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> NEMA = American muscle, easy to oversize. IEC = European precision, must size exact. Both protect motors; they just do it differently.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">12</div>
+</section>
+
+<!-- ============= PAGE 13 — APPLY 02: SIZING BY HP ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 02 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ STARTER SIZING BY MOTOR HP</div>
+  <h2 style="margin-top:14px">Five buckets.<br>Five answers.</h2>
+  <p class="lead" style="margin-top:6px">Motor HP isn't the only number that matters (FLA still rules the overload sizing), but it's the fastest way to put the customer in the right starter family on the first call.</p>
+
+  <table class="matrix" style="margin-top:18px">
+    <thead><tr><th class="row-h">Motor HP</th><th>Typical Starter Type</th><th>Upstream Protection</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">0.25 – 3 HP</td><td>Manual or DOL starter</td><td>MCB or small MCCB</td></tr>
+      <tr><td class="lbl">3 – 10 HP</td><td>DOL or reversing starter</td><td>MCCB + OL relay</td></tr>
+      <tr><td class="lbl">10 – 30 HP</td><td class="best">Combination starter or soft starter</td><td>MCP or MCCB combo</td></tr>
+      <tr><td class="lbl">30 – 100 HP</td><td class="best">Soft starter, combo starter, or VFD</td><td>Verify SCCR — fuses for high fault current</td></tr>
+      <tr><td class="lbl">100+ HP</td><td class="best">VFD package or MCC combination</td><td>Almost always fused disconnect or high-AIC MCCB</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>⚠️ Sizing pitfalls</h3>
+    <p><b>1.</b> HP alone doesn't tell you FLA — voltage and service factor change it. <b>2.</b> "Bumping up one size" sounds safe but mis-sizes the overload. <b>3.</b> Above 30 HP, always check the SCCR (Short-Circuit Current Rating) of the assembly — code requires it.</p>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#ECFDF5,#D1FAE5);border:2px solid #059669">
+    <h3 style="color:#065F46;font-size:16px">📌 SCCR — the forgotten rating</h3>
+    <p style="color:#065F46;margin-top:6px;font-size:13px">SCCR is the highest fault current a starter assembly can interrupt without damage. Modern industrial sites can have 25–100 kA available; if your starter's SCCR is 5 kA, it's a code violation. Fuses give the highest SCCR cheaply, which is why fused combination starters dominate above 30 HP.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Memorize the five HP buckets. The customer says "10 HP pump" and you instantly know they're in the combination/soft-starter zone — not a bare DOL.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">13</div>
+</section>
+
+<!-- ============= PAGE 14 — APPLY 03: PROTECTION MATRIX ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 03 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ PROTECTION MATRIX</div>
+  <h2 style="margin-top:14px">Overload OR short-circuit?<br>Always both.</h2>
+  <p class="lead" style="margin-top:6px">A motor needs <b>two</b> kinds of protection: slow-cooker (overload) and blow-up (short-circuit). Different starters put them in different places. This matrix tells you what's missing.</p>
+
+  <table class="matrix" style="margin-top:18px">
+    <thead><tr><th class="row-h">Starter Type</th><th>Overload Protection?</th><th>Short-Circuit Protection?</th><th>Where SC lives</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">DOL Starter</td><td class="best">Yes (OL relay)</td><td>No</td><td>Upstream breaker / fuses</td></tr>
+      <tr><td class="lbl">Reversing Starter</td><td class="best">Yes (OL relay)</td><td>No</td><td>Upstream breaker / fuses</td></tr>
+      <tr><td class="lbl">Soft Starter</td><td>Yes / No (model-dependent)</td><td>No</td><td>Upstream breaker / fuses</td></tr>
+      <tr><td class="lbl">VFD Starter</td><td class="best">Yes (built-in)</td><td>No</td><td>Upstream MCCB or fuses</td></tr>
+      <tr><td class="lbl">Combination Starter</td><td class="best">Yes</td><td class="best">Yes</td><td>Inside the assembly</td></tr>
+      <tr><td class="lbl">MCP Starter</td><td class="best">Yes (external OL)</td><td class="best">Yes (MCP)</td><td>Inside the assembly</td></tr>
+      <tr><td class="lbl">Manual Starter</td><td class="best">Yes (built-in)</td><td>No</td><td>Upstream breaker / fuses</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>📌 The mental model</h3>
+    <p>A <b>contactor switches</b>. An <b>overload protects the motor</b>. A <b>breaker or fuse protects the wiring and handles short circuits</b>. Three jobs, three devices. A "starter" packages the first two; the third is either upstream or bundled into a combination/MCP assembly.</p>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #EF4444">
+    <h3 style="color:#7F1D1D;font-size:16px">🚨 The "missing protection" trap</h3>
+    <p style="color:#7F1D1D;margin-top:6px;font-size:13px">A customer orders a bare DOL starter and assumes it's "fully protected." It isn't — short-circuit protection lives <b>outside</b> the starter. If the upstream breaker is wrong (or missing), the first ground fault welds the contactor shut. <b>Always confirm</b> what's upstream when quoting a non-combination starter.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Two protections, two devices, two places. Memorize where each one lives for every starter type.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">14</div>
+</section>
+
+<!-- ============= PAGE 15 — APPLY 04: ACCESSORIES ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 04 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ STARTER ACCESSORIES</div>
+  <h2 style="margin-top:14px">The five<br>upsells that matter.</h2>
+  <p class="lead" style="margin-top:6px">Five accessories show up on almost every industrial starter quote. Missing them costs reorders, callbacks, and trust. Offer them by default unless the customer says no.</p>
+
+  <table class="matrix" style="margin-top:18px">
+    <thead><tr><th class="row-h">Accessory</th><th>Purpose</th><th>Offer when…</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Aux Contacts</td><td>Status feedback to PLC / remote display</td><td>Customer mentions PLC, SCADA, remote monitoring</td></tr>
+      <tr><td class="lbl">Control Transformer</td><td>Drops 480V → 120V for the contactor coil</td><td>Industrial 480V starter, anytime control voltage ≠ line voltage</td></tr>
+      <tr><td class="lbl">Pilot Lights</td><td>Local visual indication (RUN / FAULT / READY)</td><td>Customer wants operator panel feedback</td></tr>
+      <tr><td class="lbl">Start/Stop Stations</td><td>Remote pushbutton control</td><td>Customer has field operators; motor isn't right next to the starter</td></tr>
+      <tr><td class="lbl">NEMA Enclosure</td><td>Environmental protection (1 / 3R / 4 / 4X / 12)</td><td>Outdoor, washdown, dusty, or harsh location</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>📞 The "Did you order…" follow-ups</h3>
+    <p>Three phrases close every starter call:<br>1. "Do you need a control transformer for the coil voltage?"<br>2. "Pilot lights and start/stop, or just the bare starter?"<br>3. "What enclosure rating — indoor clean, dusty, washdown, or outdoor?"</p>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FEF3C7,#FDE68A);border:2px solid #F59E0B">
+    <h3 style="color:#78350F;font-size:16px">⚠️ The enclosure rule</h3>
+    <p style="color:#78350F;margin-top:6px;font-size:13px">Open chassis is rated for installation inside another enclosure. <b>NEMA 1</b> = clean indoor. <b>NEMA 12</b> = dusty industrial. <b>NEMA 4/4X</b> = washdown / outdoor (4X is corrosion-resistant for food &amp; chemical). Never quote an open chassis to a customer installing in a standalone outdoor location.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> The accessories ARE the quote. A bare starter + the right five accessories doubles the ticket and makes the install actually work.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">15</div>
+</section>
+
+<!-- ============= PAGE 16 — APPLY 05: QUICK DECISION PATH ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 05 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ QUICK DECISION PATH</div>
+  <h2 style="margin-top:14px">Six questions.<br>One starter.</h2>
+  <p class="lead" style="margin-top:6px">Run these six questions in order on every motor-control call. The answer to each one narrows the SKU. By the last question you're at one starter type — guaranteed.</p>
+
+  <div style="margin-top:18px">
+    <div class="decision-card"><div class="q">1. Need variable speed?</div><div class="y">YES → VFD (not a starter)</div><div class="n">NO → continue</div></div>
+    <div class="decision-card"><div class="q">2. Tripping on startup (inrush)?</div><div class="y">YES → Soft Starter or VFD</div><div class="n">NO → continue</div></div>
+    <div class="decision-card"><div class="q">3. Replacing an MCC bucket?</div><div class="y">YES → MCP Starter</div><div class="n">NO → continue</div></div>
+    <div class="decision-card"><div class="q">4. Need overload + short-circuit in one unit?</div><div class="y">YES → Combination Starter</div><div class="n">NO → continue</div></div>
+    <div class="decision-card"><div class="q">5. Need forward / reverse?</div><div class="y">YES → Reversing Starter</div><div class="n">NO → continue</div></div>
+    <div class="decision-card"><div class="q">6. Small fractional HP, no automation?</div><div class="y">YES → Manual Starter</div><div class="n">NO → DOL Starter (default)</div></div>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>📌 Highest SCCR variant</h3>
+    <p>If the answer is "combination" AND the customer mentions high fault current (over 25 kA available), upgrade to a <b>fused combination starter</b>. Fuses give the highest SCCR for the lowest dollar.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Print this decision path. Tape it next to the phone. Run it every call until it's muscle memory — then your quotes never miss.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">16</div>
+</section>
+
+<!-- ============= PAGE 17 — APPLY 06: 5 SALES MISTAKES + BUCKET BANSHEE ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 06 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ 5 SALES MISTAKES TO AVOID</div>
+  <h2 style="margin-top:14px">Each one costs<br>an order.</h2>
+  <p class="lead" style="margin-top:6px">Every mistake on this list has cost a rep a callback, a returned part, or — worst case — a burned-up motor. Memorize and avoid.</p>
+
+  <div style="margin-top:18px">
+    <div class="mistake">
+      <span class="x">1</span>
+      <div><h3>Thinking a starter reduces inrush.</h3><p>A DOL starter applies <b>full voltage instantly</b>. Inrush is unchanged. Reducing inrush requires a soft starter, VFD, or reduced-voltage method (autotransformer / star-delta).</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">2</span>
+      <div><h3>Confusing a starter with a drive.</h3><p>A starter <b>does not control speed</b>. If the customer needs variable speed, you're quoting a VFD — full stop. Selling them a "starter" for variable-speed is a returned part and a lost relationship.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">3</span>
+      <div><h3>Missing overload sizing.</h3><p>Overloads MUST be sized to motor <b>FLA</b>, not HP. Two motors at the same HP can have different FLAs depending on voltage and service factor. Always ask for the nameplate.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">4</span>
+      <div><h3>Selling a DOL into a weak power system.</h3><p>DOL starters hit the line with 6–8× FLA. On a weak transformer or rural service, that drops voltage on the rest of the plant — and trips the upstream breaker. Reach for a soft starter or reduced-voltage starter.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">5</span>
+      <div><h3>Forgetting the accessories.</h3><p>Control transformer · pilot lights · start/stop stations · aux contacts · proper enclosure. The bare starter never ships alone — and forgetting one means a callback the next day.</p></div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    🏅 <b>APPLY LEVEL CLEARED — +90 XP · BADGE EARNED: 💼 "STARTER-CAPABLE."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="bucket-banshee">
+    <div class="icon">🪣</div>
+    <h3>The Bucket Banshee blocks the path!</h3>
+    <div class="sub">5 questions on combination/MCP starters, accessories &amp; decision-path · Defeat to unlock the Boss Fight</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">17</div>
+</section>
+
+<!-- ============= PAGE 18 — BOSS INTRO ============= -->
+<section class="page boss-page" data-section-id="finalboss" style="display:flex;flex-direction:column;align-items:center;text-align:center">
+  <div class="page-tag" style="color:#34D399">▸ TEST · BOSS FIGHT</div>
+  <div style="margin-top:.6in"><div class="level-banner lvl-test" style="margin:0 auto">🎯 TEST LEVEL</div></div>
+  <h2 style="margin-top:20px;font-size:54px">The Starter<br>Arena.</h2>
+  <svg width="320" height="320" viewBox="0 0 320 320" style="margin-top:14px">
+    <defs>
+      <linearGradient id="bossS" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#A7F3D0"/>
+        <stop offset="100%" stop-color="#064E3B"/>
+      </linearGradient>
+      <filter id="bossglow7"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <g transform="translate(160 160)">
+      <!-- Boss = giant starter cabinet with evil eyes -->
+      <rect x="-110" y="-130" width="220" height="260" rx="16" fill="url(#bossS)" stroke="#FCD34D" stroke-width="3" filter="url(#bossglow7)"/>
+      <!-- Top label -->
+      <rect x="-78" y="-110" width="156" height="22" rx="4" fill="#064E3B"/>
+      <text x="0" y="-94" text-anchor="middle" font-size="11" fill="#FCD34D" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="2">STARTER ARENA</text>
+      <!-- Evil eyes -->
+      <circle cx="-30" cy="-50" r="11" fill="#EF4444"/>
+      <circle cx="30" cy="-50" r="11" fill="#EF4444"/>
+      <circle cx="-28" cy="-52" r="3" fill="#FCD34D"/>
+      <circle cx="32" cy="-52" r="3" fill="#FCD34D"/>
+      <!-- Snarl -->
+      <path d="M -40 -20 L -25 -30 L -10 -20 L 5 -30 L 20 -20 L 35 -30 L 50 -20" fill="none" stroke="#FCD34D" stroke-width="3"/>
+      <!-- Big rotary disconnect handle -->
+      <circle cx="0" cy="40" r="38" fill="#0F172A" stroke="#FCD34D" stroke-width="3"/>
+      <rect x="-6" y="10" width="12" height="60" rx="3" fill="#FCD34D"/>
+      <circle cx="0" cy="40" r="8" fill="#FCD34D"/>
+      <!-- Cable feet -->
+      <g fill="#0F172A" stroke="#FCD34D" stroke-width="2">
+        <rect x="-70" y="100" width="14" height="30" rx="3"/>
+        <rect x="-7" y="100" width="14" height="30" rx="3"/>
+        <rect x="56" y="100" width="14" height="30" rx="3"/>
+      </g>
+    </g>
+  </svg>
+  <div style="width:80%;margin-top:14px">
+    <div style="display:flex;justify-content:space-between;color:#FACC15;font-weight:800;font-size:11px;letter-spacing:.1em;margin-bottom:6px">
+      <span>STARTER ARENA · 60 HP</span><span>STATUS: HOSTILE</span>
+    </div>
+    <div class="hp-bar"><div class="fill"></div></div>
+  </div>
+  <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:18px 24px;margin-top:24px;width:80%">
+    <p style="color:#fff;font-size:14px"><b>30 questions · 2 XP each · 80%+ to win</b></p>
+    <p style="color:#94A3B8;font-size:13px;margin-top:8px">No peeking. Score honest. 24/30 = ▶️ Starter Commander badge.</p>
+  </div>
+  <div class="page-num" style="color:#64748B">18</div>
+</section>
+
+<!-- ============= PAGE 19 — ROUND 1 (Q1-6) STARTER FUNDAMENTALS ============= -->
+<section class="page boss-page" data-quiz-page="1" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 1 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 1 · STARTER FUNDAMENTALS</div>
+    <div style="color:#34D399;font-weight:800;font-size:11px;letter-spacing:.1em">Q 1 → 6</div>
+  </div>
+  <div class="hp-bar" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="1"></div><div class="qcard" data-q="2"></div>
+    <div class="qcard" data-q="3"></div><div class="qcard" data-q="4"></div>
+    <div class="qcard" data-q="5"></div><div class="qcard" data-q="6"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">19</div>
+</section>
+
+<!-- ============= PAGE 20 — ROUND 2 (Q7-12) STARTER TYPES ============= -->
+<section class="page boss-page" data-quiz-page="2" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 2 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 2 · STARTER TYPES</div>
+    <div style="color:#34D399;font-weight:800;font-size:11px;letter-spacing:.1em">Q 7 → 12</div>
+  </div>
+  <div class="hp-bar r2" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="7"></div><div class="qcard" data-q="8"></div>
+    <div class="qcard" data-q="9"></div><div class="qcard" data-q="10"></div>
+    <div class="qcard" data-q="11"></div><div class="qcard" data-q="12"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">20</div>
+</section>
+
+<!-- ============= PAGE 21 — ROUND 3 (Q13-18) PROTECTION & SIZING ============= -->
+<section class="page boss-page" data-quiz-page="3" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 3 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 3 · PROTECTION &amp; SIZING</div>
+    <div style="color:#FBBF24;font-weight:800;font-size:11px;letter-spacing:.1em">Q 13 → 18</div>
+  </div>
+  <div class="hp-bar r3" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="13"></div><div class="qcard" data-q="14"></div>
+    <div class="qcard" data-q="15"></div><div class="qcard" data-q="16"></div>
+    <div class="qcard" data-q="17"></div><div class="qcard" data-q="18"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">21</div>
+</section>
+
+<!-- ============= PAGE 22 — ROUND 4 (Q19-24) COMPONENTS & ACCESSORIES ============= -->
+<section class="page boss-page" data-quiz-page="4" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 4 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 4 · COMPONENTS &amp; ACCESSORIES</div>
+    <div style="color:#F97316;font-weight:800;font-size:11px;letter-spacing:.1em">Q 19 → 24</div>
+  </div>
+  <div class="hp-bar r4" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="19"></div><div class="qcard" data-q="20"></div>
+    <div class="qcard" data-q="21"></div><div class="qcard" data-q="22"></div>
+    <div class="qcard" data-q="23"></div><div class="qcard" data-q="24"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">22</div>
+</section>
+
+<!-- ============= PAGE 23 — ROUND 5 (Q25-30) SALES & DECISIONS ============= -->
+<section class="page boss-page" data-quiz-page="5" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 5 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 FINAL ROUND · SALES &amp; DECISIONS</div>
+    <div style="color:#EF4444;font-weight:800;font-size:11px;letter-spacing:.1em">Q 25 → 30 · KILL SHOT</div>
+  </div>
+  <div class="hp-bar r5" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="25"></div><div class="qcard" data-q="26"></div>
+    <div class="qcard" data-q="27"></div><div class="qcard" data-q="28"></div>
+    <div class="qcard" data-q="29"></div><div class="qcard" data-q="30"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">23</div>
+</section>
+
+<!-- ============= PAGE 24 — ANSWER KEY / RESULTS ============= -->
+<section class="page" id="resultsPage" data-section-id="results">
+  <div class="page-tag" style="color:#10B981">▸ FINAL BOSS · RESULTS</div>
+  <div class="level-banner lvl-test" style="margin-top:.4in">🎯 ANSWER KEY · YOUR RESULTS</div>
+  <h2 style="margin-top:14px">🗝️ The Key.</h2>
+  <p class="lead print-only" style="display:none">Score yourself. Tier yourself. Earn the badge.</p>
+
+  <div id="liveResults" class="interactive-only" style="margin-top:18px;background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:18px;padding:24px;color:#fff">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+      <div>
+        <p style="color:#94A3B8;font-size:11px;letter-spacing:.18em;font-weight:800;margin:0">▸ YOUR LIVE SCORE</p>
+        <p style="font-family:'Bricolage Grotesque';font-size:54px;font-weight:800;color:#FACC15;margin-top:4px;line-height:1">
+          <span id="scoreCorrect">0</span><span style="color:#475569">/30</span>
+        </p>
+        <p style="font-size:13px;color:#CBD5E1;margin-top:4px">Total XP: <b id="scoreXP" style="color:#34D399">0</b> <span style="color:#475569">/ 280</span></p>
+      </div>
+      <div id="tierBadge" style="text-align:center"></div>
+    </div>
+    <div style="margin-top:14px;background:#334155;height:14px;border-radius:7px;overflow:hidden;border:1px solid #475569">
+      <div id="scoreBar" style="height:100%;width:0%;background:linear-gradient(90deg,#10B981,#34D399);transition:width .4s ease"></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button id="submitBtn" style="background:linear-gradient(135deg,#10B981,#047857);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📤 SUBMIT TO TRAINER</button>
+      <button id="copyBtn" style="background:#059669;color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📋 COPY RESULTS</button>
+      <button id="resetBtn" style="background:#1E293B;color:#FACC15;border:1px solid #475569;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">↻ RESTART QUIZ</button>
+    </div>
+    <div id="submitStatus" style="margin-top:10px;font-size:12px;font-weight:700;color:#94A3B8;min-height:18px;white-space:pre-wrap"></div>
+  </div>
+
+  <div class="answer-key-static">
+  <div class="key-grid">
+    <div class="key-cell"><span>Q1</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q2</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q3</span><span class="a">A</span></div>
+    <div class="key-cell"><span>Q4</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q5</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q6</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q7</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q8</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q9</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q10</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q11</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q12</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q13</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q14</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q15</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q16</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q17</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q18</span><span class="a">D</span></div>
+    <div class="key-cell"><span>Q19</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q20</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q21</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q22</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q23</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q24</span><span class="a">D</span></div>
+    <div class="key-cell"><span>Q25</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q26</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q27</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q28</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q29</span><span class="a">D</span></div>
+    <div class="key-cell"><span>Q30</span><span class="a">C</span></div>
+  </div>
+
+  <h3 style="margin-top:24px">🏆 Scoring tiers</h3>
+  <div class="tier tier-gold"><div class="medal">🥇</div><div><b>24–30 correct → STARTER COMMANDER.</b> Earn the ▶️ badge. You quote starters like an engineer.</div></div>
+  <div class="tier tier-silver"><div class="medal">🥈</div><div><b>18–23 correct → STARTER-CAPABLE.</b> Re-run the APPLY level and re-fight.</div></div>
+  <div class="tier tier-bronze"><div class="medal">🥉</div><div><b>0–17 correct → BACK TO THE STARTERS.</b> Re-read LEARN. The Banshee waits.</div></div>
+  </div><!-- /answer-key-static -->
+  <div class="page-num">24</div>
+</section>
+
+<!-- ============= PAGE 25 — LOOT DROP / POCKET CHEAT SHEET ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ LOOT DROP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">💎 POCKET CHEAT SHEET</div>
+  <h2 style="margin-top:14px">Tear-out card.</h2>
+  <p class="lead">Print it. Tape it next to your phone. Reference forever.</p>
+
+  <div class="loot" style="margin-top:18px">
+    <div class="stamp">✂ TEAR HERE</div>
+
+    <h3>▶️ What a starter IS</h3>
+    <p><b>STARTER = CONTACTOR + OVERLOAD RELAY</b> (with short-circuit protection upstream, unless it's a combination/MCP starter — then SC is in the box). Three jobs: <b>start, stop, protect.</b> No speed control.</p>
+
+    <h3>🧰 The 7 starter types</h3>
+    <p><b>DOL</b> full-voltage default · <b>Reversing</b> two contactors + interlock · <b>Manual</b> small motors, no automation · <b>Magnetic</b> coil-controlled, remote/PLC · <b>Combination</b> disconnect+breaker+contactor+OL · <b>MCP</b> MCC bucket (MCP + contactor + OL) · <b>Soft Starter / VFD</b> if inrush or speed are issues.</p>
+
+    <h3>📞 The 5 first questions</h3>
+    <p>1) Motor voltage, HP, FLA · 2) Control coil voltage · 3) Variable speed needed? · 4) Forward/reverse? · 5) NEMA or IEC frame?</p>
+
+    <h3>🛡️ Overload sizing</h3>
+    <p>✔ Size to <b>motor FLA</b> (not HP) · ✔ Trip Class 10 standard, 20–30 high inertia · ✔ Adjustable range must cover FLA. ❌ Never oversize "to be safe."</p>
+
+    <h3>📐 NEMA vs IEC</h3>
+    <p><b>NEMA</b> conservative, heavy-duty, sized in steps (00–6), safe to oversize. <b>IEC</b> compact, precise, sized to exact FLA, cheaper, must match ratings.</p>
+
+    <h3>🪣 Customer phrase decoder</h3>
+    <p>"<b>I need a starter</b>" → DOL · "<b>Full protection</b>" → Combination · "<b>A bucket</b>" → MCP · "<b>Forward/reverse</b>" → Reversing · "<b>Trips on startup</b>" → Soft Starter / VFD · "<b>Adjustable speed</b>" → VFD.</p>
+
+    <h3>🚨 5 Mistakes to Avoid</h3>
+    <p>Thinking a starter reduces inrush · Confusing starter with VFD · Missing FLA-based overload sizing · DOL on a weak power system · Forgetting accessories (CT, pilot lights, start/stop, aux contacts, enclosure).</p>
+
+    <h3>🧠 The Memory Hook</h3>
+    <p style="font-size:16px;font-weight:800;color:#065F46">A starter starts and protects. It doesn't reduce inrush. It doesn't control speed. If either of those is needed, you're past the starter — soft starter or VFD.</p>
+  </div>
+  <div class="page-num">25</div>
+</section>
+
+<!-- ============= PAGE 26 — TROPHY CASE ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ FINAL XP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">🏅 TROPHY CASE</div>
+  <h2 style="margin-top:14px">Your earned XP.</h2>
+
+  <div class="trophy-grid">
+    <div class="trophy"><div class="icon">🧠</div><h3>STARTER TYPES LOCKED</h3><div class="xp-num">+80 XP</div></div>
+    <div class="trophy"><div class="icon">⚡</div><h3>MINI BOSSES</h3><div class="xp-num">+50 XP</div></div>
+    <div class="trophy"><div class="icon">💼</div><h3>STARTER-CAPABLE</h3><div class="xp-num">+90 XP</div></div>
+    <div class="trophy"><div class="icon">▶️</div><h3>STARTER COMMANDER</h3><div class="xp-num">+60 XP</div></div>
+  </div>
+
+  <div class="factbox" style="margin-top:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="font-size:16px">TOTAL POSSIBLE XP</h3>
+      <div style="font-family:'Bricolage Grotesque';font-size:46px;font-weight:800;color:#CA8A04">280</div>
+    </div>
+    <hr class="faint">
+    <p style="font-size:12px;color:var(--slate-500)">Seven product-mastery volumes cleared. Up next on the motor track: Soft Starters · VFDs · Line/Load Reactors · Harmonic Filters — each one building on the starter knowledge you just locked.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:18px">
+    🔓 <b>NEXT UNLOCKS:</b> Soft starters and VFDs are essentially fancy starters with electronics in the middle. The contactor + OL building blocks stay the same.
+  </div>
+  <div class="page-num">26</div>
+</section>
+
+<!-- ============= PAGE 27 — CLOSING ============= -->
+<section class="page closing-page" data-section-id="results">
+  <h1 style="font-size:84px">▶️</h1>
+  <h1 style="margin-top:14px">Start it.<br>Protect it.<br>Quote the right starter.</h1>
+  <p style="font-size:20px;max-width:5.5in;margin:24px auto 0">Motor starters are the foundation of every motor control system. Master the seven types, the decision path, and the accessory checklist — and the rest of the motor track (soft starters, VFDs, MCCs) clicks into place.</p>
+</section>
+
+<!-- ADMIN OVERLAY (browser only) -->
+<div id="adminOverlay" class="interactive-only"></div>
+
+<script src="../shared/module.js?v=editor-blocks-2-page-delete"></script>
+<script>
+RSPModule.init({
+  moduleId:   "motor-starter",
+  moduleName: "Motor Starter Mastery",
+  moduleIcon: "▶️",
+
+  totalQuestions: 30,
+  passGold:       24,
+  passSilver:     18,
+  pageXpTotal:    170,   // 8 LEARN × 10 + 6 APPLY × 15
+  minibossXpTotal: 50,
+  adminPassword:  (window.RSP_CONFIG && window.RSP_CONFIG.adminPassword) || "",
+  pumbleWebhookUrl: "",
+  storageKey: "rsp_motor_starter_progress",
+
+  tierBadges: {
+    gold:   { name:"STARTER COMMANDER", msg:"You quote starters like an engineer." },
+    silver: { name:"STARTER-CAPABLE",   msg:"Re-run APPLY level and re-fight." },
+    bronze: { name:"BACK TO THE STARTERS", msg:"Re-read LEARN. The Banshee waits." }
+  },
+  tierSubmitText: {
+    gold:   "🥇 Starter Commander",
+    silver: "🥈 Starter-Capable — Re-run APPLY level",
+    bronze: "🥉 Needs Re-do — Back to LEARN"
+  },
+
+  // -------- THE 30-QUESTION BOSS FIGHT --------
+  quiz: [
+    // ROUND 1 — Starter Fundamentals
+    {n:1,  q:"A motor starter is fundamentally:", opts:{A:"A circuit breaker",B:"A speed control device",C:"A contactor + overload relay assembly",D:"A disconnect switch"}, c:"C"},
+    {n:2,  q:"Which three jobs does a motor starter do?", opts:{A:"Run, protect, cool",B:"Start, stop, protect (the motor)",C:"Start, reverse, control speed",D:"Switch, measure, log"}, c:"B"},
+    {n:3,  q:"Which device in a starter is the switching device?", opts:{A:"Contactor",B:"Overload relay",C:"Circuit breaker",D:"Control transformer"}, c:"A"},
+    {n:4,  q:"Which device protects the motor from sustained overcurrent?", opts:{A:"Contactor",B:"Overload relay",C:"Disconnect switch",D:"Control transformer"}, c:"B"},
+    {n:5,  q:"Where does short-circuit protection live in a basic DOL motor circuit?", opts:{A:"Inside the contactor",B:"Inside the overload relay",C:"Upstream of the starter (breaker or fuse)",D:"Inside the motor"}, c:"C"},
+    {n:6,  q:"A motor starter does NOT:", opts:{A:"Start the motor",B:"Stop the motor",C:"Control motor speed",D:"Protect the motor from overload"}, c:"C"},
+
+    // ROUND 2 — Starter Types
+    {n:7,  q:"An Across-the-Line (DOL) starter applies:", opts:{A:"Reduced voltage",B:"Full voltage instantly",C:"Variable frequency",D:"DC voltage only"}, c:"B"},
+    {n:8,  q:"Which starter type is best for forward / reverse control?", opts:{A:"DOL starter",B:"Reversing starter",C:"Soft starter",D:"Manual starter"}, c:"B"},
+    {n:9,  q:"A manual motor starter is best suited for:", opts:{A:"Large industrial motors with PLC control",B:"Variable-speed pumps",C:"Small fractional-HP motors with local-only control",D:"MCC bucket replacements"}, c:"C"},
+    {n:10, q:"Which starter is the natural choice for replacing an MCC bucket?", opts:{A:"DOL starter",B:"Manual starter",C:"MCP starter (MCP + contactor + OL)",D:"Soft starter"}, c:"C"},
+    {n:11, q:"A magnetic motor starter is preferred when:", opts:{A:"Local manual control is enough",B:"Remote or PLC control is required",C:"The motor is fractional HP only",D:"No overload protection is needed"}, c:"B"},
+    {n:12, q:"Which starter provides BOTH short-circuit and overload protection in a single packaged unit?", opts:{A:"DOL starter",B:"Manual starter",C:"Combination starter",D:"Reversing starter"}, c:"C"},
+
+    // ROUND 3 — Protection & Sizing
+    {n:13, q:"How should an overload relay be sized?", opts:{A:"By motor HP only",B:"By contactor frame size",C:"By motor FLA (full-load amps)",D:"By breaker AIC rating"}, c:"C"},
+    {n:14, q:"The correct sizing rule for overloads is:", opts:{A:"Always size to HP",B:"Always size to motor FLA",C:"Always oversize to be safe",D:"Always undersize for tighter protection"}, c:"B"},
+    {n:15, q:"A motor's inrush current at startup is typically:", opts:{A:"Equal to FLA",B:"Half of FLA",C:"6–8× FLA",D:"100× FLA"}, c:"C"},
+    {n:16, q:"Reduced-voltage starting is used primarily to:", opts:{A:"Increase motor speed",B:"Reduce inrush current and mechanical stress",C:"Provide overload protection",D:"Replace short-circuit protection"}, c:"B"},
+    {n:17, q:"Which starter type is best when a motor keeps tripping the upstream breaker on startup?", opts:{A:"DOL starter (smaller motor)",B:"Soft starter or VFD",C:"Manual starter",D:"Reversing starter"}, c:"B"},
+    {n:18, q:"Which is NOT a reduced-voltage starting method?", opts:{A:"Autotransformer",B:"Primary resistance",C:"Star-Delta (Wye-Delta)",D:"MCP"}, c:"D"},
+
+    // ROUND 4 — Components & Accessories
+    {n:19, q:"The mechanical part that prevents two reversing contactors from energizing at the same time is called a/an:", opts:{A:"Aux contact",B:"Interlock",C:"Snubber",D:"Limit switch"}, c:"B"},
+    {n:20, q:"A typical control transformer in an industrial starter steps voltage from:", opts:{A:"120V to 24V",B:"480V to 120V",C:"240V to 480V",D:"24V to 5V"}, c:"B"},
+    {n:21, q:"Aux contacts on a contactor are used to:", opts:{A:"Carry motor power current",B:"Provide status feedback and control logic",C:"Replace the overload relay",D:"Step down voltage"}, c:"B"},
+    {n:22, q:"A VFD-based starter package typically:", opts:{A:"Requires an external overload relay",B:"Has built-in overload protection",C:"Has no short-circuit protection needs",D:"Requires no upstream disconnect"}, c:"B"},
+    {n:23, q:"Which NEMA enclosure rating is appropriate for an outdoor washdown environment?", opts:{A:"NEMA 1",B:"NEMA 12",C:"NEMA 4 / 4X",D:"Open chassis"}, c:"C"},
+    {n:24, q:"Which is NOT a typical starter accessory?", opts:{A:"Pilot lights",B:"Start/Stop pushbutton station",C:"Aux contacts",D:"Voltage regulator"}, c:"D"},
+
+    // ROUND 5 — Sales & Decisions
+    {n:25, q:"A customer says, 'I need a bucket.' They most likely need:", opts:{A:"A DOL starter",B:"A reversing starter",C:"An MCP starter for an MCC replacement",D:"A control transformer"}, c:"C"},
+    {n:26, q:"A customer says, 'It trips on startup.' Best sales path:", opts:{A:"Larger contactor",B:"Soft starter, VFD, or D-curve breaker",C:"Smaller overload relay",D:"Replace the motor with a smaller one"}, c:"B"},
+    {n:27, q:"Between NEMA and IEC starters, which is generally larger, more conservative, and safer to oversize?", opts:{A:"IEC",B:"NEMA",C:"Both the same",D:"MCP"}, c:"B"},
+    {n:28, q:"The most common mistake in motor-starter sales is:", opts:{A:"Oversizing the contactor",B:"Thinking a starter controls speed or reduces inrush",C:"Specifying the wrong enclosure color",D:"Forgetting the pilot light color"}, c:"B"},
+    {n:29, q:"A customer needs adjustable speed control. You quote:", opts:{A:"DOL starter",B:"Manual starter",C:"Soft starter",D:"VFD"}, c:"D"},
+    {n:30, q:"Which statement is TRUE?", opts:{A:"A starter controls motor speed",B:"An overload relay interrupts short circuits",C:"A starter = contactor + overload relay (with short-circuit protection in or upstream of the assembly)",D:"A combination starter has no overload relay"}, c:"C"}
+  ],
+
+  // -------- MINI-BOSSES --------
+  minibosses: {
+    'inrush-imp': {
+      name: 'INRUSH IMP',
+      icon: '⚡',
+      tagline: 'Guardian of the Across-the-Line',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"A motor starter at minimum consists of:", opts:{A:"Contactor only",B:"Overload relay only",C:"Contactor + overload relay",D:"Disconnect + breaker"}, c:"C"},
+        {q:"The most common (and lowest cost) starter type is:", opts:{A:"Combination starter",B:"Soft starter",C:"Across-the-Line (DOL)",D:"Manual starter"}, c:"C"},
+        {q:"A DOL / across-the-line starter applies:", opts:{A:"Reduced voltage",B:"Full voltage instantly",C:"DC voltage only",D:"Variable frequency"}, c:"B"},
+        {q:"The component that switches motor power on and off is the:", opts:{A:"Overload relay",B:"Contactor",C:"Circuit breaker",D:"Aux contact"}, c:"B"},
+        {q:"A magnetic motor starter is preferred when:", opts:{A:"Local manual control is enough",B:"Remote or PLC control is required",C:"The motor is fractional HP",D:"There is no overload protection"}, c:"B"}
+      ]
+    },
+    'bucket-banshee': {
+      name: 'BUCKET BANSHEE',
+      icon: '🪣',
+      tagline: 'Keeper of the Combination',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"A combination starter includes:", opts:{A:"Just a contactor",B:"Contactor + overload only",C:"Disconnect/breaker + contactor + overload",D:"VFD + contactor"}, c:"C"},
+        {q:"An MCP starter MUST be paired with:", opts:{A:"A VFD",B:"An overload relay",C:"A control transformer",D:"A soft starter"}, c:"B"},
+        {q:"Aux contacts on a contactor are mainly used for:", opts:{A:"Carrying motor power",B:"Status feedback and control logic",C:"Short-circuit protection",D:"Overload sensing"}, c:"B"},
+        {q:"Which accessory drops 480V control power to the contactor coil at 120V?", opts:{A:"Aux contact",B:"Pilot light",C:"Control transformer",D:"Overload reset"}, c:"C"},
+        {q:"To replace a bucket in an MCC, you'd specify:", opts:{A:"A DOL starter",B:"A manual starter",C:"An MCP starter (MCP + contactor + OL)",D:"A soft starter"}, c:"C"}
+      ]
+    }
+  },
+
+  // -------- SIDE MAP --------
+  mapSections: [
+    {id:'intro',      name:'Start',           icon:'🏁', meta:'Pages 1–3',     firstPage:1},
+    {id:'types',      name:'Starter Types',   icon:'▶️', meta:'Pages 4–8',     firstPage:4},
+    {id:'protection', name:'Protection',      icon:'🛡️', meta:'Pages 9–11',    firstPage:9},
+    {id:'mb1',        name:'Inrush Imp',      icon:'⚡', meta:'Mini Boss',     firstPage:11, isBoss:true, bossId:'inrush-imp'},
+    {id:'sizing',     name:'Sizing',          icon:'📐', meta:'Pages 12–13',   firstPage:12},
+    {id:'accessories',name:'Accessories',     icon:'⚙️', meta:'Pages 14–15',   firstPage:14},
+    {id:'apply',      name:'Sales Skills',    icon:'💼', meta:'Pages 16–17',   firstPage:16},
+    {id:'mb2',        name:'Bucket Banshee',  icon:'🪣', meta:'Mini Boss',     firstPage:17, isBoss:true, bossId:'bucket-banshee'},
+    {id:'finalboss',  name:'Starter Arena',   icon:'🐉', meta:'30 Questions',  firstPage:18, isBoss:true, isFinal:true},
+    {id:'results',    name:'Results',         icon:'🏆', meta:'Trophy Case',   firstPage:24}
+  ],
+
+  pageRanges: [
+    {section:'intro',       from:1,  to:3},
+    {section:'types',       from:4,  to:8},
+    {section:'protection',  from:9,  to:11},
+    {section:'sizing',      from:12, to:13},
+    {section:'accessories', from:14, to:15},
+    {section:'apply',       from:16, to:17},
+    {section:'finalboss',   from:18, to:23},
+    {section:'results',     from:24, to:27}
+  ]
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RSP Training Portal</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/flipbook.css">
+<style>
+:root{
+  --bg:#0F172A;--bg2:#1E293B;
+  --bolt:#FACC15;--bolt-deep:#CA8A04;
+  --green:#10B981;--red:#EF4444;
+  --slate3:#334155;--slate5:#64748B;--slate9:#94A3B8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:radial-gradient(circle at top right,#1E293B 0%,#0F172A 70%);font-family:'Inter',system-ui,sans-serif;color:#fff;min-height:100vh}
+h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;line-height:1.05;letter-spacing:-.01em}
+.wrap{max-width:1280px;margin:0 auto;padding:40px 32px}
+.pretitle{color:var(--bolt);font-size:11px;letter-spacing:.18em;font-weight:800}
+.tagline{color:#CBD5E1;margin-top:6px;font-size:14px}
+
+/* ── login overlay ── */
+#loginOverlay{position:fixed;inset:0;background:radial-gradient(circle at top right,#1E40AF 0%,#0F172A 70%);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+#loginOverlay.hidden{display:none}
+.login-card{background:#fff;border-radius:24px;padding:48px 40px;max-width:420px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,.5);text-align:center;color:#0F172A;position:relative;overflow:hidden}
+.login-card .bolt-bg{position:absolute;top:-30px;right:-30px;font-size:140px;opacity:.06;pointer-events:none}
+.login-card .pretitle{color:#1E40AF}
+.login-card h1{font-size:34px;color:#0F172A;margin-top:6px}
+.login-card .sub{color:#64748B;font-size:14px;margin-top:6px;line-height:1.5}
+.login-card label{display:block;text-align:left;margin-top:18px;font-size:11px;font-weight:800;color:#475569;letter-spacing:.1em}
+.login-card input{width:100%;padding:13px 14px;border:2px solid #E2E8F0;border-radius:10px;font-size:14px;font-family:inherit;margin-top:6px;background:#F8FAFC}
+.login-card input:focus{outline:none;border-color:#1E40AF;background:#fff}
+.login-card .err{color:#EF4444;font-size:12px;font-weight:700;margin-top:8px;min-height:14px;text-align:left}
+.login-card button{width:100%;padding:14px;background:linear-gradient(135deg,#1E40AF,#3B82F6);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;margin-top:14px;letter-spacing:.05em;font-family:inherit;transition:transform .1s}
+.login-card button:hover{transform:translateY(-1px)}
+.login-card button:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+.login-card .btn-create{background:transparent;color:#64748B;border:2px solid #E2E8F0;margin-top:8px}
+.login-card .btn-create:hover{border-color:#94A3B8;color:#334155;background:#F8FAFC;transform:none}
+
+/* ── app shell ── */
+#app{display:none}
+#app.show{display:block}
+
+/* ── topbar ── */
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;padding-bottom:24px;border-bottom:1px solid #1E293B}
+.topbar h1{font-size:36px;color:#fff;margin-top:4px}
+.topnav{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.nav-link{padding:8px 14px;border-radius:8px;background:#1E293B;color:var(--slate9);text-decoration:none;font-weight:700;font-size:12px;letter-spacing:.05em;border:1px solid var(--slate3)}
+.nav-link:hover{background:var(--slate3);color:#fff}
+.nav-link.active{background:var(--bolt);color:#0F172A;border-color:var(--bolt)}
+
+/* ── user pill ── */
+.user-pill{background:linear-gradient(135deg,#1E293B,#0F172A);border:2px solid var(--slate3);border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:14px;min-width:260px}
+.user-avatar{width:48px;height:48px;border-radius:50%;flex:0 0 48px;overflow:hidden;background:#0F172A}
+.user-avatar svg{display:block;width:100%;height:100%}
+.user-name{font-weight:800;font-size:14px;color:#fff}
+.user-meta{font-size:11px;color:var(--slate9);margin-top:1px}
+.user-tier{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.05em;margin-top:4px;background:#0F172A;border:1px solid var(--slate3)}
+.user-actions{margin-left:auto;display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+.user-actions a{color:var(--slate5);font-size:11px;text-decoration:none}
+.user-actions a:hover{color:var(--bolt)}
+
+/* ── status bar ── */
+.status-bar{margin-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:5px 12px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.06em;border:1px solid var(--slate3);background:#1E293B;color:var(--slate9)}
+.chip.passed{background:#065F46;color:#A7F3D0;border-color:#065F46}
+.chip.progress{background:#1E40AF;color:#BFDBFE;border-color:#1E40AF}
+.chip.locked{background:#450A0A;color:#FCA5A5;border-color:#7F1D1D}
+.status-detail{color:var(--slate9);font-size:13px}
+
+/* ── hero ── */
+.hero{margin-top:24px;background:linear-gradient(135deg,#1E1B4B,#0F172A);border:2px solid #312E81;border-radius:24px;padding:32px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:start}
+@media(max-width:768px){.hero{grid-template-columns:1fr}}
+.hero h2{font-size:34px;color:#fff;margin-top:6px}
+.hero-desc{color:#CBD5E1;font-size:14px;margin-top:8px;line-height:1.5;max-width:560px}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:280px}
+.q-card{background:rgba(255,255,255,.04);border:1px solid var(--slate3);border-radius:12px;padding:14px}
+.q-card .lbl{color:var(--slate9);font-size:10px;font-weight:800;letter-spacing:.12em}
+.q-card .val{color:#fff;font-weight:700;font-size:14px;margin-top:4px}
+
+/* ── two-panel layout ── */
+.layout{display:grid;grid-template-columns:1fr 360px;gap:20px;margin-top:24px}
+@media(max-width:960px){.layout{grid-template-columns:1fr}}
+.panel{background:linear-gradient(160deg,#1E293B,#0F172A);border:1px solid var(--slate3);border-radius:20px;padding:28px}
+.panel h3{font-size:18px;color:#fff}
+.panel .sub{color:var(--slate9);font-size:13px;margin-top:6px;line-height:1.5}
+
+/* ── study frame ── */
+.study-frame{margin-top:14px;border-radius:14px;overflow:hidden;background:#0F172A;border:1px solid var(--slate3)}
+.study-frame iframe{width:100%;min-height:480px;border:none;display:block}
+.study-placeholder{padding:48px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+.study-placeholder .ico{font-size:52px}
+.study-placeholder h4{font-size:18px;color:#fff}
+.study-placeholder p{color:var(--slate9);font-size:13px;line-height:1.5;max-width:360px}
+
+/* ── inline admin controls ── */
+.admin-bar{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.25);border-radius:12px;padding:14px 16px;margin-top:14px;display:none}
+.admin-bar.show{display:block}
+.admin-bar .admin-label{font-size:10px;font-weight:800;letter-spacing:.14em;color:#A78BFA;margin-bottom:8px}
+.admin-row{display:flex;gap:8px;align-items:center}
+.admin-row input{flex:1;padding:10px 12px;border-radius:8px;background:#0F172A;border:1px solid rgba(167,139,250,.3);color:#fff;font-size:13px;font-family:inherit}
+.admin-row input:focus{outline:none;border-color:#A78BFA}
+.admin-row .save-btn{padding:10px 16px;border-radius:8px;background:#7C3AED;color:#fff;border:none;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.admin-row .save-btn:hover{background:#6D28D9}
+.admin-msg{font-size:11px;margin-top:6px;min-height:14px;color:var(--slate5)}
+
+/* ── quiz drop zone ── */
+.quiz-drop{margin-top:14px;border:2px dashed var(--slate3);border-radius:12px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .2s}
+.quiz-drop:hover,.quiz-drop.over{border-color:#A78BFA;background:rgba(167,139,250,.05)}
+.quiz-drop .drop-ico{font-size:36px;line-height:1}
+.quiz-drop .drop-title{color:#fff;font-weight:800;font-size:14px;margin-top:8px}
+.quiz-drop .drop-sub{color:var(--slate5);font-size:12px;margin-top:4px}
+.quiz-loaded{margin-top:14px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);border-radius:12px;padding:14px 16px}
+.quiz-loaded .ql-top{display:flex;justify-content:space-between;align-items:center}
+.quiz-loaded .ql-label{color:#10B981;font-size:11px;font-weight:800;letter-spacing:.12em}
+.quiz-loaded .ql-count{color:#fff;font-weight:800;font-size:14px;margin-top:2px}
+.quiz-loaded .ql-meta{color:var(--slate5);font-size:11px;margin-top:2px}
+.reupload-link{color:#64748B;font-size:11px;cursor:pointer;text-decoration:underline;margin-top:6px;display:inline-block}
+.reupload-link:hover{color:#94A3B8}
+
+/* ── buttons ── */
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.btn{display:inline-flex;align-items:center;padding:10px 20px;border-radius:10px;font-weight:800;font-size:13px;font-family:inherit;text-decoration:none;cursor:pointer;border:none;letter-spacing:.04em;transition:all .15s}
+.btn.primary{background:linear-gradient(135deg,var(--bolt),var(--bolt-deep));color:#0F172A}
+.btn.primary:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(250,204,21,.3)}
+.btn.secondary{background:#1E293B;color:#fff;border:1px solid var(--slate3)}
+.btn.secondary:hover{background:var(--slate3)}
+.btn.ghost{background:transparent;color:var(--slate9);border:1px solid var(--slate3)}
+.btn.ghost:hover{color:#fff;border-color:var(--slate5)}
+.btn[disabled]{opacity:.4;cursor:not-allowed;transform:none!important;pointer-events:none}
+
+/* ── bullet list ── */
+.bullet-list{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+.bullet{display:flex;gap:12px;align-items:flex-start}
+.dot{width:24px;height:24px;border-radius:50%;background:var(--bolt);color:#0F172A;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 24px;margin-top:1px}
+.bullet div:last-child{color:#CBD5E1;font-size:13px;line-height:1.5}
+
+/* ── resource list ── */
+.resource-list{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.resource{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--slate3);text-decoration:none;color:#fff;font-size:13px;transition:all .15s}
+.resource:hover{background:rgba(255,255,255,.07);border-color:var(--slate5)}
+.resource .kind{color:var(--slate5);font-size:11px;font-weight:700;letter-spacing:.05em}
+
+/* ── footer ── */
+.footer{margin-top:60px;padding:24px 0;border-top:1px solid #1E293B;color:#475569;font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+</style>
+<link rel="stylesheet" href="brand.css">
+</head>
+<body>
+
+<div id="loginOverlay">
+  <div class="login-card">
+    <div class="rsp-login-logo"><img src="images/rsp-industrial-logo.png" alt="RSP Industrial"></div>
+    <div class="bolt-bg">⚡</div>
+    <div class="pretitle">RSP INDUSTRIAL · TRAINING PORTAL</div>
+    <h1>Open training.</h1>
+    <p class="sub">Enter your name to continue. Progress is automatically synced with your hub account.</p>
+    <label for="loginFirst">First name</label>
+    <input type="text" id="loginFirst" placeholder="First" autocomplete="given-name">
+    <label for="loginLast">Last name</label>
+    <input type="text" id="loginLast" placeholder="Last" autocomplete="family-name">
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn">Log In →</button>
+    <button id="createBtn" class="btn-create">Create Account</button>
+  </div>
+</div>
+
+<div id="app">
+<div class="wrap">
+
+  <div class="topbar">
+    <div>
+      <img class="rsp-brand-logo" src="images/rsp-industrial-logo.png" alt="RSP Industrial">
+      <div class="pretitle" id="crumbBar">RSP INDUSTRIAL · TRAINING PORTAL</div>
+      <h1 id="pageTitle">Training</h1>
+      <p class="tagline" id="pageTagline"></p>
+      <div class="topnav">
+        <a class="nav-link" id="hubNavLink" href="index.html">🏠 Hub</a>
+        <a class="nav-link" href="badges.html">🏅 Badges</a>
+        <a class="nav-link" href="mastery.html">🏆 Mastery</a>
+        <a class="nav-link" href="team.html">🤝 Team</a>
+        <a class="nav-link active" id="trainingNavLink" href="#">📘 Training</a>
+      </div>
+    </div>
+    <div class="user-pill">
+      <div class="user-avatar" id="userAvatar"></div>
+      <div>
+        <div class="user-name" id="userName">—</div>
+        <div class="user-meta" id="userMeta">—</div>
+        <div class="user-tier" id="userTier"></div>
+      </div>
+      <div class="user-actions">
+        <a href="index.html" id="backToHubLink">Back to hub</a>
+        <a href="#" id="logoutLink">Log out</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <div class="chips">
+      <span class="chip" id="statusChip">STATUS</span>
+      <span class="chip" id="xpChip">XP</span>
+      <span class="chip" id="passChip">PASS</span>
+      <span class="chip" id="prereqChip">PREREQ</span>
+    </div>
+    <span class="status-detail" id="statusDetail"></span>
+  </div>
+
+  <div class="hero">
+    <div>
+      <div class="pretitle" id="categoryPretitle">TRAINING TRACK</div>
+      <h2 id="heroTitle">Training</h2>
+      <p class="hero-desc" id="heroDescription"></p>
+    </div>
+    <div class="quick-grid">
+      <div class="q-card"><div class="lbl">CATEGORY</div><div class="val" id="quickCategory">—</div></div>
+      <div class="q-card"><div class="lbl">QUIZ</div><div class="val" id="quickQuiz">—</div></div>
+      <div class="q-card"><div class="lbl">BEST SCORE</div><div class="val" id="quickBest">—</div></div>
+      <div class="q-card"><div class="lbl">STATUS</div><div class="val" id="quickStatus">—</div></div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="panel">
+      <h3>Study Material</h3>
+      <p class="sub" id="studySub"></p>
+      <!-- Admin: Video pages + codeword (shown only to admin users) -->
+      <div class="admin-bar" id="videoPageBar">
+        <div class="admin-label">🛡 ADMIN · VIDEO PAGES</div>
+        <div id="videoPagesList" style="margin-bottom:8px"></div>
+        <div class="admin-row" style="flex-wrap:wrap">
+          <input type="number" id="vpPageInput" min="1" placeholder="After page #" style="flex:0 0 120px">
+          <input type="text" id="vpUrlInput" placeholder="https://www.loom.com/share/...">
+          <input type="text" id="vpTitleInput" placeholder="Title (optional)" style="flex:0 0 180px">
+          <button class="save-btn" id="vpAddBtn">+ Add</button>
+        </div>
+        <div class="admin-row" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(167,139,250,.15)">
+          <input type="text" id="codewordInput" placeholder="Codeword (blank = no gate)" style="max-width:220px;text-transform:uppercase;letter-spacing:.08em;font-weight:700">
+          <button class="save-btn" id="codewordSaveBtn">Save Codeword</button>
+        </div>
+        <div class="admin-msg" id="videoPageMsg"></div>
+      </div>
+      <!-- Admin: PDF → flipbook upload (shown only to admin users) -->
+      <div class="admin-bar" id="flipbookBar">
+        <div class="admin-label">🛡 ADMIN · PDF FLIPBOOK</div>
+        <div id="flipbookStatus" style="margin-bottom:10px"></div>
+        <div class="quiz-drop" id="pdfDrop">
+          <div class="drop-ico">📕</div>
+          <div class="drop-title">Drop a PDF to build the flipbook</div>
+          <div class="drop-sub">.pdf — pages are converted to images in your browser, then stored. Max 60 MB.</div>
+        </div>
+        <input type="file" id="pdfFileInput" accept="application/pdf,.pdf" style="display:none">
+        <div class="admin-msg" id="pdfMsg"></div>
+      </div>
+      <div class="study-frame" id="studyFrame"></div>
+    </div>
+    <div class="panel">
+      <h3>Quiz Path</h3>
+      <p class="sub" id="pathSub"></p>
+      <div class="actions" id="pathActions"></div>
+      <!-- Admin: quiz drag/drop (shown only to admin users) -->
+      <div id="quizUploadArea" style="display:none">
+        <div class="quiz-drop" id="quizDrop">
+          <div class="drop-ico">📊</div>
+          <div class="drop-title">Drop Excel or CSV to upload quiz</div>
+          <div class="drop-sub">.xlsx · .csv · .xls — columns: Question, A, B, C, D, Correct, Explanation</div>
+        </div>
+        <input type="file" id="quizFileInput" accept=".xlsx,.xls,.csv" style="display:none">
+        <div class="admin-msg" id="quizUploadMsg"></div>
+      </div>
+      <div id="quizLoadedInfo" style="display:none"></div>
+      <div class="bullet-list" id="focusList"></div>
+      <div class="resource-list" id="resourceList"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>RSP Industrial · Training Portal</div>
+    <div id="legacyPortalLink" style="display:none"><a href="legacy/portal-v1/index.html" style="color:#64748B;text-decoration:none">Legacy portal →</a></div>
+  </div>
+
+
+</div>
+</div>
+
+<script src="manifest.js"></script>
+<script src="avatars.js"></script>
+<script src="badges.js"></script>
+<script src="config.local.js"></script>
+<script src="cloud.js"></script>
+<!-- Flipbook viewer (employee) + PDF conversion pipeline (admin) -->
+<script src="shared/flipbook.js"></script>
+<script src="shared/flipbook-convert.js"></script>
+<!-- SheetJS for Excel parsing -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+(function(){
+
+/* ── storage ── */
+const KEY_USER='rsp_user',KEY_LEDGER='rsp_ledger';
+let _m={};
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return _m[k]||null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){_m[k]=v}}
+function lsDel(k){try{localStorage.removeItem(k)}catch(e){delete _m[k]}}
+
+/* ── utils ── */
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function fmtDate(ts){if(!ts)return 'N/A';return new Date(ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+function isAdmin(u){return !!(window.RSP_MANIFEST&&window.RSP_MANIFEST.isAdminUser(u))}
+
+/* ── user/ledger ── */
+function getUser(){try{const s=lsGet(KEY_USER);return s?JSON.parse(s):null}catch(e){return null}}
+function setUser(u){lsSet(KEY_USER,JSON.stringify(u));return u}
+function clearUser(){lsDel(KEY_USER)}
+function getLedger(){try{return JSON.parse(lsGet(KEY_LEDGER)||'{}')}catch(e){return{}}}
+function saveLedger(l){lsSet(KEY_LEDGER,JSON.stringify(l))}
+
+function getProgress(user,modId){
+  const l=getLedger();
+  return(l[user.name]&&l[user.name].modules&&l[user.name].modules[modId])||null;
+}
+function markOpened(user,training){
+  const l=getLedger();
+  if(!l[user.name])l[user.name]={name:user.name,id:user.id,startedAt:user.startedAt,modules:{}};
+  if(!l[user.name].modules[training.id])l[user.name].modules[training.id]={};
+  l[user.name].modules[training.id].hub=training.hub||'product_mastery';
+  if(!l[user.name].modules[training.id].openedAt)l[user.name].modules[training.id].openedAt=Date.now();
+  saveLedger(l);
+}
+function canAccess(user,training){
+  if(isAdmin(user))return{locked:false};
+  // Explicit prerequisite (Product Mastery's hand-curated chain) wins;
+  // otherwise sequential-lock hubs (Onboarding) gate on the previous
+  // module in the hub's admin-defined order.
+  const hubList=window.RSP_MANIFEST.hubModulesSorted(training.hub||'product_mastery',moduleConfigsMap);
+  const prereqId=window.RSP_MANIFEST.effectivePrerequisite(training,hubList,moduleConfigsMap);
+  if(!prereqId)return{locked:false};
+  const pre=window.RSP_MANIFEST.modules.find(m=>m.id===prereqId)||hubList.find(m=>m.id===prereqId);
+  const p=pre?getProgress(user,pre.id):null;
+  if(!p||!p.completedAt)return{locked:true,reason:'Complete "'+(pre?pre.name:prereqId)+'" first to unlock this training.'};
+  return{locked:false};
+}
+function trainingStatus(user,training){
+  const p=getProgress(user,training.id);
+  if(!p)return{status:'new',label:'Not started'};
+  if(p.completedAt)return{status:'completed',label:'Completed'};
+  if(p.attempts||p.openedAt)return{status:'progress',label:'In progress'};
+  return{status:'new',label:'Not started'};
+}
+
+/* ── user pill ── */
+function renderPill(user){
+  document.getElementById('userName').textContent=user.name;
+  document.getElementById('userMeta').textContent=user.id||'No ID provided';
+  const av=document.getElementById('userAvatar');
+  if(user.avatar&&window.renderAvatar)av.innerHTML=window.renderAvatar(user.avatar,48);
+  const l=getLedger(),learner=l[user.name]||{modules:{}};
+  const hub=training.hub||'product_mastery';
+  const xp=window.hubScopedXP?window.hubScopedXP(hub,learner.modules,moduleConfigsMap):Object.values(learner.modules||{}).reduce((s,m)=>s+(m.totalXP||0),0);
+  const tEl=document.getElementById('userTier');
+  if(window.computeTier){
+    const t=window.computeTier(hub,xp,learner.earnedTiers||[]);
+    if(t.current){tEl.style.color=t.current.color;tEl.style.borderColor=t.current.color;tEl.textContent=t.current.icon+' '+t.current.name.toUpperCase()}
+    else{tEl.style.color='#94A3B8';tEl.textContent='🎯 UNRANKED'}
+  }
+  if(isAdmin(user)){tEl.style.color='#FACC15';tEl.style.borderColor='#FACC15';tEl.textContent='🛡️ ADMIN MODE'}
+}
+
+/* ── manifest ── */
+const params=new URLSearchParams(location.search);
+const trainingId=params.get('id');
+const manifest=window.RSP_MANIFEST;
+let training=manifest&&manifest.modules.find(m=>m.id===trainingId);
+
+// If not in manifest, create a placeholder so the login screen can appear.
+// startSession() resolves the real metadata (including hub) from Supabase after login.
+if(!training&&trainingId){
+  training={_custom:true,id:trainingId,name:'Loading module…',icon:'📋',
+    category:'',xp:0,estTime:0,description:'',published:true,
+    quiz:{ready:false,passPct:80,questionCount:0}};
+}
+if(training) training.hub=training.hub||'product_mastery';
+
+if(!training){
+  document.body.innerHTML='<div class="wrap" style="padding:80px 32px;text-align:center"><h2 style="color:#fff;font-family:Bricolage Grotesque,sans-serif;font-size:28px">Training not found</h2><p style="color:#94A3B8;margin-top:8px">No module matches that ID.</p><a href="index.html" style="display:inline-block;margin-top:20px;color:#FACC15;font-weight:700">← Back to hub</a></div>';
+  return;
+}
+document.title=training.name+' · RSP Training Portal';
+
+let user=null;
+let cloudConfig=null;
+let moduleConfigsMap=manifest.readModuleConfigCache?manifest.readModuleConfigCache():{};   // last-known-good config preserves order and sequential locks
+let flipbookCtl=null;        // active viewer controller
+let mountedFbVersion=null;   // version currently mounted (avoid re-mounting)
+let syncTimer=null;          // throttle for progress sync-up
+
+/* ── flipbook: study rendering ────────────────────────────
+   Decides what goes in the Study Material panel and mounts the page-flip
+   viewer when a converted PDF flipbook is ready. */
+function renderStudy(){
+  const study=training.study||{};
+  const fb=training.flipbook||null;
+  const sf=document.getElementById('studyFrame');
+  const subEl=document.getElementById('studySub');
+
+  // 0) Prerequisite lock — don't expose study material or let it complete.
+  const access=canAccess(user,training);
+  if(access.locked){
+    if(flipbookCtl){try{flipbookCtl.destroy()}catch(e){}flipbookCtl=null;mountedFbVersion=null;}
+    subEl.textContent=access.reason;
+    sf.innerHTML='<div class="study-placeholder"><div class="ico">🔒</div><h4>Locked</h4><p>'+esc(access.reason)+'</p></div>';
+    return;
+  }
+
+  // 1) Ready flipbook → mount the page-flip viewer.
+  if(fb&&fb.status==='ready'&&fb.page_urls&&fb.page_urls.length){
+    subEl.textContent='Flip through the training booklet below. Reach the last page, then click “Ready for Testing” to take your quiz.';
+    mountFlipbook(fb);
+    return;
+  }
+  // Any other state means we're not showing a mounted viewer — tear one down.
+  if(flipbookCtl){try{flipbookCtl.destroy()}catch(e){}flipbookCtl=null;mountedFbVersion=null;}
+
+  // 2) Flipbook still being built / pending.
+  if(fb&&(fb.status==='processing'||fb.status==='pending')){
+    subEl.textContent='Your training booklet is being prepared.';
+    if(window.RSPFlipbook) window.RSPFlipbook.showLoading(sf,'Training pages are being prepared — check back shortly…');
+    return;
+  }
+  // 3) Conversion failed.
+  if(fb&&fb.status==='failed'){
+    subEl.textContent='The training booklet could not be processed.';
+    const retry=isAdmin(user)?'<p style="margin-top:8px">Re-upload the PDF using the admin panel above. Error: '+esc(fb.error||'unknown')+'</p>':'';
+    sf.innerHTML='<div class="study-placeholder"><div class="ico">⚠️</div><h4>Flipbook unavailable</h4><p>This training’s booklet failed to build. Please check back later.</p>'+retry+'</div>';
+    return;
+  }
+  // 4) Legacy Flipsnack embed.
+  const safeEmbed=window.RSP_MANIFEST.safeWebUrl(study.embedUrl);
+  if(safeEmbed){
+    subEl.textContent='Work through the full training. The final slide contains the code word required to unlock the quiz.';
+    sf.innerHTML='<iframe src="'+esc(safeEmbed)+'" title="'+esc(training.name)+' study material" width="100%" seamless="seamless" scrolling="no" frameBorder="0" allowFullScreen allow="autoplay; clipboard-read; clipboard-write"></iframe>';
+    return;
+  }
+  // 5) Nothing configured yet.
+  subEl.textContent=isAdmin(user)?'Upload a PDF (admin panel above) to build the flipbook, or paste a Flipsnack URL.':'Study material is not available yet.';
+  const legBtn=training.legacyPath?'<a class="btn secondary" href="'+training.legacyPath+'">Open archived lesson</a>':'';
+  sf.innerHTML=
+    '<div class="study-placeholder">'+
+      '<div class="ico">📚</div>'+
+      '<h4>Study material coming soon</h4>'+
+      '<p>'+(isAdmin(user)?'Drop a PDF in the admin panel above to generate a flip-through training booklet.':'A training booklet will appear here once it’s published.')+'</p>'+
+      (legBtn?'<div class="actions" style="justify-content:center">'+legBtn+'</div>':'')+
+    '</div>';
+}
+
+function mountFlipbook(fb){
+  // Already showing this exact version — leave it (don't reset the reader).
+  if(flipbookCtl&&mountedFbVersion===fb.version) return;
+  if(flipbookCtl){try{flipbookCtl.destroy()}catch(e){}flipbookCtl=null;}
+  const sf=document.getElementById('studyFrame');
+  const progress=getProgress(user,training.id)||{};
+  const total=fb.page_urls.length;
+  const highest=Math.max(0,(progress.flipbookHighest||0));
+  const completed=!!progress.completedAt;
+  // Only route to the quiz if this module actually has one — a flipbook-only
+  // module (common for Onboarding) completes on its own, no quiz required.
+  const hasQuiz=!!(training.quiz&&training.quiz.bank&&training.quiz.bank.length);
+  mountedFbVersion=fb.version;
+  flipbookCtl=window.RSPFlipbook.mount(sf,{
+    flipbook:fb,
+    startPage:highest>1?Math.min(highest-1,total-1):0,
+    completed:completed,
+    allowComplete:!isAdmin(user),  // admins preview; learners complete
+    completeLabel:hasQuiz?'Ready for Testing':'Complete Training',
+    onPage:function(cur,high,tot){ recordFlipbookPage(cur,high,tot); },
+    onComplete:function(){
+      if(hasQuiz){
+        window.location.href='quiz.html?id='+training.id;
+        return;
+      }
+      completeFlipbook(total);
+      const hubCfg=(window.RSP_HUBS&&window.RSP_HUBS[training.hub])||{};
+      window.location.href=hubCfg.route||'index.html';
+    }
+  });
+}
+
+/* ── flipbook: progress tracking ──────────────────────────
+   Page views feed the existing viewed_pages cloud column plus two
+   flipbook-specific fields. Sync-up is throttled so we don't hammer
+   Supabase on every page turn. */
+function recordFlipbookPage(cur,highest,total){
+  if(isAdmin(user)) return; // don't record admin previews as learner progress
+  const l=getLedger();
+  if(!l[user.name])l[user.name]={name:user.name,id:user.id,startedAt:user.startedAt,modules:{}};
+  if(!l[user.name].modules[training.id])l[user.name].modules[training.id]={};
+  const rec=l[user.name].modules[training.id];
+  rec.moduleName=training.name;rec.moduleIcon=training.icon;rec.hub=training.hub||'product_mastery';
+  rec.openedAt=rec.openedAt||Date.now();
+  rec.flipbookPage=cur;
+  rec.flipbookHighest=Math.max(rec.flipbookHighest||0,highest);
+  rec.flipbookTotal=total;
+  rec.total=rec.total||total;
+  // Mirror into viewed_pages (existing synced array) for cross-device resume.
+  const seen=[];for(let i=1;i<=rec.flipbookHighest;i++)seen.push(i);
+  rec.viewedPages=seen;
+  rec.lastUpdate=Date.now();
+  saveLedger(l);
+  scheduleSyncUp();
+}
+
+function completeFlipbook(total){
+  const l=getLedger();
+  if(!l[user.name])l[user.name]={name:user.name,id:user.id,startedAt:user.startedAt,modules:{}};
+  if(!l[user.name].modules[training.id])l[user.name].modules[training.id]={};
+  const rec=l[user.name].modules[training.id];
+  rec.moduleName=training.name;rec.moduleIcon=training.icon;rec.hub=training.hub||'product_mastery';
+  rec.flipbookHighest=total;rec.flipbookTotal=total;
+  rec.viewedPages=Array.from({length:total},(_,i)=>i+1);
+  if(!rec.completedAt){
+    rec.completedAt=Date.now();
+    rec.totalXP=training.xp||rec.totalXP||0;
+    rec.tier=rec.tier||'gold';
+  }
+  rec.lastUpdate=Date.now();
+  saveLedger(l);
+  if(window.RSPCloud&&window.RSPCloud.isConfigured){window.RSPCloud.syncUp(user.name).catch(()=>{});}
+  // Refresh status chips / hero without tearing down the mounted viewer.
+  renderStatusOnly();
+}
+
+function scheduleSyncUp(){
+  if(!(window.RSPCloud&&window.RSPCloud.isConfigured))return;
+  if(syncTimer)clearTimeout(syncTimer);
+  syncTimer=setTimeout(function(){window.RSPCloud.syncUp(user.name).catch(()=>{});},4000);
+}
+
+/* Light refresh of just the status indicators (used after completion so the
+   flipbook viewer is not re-mounted). */
+function renderStatusOnly(){
+  const progress=getProgress(user,training.id)||{};
+  const status=trainingStatus(user,training);
+  const chip=document.getElementById('statusChip');
+  chip.textContent=status.label.toUpperCase();
+  chip.className='chip '+(status.status==='completed'?'passed':status.status==='progress'?'progress':'');
+  document.getElementById('quickStatus').textContent=status.label;
+  document.getElementById('statusDetail').textContent=progress.completedAt
+    ?'Completed on '+fmtDate(progress.completedAt)
+    :'Study the material below, then finish to complete this training.';
+}
+
+/* ── render ── */
+function render(){
+  document.getElementById('loginOverlay').classList.add('hidden');
+  document.getElementById('app').classList.add('show');
+
+  const cat=manifest.categories.find(c=>c.id===training.category)||{id:training.category};
+  const progress=getProgress(user,training.id)||{};
+  const access=canAccess(user,training);
+  const status=trainingStatus(user,training);
+  // Quiz is ready if manifest says so OR a quiz_bank was uploaded to Supabase
+  const hasBank=!!(training.quiz&&training.quiz.bank&&training.quiz.bank.length);
+  const ready=hasBank;
+
+  const hubCfg=(window.RSP_HUBS&&window.RSP_HUBS[training.hub])||{};
+  document.getElementById('crumbBar').innerHTML=manifest.breadcrumbHtml(training.hub,training.name);
+  document.getElementById('hubNavLink').href=hubCfg.route||'index.html';
+  document.getElementById('hubNavLink').textContent=(hubCfg.icon||'🏠')+' '+(hubCfg.shortLabel||'Hub');
+  document.getElementById('backToHubLink').href=hubCfg.route||'index.html';
+  document.getElementById('pageTitle').textContent=training.name;
+  document.getElementById('pageTagline').textContent=training.description;
+  document.getElementById('trainingNavLink').textContent='📘 '+training.name;
+  document.getElementById('categoryPretitle').textContent='TRAINING TRACK · '+cat.id.toUpperCase();
+  document.getElementById('heroTitle').textContent=training.name;
+  document.getElementById('heroDescription').textContent=training.description;
+  document.getElementById('quickCategory').textContent=cat.id;
+  document.getElementById('quickQuiz').textContent=ready?(training.quiz.bank.length+' questions'):'Pending';
+  document.getElementById('quickBest').textContent=progress.bestPct?(progress.bestPct+'%'):'No score yet';
+  document.getElementById('quickStatus').textContent=status.label;
+
+  renderPill(user);
+
+  const chip=document.getElementById('statusChip');
+  chip.textContent=status.label.toUpperCase();
+  chip.className='chip '+(status.status==='completed'?'passed':status.status==='progress'?'progress':'');
+  document.getElementById('xpChip').textContent=training.xp+' XP';
+  document.getElementById('passChip').textContent=(training.quiz?training.quiz.passPct:80)+'% PASS';
+  const hubListForChip=window.RSP_MANIFEST.hubModulesSorted(training.hub||'product_mastery',moduleConfigsMap);
+  const premodId=window.RSP_MANIFEST.effectivePrerequisite(training,hubListForChip,moduleConfigsMap);
+  const premod=premodId?(manifest.modules.find(m=>m.id===premodId)||hubListForChip.find(m=>m.id===premodId)):null;
+  document.getElementById('prereqChip').textContent=premod?('AFTER '+premod.name.toUpperCase()):'NO PREREQ';
+  document.getElementById('statusDetail').textContent=access.locked
+    ?access.reason
+    :(progress.completedAt?'Passed on '+fmtDate(progress.completedAt)
+      :(progress.attempts?(progress.attempts+' quiz attempt'+(progress.attempts===1?'':'s')+' recorded')
+        :'Study the material below, then take the quiz to complete this training.'));
+
+  /* ── study frame ──
+     Priority: PDF flipbook (preferred) → Flipsnack embed → placeholder.
+     The flipbook viewer is mounted by mountFlipbook() and intentionally NOT
+     re-mounted on every render() call (render runs several times). */
+  renderStudy();
+
+  /* ── quiz path ── */
+  const hasFlipbook=!!(training.flipbook&&training.flipbook.status==='ready'&&training.flipbook.page_urls&&training.flipbook.page_urls.length);
+  document.getElementById('pathSub').textContent=access.locked
+    ?access.reason
+    :(ready?'When you pass the quiz, the portal awards the full XP and marks this training complete.'
+       :(hasFlipbook?'Read the full booklet, then click “Complete Training” on the last page to finish — no quiz is required for this module.'
+         :(isAdmin(user)?'No quiz uploaded yet. Use the drop zone below to add quiz questions.'
+            :'This training completes when you finish the booklet above.')));
+
+  document.getElementById('pathActions').innerHTML=(ready&&!access.locked)
+    ?'<a class="btn primary" href="quiz.html?id='+training.id+'">'+(progress.completedAt?'Retake quiz':'Take quiz')+'</a>'+
+      '<a class="btn ghost" href="results.html?id='+training.id+'">View results</a>'
+    :'';
+
+  /* focus points */
+  const pts=training.focusPoints||[
+    'Work through the full Flipsnack training before starting the quiz.',
+    'The final slide of the training contains a code word required to unlock the assessment.',
+    'Passing the quiz completes this training and awards XP toward your mastery tier.'
+  ];
+  document.getElementById('focusList').innerHTML=pts.map((pt,i)=>
+    '<div class="bullet"><div class="dot">'+(i+1)+'</div><div>'+esc(pt)+'</div></div>'
+  ).join('');
+
+  /* resources */
+  const res=(training.resources||[]).slice();
+  if(!res.length&&training.legacyPath)res.push({label:'Archived lesson module',url:training.legacyPath,kind:'legacy'});
+  document.getElementById('resourceList').innerHTML=res.map(r=>
+    '<a class="resource" href="'+esc(r.url)+'"'+(r.url&&r.url.startsWith('http')?' target="_blank" rel="noopener noreferrer"':'')+'>'+
+      '<span>'+esc(r.label)+'</span><span class="kind">'+esc(r.kind||'resource')+'</span></a>'
+  ).join('');
+
+  /* admin controls */
+  if(isAdmin(user)) renderAdminControls(ready);
+}
+
+/* ── admin: Video pages bar + quiz drop zone ── */
+function renderAdminControls(quizReady){
+  document.getElementById('videoPageBar').classList.add('show');
+
+  // Codeword
+  const cwInput=document.getElementById('codewordInput');
+  cwInput.value=(training.quiz&&training.quiz.codeword)||'';
+  cwInput.addEventListener('input',function(){const p=this.selectionStart;this.value=this.value.toUpperCase();this.setSelectionRange(p,p)});
+  document.getElementById('codewordSaveBtn').onclick=async function(){
+    const cw=cwInput.value.trim().toUpperCase();
+    const msg=document.getElementById('videoPageMsg');
+    this.textContent='Saving…';this.disabled=true;
+    try{
+      if(!window.RSPCloud||!window.RSPCloud.isConfigured)throw new Error('Supabase not connected');
+      const verified=await window.RSPCloud.setModuleCodeword(training.id,cw||null,user.name);
+      cloudConfig=Object.assign({},cloudConfig||{},verified);
+      training.quiz=Object.assign({},training.quiz||{},{codeword:cw||null});
+      msg.style.color='#10B981';msg.textContent='✓ Codeword '+(cw?'set to "'+cw+'"':'cleared.');
+      setTimeout(function(){msg.textContent=''},2500);
+    }catch(e){msg.style.color='#EF4444';msg.textContent='Error: '+e.message;}
+    finally{this.textContent='Save Codeword';this.disabled=false;}
+  };
+
+  // Video pages
+  renderInlineVideoPages();
+  document.getElementById('vpAddBtn').onclick=async function(){
+    const page=parseInt(document.getElementById('vpPageInput').value);
+    const url=document.getElementById('vpUrlInput').value.trim();
+    const title=document.getElementById('vpTitleInput').value.trim();
+    const msg=document.getElementById('videoPageMsg');
+    if(!page||page<1){msg.style.color='#EF4444';msg.textContent='Enter a page number.';return;}
+    if(!url||!url.includes('loom.com')){msg.style.color='#EF4444';msg.textContent='Enter a valid Loom URL.';return;}
+    const existing=(cloudConfig&&cloudConfig.video_pages)||[];
+    const updated=[...existing,{insert_after:page,url,title}].sort(function(a,b){return a.insert_after-b.insert_after});
+    this.textContent='Saving…';this.disabled=true;
+    try{
+      if(!window.RSPCloud||!window.RSPCloud.isConfigured)throw new Error('Supabase not connected');
+      await window.RSPCloud.setModuleConfig(training.id,{video_pages:updated,updated_by:user.name});
+      if(!cloudConfig)cloudConfig={};
+      cloudConfig.video_pages=updated;
+      training.flipbook=Object.assign({},training.flipbook||{},{video_pages:updated});
+      document.getElementById('vpPageInput').value='';
+      document.getElementById('vpUrlInput').value='';
+      document.getElementById('vpTitleInput').value='';
+      msg.style.color='#10B981';msg.textContent='✓ Video page added.';
+      setTimeout(function(){msg.textContent=''},2500);
+      renderInlineVideoPages();
+      if(flipbookCtl){try{flipbookCtl.destroy()}catch(e){}flipbookCtl=null;mountedFbVersion=null;}
+      renderStudy();
+    }catch(e){msg.style.color='#EF4444';msg.textContent='Error: '+e.message;}
+    finally{this.textContent='+ Add';this.disabled=false;}
+  };
+
+  // Quiz drop zone
+  document.getElementById('quizUploadArea').style.display='block';
+  renderQuizLoadedInfo(quizReady);
+  wireQuizDrop();
+
+  // PDF flipbook upload
+  renderFlipbookAdmin();
+}
+
+function renderInlineVideoPages(){
+  const list=document.getElementById('videoPagesList');
+  if(!list)return;
+  const vps=((cloudConfig&&cloudConfig.video_pages)||[]).slice().sort(function(a,b){return a.insert_after-b.insert_after});
+  if(!vps.length){list.innerHTML='<div style="color:rgba(167,139,250,.5);font-size:11px;margin-bottom:4px">No video pages yet.</div>';return;}
+  list.innerHTML=vps.map(function(vp,i){
+    return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:12px">'+
+      '<span style="color:#A78BFA;font-weight:800;white-space:nowrap;flex:0 0 auto">After p.'+vp.insert_after+'</span>'+
+      '<span style="color:#fff;font-weight:600;flex:0 0 auto">'+esc(vp.title||'(no title)')+'</span>'+
+      '<span style="color:#64748B;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(vp.url)+'</span>'+
+      '<button data-idx="'+i+'" style="background:none;border:none;color:#64748B;cursor:pointer;font-size:14px;padding:0 4px;flex:0 0 auto" class="del-vp">✕</button>'+
+    '</div>';
+  }).join('');
+  list.querySelectorAll('.del-vp').forEach(function(btn){
+    btn.addEventListener('click',async function(){
+      const idx=parseInt(btn.dataset.idx);
+      const updated=vps.slice();updated.splice(idx,1);
+      const msg=document.getElementById('videoPageMsg');
+      try{
+        if(!window.RSPCloud||!window.RSPCloud.isConfigured)throw new Error('Supabase not connected');
+        await window.RSPCloud.setModuleConfig(training.id,{video_pages:updated,updated_by:user.name});
+        if(!cloudConfig)cloudConfig={};
+        cloudConfig.video_pages=updated;
+        training.flipbook=Object.assign({},training.flipbook||{},{video_pages:updated});
+        renderInlineVideoPages();
+        if(flipbookCtl){try{flipbookCtl.destroy()}catch(e){}flipbookCtl=null;mountedFbVersion=null;}
+        renderStudy();
+      }catch(e){if(msg){msg.style.color='#EF4444';msg.textContent='Error: '+e.message;}}
+    });
+  });
+}
+
+/* ── admin: PDF → flipbook upload ── */
+function renderFlipbookAdmin(){
+  const bar=document.getElementById('flipbookBar');
+  bar.classList.add('show');
+  renderFlipbookStatus();
+  wirePdfDrop();
+}
+
+function renderFlipbookStatus(){
+  const el=document.getElementById('flipbookStatus');
+  const fb=training.flipbook;
+  if(!fb){el.innerHTML='<div style="color:#94A3B8;font-size:12px">No PDF uploaded yet.</div>';return;}
+  const map={
+    ready:['#10B981','✓ READY'],processing:['#FACC15','⏳ PROCESSING'],
+    pending:['#FACC15','⏳ PENDING'],failed:['#EF4444','⚠️ FAILED']
+  };
+  const m=map[fb.status]||['#94A3B8',(fb.status||'').toUpperCase()];
+  const by=fb.updated_by?(' · by '+esc(fb.updated_by)):'';
+  el.innerHTML=
+    '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px">'+
+      '<span style="color:'+m[0]+';font-weight:800;letter-spacing:.08em">'+m[1]+'</span>'+
+      '<span style="color:#94A3B8">'+esc(fb.pdf_name||'')+(fb.page_count?(' · '+fb.page_count+' pages'):'')+by+'</span>'+
+    '</div>'+
+    (fb.status==='failed'&&fb.error?'<div style="color:#FCA5A5;font-size:11px;margin-top:4px">'+esc(fb.error)+'</div>':'');
+}
+
+function wirePdfDrop(){
+  const dz=document.getElementById('pdfDrop');
+  const fi=document.getElementById('pdfFileInput');
+  if(!dz||!fi||dz._wired)return;dz._wired=true;
+  dz.addEventListener('click',()=>fi.click());
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over')});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');if(e.dataTransfer.files[0])processPdfFile(e.dataTransfer.files[0])});
+  fi.addEventListener('change',()=>{if(fi.files[0])processPdfFile(fi.files[0]);fi.value=''});
+}
+
+async function processPdfFile(file){
+  const msg=document.getElementById('pdfMsg');
+  if(!window.RSPFlipbookConvert){msg.style.color='#EF4444';msg.textContent='Conversion library not loaded.';return;}
+  msg.style.color='#94A3B8';msg.textContent='Starting…';
+  try{
+    const rec=await window.RSPFlipbookConvert.convertAndUpload(training.id,file,{
+      updatedBy:user.name,
+      onProgress:function(stage,pct,text){
+        msg.style.color=stage==='failed'?'#EF4444':(stage==='ready'?'#10B981':'#94A3B8');
+        msg.textContent=text+(typeof pct==='number'&&stage==='processing'?(' ('+pct+'%)'):'');
+      }
+    });
+    training.flipbook=rec;
+    if(cloudConfig)cloudConfig.flipbook=rec;else cloudConfig={flipbook:rec};
+    renderFlipbookStatus();
+    // Tear down any old viewer and show the new flipbook immediately as a preview.
+    if(flipbookCtl){try{flipbookCtl.destroy()}catch(e){}flipbookCtl=null;mountedFbVersion=null;}
+    renderStudy();
+  }catch(err){
+    msg.style.color='#EF4444';msg.textContent='Error: '+(err&&err.message?err.message:err);
+    renderFlipbookStatus();
+  }
+}
+
+function renderQuizLoadedInfo(quizReady){
+  const info=document.getElementById('quizLoadedInfo');
+  if(quizReady&&training.quiz&&training.quiz.bank){
+    const updated=cloudConfig&&cloudConfig.updated_by
+      ?(' · uploaded by '+cloudConfig.updated_by):'';
+    info.style.display='block';
+    info.innerHTML=
+      '<div class="quiz-loaded">'+
+        '<div class="ql-top">'+
+          '<div><div class="ql-label">✓ QUIZ LOADED</div><div class="ql-count">'+training.quiz.bank.length+' questions</div></div>'+
+        '</div>'+
+        '<div class="ql-meta">'+esc(updated)+'</div>'+
+        '<span class="reupload-link" id="reuploadLink">Replace with new file ↓</span>'+
+      '</div>';
+    document.getElementById('reuploadLink').onclick=()=>{
+      document.getElementById('quizUploadArea').style.display='block';
+      document.getElementById('quizFileInput').click();
+    };
+  } else {
+    info.style.display='none';
+  }
+}
+
+/* ── Excel / CSV parser ── */
+function wireQuizDrop(){
+  const dz=document.getElementById('quizDrop');
+  const fi=document.getElementById('quizFileInput');
+  if(!dz||!fi) return;
+
+  dz.addEventListener('click',()=>fi.click());
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over')});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
+  dz.addEventListener('drop',e=>{
+    e.preventDefault();dz.classList.remove('over');
+    const file=e.dataTransfer.files[0];if(file)processQuizFile(file);
+  });
+  fi.addEventListener('change',()=>{if(fi.files[0])processQuizFile(fi.files[0]);fi.value='';});
+}
+
+function processQuizFile(file){
+  const msg=document.getElementById('quizUploadMsg');
+  msg.style.color='#94A3B8';msg.textContent='Reading file…';
+  const reader=new FileReader();
+  reader.onload=async function(e){
+    try{
+      let questions;
+      if(file.name.endsWith('.csv')||file.name.endsWith('.txt')){
+        questions=parseCSVToBank(e.target.result);
+      } else {
+        if(!window.XLSX) throw new Error('Excel parser not loaded yet — try again in a moment');
+        const wb=window.XLSX.read(e.target.result,{type:'binary'});
+        const ws=wb.Sheets[wb.SheetNames[0]];
+        const rows=window.XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+        questions=parseRowsToBank(rows);
+      }
+      if(!questions.length) throw new Error('No questions found — check the file format below');
+      msg.style.color='#94A3B8';msg.textContent='Saving '+questions.length+' questions to Supabase…';
+      if(!window.RSPCloud||!window.RSPCloud.isConfigured) throw new Error('Supabase not connected — run supabase-migration-v4.sql first');
+      await window.RSPCloud.setModuleConfig(training.id,{quiz_bank:questions,updated_by:user.name});
+      // Apply to in-memory training object
+      training.quiz=Object.assign({},training.quiz||{},{bank:questions,ready:true,questionCount:questions.length});
+      msg.style.color='#10B981';msg.textContent='✓ '+questions.length+' questions uploaded — quiz is now live for all users.';
+      render();
+    }catch(err){
+      msg.style.color='#EF4444';msg.textContent='Error: '+err.message;
+    }
+  };
+  file.name.endsWith('.csv')||file.name.endsWith('.txt')?reader.readAsText(file):reader.readAsBinaryString(file);
+}
+
+// Accepts rows array (from SheetJS or CSV split)
+// Expected columns: Question | A | B | C | D | Correct (A/B/C/D or 0-3) | Explanation
+function parseRowsToBank(rows){
+  const LETTER={A:0,B:1,C:2,D:3};
+  const questions=[];
+  // Skip header row if first cell looks like a label
+  const start=rows[0]&&String(rows[0][0]).toLowerCase().match(/question|prompt|q\b/)?1:0;
+  rows.slice(start).forEach((row,i)=>{
+    const prompt=String(row[0]||'').trim().replace(/^\d+[\.\)]\s*/,'');
+    if(!prompt) return;
+    const opts=[String(row[1]||'').trim(),String(row[2]||'').trim(),String(row[3]||'').trim(),String(row[4]||'').trim()];
+    if(opts.some(o=>!o)) return; // skip rows with blank options
+    const rawAns=String(row[5]||'').trim().toUpperCase();
+    const ansNum=rawAns in LETTER?LETTER[rawAns]:parseInt(rawAns,10);
+    if(isNaN(ansNum)||ansNum<0||ansNum>3) return;
+    const q={id:training.id+'-q'+(start+i+1),prompt,options:opts,answer:ansNum};
+    const expl=String(row[6]||'').trim();if(expl)q.explanation=expl;
+    questions.push(q);
+  });
+  return questions;
+}
+
+function parseCSVToBank(text){
+  const lines=text.trim().split('\n');
+  const rows=lines.map(l=>{
+    const cols=[];let cur='';let inQ=false;
+    for(let i=0;i<l.length;i++){
+      const c=l[i];
+      if(c==='"'){if(inQ&&l[i+1]==='"'){cur+='"';i++}else inQ=!inQ;}
+      else if(c===','&&!inQ){cols.push(cur);cur='';}
+      else cur+=c;
+    }
+    cols.push(cur);
+    return cols;
+  });
+  return parseRowsToBank(rows);
+}
+
+/* ── session ── */
+async function startSession(u){
+  user=u;
+  const ll=document.getElementById('legacyPortalLink');
+  if(ll) ll.style.display=isAdmin(u)?'':'none';
+  markOpened(user,training);
+  render(); // render immediately from local data — no flash
+  if(window.RSPCloud&&window.RSPCloud.isConfigured){
+    try{
+      await window.RSPCloud.upsertUser(user);
+      await window.RSPCloud.syncDown(user.name);
+      const settled=await Promise.allSettled([
+        window.RSPCloud.getModuleConfig(training.id),
+        window.RSPCloud.getAllModuleConfigs()
+      ]);
+      const cfg=settled[0].status==='fulfilled'?settled[0].value:moduleConfigsMap[training.id];
+      if(settled[1].status==='fulfilled') moduleConfigsMap=manifest.cacheModuleConfigs(settled[1].value);
+      else if(!Object.keys(moduleConfigsMap).length) throw settled[1].reason;
+      if(!cfg&&settled[0].status==='rejected') throw settled[0].reason;
+      if(cfg){
+        cloudConfig=cfg;
+        training.hub=cfg.hub||(cfg.module_meta&&cfg.module_meta.hub)||training.hub||'product_mastery';
+        if(training._custom){
+          if(cfg.module_meta){
+            const meta=cfg.module_meta;
+            training.name=meta.name||'New Module';
+            training.icon=meta.icon||'📋';
+            training.category=meta.category||'Basics';
+            training.description=meta.description||'';
+            training.xp=cfg.xp!=null?Number(cfg.xp):(meta.xp||100);
+            training.estTime=meta.estTime||30;
+            training._custom=false;
+            document.title=training.name+' · RSP Training Portal';
+          } else {
+            document.body.innerHTML='<div class="wrap" style="padding:80px 32px;text-align:center"><h2 style="color:#fff;font-family:Bricolage Grotesque,sans-serif;font-size:28px">Training not found</h2><p style="color:#94A3B8;margin-top:8px">No module matches that ID.</p><a href="index.html" style="display:inline-block;margin-top:20px;color:#FACC15;font-weight:700">← Back to hub</a></div>';
+            return;
+          }
+        }
+        if(cfg.xp!=null) training.xp=Number(cfg.xp);
+        if(cfg.published===false&&!isAdmin(user)) throw new Error('This module is not currently published.');
+        if(cfg.embed_url!=null) training.study=Object.assign({},training.study||{},{embedUrl:cfg.embed_url});
+        training.quiz=Object.assign({},training.quiz||{},{codeword:manifest.effectiveCodeword(training,cfg),passPct:cfg.pass_pct!=null?Number(cfg.pass_pct):((training.quiz&&training.quiz.passPct)||80)});
+        if(cfg.quiz_bank&&cfg.quiz_bank.length){
+          training.quiz=Object.assign({},training.quiz||{},{bank:cfg.quiz_bank,ready:true,questionCount:cfg.quiz_bank.length});
+        }
+        if(cfg.flipbook) training.flipbook=cfg.flipbook;  // PDF flipbook record
+        if(cfg.video_pages&&cfg.video_pages.length) training.flipbook=Object.assign({},training.flipbook||{},{video_pages:cfg.video_pages});
+      } else if(training._custom){
+        document.body.innerHTML='<div class="wrap" style="padding:80px 32px;text-align:center"><h2 style="color:#fff;font-family:Bricolage Grotesque,sans-serif;font-size:28px">Training not found</h2><p style="color:#94A3B8;margin-top:8px">No module matches that ID.</p><a href="index.html" style="display:inline-block;margin-top:20px;color:#FACC15;font-weight:700">← Back to hub</a></div>';
+        return;
+      }
+      markOpened(user,training); // persist the resolved hub for custom-module progress
+      render(); // re-render with cloud data
+    }catch(e){console.warn('cloud:',e)}
+  }
+}
+
+/* ── login ── */
+function normalizeName(first,last){
+  function tc(s){return s.trim().toLowerCase().replace(/\b\w/g,c=>c.toUpperCase())}
+  return tc(first)+' '+tc(last);
+}
+async function doLogin(mode){
+  const first=document.getElementById('loginFirst').value.trim();
+  const last=document.getElementById('loginLast').value.trim();
+  const errEl=document.getElementById('loginErr');
+  if(!first||!last){errEl.textContent='Enter your first and last name to continue.';return}
+  errEl.textContent='';
+  const name=normalizeName(first,last);
+  document.getElementById('loginBtn').disabled=true;
+  document.getElementById('createBtn').disabled=true;
+  try{
+    let localExists=false;
+    let u={name,startedAt:Date.now()};
+    try{const el=getLedger();if(el[name]){localExists=true;if(el[name].avatar)u.avatar=el[name].avatar;if(el[name].startedAt)u.startedAt=el[name].startedAt}}catch(e){}
+    let cloudExists=false;
+    if(window.RSPCloud&&window.RSPCloud.isConfigured){
+      try{const cu=await window.RSPCloud.getUser(name);cloudExists=!!(cu&&cu.name)}catch(e){}
+    }
+    const accountExists=localExists||cloudExists;
+    if(mode==='login'&&!accountExists){errEl.textContent='No account found for "'+name+'". Use "Create Account" to register.';return}
+    if(mode==='create'&&accountExists){errEl.textContent='An account for "'+name+'" already exists. Please log in instead.';return}
+    setUser(u);startSession(u);
+  }finally{
+    document.getElementById('loginBtn').disabled=false;
+    document.getElementById('createBtn').disabled=false;
+  }
+}
+document.getElementById('loginBtn').addEventListener('click',()=>doLogin('login'));
+document.getElementById('createBtn').addEventListener('click',()=>doLogin('create'));
+document.getElementById('loginFirst').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('loginLast').focus()});
+document.getElementById('loginLast').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin('login')});
+document.getElementById('logoutLink').addEventListener('click',e=>{
+  e.preventDefault();
+  if(confirm('Log out? Your progress is saved.')){clearUser();location.reload()}
+});
+
+const existing=getUser();
+if(existing){
+  document.getElementById('loginOverlay').classList.add('hidden');
+  startSession(existing);
+}
+
+})();
+</script>
+</body>
+</html>

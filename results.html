@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RSP Training Portal</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0F172A;--bg2:#1E293B;
+  --bolt:#FACC15;--bolt-deep:#CA8A04;
+  --green:#10B981;--red:#EF4444;
+  --slate3:#334155;--slate5:#64748B;--slate9:#94A3B8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:radial-gradient(circle at top right,#1E293B 0%,#0F172A 70%);font-family:'Inter',system-ui,sans-serif;color:#fff;min-height:100vh}
+h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;line-height:1.05;letter-spacing:-.01em}
+.wrap{max-width:1280px;margin:0 auto;padding:40px 32px}
+.pretitle{color:var(--bolt);font-size:11px;letter-spacing:.18em;font-weight:800}
+.tagline{color:#CBD5E1;margin-top:6px;font-size:14px}
+
+/* ── login overlay ── */
+#loginOverlay{position:fixed;inset:0;background:radial-gradient(circle at top right,#1E40AF 0%,#0F172A 70%);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+#loginOverlay.hidden{display:none}
+.login-card{background:#fff;border-radius:24px;padding:48px 40px;max-width:420px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,.5);text-align:center;color:#0F172A;position:relative;overflow:hidden}
+.login-card .bolt-bg{position:absolute;top:-30px;right:-30px;font-size:140px;opacity:.06;pointer-events:none}
+.login-card .pretitle{color:#1E40AF}
+.login-card h1{font-size:34px;color:#0F172A;margin-top:6px}
+.login-card .sub{color:#64748B;font-size:14px;margin-top:6px;line-height:1.5}
+.login-card label{display:block;text-align:left;margin-top:18px;font-size:11px;font-weight:800;color:#475569;letter-spacing:.1em}
+.login-card input{width:100%;padding:13px 14px;border:2px solid #E2E8F0;border-radius:10px;font-size:14px;font-family:inherit;margin-top:6px;background:#F8FAFC}
+.login-card input:focus{outline:none;border-color:#1E40AF;background:#fff}
+.login-card .err{color:#EF4444;font-size:12px;font-weight:700;margin-top:8px;min-height:14px;text-align:left}
+.login-card button{width:100%;padding:14px;background:linear-gradient(135deg,#1E40AF,#3B82F6);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;margin-top:14px;letter-spacing:.05em;font-family:inherit;transition:transform .1s}
+.login-card button:hover{transform:translateY(-1px)}
+.login-card button:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+.login-card .btn-create{background:transparent;color:#64748B;border:2px solid #E2E8F0;margin-top:8px}
+.login-card .btn-create:hover{border-color:#94A3B8;color:#334155;background:#F8FAFC;transform:none}
+
+/* ── app shell ── */
+#app{display:none}
+#app.show{display:block}
+
+/* ── topbar ── */
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;padding-bottom:24px;border-bottom:1px solid #1E293B}
+.topbar h1{font-size:36px;color:#fff;margin-top:4px}
+.topnav{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.nav-link{padding:8px 14px;border-radius:8px;background:#1E293B;color:var(--slate9);text-decoration:none;font-weight:700;font-size:12px;letter-spacing:.05em;border:1px solid var(--slate3)}
+.nav-link:hover{background:var(--slate3);color:#fff}
+.nav-link.active{background:var(--bolt);color:#0F172A;border-color:var(--bolt)}
+
+/* ── user pill ── */
+.user-pill{background:linear-gradient(135deg,#1E293B,#0F172A);border:2px solid var(--slate3);border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:14px;min-width:260px}
+.user-avatar{width:48px;height:48px;border-radius:50%;flex:0 0 48px;overflow:hidden;background:#0F172A}
+.user-avatar svg{display:block;width:100%;height:100%}
+.user-name{font-weight:800;font-size:14px;color:#fff}
+.user-meta{font-size:11px;color:var(--slate9);margin-top:1px}
+.user-tier{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.05em;margin-top:4px;background:#0F172A;border:1px solid var(--slate3)}
+.user-actions{margin-left:auto;display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+.user-actions a{color:var(--slate5);font-size:11px;text-decoration:none}
+.user-actions a:hover{color:var(--bolt)}
+
+/* ── status bar ── */
+.status-bar{margin-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:5px 12px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.06em;border:1px solid var(--slate3);background:#1E293B;color:var(--slate9)}
+.chip.passed{background:#065F46;color:#A7F3D0;border-color:#065F46}
+.chip.review{background:#450A0A;color:#FCA5A5;border-color:#7F1D1D}
+.status-detail{color:var(--slate9);font-size:13px}
+
+/* ── hero ── */
+.hero{margin-top:24px;background:linear-gradient(135deg,#1E1B4B,#0F172A);border:2px solid #312E81;border-radius:24px;padding:32px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:start}
+@media(max-width:768px){.hero{grid-template-columns:1fr}}
+.hero h2{font-size:34px;color:#fff;margin-top:6px}
+.hero-desc{color:#CBD5E1;font-size:14px;margin-top:8px;line-height:1.5;max-width:560px}
+
+/* ── score boxes ── */
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px;max-width:480px}
+.score-box{background:rgba(255,255,255,.05);border:1px solid var(--slate3);border-radius:14px;padding:16px}
+.score-box.win{border-color:var(--green);background:rgba(16,185,129,.08)}
+.score-box.lose{border-color:var(--red);background:rgba(239,68,68,.06)}
+.score-box .lbl{color:var(--slate9);font-size:10px;font-weight:800;letter-spacing:.12em}
+.score-box .num{font-family:'Bricolage Grotesque',sans-serif;font-size:28px;font-weight:800;color:#fff;margin-top:4px;line-height:1}
+.score-box.win .num{color:var(--green)}
+.score-box.lose .num{color:var(--red)}
+
+/* ── quick grid ── */
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:260px}
+.q-card{background:rgba(255,255,255,.04);border:1px solid var(--slate3);border-radius:12px;padding:14px}
+.q-card .lbl{color:var(--slate9);font-size:10px;font-weight:800;letter-spacing:.12em}
+.q-card .val{color:#fff;font-weight:700;font-size:14px;margin-top:4px}
+
+/* ── layout ── */
+.layout{display:grid;grid-template-columns:1fr 360px;gap:20px;margin-top:24px}
+@media(max-width:960px){.layout{grid-template-columns:1fr}}
+.panel{background:linear-gradient(160deg,#1E293B,#0F172A);border:1px solid var(--slate3);border-radius:20px;padding:28px}
+.panel h3{font-size:18px;color:#fff}
+.panel .sub{color:var(--slate9);font-size:13px;margin-top:6px;line-height:1.5}
+
+/* ── review cards ── */
+.review-list{margin-top:18px;display:flex;flex-direction:column;gap:14px}
+.review-card{border-radius:14px;padding:18px;border:1px solid var(--slate3);background:rgba(255,255,255,.02)}
+.review-card.pass{border-color:#065F46;background:rgba(16,185,129,.06)}
+.review-card.fail{border-color:#7F1D1D;background:rgba(239,68,68,.06)}
+.review-card h4{font-size:14px;color:#fff;line-height:1.4;margin-bottom:12px}
+.answer-line{font-size:13px;color:var(--slate9);margin-top:6px;line-height:1.4}
+.answer-line strong{color:#CBD5E1}
+.answer-line.correct strong{color:var(--green)}
+.answer-line.why{color:var(--slate5);font-style:italic;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.06)}
+
+/* ── helper list ── */
+.helper-list{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+.helper-item{display:flex;justify-content:space-between;align-items:baseline;padding:12px 16px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--slate3);font-size:13px}
+.helper-item strong{color:#fff;font-weight:800}
+.helper-item span{color:var(--slate9)}
+
+/* ── buttons ── */
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.btn{display:inline-flex;align-items:center;padding:10px 20px;border-radius:10px;font-weight:800;font-size:13px;font-family:inherit;text-decoration:none;cursor:pointer;border:none;letter-spacing:.04em;transition:all .15s}
+.btn.primary{background:linear-gradient(135deg,var(--bolt),var(--bolt-deep));color:#0F172A}
+.btn.primary:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(250,204,21,.3)}
+.btn.secondary{background:#1E293B;color:#fff;border:1px solid var(--slate3)}
+.btn.secondary:hover{background:var(--slate3)}
+.btn.ghost{background:transparent;color:var(--slate9);border:1px solid var(--slate3)}
+.btn.ghost:hover{color:#fff;border-color:var(--slate5)}
+
+/* ── footer ── */
+.footer{margin-top:60px;padding:24px 0;border-top:1px solid #1E293B;color:#475569;font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+</style>
+<link rel="stylesheet" href="brand.css">
+</head>
+<body>
+
+<div id="loginOverlay">
+  <div class="login-card">
+    <div class="rsp-login-logo"><img src="images/rsp-industrial-logo.png" alt="RSP Industrial"></div>
+    <div class="bolt-bg">⚡</div>
+    <div class="pretitle">RSP INDUSTRIAL · TRAINING PORTAL</div>
+    <h1>View results.</h1>
+    <p class="sub">Enter your name to access your saved quiz results and progress history.</p>
+    <label for="loginFirst">First name</label>
+    <input type="text" id="loginFirst" placeholder="First" autocomplete="given-name">
+    <label for="loginLast">Last name</label>
+    <input type="text" id="loginLast" placeholder="Last" autocomplete="family-name">
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn">Log In →</button>
+    <button id="createBtn" class="btn-create">Create Account</button>
+  </div>
+</div>
+
+<div id="app">
+<div class="wrap">
+
+  <div class="topbar">
+    <div>
+      <img class="rsp-brand-logo" src="images/rsp-industrial-logo.png" alt="RSP Industrial">
+      <div class="pretitle" id="crumbBar">RSP INDUSTRIAL · TRAINING PORTAL</div>
+      <h1 id="pageTitle">Results</h1>
+      <p class="tagline" id="pageTagline"></p>
+      <div class="topnav">
+        <a class="nav-link" id="hubNavLink" href="index.html">🏠 Hub</a>
+        <a class="nav-link" href="badges.html">🏅 Badges</a>
+        <a class="nav-link" href="mastery.html">🏆 Mastery</a>
+        <a class="nav-link" href="team.html">🤝 Team</a>
+        <a class="nav-link" id="trainingNavLink" href="#">📘 Training</a>
+        <a class="nav-link" id="quizNavLink" href="#">📝 Quiz</a>
+        <a class="nav-link active" id="resultsNavLink" href="#">📊 Results</a>
+      </div>
+    </div>
+    <div class="user-pill">
+      <div class="user-avatar" id="userAvatar"></div>
+      <div>
+        <div class="user-name" id="userName">—</div>
+        <div class="user-meta" id="userMeta">—</div>
+        <div class="user-tier" id="userTier"></div>
+      </div>
+      <div class="user-actions">
+        <a href="#" id="backToTrainingLink">Back to training</a>
+        <a href="#" id="logoutLink">Log out</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <div class="chips">
+      <span class="chip" id="statusChip">RESULTS</span>
+      <span class="chip" id="xpChip">XP</span>
+      <span class="chip" id="bestChip">BEST</span>
+      <span class="chip" id="attemptChip">ATTEMPTS</span>
+    </div>
+    <span class="status-detail" id="statusDetail"></span>
+  </div>
+
+  <div class="hero">
+    <div>
+      <div class="pretitle" id="categoryPretitle">RESULTS</div>
+      <h2 id="heroTitle">Results</h2>
+      <p class="hero-desc" id="heroDescription"></p>
+      <div class="score-grid" id="scoreGrid"></div>
+    </div>
+    <div class="quick-grid">
+      <div class="q-card"><div class="lbl">BADGE</div><div class="val" id="quickBadge">—</div></div>
+      <div class="q-card"><div class="lbl">STATUS</div><div class="val" id="quickStatus">—</div></div>
+      <div class="q-card"><div class="lbl">LAST ATTEMPT</div><div class="val" id="quickAttempted">—</div></div>
+      <div class="q-card"><div class="lbl">NEXT STEP</div><div class="val" id="quickNext">—</div></div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="panel">
+      <h3>Review &amp; explanations</h3>
+      <p class="sub" id="reviewIntro"></p>
+      <div class="review-list" id="reviewList"></div>
+    </div>
+    <div class="panel">
+      <h3>Next move</h3>
+      <p class="sub" id="summaryText"></p>
+      <div class="helper-list" id="summaryList"></div>
+      <div class="actions" id="summaryActions"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>Results stay attached to the learner record. Retakes are always allowed — completion is never lost.</div>
+    <div id="legacyPortalLink" style="display:none"><a href="legacy/portal-v1/index.html" style="color:#64748B;text-decoration:none">Legacy portal →</a></div>
+  </div>
+
+</div>
+</div>
+
+<script src="manifest.js"></script>
+<script src="avatars.js"></script>
+<script src="badges.js"></script>
+<script src="config.local.js"></script>
+<script src="cloud.js"></script>
+<script>
+(function(){
+
+/* ── storage ── */
+const KEY_USER='rsp_user',KEY_LEDGER='rsp_ledger';
+let _m={};
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return _m[k]||null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){_m[k]=v}}
+function lsDel(k){try{localStorage.removeItem(k)}catch(e){delete _m[k]}}
+
+/* ── utils ── */
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function fmtDate(ts){if(!ts)return 'N/A';return new Date(ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+function isAdmin(u){return !!(window.RSP_MANIFEST&&window.RSP_MANIFEST.isAdminUser(u))}
+
+/* ── user/ledger ── */
+function getUser(){try{const s=lsGet(KEY_USER);return s?JSON.parse(s):null}catch(e){return null}}
+function setUser(u){lsSet(KEY_USER,JSON.stringify(u));return u}
+function clearUser(){lsDel(KEY_USER)}
+function getLedger(){try{return JSON.parse(lsGet(KEY_LEDGER)||'{}')}catch(e){return{}}}
+function getProgress(user,modId){const l=getLedger();return(l[user.name]&&l[user.name].modules&&l[user.name].modules[modId])||null}
+
+/* ── user pill ── */
+function renderPill(user){
+  document.getElementById('userName').textContent=user.name;
+  document.getElementById('userMeta').textContent=user.id||'No ID provided';
+  const av=document.getElementById('userAvatar');
+  if(user.avatar&&window.renderAvatar)av.innerHTML=window.renderAvatar(user.avatar,48);
+  const l=getLedger(),learner=l[user.name]||{modules:{}};
+  const hub=training.hub||'product_mastery';
+  const xp=window.hubScopedXP?window.hubScopedXP(hub,learner.modules,moduleConfigsMap):Object.values(learner.modules||{}).reduce((s,m)=>s+(m.totalXP||0),0);
+  const tEl=document.getElementById('userTier');
+  if(window.computeTier){
+    const t=window.computeTier(hub,xp,learner.earnedTiers||[]);
+    if(t.current){tEl.style.color=t.current.color;tEl.style.borderColor=t.current.color;tEl.textContent=t.current.icon+' '+t.current.name.toUpperCase()}
+    else{tEl.style.color='#94A3B8';tEl.textContent='🎯 UNRANKED'}
+  }
+  if(isAdmin(user)){tEl.style.color='#FACC15';tEl.style.borderColor='#FACC15';tEl.textContent='🛡️ ADMIN MODE'}
+}
+
+/* ── manifest ── */
+const params=new URLSearchParams(location.search);
+const trainingId=params.get('id');
+const manifest=window.RSP_MANIFEST;
+let training=manifest&&manifest.modules.find(m=>m.id===trainingId);
+
+// Not in the static manifest — could be an admin-created custom module.
+// startSession() resolves the real metadata (including hub) from Supabase.
+if(!training&&trainingId){
+  training={_custom:true,id:trainingId,name:'Loading module…',icon:'📋',
+    category:'',xp:0,estTime:0,description:'',published:true,
+    quiz:{ready:false,passPct:80,questionCount:0}};
+}
+if(training) training.hub=training.hub||'product_mastery';
+
+if(!training){
+  document.body.innerHTML='<div class="wrap" style="padding:80px 32px;text-align:center"><h2 style="color:#fff;font-family:Bricolage Grotesque,sans-serif;font-size:28px">Results not found</h2><p style="color:#94A3B8;margin-top:8px">No module matches that ID.</p><a href="index.html" style="display:inline-block;margin-top:20px;color:#FACC15;font-weight:700">← Back to hub</a></div>';
+  return;
+}
+document.title=training.name+' Results · RSP Training Portal';
+let user=null;
+let moduleConfigsMap=manifest.readModuleConfigCache?manifest.readModuleConfigCache():{};
+
+/* ── shell ── */
+function renderShell(progress){
+  document.getElementById('loginOverlay').classList.add('hidden');
+  document.getElementById('app').classList.add('show');
+  const cat=manifest.categories.find(c=>c.id===training.category)||{id:training.category};
+
+  const hubCfg=(window.RSP_HUBS&&window.RSP_HUBS[training.hub])||{};
+  document.getElementById('crumbBar').innerHTML=manifest.breadcrumbHtml(training.hub,training.name+' Results');
+  document.getElementById('hubNavLink').href=hubCfg.route||'index.html';
+  document.getElementById('hubNavLink').textContent=(hubCfg.icon||'🏠')+' '+(hubCfg.shortLabel||'Hub');
+  document.getElementById('pageTitle').textContent=training.name+' Results';
+  document.getElementById('pageTagline').textContent=training.description;
+  document.getElementById('trainingNavLink').href='training.html?id='+training.id;
+  document.getElementById('quizNavLink').href='quiz.html?id='+training.id;
+  document.getElementById('backToTrainingLink').href='training.html?id='+training.id;
+  document.getElementById('resultsNavLink').textContent='📊 '+training.name+' Results';
+  document.getElementById('categoryPretitle').textContent='RESULTS · '+cat.id.toUpperCase();
+  document.getElementById('quickBadge').textContent=training.quiz?(training.quiz.badgeLabel||training.name):'—';
+  document.getElementById('quickStatus').textContent=progress.completedAt?'✓ Passed':'Not passed yet';
+  document.getElementById('attemptChip').textContent=(progress.attempts||0)+' ATTEMPT'+((progress.attempts||0)===1?'':'S');
+  document.getElementById('bestChip').textContent=(progress.bestPct||0)+'% BEST';
+  document.getElementById('xpChip').textContent=training.xp+' XP';
+
+  renderPill(user);
+}
+
+/* ── no attempt ── */
+function renderEmpty(progress){
+  renderShell(progress);
+  document.getElementById('heroTitle').textContent='No attempt yet';
+  document.getElementById('heroDescription').textContent='After you take the quiz, this page will show your score, missed questions with explanations, and your completion status.';
+  document.getElementById('scoreGrid').innerHTML=
+    '<div class="score-box"><div class="lbl">SCORE</div><div class="num">—</div></div>'+
+    '<div class="score-box"><div class="lbl">PERCENT</div><div class="num">—</div></div>'+
+    '<div class="score-box"><div class="lbl">XP AWARDED</div><div class="num">0</div></div>';
+  document.getElementById('quickAttempted').textContent='Not yet';
+  document.getElementById('quickNext').textContent='Take the quiz';
+  const chip=document.getElementById('statusChip');
+  chip.textContent='NO ATTEMPT';chip.className='chip';
+  document.getElementById('statusDetail').textContent='Complete the training then take the quiz when you are ready.';
+  document.getElementById('reviewIntro').textContent='Results will appear here after your first completed attempt.';
+  document.getElementById('reviewList').innerHTML='';
+  document.getElementById('summaryText').textContent='Study the training material and take the quiz to complete this topic.';
+  document.getElementById('summaryList').innerHTML=
+    '<div class="helper-item"><strong>Pass mark</strong><span>'+(training.quiz?training.quiz.passPct:80)+'%</span></div>'+
+    '<div class="helper-item"><strong>Reward</strong><span>'+training.xp+' XP on pass</span></div>';
+  document.getElementById('summaryActions').innerHTML=
+    '<a class="btn primary" href="quiz.html?id='+training.id+'">Start quiz →</a>'+
+    '<a class="btn secondary" href="training.html?id='+training.id+'">Back to training</a>';
+}
+
+/* ── attempt results ── */
+function renderResults(progress){
+  renderShell(progress);
+  const attempt=progress.lastAttempt;
+  const passed=!!attempt.passed;
+  const passPct=training.quiz&&training.quiz.passPct||80;
+  const nextTraining=getNextTraining();
+
+  document.getElementById('heroTitle').textContent=passed?'Passed.':'Not passed.';
+  document.getElementById('heroDescription').textContent=passed
+    ?'This attempt cleared the pass mark. XP has been awarded and this training is marked complete.'
+    :'This attempt did not reach the '+passPct+'% pass mark. Study the material and retake when ready.';
+  document.getElementById('scoreGrid').innerHTML=
+    '<div class="score-box '+(passed?'win':'lose')+'"><div class="lbl">SCORE</div><div class="num">'+attempt.score+'/'+attempt.total+'</div></div>'+
+    '<div class="score-box '+(passed?'win':'lose')+'"><div class="lbl">PERCENT</div><div class="num">'+attempt.pct+'%</div></div>'+
+    '<div class="score-box '+(passed?'win':'')+'"><div class="lbl">XP AWARDED</div><div class="num">'+(passed?training.xp:0)+'</div></div>';
+  document.getElementById('quickAttempted').textContent=fmtDate(attempt.finishedAt);
+  document.getElementById('quickNext').textContent=passed?(nextTraining?nextTraining.name:'Path complete'):'Retake quiz';
+
+  const chip=document.getElementById('statusChip');
+  chip.textContent=passed?'PASSED':'NOT PASSED';
+  chip.className='chip '+(passed?'passed':'review');
+  document.getElementById('statusDetail').textContent=passed
+    ?'Passed on '+fmtDate(attempt.finishedAt)+'. Completion is recorded on the hub.'
+    :(!progress.completedAt
+        ?'Score: '+attempt.pct+'% — pass mark is '+passPct+'%. Retake when ready.'
+        :'This retake missed the mark, but a prior passing attempt still keeps the module complete.');
+
+  if(passed&&Array.isArray(attempt.items)&&attempt.items.length){
+    /* pass: show full answer review with correct answers */
+    const missedItems=attempt.items.filter(i=>!i.isCorrect);
+    document.getElementById('reviewIntro').textContent=missedItems.length
+      ?'These questions need another look before your next attempt.'
+      :'Perfect run — nothing was missed on this attempt.';
+    const displayItems=missedItems.length?missedItems:attempt.items.slice(0,3);
+    document.getElementById('reviewList').innerHTML=displayItems.map(item=>
+      '<article class="review-card '+(item.isCorrect?'pass':'fail')+'">'+
+        '<h4>'+esc(item.prompt)+'</h4>'+
+        '<div class="answer-line"><strong>Your answer:</strong> '+esc(item.selectedText!=null?item.selectedText:'No answer selected')+'</div>'+
+        '<div class="answer-line correct"><strong>Correct answer:</strong> '+esc(item.correctText)+'</div>'+
+        (item.explanation?'<div class="answer-line why">'+esc(item.explanation)+'</div>':'')+
+      '</article>'
+    ).join('');
+  } else if(!passed) {
+    /* fail: hide correct answers — only show retake prompt */
+    document.getElementById('reviewIntro').textContent='Correct answers are revealed when you pass.';
+    document.getElementById('reviewList').innerHTML='';
+  } else {
+    document.getElementById('reviewIntro').textContent='This attempt was restored from cloud progress. Detailed answer review remains available on the device where the quiz was taken.';
+    document.getElementById('reviewList').innerHTML='';
+  }
+
+  /* summary panel */
+  document.getElementById('summaryText').textContent=passed
+    ?'Move to the next training, or retake this quiz anytime — your completion stays locked in.'
+    :'Use the training material as study support, then try again when the concepts feel solid.';
+  document.getElementById('summaryList').innerHTML=
+    '<div class="helper-item"><strong>Best score</strong><span>'+(progress.bestPct||attempt.pct)+'%</span></div>'+
+    '<div class="helper-item"><strong>Total attempts</strong><span>'+(progress.attempts||1)+'</span></div>'+
+    '<div class="helper-item"><strong>Status</strong><span>'+(progress.completedAt?'Passed':'In progress')+'</span></div>';
+  document.getElementById('summaryActions').innerHTML=
+    '<a class="btn primary" href="quiz.html?id='+training.id+'">Retake quiz →</a>'+
+    '<a class="btn secondary" href="training.html?id='+training.id+'">Back to training</a>'+
+    (passed&&nextTraining?'<a class="btn ghost" href="training.html?id='+nextTraining.id+'">Next training →</a>':'<a class="btn ghost" href="index.html">Return to hub</a>');
+}
+
+function getNextTraining(){
+  const ordered=manifest.hubModulesSorted(training.hub||'product_mastery',moduleConfigsMap);
+  const index=ordered.findIndex(function(mod){return mod.id===training.id});
+  return index>=0&&index<ordered.length-1?ordered[index+1]:null;
+}
+
+/* ── render ── */
+function render(){
+  let progress=getProgress(user,training.id)||{};
+  if(!progress.lastAttempt&&Array.isArray(progress.attemptHistory)&&progress.attemptHistory.length){
+    const latest=progress.attemptHistory[progress.attemptHistory.length-1];
+    progress=Object.assign({},progress,{lastAttempt:{score:Number(latest.score||0),total:Number(latest.total||0),pct:Number(latest.pct||0),passed:!!latest.passed,finishedAt:Number(latest.finishedAt||latest.finished_at||0),items:[]}});
+  }
+  if(!progress.lastAttempt){renderEmpty(progress);return}
+  renderResults(progress);
+}
+
+/* ── session ── */
+async function startSession(u){
+  user=u;
+  render(); // render immediately from local data — no flash
+  if(window.RSPCloud&&window.RSPCloud.isConfigured){
+    try{
+      await window.RSPCloud.upsertUser(user);
+      await window.RSPCloud.syncDown(user.name);
+      const settled=await Promise.allSettled([
+        window.RSPCloud.getModuleConfig(training.id),
+        window.RSPCloud.getAllModuleConfigs()
+      ]);
+      const cfg=settled[0].status==='fulfilled'?settled[0].value:moduleConfigsMap[training.id];
+      if(settled[1].status==='fulfilled') moduleConfigsMap=manifest.cacheModuleConfigs(settled[1].value);
+      if(training._custom){
+        if(cfg&&cfg.module_meta){
+          const meta=cfg.module_meta;
+          training.hub=cfg.hub||meta.hub||training.hub||'product_mastery';
+          training.name=meta.name||'New Module';
+          training.icon=meta.icon||'📋';
+          training.category=meta.category||'Basics';
+          training.description=meta.description||'';
+          training.xp=cfg.xp!=null?Number(cfg.xp):(meta.xp||100);
+          training.estTime=meta.estTime||30;
+          training._custom=false;
+          document.title=training.name+' Results · RSP Training Portal';
+        } else {
+          document.body.innerHTML='<div class="wrap" style="padding:80px 32px;text-align:center"><h2 style="color:#fff;font-family:Bricolage Grotesque,sans-serif;font-size:28px">Results not found</h2><p style="color:#94A3B8;margin-top:8px">No module matches that ID.</p><a href="index.html" style="display:inline-block;margin-top:20px;color:#FACC15;font-weight:700">← Back to hub</a></div>';
+          return;
+        }
+      }
+      if(cfg){
+        training.hub=cfg.hub||(cfg.module_meta&&cfg.module_meta.hub)||training.hub||'product_mastery';
+        if(cfg.xp!=null) training.xp=Number(cfg.xp);
+        training.quiz=Object.assign({},training.quiz||{},{passPct:cfg.pass_pct!=null?Number(cfg.pass_pct):((training.quiz&&training.quiz.passPct)||80)});
+        if(cfg.published===false&&!isAdmin(user)) throw new Error('This module is not currently published.');
+      } else if(settled[0].status==='rejected'&&!moduleConfigsMap[training.id]){
+        throw settled[0].reason;
+      }
+      render(); // re-render with cloud data
+    }catch(e){console.warn('cloud:',e)}
+  }
+}
+
+/* ── login ── */
+function normalizeName(first,last){
+  function tc(s){return s.trim().toLowerCase().replace(/\b\w/g,c=>c.toUpperCase())}
+  return tc(first)+' '+tc(last);
+}
+async function doLogin(mode){
+  const first=document.getElementById('loginFirst').value.trim();
+  const last=document.getElementById('loginLast').value.trim();
+  const errEl=document.getElementById('loginErr');
+  if(!first||!last){errEl.textContent='Enter your first and last name to continue.';return}
+  errEl.textContent='';
+  const name=normalizeName(first,last);
+  document.getElementById('loginBtn').disabled=true;
+  document.getElementById('createBtn').disabled=true;
+  try{
+    let localExists=false;
+    let u={name,startedAt:Date.now()};
+    try{const el=getLedger();if(el&&el[name]){localExists=true;if(el[name].avatar)u.avatar=el[name].avatar;if(el[name].startedAt)u.startedAt=el[name].startedAt}}catch(e){}
+    let cloudExists=false;
+    if(window.RSPCloud&&window.RSPCloud.isConfigured){
+      try{const cu=await window.RSPCloud.getUser(name);cloudExists=!!(cu&&cu.name)}catch(e){}
+    }
+    const accountExists=localExists||cloudExists;
+    if(mode==='login'&&!accountExists){errEl.textContent='No account found for "'+name+'". Use "Create Account" to register.';return}
+    if(mode==='create'&&accountExists){errEl.textContent='An account for "'+name+'" already exists. Please log in instead.';return}
+    setUser(u);startSession(u);
+  }finally{
+    document.getElementById('loginBtn').disabled=false;
+    document.getElementById('createBtn').disabled=false;
+  }
+}
+document.getElementById('loginBtn').addEventListener('click',()=>doLogin('login'));
+document.getElementById('createBtn').addEventListener('click',()=>doLogin('create'));
+document.getElementById('loginFirst').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('loginLast').focus()});
+document.getElementById('loginLast').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin('login')});
+document.getElementById('logoutLink').addEventListener('click',e=>{
+  e.preventDefault();
+  if(confirm('Log out? Your progress is saved.')){clearUser();location.reload()}
+});
+
+function getLedger(){try{return JSON.parse(lsGet(KEY_LEDGER)||'{}')}catch(e){return{}}}
+
+const existing=getUser();
+if(existing){
+  document.getElementById('loginOverlay').classList.add('hidden');
+  startSession(existing);
+}
+if(isAdmin(getUser())){const ll=document.getElementById('legacyPortalLink');if(ll)ll.style.display='';}
+
+})();
+</script>
+</body>
+</html>

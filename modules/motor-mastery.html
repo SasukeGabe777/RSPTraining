@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Motor Mastery — RSP Industrial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/module.css?v=editor-blocks-1">
+<style>
+  /* === MOTOR MASTERY · VIOLET THEME OVERRIDES === */
+  :root{
+    --theme-primary:#6D28D9;
+    --theme-primary-deep:#4C1D95;
+    --theme-accent:#C4B5FD;
+    --theme-obj-num:#6D28D9;
+    --theme-login-btn-1:#6D28D9;
+    --theme-login-btn-2:#8B5CF6;
+    --theme-login-pretitle:#6D28D9;
+    --theme-login-focus:#6D28D9;
+    --theme-side-bg:#4C1D95;
+    --theme-side-border:#5B21B6;
+    --theme-side-toggle:#5B21B6;
+    --theme-loot-border:#6D28D9;
+    --theme-loot-bg-1:#F5F3FF;
+    --theme-loot-bg-2:#EDE9FE;
+    --theme-loot-h3:#6D28D9;
+    --theme-admin-btn:#6D28D9;
+    --theme-admin-loginbox-border:#5B21B6;
+  }
+
+  /* === MODULE-SPECIFIC COMPONENTS === */
+
+  /* Motor enclosure / type card */
+  .motor-card{background:var(--slate-50);border:2px solid var(--slate-200);border-radius:14px;padding:16px;margin-bottom:10px}
+  .motor-card .mc-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .motor-card .mc-name{font-family:'Bricolage Grotesque';font-size:18px;font-weight:800;color:#5B21B6}
+  .motor-card .mc-tag{font-size:10px;font-weight:700;color:#64748B;letter-spacing:.08em;text-transform:uppercase}
+  .motor-card .mc-sect{font-size:11px;font-weight:800;letter-spacing:.05em;color:#5B21B6;margin-top:8px;text-transform:uppercase}
+  .motor-card .mc-list{font-size:12px;color:#334155;margin-top:4px;line-height:1.45}
+  .motor-card .mc-list li{margin-left:18px}
+  .motor-card.danger{background:#FEF2F2;border-color:#FCA5A5}
+  .motor-card.danger .mc-name{color:#7F1D1D}
+
+  /* Two-column allowed/not-allowed lists */
+  .sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .sub-col{border-radius:14px;padding:16px}
+  .sub-col.ok{background:linear-gradient(160deg,#D1FAE5,#A7F3D0);border:2px solid #047857}
+  .sub-col.no{background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #DC2626}
+  .sub-col h3{font-size:16px}
+  .sub-col.ok h3{color:#065F46}
+  .sub-col.no h3{color:#7F1D1D}
+  .sub-col ul{margin-top:8px;list-style:none}
+  .sub-col li{font-size:12.5px;font-weight:600;line-height:1.45;padding:5px 0;border-bottom:1px dashed rgba(0,0,0,.08);display:flex;gap:8px;align-items:flex-start}
+  .sub-col.ok li{color:#065F46}
+  .sub-col.no li{color:#7F1D1D}
+  .sub-col li:last-child{border-bottom:none}
+
+  /* Matrix tables */
+  .matrix{width:100%;border-collapse:collapse;margin-top:12px;font-size:11.5px}
+  .matrix th{background:#EDE9FE;color:#5B21B6;text-align:center;padding:10px 6px;font-weight:800;border:1px solid #DDD6FE;letter-spacing:.05em}
+  .matrix th.row-h{background:#F1F5F9;color:#0F172A;text-align:left;width:160px}
+  .matrix td{padding:10px 8px;border:1px solid #E2E8F0;color:#1E293B;font-weight:600}
+  .matrix td.lbl{background:#F8FAFC;font-weight:800;color:#0F172A;font-size:12px}
+  .matrix td.best{background:#EDE9FE;color:#5B21B6;font-weight:800}
+
+  /* Brand callout */
+  .brand-card{background:var(--slate-50);border:2px solid var(--slate-200);border-radius:14px;padding:14px;margin-bottom:10px}
+  .brand-card .b-name{font-family:'Bricolage Grotesque';font-size:18px;font-weight:800;color:#5B21B6}
+  .brand-card .b-pos{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#7C3AED;margin-top:2px}
+  .brand-card .b-desc{font-size:12.5px;color:#334155;margin-top:6px;line-height:1.45}
+
+  /* Nameplate visual */
+  .nameplate{background:#0F172A;color:#FACC15;border-radius:12px;padding:18px;border:2px solid #475569;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6}
+  .nameplate .np-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dotted #334155}
+  .nameplate .np-row:last-child{border-bottom:none}
+  .nameplate .np-key{color:#94A3B8;letter-spacing:.1em}
+  .nameplate .np-val{color:#FACC15;font-weight:700}
+</style>
+</head>
+<body>
+
+<a href="../index.html" id="portalLink" class="interactive-only">← PORTAL</a>
+
+<aside id="sideMap" class="interactive-only">
+  <button class="map-toggle" id="mapToggle" title="Toggle map">‹</button>
+  <div class="map-title">⚡ MOTOR MAP</div>
+  <div class="map-hint">YOUR JOURNEY</div>
+  <div class="map-path" id="mapPath"></div>
+</aside>
+
+<div id="minibossOverlay" class="interactive-only">
+  <div class="miniboss-modal" id="minibossModal"></div>
+</div>
+
+<div id="loginOverlay" class="interactive-only">
+  <div class="login-card">
+    <div class="bolt-bg">⚡</div>
+    <div class="pretitle">RSP INDUSTRIAL · PRODUCT MASTERY</div>
+    <h1>Motor<br>Mastery</h1>
+    <p class="sub">Sign in to track your XP and unlock the Boss Fight.</p>
+    <label for="loginName">Your name</label>
+    <input type="text" id="loginName" placeholder="e.g. Gabe Ebmeyer" autocomplete="off"/>
+    <label for="loginId">Employee ID <span style="font-weight:500;color:#94A3B8;letter-spacing:0">(optional)</span></label>
+    <input type="text" id="loginId" placeholder="e.g. RSP-1234" autocomplete="off"/>
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn">Begin Training →</button>
+    <p class="footer-note">Your progress is saved on this device. No data leaves your browser.</p>
+  </div>
+</div>
+
+<div id="xpTracker" class="interactive-only">
+  <div>
+    <div class="username" id="trackerUser">⚡ READY</div>
+    <div class="label">XP EARNED</div>
+    <div><span class="num" id="trackerXP">0</span><span style="color:#475569;font-size:14px"> / 280</span></div>
+    <span class="reset-link" id="resetProgress">↻ Reset</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+    <div style="display:flex;gap:10px;font-size:10px;color:#94A3B8;white-space:nowrap;flex-wrap:wrap">
+      <span>📖&nbsp;<b style="color:#fff"><span id="trackerPages">0</span>/14</b></span>
+      <span>🎯&nbsp;<b style="color:#fff"><span id="trackerAnswered">0</span>/30</b></span>
+      <span>✓&nbsp;<b style="color:#34D399"><span id="trackerCorrect">0</span></b></span>
+    </div>
+    <div class="bar"><div class="fill" id="trackerFill"></div></div>
+  </div>
+</div>
+
+<!-- ============= PAGE 1 — COVER ============= -->
+<section class="page cover">
+  <div class="ribbon">
+    <span class="badge">RSP INDUSTRIAL</span>
+    <span class="badge">PRODUCT MASTERY · MODULE 04</span>
+  </div>
+  <svg width="500" height="500" viewBox="0 0 500 500" style="position:absolute;right:-60px;top:120px;opacity:.95">
+    <defs>
+      <linearGradient id="rotorg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#C4B5FD"/>
+        <stop offset="100%" stop-color="#6D28D9"/>
+      </linearGradient>
+    </defs>
+    <g transform="translate(250 250)">
+      <circle r="140" fill="none" stroke="#C4B5FD" stroke-width="3" opacity=".5"/>
+      <circle r="120" fill="url(#rotorg)" stroke="#C4B5FD" stroke-width="3"/>
+      <g fill="#0F172A" stroke="#C4B5FD" stroke-width="2">
+        <rect x="-12" y="-100" width="24" height="60" rx="3"/>
+        <rect x="-12" y="-100" width="24" height="60" rx="3" transform="rotate(45)"/>
+        <rect x="-12" y="-100" width="24" height="60" rx="3" transform="rotate(90)"/>
+        <rect x="-12" y="-100" width="24" height="60" rx="3" transform="rotate(135)"/>
+        <rect x="-12" y="-100" width="24" height="60" rx="3" transform="rotate(180)"/>
+        <rect x="-12" y="-100" width="24" height="60" rx="3" transform="rotate(225)"/>
+        <rect x="-12" y="-100" width="24" height="60" rx="3" transform="rotate(270)"/>
+        <rect x="-12" y="-100" width="24" height="60" rx="3" transform="rotate(315)"/>
+      </g>
+      <circle r="40" fill="#0F172A" stroke="#C4B5FD" stroke-width="3"/>
+      <circle r="14" fill="#C4B5FD"/>
+    </g>
+  </svg>
+  <div style="position:absolute;bottom:2.4in;left:.5in;right:.5in">
+    <div class="pill" style="background:rgba(196,181,253,.25);color:#C4B5FD;border:1px solid rgba(196,181,253,.4);margin-bottom:18px">PRODUCT MASTERY · MOTORS</div>
+    <h1>MOTOR<br>MASTERY</h1>
+    <div class="sub">Spin it. Size it. Sell it. Substitute it.</div>
+  </div>
+  <div class="tagline">
+    <div>TEFC. ODP. XP. Inverter Duty. Sub Rules.</div>
+    <div>RSP · PROD 04</div>
+  </div>
+</section>
+
+<!-- ============= PAGE 2 — MISSION ============= -->
+<section class="page">
+  <div class="page-tag">▸ THE PROMISE</div>
+  <div style="display:flex;gap:30px;margin-top:.5in;height:8.6in">
+    <div style="flex:1;display:flex;flex-direction:column">
+      <h2>Match the right motor<br>to the right job.</h2>
+      <p class="lead" style="margin-top:14px">By the last page you will be able to:</p>
+      <ul class="objectives" style="margin-top:18px">
+        <li><span class="obj-num">1</span><span>Decode any motor <b>nameplate</b> cold and read its 10 critical fields.</span></li>
+        <li><span class="obj-num">2</span><span>Recommend the right <b>enclosure type</b> (TEFC, ODP, Washdown, Severe, XP, Inverter Duty) from the environment alone.</span></li>
+        <li><span class="obj-num">3</span><span>Match <b>NEMA frame sizes</b> correctly so substitutions don't fail at the bolt pattern.</span></li>
+        <li><span class="obj-num">4</span><span>Apply the <b>substitution rules</b> without engineering callbacks.</span></li>
+        <li><span class="obj-num">5</span><span>Position the <b>anchor motor brands</b> (Baldor-Reliance, Toshiba, Nidec, TECO, Yaskawa) by use case.</span></li>
+        <li><span class="obj-num">6</span><span>Pass the 30-question Boss Fight at 80%+ to earn the badge.</span></li>
+      </ul>
+      <div class="powerup" style="margin-top:20px">
+        💡 <b>The promise:</b> Motors are 30% of every industrial quote. Master them and you own a huge chunk of the order book.
+      </div>
+    </div>
+    <div style="flex:0 0 2.4in;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="100" fill="none" stroke="#6D28D9" stroke-width="6"/>
+        <circle cx="110" cy="110" r="75" fill="none" stroke="#6D28D9" stroke-width="6" opacity=".6"/>
+        <circle cx="110" cy="110" r="50" fill="none" stroke="#6D28D9" stroke-width="6" opacity=".4"/>
+        <circle cx="110" cy="110" r="25" fill="#6D28D9"/>
+        <text x="110" y="118" text-anchor="middle" font-size="22" fill="#fff" font-weight="800" font-family="Bricolage Grotesque">XP</text>
+      </svg>
+      <div style="background:var(--ink);color:#FCD34D;padding:10px 18px;border-radius:999px;font-weight:800;font-size:13px;letter-spacing:.1em">EARN: ⚡ MOTOR MASTER</div>
+    </div>
+  </div>
+  <div class="page-num">02</div>
+</section>
+
+<!-- ============= PAGE 3 — HOW TO PLAY ============= -->
+<section class="page">
+  <div class="page-tag">▸ HOW TO PLAY</div>
+  <h2 style="margin-top:.4in">Three levels.<br>Two mini-bosses.<br>One badge.</h2>
+  <div style="display:flex;gap:14px;margin-top:30px">
+    <div class="level-card learn">
+      <div class="num">01</div>
+      <h3>LEARN</h3>
+      <p>8 pages. The 3 selection questions, all 6 enclosure types, frames, materials, duty ratings, and the nameplate code.</p>
+      <div class="xp-pill">+10 XP / page</div>
+    </div>
+    <div class="level-card apply">
+      <div class="num">02</div>
+      <h3>APPLY</h3>
+      <p>6 pages. Substitution rules (allowed + forbidden), the application matrix, brand positioning, and customer scenarios.</p>
+      <div class="xp-pill">+15 XP / page</div>
+    </div>
+    <div class="level-card test">
+      <div class="num">03</div>
+      <h3>TEST</h3>
+      <p>30-question Boss Fight. Score 80%+ for the ⚡ Motor Mastery badge.</p>
+      <div class="xp-pill">+2 XP / correct</div>
+    </div>
+  </div>
+  <div class="powerup" style="margin-top:30px">
+    💡 <b>Two Mini-Bosses block the path.</b> Defeat the Frame Phantom after LEARN and the Substitution Specter after APPLY. Each is worth +25 XP.
+  </div>
+  <div class="page-num">03</div>
+</section>
+
+<!-- ============= PAGE 4 — LEARN 01: WHAT MOTORS DO ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#5B21B6">▸ LEARN · 01 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ THE FOUNDATION</div>
+  <h2 style="margin-top:14px">Motors convert electrical<br>energy into rotation.</h2>
+  <p class="lead" style="margin-top:6px">That's the entire job. Everything else — enclosure, frame, duty, materials — is about <b>matching that rotation to a real-world job</b>.</p>
+
+  <div class="factbox" style="margin-top:18px">
+    <h3 style="font-size:16px;color:#5B21B6">📦 What motors power at RSP customer sites:</h3>
+    <ul class="biglist" style="margin-top:10px">
+      <li><span class="bullet">▸</span><b>Pumps</b> — water, chemical, slurry, sump</li>
+      <li><span class="bullet">▸</span><b>Fans &amp; blowers</b> — HVAC, ventilation, dust collection</li>
+      <li><span class="bullet">▸</span><b>Compressors</b> — air, refrigeration</li>
+      <li><span class="bullet">▸</span><b>Conveyors</b> — packaging, distribution, mining</li>
+      <li><span class="bullet">▸</span><b>Mixers / agitators</b> — food, chemical, wastewater</li>
+      <li><span class="bullet">▸</span><b>Machine tools</b> — lathes, mills, grinders</li>
+      <li><span class="bullet">▸</span><b>VFD-driven systems</b> — variable speed everything</li>
+      <li><span class="bullet">▸</span><b>HVAC equipment</b> — building automation</li>
+      <li><span class="bullet">▸</span><b>Industrial automation</b> — robots, actuators</li>
+    </ul>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> A trained rep matches motors on <b>construction, cooling, enclosure, duty, and application</b> — not on price alone.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">04</div>
+</section>
+
+<!-- ============= PAGE 5 — LEARN 02: THE 3 CORE QUESTIONS ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#5B21B6">▸ LEARN · 02 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ THE THREE CORE QUESTIONS</div>
+  <h2 style="margin-top:14px">Three questions.<br>Every motor quote.</h2>
+  <p class="lead" style="margin-top:6px">Before recommending ANY motor, you clarify these three. They define the entire selection.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:18px">
+    <div class="motor-card">
+      <div class="mc-head"><span style="font-size:28px">⚡</span><div><div class="mc-name">1. ELECTRICAL</div><div class="mc-tag">Power needs</div></div></div>
+      <div class="mc-sect">Always ask</div>
+      <ul class="mc-list">
+        <li>Voltage (230 / 460 / 575V)</li>
+        <li>Phase (1-phase or 3-phase)</li>
+        <li>Frequency (60 Hz · sometimes 50 Hz)</li>
+        <li>Full Load Amps (FLA)</li>
+      </ul>
+    </div>
+    <div class="motor-card">
+      <div class="mc-head"><span style="font-size:28px">⚙️</span><div><div class="mc-name">2. MECHANICAL</div><div class="mc-tag">How it mounts</div></div></div>
+      <div class="mc-sect">Always ask</div>
+      <ul class="mc-list">
+        <li>Horsepower</li>
+        <li>RPM / speed</li>
+        <li>NEMA frame size</li>
+        <li>Mounting (foot, C-face, D-flange, vertical, rigid)</li>
+      </ul>
+    </div>
+    <div class="motor-card">
+      <div class="mc-head"><span style="font-size:28px">🌡️</span><div><div class="mc-name">3. ENVIRONMENTAL</div><div class="mc-tag">Where it lives</div></div></div>
+      <div class="mc-sect">Always ask</div>
+      <ul class="mc-list">
+        <li>Indoor or outdoor</li>
+        <li>Wet / washdown</li>
+        <li>Chemicals / corrosives</li>
+        <li>Hazardous location</li>
+        <li>Temperature extremes</li>
+        <li>Dust / particulates</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Echo each answer back. "So that's 460V, 3-phase, 5 HP, 1800 RPM, 184T frame, outdoor wet location." Now you sound like the expert in the room.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">05</div>
+</section>
+
+<!-- ============= PAGE 6 — LEARN 03: ENCLOSURES PART 1 ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#5B21B6">▸ LEARN · 03 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ MOTOR ENCLOSURES · PART 1</div>
+  <h2 style="margin-top:14px">TEFC &amp; ODP.<br>The two you'll quote daily.</h2>
+  <p class="lead" style="margin-top:6px">"Enclosure" on a motor does NOT mean a steel box. It means the <b>cooling and protection method</b> of the motor itself. Get this distinction right and SDR confusion drops 80%.</p>
+
+  <div style="margin-top:14px">
+    <div class="motor-card">
+      <div class="mc-head"><span style="font-size:28px">⭐</span><div><div class="mc-name">TEFC — Totally Enclosed Fan Cooled</div><div class="mc-tag">The industry workhorse · default choice</div></div></div>
+      <div class="mc-sect">Characteristics</div>
+      <div class="mc-list">Fully sealed housing · external fan blows air over the frame · most common industrial motor.</div>
+      <div class="mc-sect">Best uses</div>
+      <div class="mc-list">Dusty, dirty, outdoor, general purpose — pumps, compressors, conveyors.</div>
+      <div class="mc-sect">Selling points</div>
+      <div class="mc-list">Longer life in harsh environments · most versatile option in the catalog.</div>
+    </div>
+    <div class="motor-card">
+      <div class="mc-head"><span style="font-size:28px">⭐</span><div><div class="mc-name">ODP — Open Drip Proof</div><div class="mc-tag">Cooler · cheaper · clean-room only</div></div></div>
+      <div class="mc-sect">Characteristics</div>
+      <div class="mc-list">Open frame vents · air flows directly through the motor · runs cooler &amp; more efficient than TEFC.</div>
+      <div class="mc-sect">Best uses</div>
+      <div class="mc-list">Clean indoor environments — HVAC, mechanical rooms, indoor pumping.</div>
+      <div class="mc-sect" style="color:#7F1D1D">Avoid if</div>
+      <div class="mc-list" style="color:#7F1D1D">Outdoors · dust / dirt present · any moisture risk.</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>POWER-UP:</b> "Indoor and clean?" → either works. "Outdoor or dusty?" → TEFC, always.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">06</div>
+</section>
+
+<!-- ============= PAGE 7 — LEARN 04: ENCLOSURES PART 2 ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#5B21B6">▸ LEARN · 04 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ MOTOR ENCLOSURES · PART 2</div>
+  <h2 style="margin-top:14px">Washdown &amp; Severe Duty.<br>For tough environments.</h2>
+  <p class="lead" style="margin-top:6px">When the job is dirty, wet, corrosive, or just plain brutal — these are the two enclosures you reach for.</p>
+
+  <div style="margin-top:14px">
+    <div class="motor-card">
+      <div class="mc-head"><span style="font-size:28px">⭐</span><div><div class="mc-name">WASHDOWN DUTY</div><div class="mc-tag">Food · beverage · pharma · sanitary</div></div></div>
+      <div class="mc-sect">Characteristics</div>
+      <div class="mc-list">Epoxy coatings · stainless steel hardware · sealed bearings · smooth "cleanable" housing — designed to be hosed down without water ingress.</div>
+      <div class="mc-sect">Best uses</div>
+      <div class="mc-list">Food and beverage production · pharmaceutical · high-pressure washdown lines · sanitary environments.</div>
+    </div>
+    <div class="motor-card">
+      <div class="mc-head"><span style="font-size:28px">⭐</span><div><div class="mc-name">SEVERE DUTY</div><div class="mc-tag">Mining · asphalt · wastewater</div></div></div>
+      <div class="mc-sect">Characteristics</div>
+      <div class="mc-list">Reinforced bearings · enhanced insulation system · corrosion protection · rugged housings built for impact and vibration.</div>
+      <div class="mc-sect">Best uses</div>
+      <div class="mc-list">Mining · asphalt plants · wastewater treatment · harsh industrial loads where TEFC alone won't survive.</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>POWER-UP:</b> Customer says "we hose it down daily" → washdown. Customer says "it's outside and gets hammered" → severe duty.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">07</div>
+</section>
+
+<!-- ============= PAGE 8 — LEARN 05: ENCLOSURES PART 3 ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#5B21B6">▸ LEARN · 05 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ MOTOR ENCLOSURES · PART 3</div>
+  <h2 style="margin-top:14px">Explosion-Proof &amp;<br>Inverter Duty.</h2>
+  <p class="lead" style="margin-top:6px">The two specialty enclosures — one for hazardous locations, one for VFD-controlled systems. <b>Get either of these wrong and the motor fails or kills someone</b>.</p>
+
+  <div style="margin-top:14px">
+    <div class="motor-card danger">
+      <div class="mc-head"><span style="font-size:28px">⚠️</span><div><div class="mc-name">EXPLOSION-PROOF (XP)</div><div class="mc-tag">Hazardous locations · Class I / II / III</div></div></div>
+      <div class="mc-sect">Characteristics</div>
+      <div class="mc-list">Explosion containment construction — internal sparks cannot ignite external atmosphere. Designed for Class I (flammable gases), Class II (combustible dust), Class III (fibers).</div>
+      <div class="mc-sect">Best uses</div>
+      <div class="mc-list">Oil &amp; gas · chemical processing · grain handling · paint booths · anywhere ignition risk exists.</div>
+    </div>
+    <div class="motor-card">
+      <div class="mc-head"><span style="font-size:28px">⭐</span><div><div class="mc-name">INVERTER DUTY / VFD RATED</div><div class="mc-tag">Required on VFDs · NEMA MG1 Part 31</div></div></div>
+      <div class="mc-sect">Characteristics</div>
+      <div class="mc-list">Special insulation systems (Class F or H) · phase-paper insulation · designed for PWM drive voltage spikes · superior thermal tolerance.</div>
+      <div class="mc-sect">Best uses</div>
+      <div class="mc-list">VFD-controlled systems · pumps and fans with speed control · constant-torque loads.</div>
+      <div class="mc-sect" style="color:#7F1D1D">Never substitute a standard motor on a VFD for</div>
+      <div class="mc-list" style="color:#7F1D1D">Continuous low-speed operation · high-frequency switching · constant-torque applications.</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>POWER-UP:</b> "Is there a VFD?" If yes → inverter duty is required, not optional. Standard motors die early on VFDs.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">08</div>
+</section>
+
+<!-- ============= PAGE 9 — LEARN 06: FRAME SIZES ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#5B21B6">▸ LEARN · 06 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ NEMA FRAME SIZES</div>
+  <h2 style="margin-top:14px">Frame size is why motors<br>cannot just "swap."</h2>
+  <p class="lead" style="margin-top:6px">The <b>#1 reason</b> motor substitutions fail across brands. Frame controls the physical dimensions — if those don't match, the motor won't bolt to the customer's machine.</p>
+
+  <div class="factbox" style="margin-top:18px">
+    <h3 style="font-size:16px;color:#5B21B6">A NEMA frame controls:</h3>
+    <ul class="biglist" style="margin-top:10px">
+      <li><span class="bullet">▸</span><b>Shaft diameter</b> — must mate to the customer's coupler / pulley</li>
+      <li><span class="bullet">▸</span><b>Shaft length</b> — keyway position</li>
+      <li><span class="bullet">▸</span><b>Bolt hole pattern</b> — how the motor mounts to the base</li>
+      <li><span class="bullet">▸</span><b>Mounting height</b> — distance from base to shaft centerline</li>
+      <li><span class="bullet">▸</span><b>Overall footprint</b> — length × width × height</li>
+    </ul>
+  </div>
+
+  <div style="margin-top:14px">
+    <div class="motor-card" style="padding:12px 16px">
+      <div class="mc-sect" style="margin-top:0">Common frame examples</div>
+      <ul class="mc-list" style="font-size:13px">
+        <li><b>56C</b> — small C-face motor (fractional HP, often on small pumps)</li>
+        <li><b>143T · 145T</b> — common pump motors (1–2 HP)</li>
+        <li><b>182T · 184T</b> — industrial fans, conveyors (3–5 HP)</li>
+        <li><b>254T · 256T</b> — heavy-duty systems (15–20 HP)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Same HP, same RPM, different frame" = customer modifies mounting OR you lose the sale to a callback. <b>Always</b> confirm frame match before quoting a substitute.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">09</div>
+</section>
+
+<!-- ============= PAGE 10 — LEARN 07: MATERIALS & DUTY ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#5B21B6">▸ LEARN · 07 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ MATERIALS &amp; DUTY RATINGS</div>
+  <h2 style="margin-top:14px">Cast iron, aluminum,<br>stainless. And how often.</h2>
+  <p class="lead" style="margin-top:6px">Housing material drives corrosion resistance and weight. Duty rating drives how long it can run.</p>
+
+  <table class="matrix" style="margin-top:14px">
+    <thead><tr>
+      <th class="row-h">Housing Material</th>
+      <th>Strength</th>
+      <th>Corrosion</th>
+      <th>Weight</th>
+      <th>Best For</th>
+    </tr></thead>
+    <tbody>
+      <tr><td class="lbl">Cast Iron</td><td>⭐ Very high</td><td>⚠️ Good w/ paint</td><td>Heavy</td><td class="best">Severe duty · industrial · tough loads</td></tr>
+      <tr><td class="lbl">Rolled Steel</td><td>⭐ Medium</td><td>⚠️ Moderate</td><td>Medium</td><td class="best">General-purpose indoor/outdoor</td></tr>
+      <tr><td class="lbl">Aluminum</td><td>⭐ High</td><td>⭐ Excellent</td><td>Light</td><td class="best">Washdown · food/beverage · outdoor</td></tr>
+      <tr><td class="lbl">Stainless Steel</td><td>⭐ High</td><td>⭐⭐ Best</td><td>Heavy</td><td class="best">Sanitary · corrosive · marine</td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:18px;font-size:18px">⏱️ Duty ratings</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+    <div class="motor-card" style="margin-bottom:0;padding:12px"><div class="mc-name" style="font-size:14px">CONTINUOUS DUTY (S1)</div><div class="mc-list" style="margin-top:4px">Runs indefinitely at full load. Default for pumps, fans, conveyors.</div></div>
+    <div class="motor-card" style="margin-bottom:0;padding:12px"><div class="mc-name" style="font-size:14px">INTERMITTENT DUTY (S3)</div><div class="mc-list" style="margin-top:4px">Cycles on/off. Must cool between runs. Cranes, hoists, presses.</div></div>
+    <div class="motor-card" style="margin-bottom:0;padding:12px"><div class="mc-name" style="font-size:14px">SEVERE DUTY</div><div class="mc-list" style="margin-top:4px">Higher thermal and mechanical limits. Heavy industrial.</div></div>
+    <div class="motor-card" style="margin-bottom:0;padding:12px"><div class="mc-name" style="font-size:14px">VFD DUTY</div><div class="mc-list" style="margin-top:4px">Meets NEMA MG1 Part 31 standards. Required for variable speed.</div></div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">10</div>
+</section>
+
+<!-- ============= PAGE 11 — LEARN 08: NAMEPLATE + MINI-BOSS GATE ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#5B21B6">▸ LEARN · 08 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ THE MOTOR NAMEPLATE</div>
+  <h2 style="margin-top:14px">Read it. Repeat it.<br>Sell the right motor.</h2>
+  <p class="lead" style="margin-top:6px">10 fields. Memorize them. Reading them aloud to an engineer instantly builds credibility.</p>
+
+  <div style="display:flex;gap:16px;margin-top:14px">
+    <div class="nameplate" style="flex:0 0 2.6in">
+      <div class="np-row"><span class="np-key">HP</span><span class="np-val">5</span></div>
+      <div class="np-row"><span class="np-key">VOLTS</span><span class="np-val">460</span></div>
+      <div class="np-row"><span class="np-key">PHASE</span><span class="np-val">3</span></div>
+      <div class="np-row"><span class="np-key">RPM</span><span class="np-val">1750</span></div>
+      <div class="np-row"><span class="np-key">FRAME</span><span class="np-val">184T</span></div>
+      <div class="np-row"><span class="np-key">SF</span><span class="np-val">1.15</span></div>
+      <div class="np-row"><span class="np-key">EFF</span><span class="np-val">NEMA PREM</span></div>
+      <div class="np-row"><span class="np-key">FLA</span><span class="np-val">6.8 A</span></div>
+      <div class="np-row"><span class="np-key">DUTY</span><span class="np-val">CONT</span></div>
+      <div class="np-row"><span class="np-key">AMB</span><span class="np-val">40°C</span></div>
+      <div class="np-row"><span class="np-key">CODE</span><span class="np-val">G</span></div>
+    </div>
+    <div style="flex:1">
+      <h3 style="font-size:16px;color:#5B21B6">The 10 fields every SDR reads:</h3>
+      <ul class="biglist" style="margin-top:10px;gap:5px">
+        <li><span class="bullet">1</span><b>HP</b> — horsepower</li>
+        <li><span class="bullet">2</span><b>Voltage</b> — 230 / 460 / 575</li>
+        <li><span class="bullet">3</span><b>Phase</b> — 1Φ or 3Φ</li>
+        <li><span class="bullet">4</span><b>RPM</b> — 1200 / 1800 / 3600</li>
+        <li><span class="bullet">5</span><b>Frame</b> — 143T, 184T, etc.</li>
+        <li><span class="bullet">6</span><b>SF</b> (service factor) — overload allowance</li>
+        <li><span class="bullet">7</span><b>Efficiency</b> — NEMA Premium?</li>
+        <li><span class="bullet">8</span><b>FLA</b> — full load amps</li>
+        <li><span class="bullet">9</span><b>Duty</b> — continuous / intermittent</li>
+        <li><span class="bullet">10</span><b>Ambient + Code</b> — temp tolerance + locked rotor</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px;padding:10px 16px;font-size:13px">
+    🏅 <b>LEARN LEVEL CLEARED — +80 XP · BADGE EARNED: 🧠 "NAMEPLATE READER."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="frame-phantom" style="margin-top:14px;padding:18px">
+    <div class="icon">👻</div>
+    <h3>The Frame Phantom blocks the path!</h3>
+    <div class="sub">5 questions on enclosures, frames, and duty · Defeat to unlock APPLY level</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">11</div>
+</section>
+
+<!-- ============= PAGE 12 — APPLY 01: SUBSTITUTION RULES ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 01 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ SUBSTITUTION RULES</div>
+  <h2 style="margin-top:14px">When you CAN swap.<br>When you CAN'T.</h2>
+  <p class="lead" style="margin-top:6px">The single highest-leverage page in this module. Memorize both columns. They prevent 90% of motor-related callbacks.</p>
+
+  <div class="sub-grid">
+    <div class="sub-col ok">
+      <h3>✔ ALLOWED substitutions</h3>
+      <ul>
+        <li><b>✓</b> Equal or higher efficiency (upgrade to NEMA Premium)</li>
+        <li><b>✓</b> Same frame · same RPM · same HP</li>
+        <li><b>✓</b> TEFC replacing ODP (upgrade)</li>
+        <li><b>✓</b> Inverter-duty replacing standard (upgrade)</li>
+        <li><b>✓</b> Higher temperature or severe-duty rating</li>
+      </ul>
+    </div>
+    <div class="sub-col no">
+      <h3>❌ NOT allowed without engineering</h3>
+      <ul>
+        <li><b>✗</b> Different frame size</li>
+        <li><b>✗</b> Lower duty rating</li>
+        <li><b>✗</b> ODP replacing TEFC</li>
+        <li><b>✗</b> Non-inverter motor on a VFD</li>
+        <li><b>✗</b> Lower RPM (1725 → 3450 mismatch)</li>
+        <li><b>✗</b> Lower horsepower</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> When in doubt, repeat the customer's spec back, check the allowed column, and quote. If it falls in the right column, <b>stop and ask engineering</b> — don't guess.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">12</div>
+</section>
+
+<!-- ============= PAGE 13 — APPLY 02: LAMINATED CARD ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 02 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ THE LAMINATED CARD</div>
+  <h2 style="margin-top:14px">7 checks before any swap.</h2>
+  <p class="lead" style="margin-top:6px">Print this. Tape it next to your phone. Read it before quoting any motor substitution.</p>
+
+  <div class="factbox" style="margin-top:18px;background:linear-gradient(160deg,#EDE9FE,#DDD6FE);border-color:#6D28D9">
+    <h3 style="color:#5B21B6;font-size:18px">✔ Confirm ALL seven before substituting:</h3>
+    <ol style="margin-top:12px;padding-left:24px">
+      <li style="font-size:14px;color:#5B21B6;font-weight:700;padding:4px 0">Same <b>frame size</b></li>
+      <li style="font-size:14px;color:#5B21B6;font-weight:700;padding:4px 0">Same <b>HP</b></li>
+      <li style="font-size:14px;color:#5B21B6;font-weight:700;padding:4px 0">Same <b>RPM</b></li>
+      <li style="font-size:14px;color:#5B21B6;font-weight:700;padding:4px 0">Same <b>voltage</b></li>
+      <li style="font-size:14px;color:#5B21B6;font-weight:700;padding:4px 0">Same <b>mounting</b> type (foot, C-face, etc.)</li>
+      <li style="font-size:14px;color:#5B21B6;font-weight:700;padding:4px 0">Same OR <b>higher enclosure</b> type (never go down)</li>
+      <li style="font-size:14px;color:#5B21B6;font-weight:700;padding:4px 0"><b>Inverter-duty</b> if a VFD is in the system</li>
+    </ol>
+  </div>
+
+  <div class="mistake" style="margin-top:14px">
+    <span class="x">!</span>
+    <div>
+      <h3>The 6 instant-fail substitutions</h3>
+      <p>ODP → TEFC · TEFC → ODP · lower HP · different frame · non-inverter on a VFD · standard motor into washdown environment. Any one of these = callback or motor failure.</p>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Stop. Ask engineering" is a complete answer. Customers respect it. Engineers prefer it. Callbacks vanish.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">13</div>
+</section>
+
+<!-- ============= PAGE 14 — APPLY 03: APPLICATION MATRIX ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 03 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ APPLICATION MATRIX</div>
+  <h2 style="margin-top:14px">Customer says X.<br>You quote Y.</h2>
+  <p class="lead" style="margin-top:6px">The selling-tool matrix — one application, one enclosure recommendation. Memorize the right column.</p>
+
+  <table class="matrix" style="margin-top:18px;font-size:13px">
+    <thead><tr>
+      <th class="row-h">Customer Application</th>
+      <th>Best Motor Type</th>
+    </tr></thead>
+    <tbody>
+      <tr><td class="lbl">Pumps</td><td class="best">TEFC · or inverter duty if on VFD</td></tr>
+      <tr><td class="lbl">HVAC fans</td><td class="best">ODP or TEFC (depends on cleanliness)</td></tr>
+      <tr><td class="lbl">Food &amp; beverage</td><td class="best">Washdown duty or stainless steel</td></tr>
+      <tr><td class="lbl">Wastewater</td><td class="best">TEFC or severe duty</td></tr>
+      <tr><td class="lbl">Mining</td><td class="best">Severe duty cast iron</td></tr>
+      <tr><td class="lbl">Chemical plants</td><td class="best">XP (explosion-proof) or stainless</td></tr>
+      <tr><td class="lbl">VFD systems</td><td class="best">Inverter-duty motors (required)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> When the customer names the application before the motor type, lead with this matrix. You sound like the consultant, not the order-taker.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">14</div>
+</section>
+
+<!-- ============= PAGE 15 — APPLY 04: BRAND POSITIONING ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 04 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ BRAND POSITIONING</div>
+  <h2 style="margin-top:14px">Five anchor brands.<br>One matched play per call.</h2>
+  <p class="lead" style="margin-top:6px">RSP carries nine motor manufacturers. Five anchor the conversation; the others fill in when the customer's spec or budget calls for them.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px">
+    <div class="brand-card">
+      <div class="b-name">BALDOR-RELIANCE</div>
+      <div class="b-pos">⭐ Premium · severe-duty &amp; washdown leader</div>
+      <div class="b-desc">Premium pricing earns premium reliability. Strongest severe-duty catalog, plus the Reliance washdown / stainless line. Lead here when the customer says "this one cannot fail" or "food plant."</div>
+    </div>
+    <div class="brand-card">
+      <div class="b-name">TOSHIBA MOTORS</div>
+      <div class="b-pos">⭐ VFD-duty &amp; explosion-proof specialist</div>
+      <div class="b-desc">Top-tier inverter-duty and XP motors. Rugged construction. Lead with Toshiba on VFD-driven systems and hazardous-location (Class I/II Div) quotes.</div>
+    </div>
+    <div class="brand-card">
+      <div class="b-name">NIDEC</div>
+      <div class="b-pos">⭐ Broadest general-industrial catalog</div>
+      <div class="b-desc">Formerly U.S. Motors / Emerson Industrial. Deep general-industrial line — HVAC, pumps, fans, replacement motors. Lead here when the customer needs "standard duty" across many SKUs.</div>
+    </div>
+    <div class="brand-card">
+      <div class="b-name">TECO</div>
+      <div class="b-pos">⭐ Cost-effective workhorse</div>
+      <div class="b-desc">Strong value play. Broad TEFC catalog at competitive price. Lead here when the customer is price-sensitive but still wants a quality industrial motor.</div>
+    </div>
+    <div class="brand-card">
+      <div class="b-name">YASKAWA</div>
+      <div class="b-pos">⭐ Matched motor + VFD pair</div>
+      <div class="b-desc">Natural pick when the customer is already quoting a Yaskawa drive. Inverter-duty motors engineered to pair with Yaskawa's drives for a clean, warrantied system.</div>
+    </div>
+    <div class="brand-card" style="background:linear-gradient(160deg,#F5F3FF,#EDE9FE);border-color:#C4B5FD">
+      <div class="b-name" style="color:#6D28D9">ALSO CARRIED</div>
+      <div class="b-pos">Specialty &amp; supporting line</div>
+      <div class="b-desc" style="font-size:12px"><b>GE Motors</b> — heritage U.S. brand, large industrial frames.<br><b>Schneider Electric</b> — pairs with Schneider drives &amp; control systems.<br><b>North American Electric Motors</b> — cost-effective replacement source.<br><b>Tatung Motors</b> — heavy-duty industrial &amp; large-frame specialty.</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Severe / washdown → <b>Baldor-Reliance</b> · VFD/XP → <b>Toshiba</b> · broad catalog → <b>Nidec</b> · price → <b>TECO</b> · matched VFD pair → <b>Yaskawa</b>. Five levers, one matched answer per call.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">15</div>
+</section>
+
+<!-- ============= PAGE 16 — APPLY 05: QUICK SELECTION ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 05 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ THE QUICK-SELECTION SCRIPT</div>
+  <h2 style="margin-top:14px">Five questions.<br>Five clean answers.</h2>
+  <p class="lead" style="margin-top:6px">This is the laminated decision tree you run in your head on every motor call.</p>
+
+  <div style="margin-top:18px">
+    <div class="translate-row"><div class="says">"Indoors and clean?"</div><div class="means">→ ODP or TEFC works</div><div class="quote-it">Default: TEFC</div></div>
+    <div class="translate-row"><div class="says">"Dusty, outdoors, industrial?"</div><div class="means">→ TEFC or Severe Duty</div><div class="quote-it">Default: TEFC</div></div>
+    <div class="translate-row"><div class="says">"Gets washed down daily?"</div><div class="means">→ Washdown or stainless motor</div><div class="quote-it">Baldor-Reliance washdown / stainless</div></div>
+    <div class="translate-row"><div class="says">"Hazardous location?"</div><div class="means">→ Explosion-proof (XP)</div><div class="quote-it">Toshiba Motors XP</div></div>
+    <div class="translate-row"><div class="says">"On a VFD?"</div><div class="means">→ Inverter-duty REQUIRED</div><div class="quote-it">Not optional</div></div>
+    <div class="translate-row"><div class="says">"Same frame? Same RPM?"</div><div class="means">→ Substitution is safe</div><div class="quote-it">If NOT → stop, ask engineering</div></div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px;padding:10px 16px;font-size:13px">
+    🏅 <b>APPLY LEVEL CLEARED — +90 XP · BADGE EARNED: 🛠️ "MOTOR-READY."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="sub-specter" style="margin-top:14px;padding:18px">
+    <div class="icon">🪞</div>
+    <h3>The Substitution Specter blocks the path!</h3>
+    <div class="sub">5 questions on substitution &amp; applications · Defeat to unlock the Boss Fight</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">16</div>
+</section>
+
+<!-- ============= PAGE 17 — APPLY 06: TOP MISTAKES ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 06 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ 5 MISTAKES THAT KILL MOTOR SALES</div>
+  <h2 style="margin-top:14px">Don't lose<br>the order.</h2>
+  <p class="lead" style="margin-top:6px">Every one of these has cost a rep an account. Memorize and avoid.</p>
+
+  <div style="margin-top:18px">
+    <div class="mistake"><span class="x">1</span><div><h3>Quoting without the nameplate.</h3><p>Asking the 10 fields takes 90 seconds and saves a callback. Skip it and the wrong motor ships.</p></div></div>
+    <div class="mistake"><span class="x">2</span><div><h3>Ignoring the VFD.</h3><p>"Is this on a drive?" If yes, inverter-duty is required. A standard motor will fail inside a year.</p></div></div>
+    <div class="mistake"><span class="x">3</span><div><h3>Assuming frames match.</h3><p>184T and 184TS look identical on paper but the shaft length differs. Always confirm the suffix.</p></div></div>
+    <div class="mistake"><span class="x">4</span><div><h3>Downgrading the enclosure.</h3><p>ODP for a TEFC is the #1 motor return. Same with washdown → standard. Never go down a tier.</p></div></div>
+    <div class="mistake"><span class="x">5</span><div><h3>Skipping "stop and ask engineering."</h3><p>If anything in the 7-check list fails, that's the answer. Customers respect it. Engineers prefer it.</p></div></div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>POWER-UP:</b> "I'll confirm with engineering and call you back inside the hour" wins more orders than any guess.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">17</div>
+</section>
+
+<!-- ============= PAGE 18 — BOSS FIGHT INTRO ============= -->
+<section class="page boss-page" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS</div>
+  <div class="level-banner lvl-test" style="margin-top:.4in">🎯 BOSS FIGHT · 30 QUESTIONS</div>
+  <h2 style="margin-top:14px;color:#fff">Five rounds.<br>One badge.</h2>
+  <p class="lead" style="color:#CBD5E1;margin-top:6px">Pass at 80% (24/30) to earn the ⚡ Motor Mastery badge. 60% (18/30) re-runs APPLY. Below that → back to LEARN.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:24px">
+    <div style="background:rgba(196,181,253,.15);border:1px solid rgba(196,181,253,.35);border-radius:10px;padding:12px;color:#fff"><div style="font-size:10px;letter-spacing:.1em;color:#C4B5FD;font-weight:800">ROUND 1</div><div style="font-size:13px;margin-top:4px;font-weight:700">Enclosures &amp; Types</div><div style="font-size:11px;color:#94A3B8;margin-top:2px">Q1–6</div></div>
+    <div style="background:rgba(196,181,253,.15);border:1px solid rgba(196,181,253,.35);border-radius:10px;padding:12px;color:#fff"><div style="font-size:10px;letter-spacing:.1em;color:#C4B5FD;font-weight:800">ROUND 2</div><div style="font-size:13px;margin-top:4px;font-weight:700">Frames &amp; Nameplate</div><div style="font-size:11px;color:#94A3B8;margin-top:2px">Q7–12</div></div>
+    <div style="background:rgba(196,181,253,.15);border:1px solid rgba(196,181,253,.35);border-radius:10px;padding:12px;color:#fff"><div style="font-size:10px;letter-spacing:.1em;color:#C4B5FD;font-weight:800">ROUND 3</div><div style="font-size:13px;margin-top:4px;font-weight:700">Substitution</div><div style="font-size:11px;color:#94A3B8;margin-top:2px">Q13–18</div></div>
+    <div style="background:rgba(196,181,253,.15);border:1px solid rgba(196,181,253,.35);border-radius:10px;padding:12px;color:#fff"><div style="font-size:10px;letter-spacing:.1em;color:#C4B5FD;font-weight:800">ROUND 4</div><div style="font-size:13px;margin-top:4px;font-weight:700">Apps &amp; Brands</div><div style="font-size:11px;color:#94A3B8;margin-top:2px">Q19–24</div></div>
+    <div style="background:rgba(196,181,253,.15);border:1px solid rgba(196,181,253,.35);border-radius:10px;padding:12px;color:#fff"><div style="font-size:10px;letter-spacing:.1em;color:#C4B5FD;font-weight:800">ROUND 5</div><div style="font-size:13px;margin-top:4px;font-weight:700">Customer Scenarios</div><div style="font-size:11px;color:#94A3B8;margin-top:2px">Q25–30</div></div>
+  </div>
+
+  <div class="hp-bar" style="margin-top:30px"><div class="fill"></div></div>
+  <p style="color:#94A3B8;font-size:12px;margin-top:6px;font-weight:700">⚡ MOTOR PHANTOM · 30 HP &nbsp;·&nbsp; STATUS: HOSTILE</p>
+
+  <div class="page-num" style="color:#64748B">18</div>
+</section>
+
+<!-- ============= PAGE 19 — ROUND 1 (Q1-6) ENCLOSURES ============= -->
+<section class="page boss-page" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 1 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 1 · ENCLOSURES &amp; TYPES</div>
+    <div style="color:#34D399;font-weight:800;font-size:11px;letter-spacing:.1em">Q 1 → 6</div>
+  </div>
+  <div class="hp-bar" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="1"></div><div class="qcard" data-q="2"></div>
+    <div class="qcard" data-q="3"></div><div class="qcard" data-q="4"></div>
+    <div class="qcard" data-q="5"></div><div class="qcard" data-q="6"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">19</div>
+</section>
+
+<!-- ============= PAGE 20 — ROUND 2 (Q7-12) FRAMES & NAMEPLATE ============= -->
+<section class="page boss-page" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 2 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 2 · FRAMES &amp; NAMEPLATE</div>
+    <div style="color:#FACC15;font-weight:800;font-size:11px;letter-spacing:.1em">Q 7 → 12</div>
+  </div>
+  <div class="hp-bar r2" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="7"></div><div class="qcard" data-q="8"></div>
+    <div class="qcard" data-q="9"></div><div class="qcard" data-q="10"></div>
+    <div class="qcard" data-q="11"></div><div class="qcard" data-q="12"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">20</div>
+</section>
+
+<!-- ============= PAGE 21 — ROUND 3 (Q13-18) SUBSTITUTION ============= -->
+<section class="page boss-page" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 3 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 3 · SUBSTITUTION RULES</div>
+    <div style="color:#FB923C;font-weight:800;font-size:11px;letter-spacing:.1em">Q 13 → 18</div>
+  </div>
+  <div class="hp-bar r3" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="13"></div><div class="qcard" data-q="14"></div>
+    <div class="qcard" data-q="15"></div><div class="qcard" data-q="16"></div>
+    <div class="qcard" data-q="17"></div><div class="qcard" data-q="18"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">21</div>
+</section>
+
+<!-- ============= PAGE 22 — ROUND 4 (Q19-24) APPS & BRANDS ============= -->
+<section class="page boss-page" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 4 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 4 · APPLICATIONS &amp; BRANDS</div>
+    <div style="color:#F97316;font-weight:800;font-size:11px;letter-spacing:.1em">Q 19 → 24</div>
+  </div>
+  <div class="hp-bar r4" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="19"></div><div class="qcard" data-q="20"></div>
+    <div class="qcard" data-q="21"></div><div class="qcard" data-q="22"></div>
+    <div class="qcard" data-q="23"></div><div class="qcard" data-q="24"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">22</div>
+</section>
+
+<!-- ============= PAGE 23 — ROUND 5 (Q25-30) SCENARIOS ============= -->
+<section class="page boss-page" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 5 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 FINAL ROUND · CUSTOMER SCENARIOS</div>
+    <div style="color:#EF4444;font-weight:800;font-size:11px;letter-spacing:.1em">Q 25 → 30 · KILL SHOT</div>
+  </div>
+  <div class="hp-bar r5" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="25"></div><div class="qcard" data-q="26"></div>
+    <div class="qcard" data-q="27"></div><div class="qcard" data-q="28"></div>
+    <div class="qcard" data-q="29"></div><div class="qcard" data-q="30"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">23</div>
+</section>
+
+<!-- ============= PAGE 24 — RESULTS ============= -->
+<section class="page" id="resultsPage" data-section-id="results">
+  <div class="page-tag" style="color:#10B981">▸ FINAL BOSS · RESULTS</div>
+  <div class="level-banner lvl-test" style="margin-top:.4in">🎯 ANSWER KEY · YOUR RESULTS</div>
+  <h2 style="margin-top:14px">🗝️ The Key.</h2>
+  <p class="lead print-only" style="display:none">Score yourself. Tier yourself. Earn the badge.</p>
+
+  <div id="liveResults" class="interactive-only" style="margin-top:18px;background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:18px;padding:24px;color:#fff">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+      <div>
+        <p style="color:#94A3B8;font-size:11px;letter-spacing:.18em;font-weight:800;margin:0">▸ YOUR LIVE SCORE</p>
+        <p style="font-family:'Bricolage Grotesque';font-size:54px;font-weight:800;color:#FACC15;margin-top:4px;line-height:1">
+          <span id="scoreCorrect">0</span><span style="color:#475569">/30</span>
+        </p>
+        <p style="font-size:13px;color:#CBD5E1;margin-top:4px">Total XP: <b id="scoreXP" style="color:#34D399">0</b> <span style="color:#475569">/ 280</span></p>
+      </div>
+      <div id="tierBadge" style="text-align:center"></div>
+    </div>
+    <div style="margin-top:14px;background:#334155;height:14px;border-radius:7px;overflow:hidden;border:1px solid #475569">
+      <div id="scoreBar" style="height:100%;width:0%;background:linear-gradient(90deg,#10B981,#34D399);transition:width .4s ease"></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button id="submitBtn" style="background:linear-gradient(135deg,#10B981,#047857);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📤 SUBMIT TO TRAINER</button>
+      <button id="copyBtn" style="background:#6D28D9;color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📋 COPY RESULTS</button>
+      <button id="resetBtn" style="background:#1E293B;color:#FACC15;border:1px solid #475569;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">↻ RESTART QUIZ</button>
+    </div>
+    <div id="submitStatus" style="margin-top:10px;font-size:12px;font-weight:700;color:#94A3B8;min-height:18px;white-space:pre-wrap"></div>
+  </div>
+
+  <div class="answer-key-static">
+  <h3 style="margin-top:18px">🏆 Scoring tiers</h3>
+  <div class="tier tier-gold"><div class="medal">🥇</div><div><b>24–30 correct → MOTOR MASTERY.</b> Earn the ⚡ badge. You quote motors like an engineer.</div></div>
+  <div class="tier tier-silver"><div class="medal">🥈</div><div><b>18–23 correct → MOTOR-READY.</b> Re-run the APPLY level and re-fight.</div></div>
+  <div class="tier tier-bronze"><div class="medal">🥉</div><div><b>0–17 correct → BACK TO LEARN.</b> Re-read the enclosures &amp; nameplate pages. The Specter waits.</div></div>
+  </div>
+  <div class="page-num">24</div>
+</section>
+
+<!-- ============= PAGE 25 — LOOT / CHEAT SHEET ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ LOOT DROP</div>
+  <div class="level-banner" style="background:#EDE9FE;color:#5B21B6;margin-top:.4in">💎 POCKET CHEAT SHEET</div>
+  <h2 style="margin-top:14px">Tear-out card.</h2>
+  <p class="lead">Print it. Tape it next to your monitor. Reference forever.</p>
+
+  <div class="loot" style="margin-top:18px">
+    <div class="stamp">✂ TEAR HERE</div>
+
+    <h3>⚡ The 3 Core Questions</h3>
+    <p>1) Electrical: voltage / phase / freq / FLA · 2) Mechanical: HP / RPM / frame / mounting · 3) Environmental: indoor-outdoor / wet / chemical / hazardous</p>
+
+    <h3>📦 The 6 Motor Enclosures</h3>
+    <p><b>TEFC</b> general industrial · <b>ODP</b> clean indoor only · <b>Washdown</b> food &amp; pharma · <b>Severe Duty</b> mining/wastewater · <b>XP</b> hazardous (Class I/II/III) · <b>Inverter Duty</b> VFD required</p>
+
+    <h3>🔩 7-Check Substitution Card</h3>
+    <p>Same frame · same HP · same RPM · same voltage · same mounting · same-or-higher enclosure · inverter-duty if VFD. If any check fails → <b>stop, ask engineering</b>.</p>
+
+    <h3>🏭 Brand Match</h3>
+    <p>Severe / washdown → <b>Baldor-Reliance</b> · VFD / XP → <b>Toshiba</b> · broad catalog → <b>Nidec</b> · price → <b>TECO</b> · matched VFD pair → <b>Yaskawa</b><br><span style="font-size:11px;color:#475569">Also carried: GE Motors · Schneider Electric · North American Electric Motors · Tatung Motors</span></p>
+
+    <h3>🧠 The Memory Hook</h3>
+    <p style="font-size:16px;font-weight:800;color:#6D28D9">Read the nameplate. Match the environment. Confirm the frame. Quote the motor.</p>
+  </div>
+  <div class="page-num">25</div>
+</section>
+
+<!-- ============= PAGE 26 — TROPHY CASE ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ FINAL XP</div>
+  <div class="level-banner" style="background:#EDE9FE;color:#5B21B6;margin-top:.4in">🏅 TROPHY CASE</div>
+  <h2 style="margin-top:14px">Your earned XP.</h2>
+
+  <div class="trophy-grid">
+    <div class="trophy"><div class="icon">🧠</div><h3>NAMEPLATE READER</h3><div class="xp-num">+80 XP</div></div>
+    <div class="trophy"><div class="icon">👻</div><h3>MINI BOSSES</h3><div class="xp-num">+50 XP</div></div>
+    <div class="trophy"><div class="icon">🛠️</div><h3>MOTOR-READY</h3><div class="xp-num">+90 XP</div></div>
+    <div class="trophy"><div class="icon">⚡</div><h3>MOTOR MASTERY</h3><div class="xp-num">+60 XP</div></div>
+  </div>
+
+  <div class="factbox" style="margin-top:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="font-size:16px">TOTAL POSSIBLE XP</h3>
+      <div style="font-family:'Bricolage Grotesque';font-size:46px;font-weight:800;color:#6D28D9">280</div>
+    </div>
+    <hr class="faint">
+    <p style="font-size:12px;color:var(--slate-500)">Four product-mastery volumes down. Keep the streak going — VFDs &amp; Drives, Soft Starters, Motor Control Centers up next.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:18px">
+    🔓 <b>NEXT UNLOCKS:</b> VFDs &amp; Drives · Soft Starters · Motor Control Centers · Pump Controls
+  </div>
+  <div class="page-num">26</div>
+</section>
+
+<!-- ============= PAGE 27 — CLOSING ============= -->
+<section class="page closing-page" data-section-id="results">
+  <h1 style="font-size:84px">⚡</h1>
+  <h1 style="margin-top:14px">Read it. Match it.<br>Confirm. Quote.</h1>
+  <p style="font-size:20px;max-width:5.5in;margin:24px auto 0">Every motor call now follows the same script — nameplate first, environment second, frame third, substitute fourth. Every quote is the right motor, the first time.</p>
+
+  <div style="margin-top:40px;display:flex;gap:18px;flex-wrap:wrap;justify-content:center">
+    <div style="background:rgba(139,92,246,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(139,92,246,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#C4B5FD">🧠 LEARN the nameplate</div>
+    <div style="background:rgba(139,92,246,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(139,92,246,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#C4B5FD">🛠️ APPLY the 7 checks</div>
+    <div style="background:rgba(139,92,246,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(139,92,246,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#C4B5FD">🎯 TEST your subs</div>
+  </div>
+
+  <div style="margin-top:auto;padding-top:30px;text-align:center">
+    <p style="color:#FACC15;font-size:13px;letter-spacing:.18em;font-weight:800">▸ NEXT UP</p>
+    <p style="font-size:14px;color:#fff;margin-top:6px">VFDs &amp; Drives · Soft Starters · Motor Control Centers · Pump Controls</p>
+    <p style="margin-top:30px;color:#C4B5FD;font-size:12px;font-weight:800;letter-spacing:.18em">RSP INDUSTRIAL · PRODUCT MASTERY · VOL 04</p>
+  </div>
+</section>
+
+<!-- ADMIN OVERLAY (browser only) -->
+<div id="adminOverlay" class="interactive-only"></div>
+
+<script src="../shared/module.js?v=editor-blocks-2-page-delete"></script>
+<script>
+RSPModule.init({
+  moduleId:   "motor-mastery",
+  moduleName: "Motor Mastery",
+  moduleIcon: "⚡",
+
+  totalQuestions: 30,
+  passGold:       24,
+  passSilver:     18,
+  pageXpTotal:    170,   // 8 LEARN × 10 + 6 APPLY × 15
+  minibossXpTotal: 50,
+  adminPassword:  (window.RSP_CONFIG && window.RSP_CONFIG.adminPassword) || "",
+  pumbleWebhookUrl: "",
+  storageKey: "rsp_motor_progress",
+
+  tierBadges: {
+    gold:   { name:"MOTOR MASTERY",  msg:"Top tier — you quote motors like an engineer." },
+    silver: { name:"MOTOR-READY",    msg:"Re-run APPLY level and re-fight the boss." },
+    bronze: { name:"BACK TO LEARN",  msg:"Re-read enclosures &amp; nameplate. Specter waits." }
+  },
+  tierSubmitText: {
+    gold:   "🥇 Motor Mastery",
+    silver: "🥈 Motor-Ready — Re-run APPLY level",
+    bronze: "🥉 Needs Re-do — Back to LEARN"
+  },
+
+  // -------- THE 30-QUESTION BOSS FIGHT --------
+  quiz: [
+    // ROUND 1 — Enclosures & Types
+    {n:1,  q:"TEFC stands for:", opts:{A:"Triple-Enclosed Fan Cycle",B:"Totally Enclosed Fan Cooled",C:"Top-Efficiency Fan Cooler",D:"Thermal-Engineered Frame Construction"}, c:"B"},
+    {n:2,  q:"Which motor enclosure is best for dusty, outdoor industrial use?", opts:{A:"ODP",B:"TEFC",C:"Open frame",D:"Drip proof only"}, c:"B"},
+    {n:3,  q:"ODP motors should be used ONLY:", opts:{A:"Outdoors in mining",B:"In clean indoor environments",C:"Submerged",D:"On VFDs"}, c:"B"},
+    {n:4,  q:"Washdown duty motors feature:", opts:{A:"Plastic housings",B:"Epoxy coatings, stainless hardware, sealed bearings, cleanable housing",C:"Open vents",D:"Cast iron only"}, c:"B"},
+    {n:5,  q:"An explosion-proof (XP) motor is designed for:", opts:{A:"Clean indoor offices",B:"Class I, II, III hazardous locations with ignition risk",C:"Submerged operation",D:"VFD systems only"}, c:"B"},
+    {n:6,  q:"Severe duty motors are best matched to:", opts:{A:"HVAC fans in offices",B:"Mining, asphalt plants, wastewater — harsh industrial loads",C:"Clean rooms",D:"Food prep lines"}, c:"B"},
+
+    // ROUND 2 — Frames & Nameplate
+    {n:7,  q:"A NEMA frame size controls all of the following EXCEPT:", opts:{A:"Shaft diameter and length",B:"Bolt hole pattern and mounting height",C:"Internal winding color",D:"Overall footprint"}, c:"C"},
+    {n:8,  q:"A 143T or 145T frame is typically used for:", opts:{A:"Heavy mining motors",B:"Common pump motors (1–2 HP)",C:"Fractional HP fans",D:"15+ HP conveyors"}, c:"B"},
+    {n:9,  q:"You cannot substitute a different-frame motor UNLESS:", opts:{A:"It's the same brand",B:"The customer modifies the mounting",C:"It's painted the same color",D:"It has the same RPM"}, c:"B"},
+    {n:10, q:"\"Service Factor\" (SF) on a nameplate indicates:", opts:{A:"Warranty period",B:"Allowable overload above rated HP",C:"Maintenance interval",D:"Replacement frame number"}, c:"B"},
+    {n:11, q:"NEMA Premium refers to a motor's:", opts:{A:"Paint quality",B:"Efficiency rating",C:"Warranty length",D:"Bolt pattern grade"}, c:"B"},
+    {n:12, q:"The nameplate field that confirms VFD compatibility is the:", opts:{A:"Service factor",B:"Class F/H insulation rating + NEMA MG1 Part 31",C:"Frame suffix",D:"Voltage rating"}, c:"B"},
+
+    // ROUND 3 — Substitution Rules
+    {n:13, q:"Substituting TEFC for ODP is:", opts:{A:"Always forbidden",B:"Allowed (upgrade)",C:"Allowed only on VFDs",D:"Requires engineering"}, c:"B"},
+    {n:14, q:"Substituting ODP for TEFC is:", opts:{A:"Allowed",B:"NOT allowed — never go down a tier",C:"Allowed if same HP",D:"Allowed indoors only"}, c:"B"},
+    {n:15, q:"A safe motor substitution requires:", opts:{A:"Same paint color",B:"Same frame, same HP, same RPM (minimum)",C:"Same brand only",D:"Same warranty"}, c:"B"},
+    {n:16, q:"Substituting LOWER HP is:", opts:{A:"Always fine",B:"NOT allowed without engineering approval",C:"Allowed indoors",D:"Allowed if newer"}, c:"B"},
+    {n:17, q:"Inverter-duty motor replacing a standard motor is:", opts:{A:"Forbidden",B:"Allowed (upgrade)",C:"Allowed only on pumps",D:"Requires VFD reprogramming"}, c:"B"},
+    {n:18, q:"Putting a non-inverter motor on a VFD will:", opts:{A:"Work fine forever",B:"Likely fail — PWM spikes destroy standard insulation",C:"Only fail above 60 Hz",D:"Boost efficiency"}, c:"B"},
+
+    // ROUND 4 — Applications & Brands
+    {n:19, q:"Best motor type for HVAC fans in a clean mechanical room:", opts:{A:"Severe duty cast iron",B:"ODP or TEFC",C:"Explosion-proof",D:"Stainless washdown"}, c:"B"},
+    {n:20, q:"Best motor for a chemical processing facility:", opts:{A:"ODP",B:"XP (explosion-proof) or stainless",C:"Washdown duty only",D:"Standard rolled steel"}, c:"B"},
+    {n:21, q:"Best motor for any VFD-controlled system:", opts:{A:"ODP",B:"Inverter-duty (NEMA MG1 Part 31)",C:"Severe duty",D:"Standard TEFC"}, c:"B"},
+    {n:22, q:"Baldor-Reliance's strongest positioning is:", opts:{A:"Cheapest motors",B:"Premium reliability, severe-duty, and washdown / stainless options",C:"Sub-fractional HP only",D:"Plastic enclosures"}, c:"B"},
+    {n:23, q:"Toshiba Motors is top-tier for:", opts:{A:"Washdown food motors only",B:"VFD-duty and explosion-proof motors",C:"Sub-fractional HP",D:"DC motors only"}, c:"B"},
+    {n:24, q:"Nidec (formerly U.S. Motors) is best positioned as:", opts:{A:"Premium severe-duty only",B:"A broad general-industrial catalog (HVAC, pumps, fans, replacement motors)",C:"Hazardous-location specialist",D:"DC motors only"}, c:"B"},
+
+    // ROUND 5 — Customer Scenarios
+    {n:25, q:"Customer runs a daily-hosed food processing line. Recommend:", opts:{A:"Standard TEFC",B:"Washdown duty or stainless steel motor",C:"ODP",D:"XP rated"}, c:"B"},
+    {n:26, q:"Customer says \"the motor we put on the VFD failed within a year.\" Most likely cause:", opts:{A:"Wrong voltage",B:"Non-inverter motor couldn't handle PWM switching",C:"Wrong color",D:"VFD overheated"}, c:"B"},
+    {n:27, q:"Customer wants \"same HP, same RPM\" but the new motor doesn't fit. First check:", opts:{A:"Voltage",B:"Frame size match (including suffix)",C:"Brand",D:"Bearing type"}, c:"B"},
+    {n:28, q:"Customer asks to swap to a smaller cheaper motor (lower HP). Correct response:", opts:{A:"Quote it",B:"Stop. Lower HP requires engineering approval",C:"Recommend ODP",D:"Add a VFD"}, c:"B"},
+    {n:29, q:"The three foundational questions before ANY motor recommendation:", opts:{A:"Color, brand, price",B:"Electrical, mechanical, environmental",C:"Voltage, current, resistance",D:"Indoor, outdoor, ambient"}, c:"B"},
+    {n:30, q:"The single phrase that builds the most engineer credibility is:", opts:{A:"\"What's your budget?\"",B:"\"Let me read the nameplate first.\"",C:"\"It's all the same.\"",D:"\"Trust me on this one.\""}, c:"B"}
+  ],
+
+  // -------- MINI-BOSSES --------
+  minibosses: {
+    'frame-phantom': {
+      name: 'FRAME PHANTOM',
+      icon: '👻',
+      tagline: 'Guardian of the NEMA Specs',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"A NEMA frame primarily controls:", opts:{A:"Paint color",B:"Shaft, bolt pattern, mounting height, footprint",C:"Warranty length",D:"Voltage rating"}, c:"B"},
+        {q:"Can you swap a different-frame motor into the same machine?", opts:{A:"Yes, always",B:"No — customer must modify the mounting",C:"Only if same brand",D:"Only on VFDs"}, c:"B"},
+        {q:"TEFC means:", opts:{A:"Tri-Enclosed Frame Constant",B:"Totally Enclosed Fan Cooled",C:"Temperature-Engineered Fan Channel",D:"Top-Efficiency Frame Class"}, c:"B"},
+        {q:"ODP motors work best in:", opts:{A:"Outdoor wet locations",B:"Clean indoor environments",C:"Mining sites",D:"Food washdown lines"}, c:"B"},
+        {q:"Severe duty motors are designed for:", opts:{A:"Office HVAC",B:"Harsh industrial loads (mining, wastewater, asphalt)",C:"Clean rooms",D:"Pharmaceutical washdown"}, c:"B"}
+      ]
+    },
+    'sub-specter': {
+      name: 'SUBSTITUTION SPECTER',
+      icon: '🪞',
+      tagline: 'Mirror of the 7 Checks',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"The safest motor substitution requires:", opts:{A:"Same brand only",B:"Same frame, same HP, same RPM (minimum)",C:"Same color",D:"Same warranty"}, c:"B"},
+        {q:"ODP cannot replace TEFC because:", opts:{A:"It's heavier",B:"ODP is open-frame and lacks dust/moisture protection",C:"It costs more",D:"It runs at lower RPM"}, c:"B"},
+        {q:"On a VFD-controlled system you MUST use:", opts:{A:"ODP motor",B:"Inverter-duty motor (NEMA MG1 Part 31)",C:"Severe duty cast iron",D:"Standard TEFC"}, c:"B"},
+        {q:"Best motor for a hazardous Class I location:", opts:{A:"ODP",B:"Explosion-proof (XP)",C:"Severe duty",D:"Washdown"}, c:"B"},
+        {q:"Customer asks for a lower-HP swap. Your response:", opts:{A:"Quote it immediately",B:"Stop. Lower HP requires engineering approval.",C:"Recommend ODP",D:"Add a soft starter"}, c:"B"}
+      ]
+    }
+  },
+
+  // -------- SIDE MAP --------
+  mapSections: [
+    {id:'intro',     name:'Start',            icon:'🏁', meta:'Pages 1–3',    firstPage:1},
+    {id:'foundation',name:'Foundation',       icon:'⚡', meta:'Page 4',       firstPage:4},
+    {id:'core-qs',   name:'Three Questions',  icon:'❓', meta:'Page 5',       firstPage:5},
+    {id:'enclosures',name:'Enclosure Types',  icon:'📦', meta:'Pages 6–8',    firstPage:6},
+    {id:'frame',     name:'Frame Sizes',      icon:'🔩', meta:'Page 9',       firstPage:9},
+    {id:'materials', name:'Materials & Duty', icon:'⏱️', meta:'Page 10',      firstPage:10},
+    {id:'nameplate', name:'Nameplate',        icon:'🧾', meta:'Page 11',      firstPage:11},
+    {id:'mb1',       name:'Frame Phantom',    icon:'👻', meta:'Mini Boss',    firstPage:11, isBoss:true, bossId:'frame-phantom'},
+    {id:'sub-rules', name:'Substitution',     icon:'🔄', meta:'Pages 12–13',  firstPage:12},
+    {id:'app-matrix',name:'App Matrix',       icon:'📊', meta:'Page 14',      firstPage:14},
+    {id:'brands',    name:'Brands',           icon:'🏭', meta:'Page 15',      firstPage:15},
+    {id:'selection', name:'Quick Selection',  icon:'🎯', meta:'Pages 16–17',  firstPage:16},
+    {id:'mb2',       name:'Sub Specter',      icon:'🪞', meta:'Mini Boss',    firstPage:16, isBoss:true, bossId:'sub-specter'},
+    {id:'finalboss', name:'Boss Fight',       icon:'🐲', meta:'30 Questions', firstPage:18, isBoss:true, isFinal:true},
+    {id:'results',   name:'Results',          icon:'🏆', meta:'Trophy Case',  firstPage:24}
+  ],
+
+  pageRanges: [
+    {section:'intro',      from:1,  to:3},
+    {section:'foundation', from:4,  to:4},
+    {section:'core-qs',    from:5,  to:5},
+    {section:'enclosures', from:6,  to:8},
+    {section:'frame',      from:9,  to:9},
+    {section:'materials',  from:10, to:10},
+    {section:'nameplate',  from:11, to:11},
+    {section:'sub-rules',  from:12, to:13},
+    {section:'app-matrix', from:14, to:14},
+    {section:'brands',     from:15, to:15},
+    {section:'selection',  from:16, to:17},
+    {section:'finalboss',  from:18, to:23},
+    {section:'results',    from:24, to:27}
+  ]
+});
+</script>
+
+</body>
+</html>

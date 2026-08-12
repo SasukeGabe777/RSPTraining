@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>New Employee Onboarding · RSP Training Portal</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F172A; --bg-2:#1E293B; --ink:#0F172A;
+    --bolt:#FACC15; --bolt-deep:#CA8A04;
+    --volt-1:#1E40AF; --volt-2:#3B82F6;
+    --green-1:#10B981; --green-2:#34D399;
+    --orange-1:#F97316; --red:#EF4444;
+    --slate-50:#F8FAFC; --slate-200:#E2E8F0; --slate-500:#64748B; --slate-700:#334155;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:radial-gradient(circle at top right,#1E293B 0%,#0F172A 70%);
+    font-family:'Inter',system-ui,sans-serif;color:#fff;min-height:100vh;
+  }
+  h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;line-height:1.05;letter-spacing:-.01em}
+  .wrap{max-width:1280px;margin:0 auto;padding:40px 32px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+  .pretitle{color:var(--bolt);font-size:11px;letter-spacing:.18em;font-weight:800}
+  .topbar h1{font-size:48px;color:#fff;margin-top:4px}
+  .tagline{color:#CBD5E1;margin-top:6px}
+
+  /* User pill (top right) */
+  .user-pill{
+    background:linear-gradient(135deg,#1E293B,#0F172A);
+    border:2px solid #334155;border-radius:14px;padding:14px 18px;
+    display:flex;align-items:center;gap:14px;min-width:280px;
+  }
+  .user-avatar{width:48px;height:48px;border-radius:50%;flex:0 0 48px;overflow:hidden;background:#0F172A;cursor:pointer;border:2px solid transparent;transition:border-color .15s ease}
+  .user-avatar:hover{border-color:var(--bolt)}
+  .user-avatar svg{display:block;width:100%;height:100%}
+  .user-name{font-weight:800;font-size:14px;color:#fff}
+  .user-meta{font-size:11px;color:#94A3B8;margin-top:1px}
+  .user-tier{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.05em;margin-top:4px;background:#0F172A;border:1px solid #334155}
+  .user-actions{margin-left:auto;display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+  .user-actions a{color:#64748B;font-size:11px;text-decoration:none}
+  .user-actions a:hover{color:var(--bolt)}
+
+  /* Top nav */
+  .topnav{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .nav-link{padding:8px 14px;border-radius:8px;background:#1E293B;color:#94A3B8;text-decoration:none;font-weight:700;font-size:12px;letter-spacing:.05em;border:1px solid #334155}
+  .nav-link:hover{background:#334155;color:#fff}
+  .nav-link.active{background:#FACC15;color:#0F172A;border-color:#FACC15}
+
+  /* Avatar picker modal */
+  #avatarOverlay{
+    position:fixed;inset:0;background:rgba(15,23,42,.96);z-index:9998;
+    display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);
+  }
+  #avatarOverlay.show{display:flex}
+  .avatar-modal{
+    background:linear-gradient(160deg,#1E293B,#0F172A);
+    border:2px solid #312E81;border-radius:24px;padding:34px;
+    max-width:680px;width:100%;max-height:90vh;overflow-y:auto;
+  }
+  .avatar-modal h2{color:#FACC15;font-size:28px;font-family:'Bricolage Grotesque',sans-serif}
+  .avatar-modal .sub{color:#94A3B8;font-size:13px;margin-top:6px}
+  .avatar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:24px}
+  @media(max-width:600px){.avatar-grid{grid-template-columns:repeat(3,1fr)}}
+  .avatar-choice{
+    background:#0F172A;border:2px solid #334155;border-radius:14px;
+    padding:12px 6px;text-align:center;cursor:pointer;transition:all .15s ease;
+  }
+  .avatar-choice:hover{border-color:#FACC15;transform:translateY(-2px)}
+  .avatar-choice.selected{border-color:#FACC15;background:rgba(250,204,21,.1);box-shadow:0 0 24px rgba(250,204,21,.2)}
+  .avatar-choice .av-name{color:#fff;font-weight:800;font-size:11px;margin-top:6px}
+  .avatar-choice .av-tag{color:#64748B;font-size:9px;margin-top:1px;line-height:1.2}
+  .avatar-modal .actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
+  .avatar-modal button.cancel{background:transparent;color:#94A3B8;border:1px solid #475569;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:700;font-family:inherit}
+  .avatar-modal button.confirm{background:linear-gradient(135deg,#FACC15,#CA8A04);color:#0F172A;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-weight:800;font-family:inherit;font-size:13px}
+  .avatar-modal button.confirm:disabled{opacity:.4;cursor:not-allowed}
+
+  /* Lifetime XP bar */
+  .xp-banner{
+    margin-top:30px;background:linear-gradient(135deg,#1E293B,#0F172A);
+    border:2px solid #312E81;border-radius:18px;padding:24px 28px;
+    display:flex;align-items:center;gap:24px;flex-wrap:wrap;
+  }
+  .xp-stat .label{color:#94A3B8;font-size:10px;letter-spacing:.18em;font-weight:800}
+  .xp-stat .num{font-family:'Bricolage Grotesque';font-size:42px;font-weight:800;color:#FACC15;line-height:1}
+  .xp-stat .small{color:#475569;font-size:18px;font-weight:600}
+  .xp-bar{flex:1;min-width:240px;display:flex;flex-direction:column;gap:6px}
+  .xp-bar .meta{color:#94A3B8;font-size:11px;font-weight:600;display:flex;justify-content:space-between}
+  .xp-bar .track{background:#1E293B;height:14px;border-radius:7px;overflow:hidden;border:1px solid #334155}
+  .xp-bar .fill{height:100%;background:linear-gradient(90deg,#FACC15,#CA8A04);transition:width .5s ease}
+
+  /* Category section */
+  .category{
+    --cat-color:#FACC15;
+    margin-top:36px;padding:24px;border:1px solid rgba(51,65,85,.9);border-radius:24px;
+    background:linear-gradient(180deg,rgba(30,41,59,.88),rgba(15,23,42,.72));
+    position:relative;overflow:hidden;
+  }
+  .category::before{
+    content:"";position:absolute;left:0;top:0;right:0;height:4px;
+    background:linear-gradient(90deg,var(--cat-color),transparent 80%);
+  }
+  .category-header{
+    display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;
+    margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid rgba(51,65,85,.85);
+  }
+  .category-header .ico{
+    width:52px;height:52px;border-radius:16px;display:grid;place-items:center;
+    font-size:26px;background:rgba(15,23,42,.82);box-shadow:inset 0 0 0 1px var(--cat-color);
+  }
+  .category-copy .eyebrow{color:var(--cat-color);font-size:10px;font-weight:800;letter-spacing:.16em}
+  .category-header h2{font-size:24px;color:#fff}
+  .category-header .count{
+    color:#CBD5E1;font-size:11px;font-weight:800;letter-spacing:.1em;
+    padding:10px 12px;border-radius:999px;background:rgba(15,23,42,.82);border:1px solid rgba(71,85,105,.9);
+  }
+
+  /* Module grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+  .card{
+    background:linear-gradient(160deg,#1E293B,#0F172A);
+    border:2px solid #334155;border-radius:18px;padding:0;
+    cursor:pointer;text-decoration:none;color:#fff;
+    display:flex;flex-direction:column;
+    transition:all .2s ease;position:relative;overflow:hidden;
+  }
+  .card:hover{transform:translateY(-3px);border-color:var(--bolt);box-shadow:0 12px 40px rgba(250,204,21,.15)}
+  .card.completed{border-color:#10B981}
+  .card.locked{opacity:.5;cursor:not-allowed;pointer-events:none}
+  /* cover image area */
+  .card-cover{
+    position:relative;aspect-ratio:3/4;height:auto;overflow:hidden;flex-shrink:0;
+    background:linear-gradient(160deg,#1E293B,#0F172A);
+  }
+  .card-cover-img{
+    display:block;width:100%;height:100%;
+    object-fit:contain;
+    transition:transform .35s ease;
+  }
+  .card:hover .card-cover-img{transform:scale(1.02)}
+  .card-cover-placeholder{
+    width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 50% 110%,rgba(250,204,21,.07),transparent 65%),
+               linear-gradient(160deg,#1E293B,#0F172A);
+    font-size:54px;line-height:1;
+  }
+  /* card body */
+  .card-body{padding:14px 20px 20px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .card .meta{display:flex;justify-content:space-between;align-items:center;color:#64748B;font-size:11px;font-weight:700;letter-spacing:.05em}
+  .card h3{font-size:17px;color:#fff;line-height:1.25}
+  .card .desc{color:#94A3B8;font-size:12px;line-height:1.45;flex:1}
+  .card .progress-wrap{display:flex;flex-direction:column;gap:4px;margin-top:4px}
+  .card .progress-bar{background:#0F172A;height:6px;border-radius:3px;overflow:hidden}
+  .card .progress-fill{height:100%;background:linear-gradient(90deg,#FACC15,#CA8A04);transition:width .4s ease}
+  .card.completed .progress-fill{background:linear-gradient(90deg,#10B981,#34D399)}
+  .card .progress-text{font-size:10px;color:#64748B;display:flex;justify-content:space-between;font-weight:700}
+  .card .badge{position:absolute;top:12px;right:12px;font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;letter-spacing:.05em;z-index:1}
+  .badge-completed{background:#065F46;color:#A7F3D0}
+  .badge-progress{background:#1E40AF;color:#BFDBFE}
+  .badge-new{background:#FACC15;color:#0F172A}
+  .badge-locked{background:rgba(15,23,42,.85);color:#64748B;backdrop-filter:blur(4px)}
+  .card .prereq-note{color:#FCA5A5;font-size:10px;font-weight:700;letter-spacing:.05em}
+
+  /* Required-for-your-role marker (learner paths) */
+  .req-chip{
+    display:inline-flex;align-items:center;gap:3px;padding:1px 7px;border-radius:999px;
+    background:rgba(139,92,246,.16);color:#C4B5FD;border:1px solid rgba(139,92,246,.45);
+    font-size:9.5px;font-weight:800;letter-spacing:.08em;margin-right:6px;
+  }
+  .card.required{border-color:rgba(139,92,246,.55)}
+  .card.required:hover{border-color:#A78BFA}
+
+  /* Login modal */
+  #loginOverlay{
+    position:fixed;inset:0;
+    background:radial-gradient(circle at top right,#1E40AF 0%,#0F172A 70%);
+    z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  #loginOverlay.hidden{display:none}
+  .login-card{
+    background:#fff;border-radius:24px;padding:48px 40px;max-width:420px;width:100%;
+    box-shadow:0 30px 80px rgba(0,0,0,.5);text-align:center;color:#0F172A;
+    position:relative;overflow:hidden;
+  }
+  .login-card .bolt-bg{position:absolute;top:-30px;right:-30px;font-size:140px;opacity:.06}
+  .login-card .pretitle{color:#1E40AF;font-size:11px;font-weight:800;letter-spacing:.2em}
+  .login-card h1{font-size:34px;color:#0F172A;margin-top:6px}
+  .login-card .sub{color:#64748B;font-size:14px;margin-top:6px}
+  .login-card label{display:block;text-align:left;margin-top:18px;font-size:11px;font-weight:800;color:#475569;letter-spacing:.1em}
+  .login-card input{
+    width:100%;padding:13px 14px;border:2px solid #E2E8F0;border-radius:10px;
+    font-size:14px;font-family:inherit;margin-top:6px;background:#F8FAFC;
+  }
+  .login-card input:focus{outline:none;border-color:#1E40AF;background:#fff}
+  .login-card .err{color:#EF4444;font-size:12px;font-weight:700;margin-top:8px;min-height:14px;text-align:left}
+  .login-card button{
+    width:100%;padding:14px;background:linear-gradient(135deg,#1E40AF,#3B82F6);
+    color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:800;
+    cursor:pointer;margin-top:14px;letter-spacing:.05em;font-family:inherit;
+  }
+  .login-card button:hover{transform:translateY(-1px)}
+  .login-card button:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+  .login-card .btn-create{background:transparent;color:#64748B;border:2px solid #E2E8F0;margin-top:8px}
+  .login-card .btn-create:hover{border-color:#94A3B8;color:#334155;background:#F8FAFC;transform:none}
+
+  /* Empty state */
+  .empty{text-align:center;padding:60px 20px;color:#64748B}
+  .empty .ico{font-size:64px;margin-bottom:14px}
+
+  /* Footer */
+  .footer{margin-top:60px;padding:24px 0;border-top:1px solid #1E293B;color:#475569;font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+</style>
+<link rel="stylesheet" href="brand.css">
+</head>
+<body>
+
+<!-- Login overlay -->
+<div id="loginOverlay">
+  <div class="login-card">
+    <div class="rsp-login-logo"><img src="images/rsp-industrial-logo.png" alt="RSP Industrial"></div>
+    <div class="bolt-bg">⚡</div>
+    <div class="pretitle">RSP INDUSTRIAL · TRAINING PORTAL</div>
+    <h1>Welcome.</h1>
+    <p class="sub">Sign in to track your training progress across all modules.</p>
+    <label for="loginFirst">First name</label>
+    <input type="text" id="loginFirst" placeholder="First" autocomplete="given-name"/>
+    <label for="loginLast">Last name</label>
+    <input type="text" id="loginLast" placeholder="Last" autocomplete="family-name"/>
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn">Log In →</button>
+    <button id="createBtn" class="btn-create">Create Account</button>
+  </div>
+</div>
+
+<!-- Avatar picker modal -->
+<div id="avatarOverlay">
+  <div class="avatar-modal">
+    <h2>Pick your avatar</h2>
+    <p class="sub">This is how teammates will see you across the portal. You can change it anytime.</p>
+    <div class="avatar-grid" id="avatarGrid"></div>
+    <div class="actions">
+      <button class="cancel" id="avatarCancel">Cancel</button>
+      <button class="confirm" id="avatarConfirm" disabled>Confirm Avatar →</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" id="portal" style="display:none">
+  <div class="topbar">
+    <div>
+      <img class="rsp-brand-logo" src="images/rsp-industrial-logo.png" alt="RSP Industrial">
+      <div class="pretitle">RSP INDUSTRIAL · TRAINING PORTAL</div>
+      <h1 id="brandTitle">Training Portal</h1>
+      <p class="tagline" id="brandTagline"></p>
+      <div class="topnav">
+        <a class="nav-link" href="index.html">🏠 All Hubs</a>
+        <a class="nav-link active" href="onboarding.html">🧭 Onboarding</a>
+        <a class="nav-link" href="badges.html">🏅 Badges</a>
+        <a class="nav-link" href="mastery.html">🏆 Mastery</a>
+        <a class="nav-link" href="team.html">🤝 Team</a>
+      </div>
+    </div>
+    <div class="user-pill">
+      <div class="user-avatar" id="userAvatar" title="Click to change avatar"></div>
+      <div>
+        <div class="user-name" id="userName">—</div>
+        <div class="user-meta" id="userMeta">—</div>
+        <div class="user-tier" id="userTier" style="display:none"></div>
+      </div>
+      <div class="user-actions">
+        <a href="#" id="changeAvatarLink">Change avatar</a>
+        <a href="#" id="logoutLink">Log out</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lifetime XP banner -->
+  <div class="xp-banner">
+    <div class="xp-stat">
+      <div class="label">LIFETIME XP</div>
+      <div><span class="num" id="lifetimeXP">0</span> <span class="small">/ <span id="totalAvailableXP">0</span></span></div>
+    </div>
+    <div class="xp-stat">
+      <div class="label">MODULES COMPLETED</div>
+      <div><span class="num" id="modulesCompleted">0</span> <span class="small">/ <span id="totalModules">0</span></span></div>
+    </div>
+    <div class="xp-stat">
+      <div class="label">BADGES EARNED</div>
+      <div><span class="num" id="badgesEarned">0</span></div>
+    </div>
+    <div class="xp-bar">
+      <div class="meta"><span>Path to Master</span><span id="xpPercent">0%</span></div>
+      <div class="track"><div class="fill" id="lifetimeXpFill"></div></div>
+    </div>
+  </div>
+
+  <!-- Module categories -->
+  <div id="categories"></div>
+
+  <div class="footer">
+    <div>RSP Industrial · Training Portal · v1</div>
+    <div><a href="admin.html?admin=true" style="color:#64748B;text-decoration:none">Admin →</a></div>
+  </div>
+</div>
+
+<script src="manifest.js"></script>
+<script src="avatars.js"></script>
+<script src="badges.js"></script>
+<script src="paths.js"></script>
+<script src="config.local.js"></script>
+<script src="cloud.js"></script>
+<script src="welcome.js"></script>
+<script>
+(function(){
+  const KEY_USER = 'rsp_user';
+  const KEY_LEDGER = 'rsp_ledger';
+  let mem = {};
+  function lsGet(k){try{return localStorage.getItem(k)}catch(e){return mem[k]||null}}
+  function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){mem[k]=v}}
+  function lsDel(k){try{localStorage.removeItem(k)}catch(e){delete mem[k]}}
+
+  // Master / admin usernames that bypass every prerequisite lock on the hub.
+  // Sign in with any of these names to review every module regardless of
+  // completion progress. Case-insensitive.
+  function isAdminUser(u){
+    return !!(window.RSP_MANIFEST && window.RSP_MANIFEST.isAdminUser(u));
+  }
+
+  let user = null;
+  let ledger = {};
+  let pendingAvatar = null;
+  let avatarPickerFirstTime = false;
+  let moduleConfigs = window.RSP_MANIFEST.readModuleConfigCache ? window.RSP_MANIFEST.readModuleConfigCache() : {};
+  let paths = window.RSPPaths ? window.RSPPaths.readCache() : [];
+
+  const HUB = 'onboarding';
+
+  function init(){
+    const m = window.RSP_MANIFEST;
+    if(!m){ alert('Manifest not loaded'); return; }
+    lsSet('rsp_last_hub', HUB);
+    const hubCfg = (window.RSP_HUBS && window.RSP_HUBS[HUB]) || {};
+    document.getElementById('brandTitle').textContent = hubCfg.label || 'New Employee Onboarding';
+    document.getElementById('brandTagline').textContent = hubCfg.description || '';
+
+    const u = lsGet(KEY_USER);
+    if(u){
+      try{
+        user = JSON.parse(u);
+        // Existing user without an avatar? Prompt them to pick one.
+        if(!user.avatar){ enterPortal(); openAvatarPicker(true); return; }
+        enterPortal();
+        return;
+      }catch(e){}
+    }
+    showLogin();
+  }
+
+  function showLogin(){
+    document.getElementById('loginOverlay').classList.remove('hidden');
+    document.getElementById('portal').style.display = 'none';
+    setTimeout(() => document.getElementById('loginFirst').focus(), 100);
+  }
+
+  async function enterPortal(){
+    document.getElementById('loginOverlay').classList.add('hidden');
+    document.getElementById('portal').style.display = 'block';
+    loadLedger();
+    renderUser();
+    renderModules();
+    renderStats();
+
+    // Fetch ordering/categories and learner progress independently. The cached
+    // configuration above keeps the first paint in the same order as admin.
+    if(window.RSPCloud && window.RSPCloud.isConfigured){
+      const moduleSync = window.RSP_MANIFEST.loadModuleConfigs({current: moduleConfigs})
+        .then(function(map){
+          moduleConfigs = map;
+          renderModules();
+          renderStats();
+        })
+        .catch(function(e){
+          console.warn('Module config refresh failed; using last-known-good configuration:', e);
+        });
+      // Paths decide which modules carry the "required for your role" marker.
+      const pathSync = window.RSPPaths.loadPaths({current: paths})
+        .then(function(rows){
+          paths = rows;
+          renderModules();
+        })
+        .catch(function(e){
+          console.warn('Path refresh failed; using last-known-good paths:', e);
+        });
+      const progressSync = (async function(){
+        await window.RSPCloud.upsertUser(user);
+        await window.RSPCloud.syncDown(user.name);
+        // syncDown refreshes the admin-assigned roles on the user record.
+        try{ const refreshed = JSON.parse(lsGet(KEY_USER) || 'null'); if(refreshed) user = refreshed; }catch(e){}
+        loadLedger();
+        renderUser();
+        renderModules();
+        renderStats();
+        await window.RSPCloud.syncUp(user.name);
+      })().catch(function(e){
+        console.warn('Cloud sync failed (portal still works locally):', e);
+      });
+      await Promise.all([moduleSync, pathSync, progressSync]);
+      renderModules();
+    }
+  }
+
+  function loadLedger(){
+    try{
+      ledger = JSON.parse(lsGet(KEY_LEDGER) || '{}');
+    }catch(e){ ledger = {}; }
+    if(!ledger[user.name]){
+      ledger[user.name] = { name: user.name, id: user.id, startedAt: user.startedAt, modules: {} };
+      lsSet(KEY_LEDGER, JSON.stringify(ledger));
+    }
+  }
+
+  function userProgress(modId){
+    return (ledger[user.name] && ledger[user.name].modules && ledger[user.name].modules[modId]) || null;
+  }
+
+  function moduleStatus(mod){
+    const p = userProgress(mod.id);
+    if(!p) return {status:'new', xp:0, pct:0, bestPct:0};
+    const xp = p.totalXP || 0;
+    const xpPct = mod.xp > 0 ? Math.min(100, Math.round(xp/mod.xp*100)) : 0;
+    const bestPct = p.bestPct || 0;
+    if(p.completedAt) return {status:'completed', xp, pct:100, bestPct:bestPct||100};
+    if(p.attempts > 0) return {status:'progress', xp, pct:xpPct||5, bestPct};
+    if((p.openedAt || p.lastAttemptAt) && xpPct === 0) return {status:'progress', xp:0, pct:5, bestPct:0};
+    if(xp > 0) return {status:'progress', xp, pct:xpPct, bestPct:0};
+    return {status:'new', xp:0, pct:0, bestPct:0};
+  }
+
+  function renderUser(){
+    document.getElementById('userName').textContent = user.name;
+    document.getElementById('userMeta').textContent = user.id || 'No ID provided';
+    const av = document.getElementById('userAvatar');
+    if(user.avatar && window.renderAvatar){
+      av.innerHTML = window.renderAvatar(user.avatar, 48);
+    } else {
+      av.textContent = (user.name.trim().charAt(0).toUpperCase() || '?');
+    }
+    // Tier pill — uses the ratchet (highest ever earned, never decreases),
+    // scoped to this hub's XP only.
+    const learner = ledger[user.name] || { modules: {} };
+    const lifetimeXP = window.hubScopedXP ? window.hubScopedXP(HUB, learner.modules, moduleConfigs) : 0;
+    if(window.computeTier){
+      const tier = window.computeTier(HUB, lifetimeXP, learner.earnedTiers || []);
+      const tEl = document.getElementById('userTier');
+      if(tier.current){
+        tEl.style.display = 'inline-block';
+        tEl.style.color = tier.current.color;
+        tEl.style.borderColor = tier.current.color;
+        tEl.textContent = tier.current.icon + ' ' + tier.current.name.toUpperCase();
+      } else {
+        tEl.style.display = 'inline-block';
+        tEl.style.color = '#94A3B8';
+        tEl.textContent = '🎯 UNRANKED';
+      }
+    }
+    // Admin override: signal that every prerequisite is bypassed
+    if(isAdminUser(user)){
+      const tEl = document.getElementById('userTier');
+      tEl.style.display = 'inline-block';
+      tEl.style.color = '#FACC15';
+      tEl.style.borderColor = '#FACC15';
+      tEl.textContent = '🛡️ ADMIN MODE';
+    }
+  }
+
+  function openAvatarPicker(isFirstTime){
+    avatarPickerFirstTime = !!isFirstTime;
+    pendingAvatar = user.avatar || null;
+    const grid = document.getElementById('avatarGrid');
+    grid.innerHTML = '';
+    window.RSP_AVATARS.forEach(av => {
+      const node = document.createElement('div');
+      node.className = 'avatar-choice' + (av.id === pendingAvatar ? ' selected' : '');
+      node.dataset.id = av.id;
+      node.innerHTML = window.renderAvatar(av.id, 70) +
+        '<div class="av-name">'+av.name+'</div>'+
+        '<div class="av-tag">'+av.tagline+'</div>';
+      node.addEventListener('click', () => {
+        pendingAvatar = av.id;
+        Array.from(grid.children).forEach(c => c.classList.remove('selected'));
+        node.classList.add('selected');
+        document.getElementById('avatarConfirm').disabled = false;
+      });
+      grid.appendChild(node);
+    });
+    document.getElementById('avatarConfirm').disabled = !pendingAvatar;
+    document.getElementById('avatarCancel').style.display = isFirstTime ? 'none' : 'inline-block';
+    document.getElementById('avatarOverlay').classList.add('show');
+  }
+
+  function closeAvatarPicker(){
+    document.getElementById('avatarOverlay').classList.remove('show');
+  }
+
+  function saveAvatar(){
+    if(!pendingAvatar) return;
+    const showWelcome = avatarPickerFirstTime;
+    avatarPickerFirstTime = false;
+    user.avatar = pendingAvatar;
+    lsSet(KEY_USER, JSON.stringify(user));
+    // Persist on ledger record too
+    if(ledger[user.name]){
+      ledger[user.name].avatar = pendingAvatar;
+      lsSet(KEY_LEDGER, JSON.stringify(ledger));
+    }
+    closeAvatarPicker();
+    renderUser();
+    // Sync avatar to cloud
+    if(window.RSPCloud && window.RSPCloud.isConfigured){
+      window.RSPCloud.upsertUser(user).catch(e => console.warn('avatar sync failed:', e));
+    }
+    if(showWelcome && window.RSPWelcome) window.RSPWelcome.show(user);
+  }
+
+  function renderStats(){
+    const m = window.RSP_MANIFEST;
+    const hubModules = m.hubModulesSorted(HUB, moduleConfigs);
+    const totalAvailable = hubModules.filter(x=>x.published).reduce((s,x)=>s+x.xp,0);
+    let earned = 0, completed = 0, badges = 0;
+    hubModules.forEach(mod => {
+      const p = userProgress(mod.id);
+      if(p){
+        earned += p.totalXP || 0;
+        if(p.completedAt) completed++;
+        if(p.tier === 'gold') badges++;
+      }
+    });
+    document.getElementById('lifetimeXP').textContent = earned;
+    document.getElementById('totalAvailableXP').textContent = totalAvailable;
+    document.getElementById('modulesCompleted').textContent = completed;
+    document.getElementById('totalModules').textContent = hubModules.filter(x=>x.published).length;
+    document.getElementById('badgesEarned').textContent = badges;
+    const pct = totalAvailable > 0 ? Math.min(100, Math.round(earned/totalAvailable*100)) : 0;
+    document.getElementById('lifetimeXpFill').style.width = pct + '%';
+    document.getElementById('xpPercent').textContent = pct + '%';
+  }
+
+  function renderModules(){
+    const m = window.RSP_MANIFEST;
+    const root = document.getElementById('categories');
+    root.innerHTML = '';
+
+    // This hub's modules (manifest + custom) in admin-defined display
+    // order — also the order the sequential lock chain follows (see
+    // effectivePrerequisite below) for hubs like Onboarding.
+    const hubList = m.hubModulesSorted(HUB, moduleConfigs);
+    const orderIndex = {};
+    hubList.forEach(function(mod, i){ orderIndex[mod.id] = i; });
+
+    // Create sections from contiguous category runs in the sorted list. That
+    // gives every configured category its own section while preserving the
+    // exact admin-defined sequence (including the sequential lock chain).
+    const categoryRuns = [];
+    hubList.forEach(function(mod){
+      const category = String(mod.category || 'Uncategorized').trim() || 'Uncategorized';
+      const last = categoryRuns[categoryRuns.length - 1];
+      if(last && last.id === category) last.modules.push(mod);
+      else categoryRuns.push({id:category, modules:[mod]});
+    });
+    const fallbackColors = ['#38BDF8','#6366F1','#22C55E','#F97316','#A855F7','#EC4899'];
+    categoryRuns.forEach(function(run, runIndex){
+        const cat = m.categories.find(function(candidate){
+          return (candidate.hub||'product_mastery') === HUB && candidate.id === run.id;
+        }) || {id:run.id, icon:'📂', color:fallbackColors[runIndex % fallbackColors.length]};
+        const inCat = run.modules;
+        const section = document.createElement('div');
+        const safe = m.escapeHtml;
+        const title = safe(cat.label || cat.id);
+        section.className = 'category';
+        if(cat.color) section.style.setProperty('--cat-color', cat.color);
+        const completedCount = inCat.filter(x => moduleStatus(x).status === 'completed').length;
+        section.innerHTML =
+          '<div class="category-header">' +
+            '<span class="ico">'+safe(cat.icon)+'</span>' +
+            '<div class="category-copy"><div class="eyebrow">TRAINING TRACK</div><h2>'+title+'</h2></div>' +
+            '<span class="count">'+completedCount+' / '+inCat.length+' COMPLETED</span>' +
+          '</div>';
+        const grid = document.createElement('div');
+        grid.className = 'grid';
+        inCat.forEach(mod => grid.appendChild(renderCard(mod, hubList, orderIndex)));
+        section.appendChild(grid);
+        root.appendChild(section);
+    });
+
+    if(!root.children.length){
+      root.innerHTML = HUB === 'onboarding'
+        ? '<div class="empty"><div class="ico">🧭</div><h3>Onboarding content is on its way</h3><p style="margin-top:8px">Your onboarding modules haven\'t been published yet. Check back soon, or ask an admin to add one from the admin panel.</p></div>'
+        : '<div class="empty"><div class="ico">📚</div><h3>No modules yet</h3><p style="margin-top:8px">Add modules to manifest.js to populate the portal.</p></div>';
+    }
+  }
+
+  function renderCard(mod, hubList, orderIndex){
+    const card = document.createElement('a');
+    const status = moduleStatus(mod);
+    const hubCfg = window.RSP_HUBS && window.RSP_HUBS[HUB];
+
+    // Check prerequisite (admin users bypass every lock). An explicit
+    // mod.prerequisite (Product Mastery's hand-curated chain) always
+    // wins; otherwise, sequential-lock hubs (Onboarding) gate on
+    // whichever module is immediately before this one in hubList.
+    let locked = false;
+    let lockReason = '';
+    const prereqId = window.RSP_MANIFEST.effectivePrerequisite(mod, hubList, moduleConfigs);
+    if(prereqId && !isAdminUser(user)){
+      const prereq = window.RSP_MANIFEST.modules.find(x => x.id === prereqId) || hubList.find(x => x.id === prereqId);
+      const prereqStatus = prereq ? moduleStatus(prereq) : null;
+      if(!prereqStatus || prereqStatus.status !== 'completed'){
+        locked = true;
+        lockReason = '🔒 Complete "' + (prereq ? prereq.name : prereqId) + '" first';
+      }
+    }
+    const stepBadge = (hubCfg && hubCfg.sequentialLock && orderIndex[mod.id] != null)
+      ? '<span style="color:#64748B;font-weight:700">Step ' + (orderIndex[mod.id] + 1) + '</span> · '
+      : '';
+
+    // Modules on the learner's assigned role path are marked required.
+    // Nothing is hidden or reordered: off-path training stays fully
+    // browsable, it simply carries no marker.
+    const required = window.RSPPaths ? window.RSPPaths.isRequiredFor(mod.id, user, paths) : false;
+
+    card.href = locked ? '#' : mod.path;
+    card.className = 'card ' + status.status + (locked ? ' locked' : '') + (required ? ' required' : '');
+
+    let badgeHtml = '';
+    if(locked) badgeHtml = '<div class="badge badge-locked">🔒 LOCKED</div>';
+    else if(isAdminUser(user)) badgeHtml = '<div class="badge" style="background:#FACC15;color:#0F172A">🛡️ ADMIN</div>';
+    else if(status.status === 'completed') badgeHtml = '<div class="badge badge-completed">✓ DONE</div>';
+    else if(status.status === 'progress' && status.bestPct > 0) badgeHtml = '<div class="badge badge-progress">Best: '+status.bestPct+'%</div>';
+    else if(status.status === 'progress') badgeHtml = '<div class="badge badge-progress">In progress</div>';
+    else badgeHtml = '<div class="badge badge-new">START</div>';
+
+    // Cover image: first page of the module's flipbook, if available
+    const cfg = moduleConfigs[mod.id] || {};
+    const fb = cfg.flipbook || {};
+    const safe = window.RSP_MANIFEST.escapeHtml;
+    const coverUrl = (fb.status === 'ready' && fb.page_urls && fb.page_urls.length)
+      ? window.RSP_MANIFEST.safeWebUrl(fb.page_urls[0]) : null;
+    const coverInner = coverUrl
+      ? '<img class="card-cover-img" src="'+safe(coverUrl)+'" alt="'+safe(mod.name)+' cover" loading="lazy">'
+      : '<div class="card-cover-placeholder">'+safe(mod.icon)+'</div>';
+
+    card.innerHTML =
+      '<div class="card-cover">'+
+        coverInner+
+        badgeHtml+
+      '</div>'+
+      '<div class="card-body">'+
+        '<div class="meta"><span>'+(required?'<span class="req-chip">★ REQUIRED</span>':'')+stepBadge+safe(mod.category)+'</span><span>~'+safe(mod.estTime)+' min · '+safe(mod.xp)+' XP</span></div>'+
+        '<h3>'+safe(mod.icon)+' '+safe(mod.name)+'</h3>'+
+        '<p class="desc">'+safe(mod.description)+'</p>'+
+        '<div class="progress-wrap">'+
+          '<div class="progress-text"><span>Progress</span><span>'+status.xp+' / '+mod.xp+' XP</span></div>'+
+          '<div class="progress-bar"><div class="progress-fill" style="width:'+status.pct+'%"></div></div>'+
+        '</div>'+
+        (lockReason ? '<div class="prereq-note">'+safe(lockReason)+'</div>' : '')+
+      '</div>';
+
+    return card;
+  }
+
+  // Login flow
+  document.getElementById('loginBtn').addEventListener('click', () => doLogin('login'));
+  document.getElementById('createBtn').addEventListener('click', () => doLogin('create'));
+  document.getElementById('loginFirst').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('loginLast').focus(); });
+  document.getElementById('loginLast').addEventListener('keydown', e => { if(e.key==='Enter') doLogin('login'); });
+
+  function normalizeName(first, last){
+    function tc(s){ return s.trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase()); }
+    return tc(first) + ' ' + tc(last);
+  }
+
+  async function doLogin(mode){
+    const first = document.getElementById('loginFirst').value.trim();
+    const last  = document.getElementById('loginLast').value.trim();
+    const errEl = document.getElementById('loginErr');
+    if(!first || !last){
+      errEl.textContent = 'Please enter your first and last name to continue.';
+      return;
+    }
+    const name = normalizeName(first, last);
+    errEl.textContent = '';
+    document.getElementById('loginBtn').disabled = true;
+    document.getElementById('createBtn').disabled = true;
+
+    try{
+      // Check for an existing account in local storage and cloud
+      let priorAvatar = null;
+      let priorStartedAt = Date.now();
+      let localExists = false;
+      try{
+        const existingLedger = JSON.parse(lsGet(KEY_LEDGER) || '{}');
+        const existingEntry  = existingLedger[name];
+        if(existingEntry){
+          localExists = true;
+          if(existingEntry.avatar) priorAvatar = existingEntry.avatar;
+          if(existingEntry.startedAt) priorStartedAt = existingEntry.startedAt;
+        }
+      }catch(e){}
+
+      let cloudHadUser = false;
+      if(window.RSPCloud && window.RSPCloud.isConfigured){
+        try{
+          const existing = await window.RSPCloud.getUser(name);
+          cloudHadUser = !!(existing && existing.name);
+        }catch(e){}
+      }
+
+      const accountExists = cloudHadUser || localExists;
+
+      if(mode === 'login' && !accountExists){
+        errEl.textContent = 'No account found for "' + name + '". Use "Create Account" to register.';
+        return;
+      }
+      if(mode === 'create' && accountExists){
+        errEl.textContent = 'An account for "' + name + '" already exists. Please log in instead.';
+        return;
+      }
+
+      user = { name: name, startedAt: priorStartedAt };
+      if(priorAvatar) user.avatar = priorAvatar;
+      lsSet(KEY_USER, JSON.stringify(user));
+
+      await enterPortal();
+
+      try{
+        const refreshed = JSON.parse(lsGet(KEY_USER) || 'null');
+        if(refreshed) user = refreshed;
+      }catch(e){}
+
+      // Show avatar picker for genuinely new accounts
+      const isBrandNewUser = !priorAvatar && !cloudHadUser;
+      if(!user.avatar || isBrandNewUser){
+        openAvatarPicker(true);
+      }
+    } finally {
+      document.getElementById('loginBtn').disabled = false;
+      document.getElementById('createBtn').disabled = false;
+    }
+  }
+
+  // Logout
+  document.getElementById('logoutLink').addEventListener('click', function(e){
+    e.preventDefault();
+    if(confirm('Log out? Your progress is saved on this device under your name.')){
+      lsDel(KEY_USER);
+      location.reload();
+    }
+  });
+
+  // Change avatar (from user pill)
+  document.getElementById('changeAvatarLink').addEventListener('click', function(e){
+    e.preventDefault();
+    openAvatarPicker(false);
+  });
+  document.getElementById('userAvatar').addEventListener('click', function(){
+    openAvatarPicker(false);
+  });
+  document.getElementById('avatarConfirm').addEventListener('click', saveAvatar);
+  document.getElementById('avatarCancel').addEventListener('click', closeAvatarPicker);
+
+  init();
+})();
+</script>
+</body>
+</html>

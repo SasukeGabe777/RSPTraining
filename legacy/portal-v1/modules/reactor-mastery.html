@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Line &amp; Load Reactor Mastery — RSP Industrial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/module.css?v=editor-blocks-2-page-delete">
+<style>
+  /* === LINE & LOAD REACTOR MASTERY · INDIGO THEME === */
+  :root{
+    --theme-primary:#4F46E5;
+    --theme-primary-deep:#1E1B4B;
+    --theme-accent:#C7D2FE;
+    --theme-obj-num:#4F46E5;
+    --theme-login-btn-1:#4F46E5;
+    --theme-login-btn-2:#6366F1;
+    --theme-login-pretitle:#4F46E5;
+    --theme-login-focus:#4F46E5;
+    --theme-side-bg:#1E1B4B;
+    --theme-side-border:#312E81;
+    --theme-side-toggle:#312E81;
+    --theme-loot-border:#4F46E5;
+    --theme-loot-bg-1:#EEF2FF;
+    --theme-loot-bg-2:#E0E7FF;
+    --theme-loot-h3:#312E81;
+    --theme-admin-btn:#4F46E5;
+    --theme-admin-loginbox-border:#312E81;
+  }
+
+  /* === MODULE-SPECIFIC COMPONENTS === */
+
+  /* Reactor anatomy card */
+  .reactor-card{background:var(--slate-50);border:2px solid var(--slate-200);border-radius:14px;padding:16px;margin-bottom:10px}
+  .reactor-card .rc-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .reactor-card .rc-name{font-family:'Bricolage Grotesque';font-size:18px;font-weight:800;color:#1E1B4B}
+  .reactor-card .rc-tag{font-size:10px;font-weight:700;color:#64748B;letter-spacing:.08em;text-transform:uppercase}
+  .reactor-card .rc-sect{font-size:11px;font-weight:800;letter-spacing:.05em;color:#312E81;margin-top:8px;text-transform:uppercase}
+  .reactor-card .rc-list{font-size:12.5px;color:#334155;margin-top:4px;line-height:1.5}
+  .reactor-card .rc-list li{margin-left:18px}
+  .reactor-card .rc-good{display:inline-block;background:#E0E7FF;color:#312E81;font-size:10px;font-weight:800;letter-spacing:.05em;padding:2px 8px;border-radius:8px;margin-right:6px;text-transform:uppercase}
+  .reactor-card .rc-bad{display:inline-block;background:#FEE2E2;color:#7F1D1D;font-size:10px;font-weight:800;letter-spacing:.05em;padding:2px 8px;border-radius:8px;margin-right:6px;text-transform:uppercase}
+
+  /* Line vs Load two-column grid */
+  .vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .vs-col{border-radius:14px;padding:18px}
+  .vs-col.line{background:linear-gradient(160deg,#EEF2FF,#E0E7FF);border:2px solid #4F46E5}
+  .vs-col.load{background:linear-gradient(160deg,#F0FDF4,#DCFCE7);border:2px solid #16A34A}
+  .vs-col h3{font-size:16px}
+  .vs-col.line h3{color:#1E1B4B}
+  .vs-col.load h3{color:#14532D}
+  .vs-col ul{margin-top:8px;list-style:none}
+  .vs-col li{font-size:12.5px;font-weight:600;line-height:1.45;padding:6px 0;border-bottom:1px dashed rgba(0,0,0,.08);display:flex;gap:8px;align-items:flex-start}
+  .vs-col.line li{color:#1E1B4B}
+  .vs-col.load li{color:#14532D}
+  .vs-col li:last-child{border-bottom:none}
+
+  /* Matrix tables (indigo palette) */
+  .matrix{width:100%;border-collapse:collapse;margin-top:12px;font-size:11.5px}
+  .matrix th{background:#E0E7FF;color:#312E81;text-align:center;padding:10px 6px;font-weight:800;border:1px solid #C7D2FE;letter-spacing:.05em}
+  .matrix th.row-h{background:#F1F5F9;color:#0F172A;text-align:left;width:160px}
+  .matrix td{padding:10px 8px;border:1px solid #E2E8F0;color:#1E293B;font-weight:600}
+  .matrix td.lbl{background:#F8FAFC;font-weight:800;color:#0F172A;font-size:12px}
+  .matrix td.best{background:#E0E7FF;color:#312E81;font-weight:800}
+  .matrix td.warn{background:#FEF9C3;color:#713F12;font-weight:800}
+  .matrix td.bad{background:#FEE2E2;color:#7F1D1D;font-weight:800}
+
+  /* AHA card (indigo) */
+  .aha-card{background:linear-gradient(160deg,#EEF2FF,#E0E7FF);border:3px solid #4F46E5;border-radius:18px;padding:24px;margin-top:14px}
+  .aha-card h3{color:#1E1B4B;font-size:22px}
+  .aha-card .flow{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .aha-card .node{background:#fff;border:2px solid #4F46E5;border-radius:12px;padding:14px 18px;font-weight:800;color:#1E1B4B;font-size:13px;text-align:center;min-width:128px;line-height:1.3}
+  .aha-card .node .sub{display:block;font-size:10px;color:#64748B;font-weight:700;letter-spacing:.05em;margin-top:3px;text-transform:uppercase}
+  .aha-card .arrow{font-size:28px;color:#4F46E5;line-height:1}
+  .aha-card .node.highlight{background:#4F46E5;color:#fff;border-color:#1E1B4B}
+  .aha-card .node.highlight .sub{color:#C7D2FE}
+
+  /* Callout */
+  .callout{background:linear-gradient(160deg,#EEF2FF,#E0E7FF);border:2px solid #4F46E5;border-radius:14px;padding:16px;margin-top:10px}
+  .callout h3{color:#1E1B4B;font-size:16px}
+  .callout p{color:#312E81;font-size:13px;margin-top:6px;line-height:1.5}
+
+  /* Customer translation */
+  .translate-row .says{background:#E0E7FF;color:#1E1B4B}
+  .translate-row .means{background:#FEF3C7;color:#78350F}
+  .translate-row .quote-it{background:#DCFCE7;color:#14532D}
+
+  /* Decision path card */
+  .decision-card{background:#fff;border:2px solid #C7D2FE;border-radius:14px;padding:14px 16px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start}
+  .decision-card .q{flex:0 0 220px;font-size:12.5px;font-weight:800;color:#1E1B4B}
+  .decision-card .y,.decision-card .n{flex:1;font-size:12px;font-weight:700;padding:8px 10px;border-radius:8px}
+  .decision-card .y{background:#E0E7FF;color:#1E1B4B}
+  .decision-card .n{background:#FEF3C7;color:#78350F}
+
+  /* Cable zone bar */
+  .zone-bar{display:flex;border-radius:12px;overflow:hidden;margin-top:12px;height:44px}
+  .zone-bar .zone{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;text-align:center;line-height:1.2;letter-spacing:.03em}
+  .zone-bar .z0{flex:1;background:#D1FAE5;color:#065F46}
+  .zone-bar .z1{flex:1.5;background:#FEF9C3;color:#713F12}
+  .zone-bar .z2{flex:2;background:#FDBA74;color:#7C2D12}
+  .zone-bar .z3{flex:2;background:#FCA5A5;color:#7F1D1D}
+  .zone-bar .z4{flex:2.5;background:#EF4444;color:#fff}
+</style>
+</head>
+<body>
+
+<a href="../index.html" id="portalLink" class="interactive-only">← PORTAL</a>
+
+<aside id="sideMap" class="interactive-only">
+  <button class="map-toggle" id="mapToggle" title="Toggle map">‹</button>
+  <div class="map-title">🔌 REACTOR MAP</div>
+  <div class="map-hint">YOUR JOURNEY</div>
+  <div class="map-path" id="mapPath"></div>
+</aside>
+
+<div id="minibossOverlay" class="interactive-only">
+  <div class="miniboss-modal" id="minibossModal"></div>
+</div>
+
+<div id="loginOverlay" class="interactive-only">
+  <div class="login-card">
+    <div class="bolt-bg">🔌</div>
+    <div class="pretitle">RSP INDUSTRIAL · PRODUCT MASTERY</div>
+    <h1>Line &amp; Load<br>Reactor Mastery</h1>
+    <p class="sub">Sign in to track your XP and unlock the Boss Fight.</p>
+    <label for="loginName">Your name</label>
+    <input type="text" id="loginName" placeholder="e.g. Gabe Ebmeyer" autocomplete="off"/>
+    <label for="loginId">Employee ID <span style="font-weight:500;color:#94A3B8;letter-spacing:0">(optional)</span></label>
+    <input type="text" id="loginId" placeholder="e.g. RSP-1234" autocomplete="off"/>
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn">Begin Training →</button>
+    <p class="footer-note">Your progress is saved on this device. No data leaves your browser.</p>
+  </div>
+</div>
+
+<div id="xpTracker" class="interactive-only">
+  <div>
+    <div class="username" id="trackerUser">🔌 READY</div>
+    <div class="label">XP EARNED</div>
+    <div><span class="num" id="trackerXP">0</span><span style="color:#475569;font-size:14px"> / 280</span></div>
+    <span class="reset-link" id="resetProgress">↻ Reset</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+    <div style="display:flex;gap:10px;font-size:10px;color:#94A3B8;white-space:nowrap;flex-wrap:wrap">
+      <span>📖&nbsp;<b style="color:#fff"><span id="trackerPages">0</span>/14</b></span>
+      <span>🎯&nbsp;<b style="color:#fff"><span id="trackerAnswered">0</span>/30</b></span>
+      <span>✓&nbsp;<b style="color:#fff"><span id="trackerCorrect">0</span></b></span>
+    </div>
+    <div class="bar"><div class="fill" id="trackerFill"></div></div>
+  </div>
+</div>
+
+<!-- ============= PAGE 1 — COVER ============= -->
+<section class="page cover">
+  <div class="ribbon">
+    <span class="badge">RSP INDUSTRIAL</span>
+    <span class="badge">PRODUCT MASTERY · MODULE 09</span>
+  </div>
+  <svg width="480" height="480" viewBox="0 0 480 480" style="position:absolute;right:-40px;top:100px;opacity:.95">
+    <defs>
+      <linearGradient id="reactorg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#C7D2FE"/>
+        <stop offset="100%" stop-color="#4F46E5"/>
+      </linearGradient>
+      <filter id="rglow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <g transform="translate(240 240)">
+      <!-- Power line in -->
+      <line x1="-160" y1="-60" x2="-90" y2="-60" stroke="#C7D2FE" stroke-width="4"/>
+      <line x1="-160" y1="0" x2="-90" y2="0" stroke="#C7D2FE" stroke-width="4"/>
+      <line x1="-160" y1="60" x2="-90" y2="60" stroke="#C7D2FE" stroke-width="4"/>
+      <!-- Line Reactor box -->
+      <rect x="-90" y="-90" width="80" height="180" rx="10" fill="url(#reactorg)" stroke="#C7D2FE" stroke-width="3" filter="url(#rglow)"/>
+      <text x="-50" y="-20" text-anchor="middle" font-size="10" fill="#fff" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="1">LINE</text>
+      <text x="-50" y="-6" text-anchor="middle" font-size="10" fill="#fff" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="1">REACTOR</text>
+      <!-- Coil symbol inside line reactor -->
+      <path d="M -68 20 Q -62 8 -56 20 Q -50 32 -44 20 Q -38 8 -32 20" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M -68 36 Q -62 24 -56 36 Q -50 48 -44 36 Q -38 24 -32 36" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M -68 52 Q -62 40 -56 52 Q -50 64 -44 52 Q -38 40 -32 52" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- VFD box -->
+      <rect x="0" y="-70" width="70" height="140" rx="8" fill="#1E1B4B" stroke="#4F46E5" stroke-width="2.5"/>
+      <text x="35" y="-10" text-anchor="middle" font-size="9" fill="#C7D2FE" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="1">VFD</text>
+      <rect x="10" y="0" width="50" height="30" rx="4" fill="#0F172A" stroke="#4F46E5" stroke-width="1"/>
+      <text x="35" y="19" text-anchor="middle" font-family="JetBrains Mono" font-size="14" fill="#6366F1" font-weight="800">60Hz</text>
+      <!-- Connecting wires VFD to load reactor -->
+      <line x1="70" y1="-40" x2="100" y2="-40" stroke="#A5F3FC" stroke-width="3"/>
+      <line x1="70" y1="0" x2="100" y2="0" stroke="#A5F3FC" stroke-width="3"/>
+      <line x1="70" y1="40" x2="100" y2="40" stroke="#A5F3FC" stroke-width="3"/>
+      <!-- Load Reactor box -->
+      <rect x="100" y="-70" width="80" height="140" rx="10" fill="#065F46" stroke="#34D399" stroke-width="3"/>
+      <text x="140" y="-18" text-anchor="middle" font-size="10" fill="#fff" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="1">LOAD</text>
+      <text x="140" y="-4" text-anchor="middle" font-size="10" fill="#fff" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="1">REACTOR</text>
+      <!-- Coil symbol inside load reactor -->
+      <path d="M 112 18 Q 118 6 124 18 Q 130 30 136 18 Q 142 6 148 18 Q 154 30 160 18" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M 112 36 Q 118 24 124 36 Q 130 48 136 36 Q 142 24 148 36 Q 154 48 160 36" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Motor -->
+      <circle cx="210" cy="0" r="44" fill="#334155" stroke="#94A3B8" stroke-width="2.5"/>
+      <text x="210" y="-6" text-anchor="middle" font-size="11" fill="#fff" font-weight="800" font-family="Bricolage Grotesque">MTR</text>
+      <text x="210" y="10" text-anchor="middle" font-size="9" fill="#94A3B8" font-weight="700">PROTECTED</text>
+      <!-- Wire from load reactor to motor -->
+      <line x1="180" y1="-40" x2="190" y2="-30" stroke="#34D399" stroke-width="3"/>
+      <line x1="180" y1="0" x2="166" y2="0" stroke="#34D399" stroke-width="3"/>
+      <line x1="180" y1="40" x2="190" y2="30" stroke="#34D399" stroke-width="3"/>
+      <!-- Labels -->
+      <text x="-50" y="108" text-anchor="middle" font-size="9" fill="#C7D2FE" font-weight="800" letter-spacing="1">INPUT SIDE</text>
+      <text x="140" y="88" text-anchor="middle" font-size="9" fill="#34D399" font-weight="800" letter-spacing="1">OUTPUT SIDE</text>
+    </g>
+  </svg>
+  <div style="position:absolute;bottom:2.4in;left:.5in;right:.5in">
+    <div class="pill" style="background:rgba(199,210,254,.25);color:#C7D2FE;border:1px solid rgba(199,210,254,.4);margin-bottom:18px">PRODUCT MASTERY · MOTOR PROTECTION</div>
+    <h1>LINE &amp; LOAD<br>REACTOR<br>MASTERY</h1>
+    <div class="sub">Protect it. Filter it. Quote the right reactor.</div>
+  </div>
+  <div class="tagline">
+    <div>The two accessories that make VFD installations reliable — and what goes wrong without them.</div>
+    <div>RSP · PROD 09</div>
+  </div>
+  <div class="page-num">1</div>
+</section>
+
+<!-- ============= PAGE 2 — THE PROMISE ============= -->
+<section class="page" data-section-id="intro">
+  <div class="page-tag">▸ THE PROMISE</div>
+  <div style="display:flex;gap:30px;margin-top:.5in;height:8.6in">
+    <div style="flex:1;display:flex;flex-direction:column">
+      <h2>Protect the drive.<br>Protect the motor.<br>Quote it right.</h2>
+      <p class="lead" style="margin-top:14px">By the last page you will be able to:</p>
+      <ul class="objectives" style="margin-top:18px">
+        <li><span class="obj-num">1</span><span>Name the difference between a <b>line reactor</b> and a <b>load reactor</b> without mixing up which side of the VFD they live on.</span></li>
+        <li><span class="obj-num">2</span><span>Explain <b>reflected wave</b> in plain English and why cable length changes the conversation fast.</span></li>
+        <li><span class="obj-num">3</span><span>Know when to quote a <b>3% vs 5% line reactor</b> and why generator-fed systems change the rules.</span></li>
+        <li><span class="obj-num">4</span><span>Choose between <b>load reactor, dv/dt filter, and sine wave filter</b> based on motor lead length and motor type.</span></li>
+        <li><span class="obj-num">5</span><span>Ask the right qualifying questions and turn a basic VFD quote into a <b>fully protected installation</b>.</span></li>
+        <li><span class="obj-num">6</span><span>Pass the 30-question Boss Fight at 80%+ to earn the badge.</span></li>
+      </ul>
+      <div class="powerup" style="margin-top:20px">
+        💡 <b>The promise:</b> Stop treating reactors like generic add-ons. Once you hear input-side clues, output-side clues, and cable length, the right accessory starts to pick itself.
+      </div>
+    </div>
+    <div style="flex:0 0 2.4in;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="100" fill="none" stroke="#4F46E5" stroke-width="6"/>
+        <circle cx="110" cy="110" r="75" fill="none" stroke="#4F46E5" stroke-width="6" opacity=".6"/>
+        <circle cx="110" cy="110" r="50" fill="none" stroke="#4F46E5" stroke-width="6" opacity=".4"/>
+        <circle cx="110" cy="110" r="25" fill="#4F46E5"/>
+        <text x="110" y="115" text-anchor="middle" font-family="JetBrains Mono" font-size="13" fill="#fff" font-weight="800">COIL</text>
+      </svg>
+      <div style="text-align:center">
+        <div style="font-family:'Bricolage Grotesque';font-size:28px;font-weight:800;color:#1E1B4B">280 XP</div>
+        <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.1em;text-transform:uppercase">Total reward</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">02</div>
+</section>
+
+<!-- ============= PAGE 3 — HOW TO PLAY ============= -->
+<section class="page" data-section-id="intro">
+  <div class="page-tag">▸ HOW TO PLAY</div>
+  <h2 style="margin-top:.4in">Three levels.<br>Two mini-bosses.<br>One badge.</h2>
+  <div style="display:flex;gap:14px;margin-top:30px">
+    <div class="level-card learn">
+      <div class="num">01</div>
+      <h3>LEARN</h3>
+      <p>8 pages. Inductors, line vs load reactor logic, reflected wave, motor vulnerability, cable-length thresholds, harmonics, and when both reactors belong in the same system.</p>
+      <div class="xp-pill">+10 XP / page</div>
+    </div>
+    <div class="level-card apply">
+      <div class="num">02</div>
+      <h3>APPLY</h3>
+      <p>6 pages. dv/dt and sine wave filters, the output accessory ladder, three qualifying questions, the decision path, and the scenario matrix.</p>
+      <div class="xp-pill">+15 XP / page</div>
+    </div>
+    <div class="level-card test">
+      <div class="num">03</div>
+      <h3>TEST</h3>
+      <p>30-question Boss Fight. Score 80%+ for the 🔌 Reactor Master badge.</p>
+      <div class="xp-pill">+2 XP / correct</div>
+    </div>
+  </div>
+  <div class="powerup" style="margin-top:30px">
+    💡 <b>Two Mini-Bosses block the path.</b> The Harmonic Haunter guards the input-side basics; the Reflected Wave Wraith guards cable-length and motor-protection logic. Each is worth +25 XP.
+  </div>
+  <div class="page-num">03</div>
+</section>
+
+<!-- ============= PAGE 4 — LEARN 01: WHAT IS A REACTOR? ============= -->
+<section class="page" data-section-id="foundation">
+  <div class="page-tag" style="color:#818CF8">▸ LEARN · 01 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 FOUNDATION · WHAT IS A REACTOR?</div>
+  <h2 style="margin-top:14px">A speed bump<br>for electricity.</h2>
+  <p class="lead" style="margin-top:6px">A reactor is simply an <b>inductor</b> — a coil of wire wound around an iron core. Its job: resist rapid changes in current. That one property solves two completely different problems at two different points in a VFD system.</p>
+
+  <div class="aha-card">
+    <h3>⚡ The Physics (in plain English)</h3>
+    <p style="color:#312E81;font-size:13px;margin-top:8px;line-height:1.6">When current tries to <b>change quickly</b> — whether a voltage spike arriving from the utility or a reflected wave bouncing back from a motor — the inductor generates a voltage that <b>opposes</b> that change (Lenz's Law). The faster the current tries to change, the harder the reactor pushes back.</p>
+    <div class="flow" style="margin-top:14px">
+      <div class="node">Voltage Spike<div class="sub">arrives fast</div></div>
+      <div class="arrow">→</div>
+      <div class="node highlight">Reactor Coil<div class="sub">opposes change</div></div>
+      <div class="arrow">→</div>
+      <div class="node">Smoothed Waveform<div class="sub">reaches load</div></div>
+    </div>
+  </div>
+
+  <div style="margin-top:14px">
+    <div class="reactor-card">
+      <div class="rc-head"><span style="font-size:24px">🔵</span><div><div class="rc-name">Line Reactor</div><div class="rc-tag">Input Side · Before VFD</div></div></div>
+      <div class="rc-sect">Impedance Options</div>
+      <div class="rc-list">
+        <ul>
+          <li><b>3% impedance</b> — standard choice, lighter harmonic reduction, minimal voltage drop</li>
+          <li><b>5% impedance</b> — stronger protection, more harmonic suppression, small voltage drop (~5V on 480V)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="reactor-card">
+      <div class="rc-head"><span style="font-size:24px">🟢</span><div><div class="rc-name">Load Reactor</div><div class="rc-tag">Output Side · Between VFD &amp; Motor</div></div></div>
+      <div class="rc-sect">Key Action</div>
+      <div class="rc-list">
+        <ul>
+          <li>Slows the rate of voltage rise (dv/dt) hitting motor terminals</li>
+          <li>Blocks reflected wave energy from doubling at motor windings</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">4</div>
+</section>
+
+<!-- ============= PAGE 5 — LEARN 02: LINE REACTOR ============= -->
+<section class="page" data-section-id="foundation">
+  <div class="page-tag" style="color:#818CF8">▸ LEARN · 02 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 FOUNDATION · LINE REACTOR DEEP DIVE</div>
+  <h2 style="margin-top:14px">The VFD's<br>bodyguard.</h2>
+  <p class="lead" style="margin-top:6px">A line reactor sits between the incoming power and the VFD. If the problem starts on the power side of the drive, this is the first accessory to think about.</p>
+
+  <div class="reactor-card" style="margin-top:16px">
+    <div class="rc-head"><span style="font-size:22px">⚡</span><div><div class="rc-name">What a Line Reactor Does</div><div class="rc-tag">Installed before the VFD</div></div></div>
+    <div class="rc-list">
+      Smooths incoming power • reduces harmonics • reduces inrush current • reduces voltage spikes • helps protect the drive from dirty power
+    </div>
+  </div>
+
+  <table class="matrix" style="margin-top:12px;font-size:10.8px">
+    <thead><tr><th class="row-h">Line-Reactor Clue</th><th>Why It Matters</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Generator, weak utility, or dirty incoming power</td><td>Buffers the drive from unstable power and helps calm surges before they hit the VFD.</td></tr>
+      <tr><td class="lbl">Multiple VFDs on one system</td><td>Helps smooth the pulsed current draw that raises harmonics and interference.</td></tr>
+      <tr><td class="lbl">Sensitive facilities</td><td>Hospitals, data centers, and automation-heavy plants care more about clean power and nuisance issues.</td></tr>
+      <tr><td class="lbl">Nuisance tripping or DC bus stress</td><td>Often an input-side clue that the drive needs buffering on the line side.</td></tr>
+      <tr><td class="lbl">Large transformer very close to the VFD</td><td>Available fault current and stress rise fast; the reactor helps buffer the drive.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:12px">
+    <h3>📌 3% vs 5% — Which to Specify</h3>
+    <p><b>3%</b> → Most common. General protection for standard applications.<br>
+    <b>5%</b> → Better harmonic reduction, more protection, and more voltage drop. Use for difficult power systems, high harmonics, generator-fed jobs, or sensitive installations.<br><br>
+    <b>Sales shortcut:</b> "If the problem is on the power side of the drive, think <b>LINE reactor</b>."</p>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">5</div>
+</section>
+
+<!-- ============= PAGE 6 — LEARN 03: LOAD REACTOR ============= -->
+<section class="page" data-section-id="foundation">
+  <div class="page-tag" style="color:#818CF8">▸ LEARN · 03 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 FOUNDATION · LOAD REACTOR DEEP DIVE</div>
+  <h2 style="margin-top:14px">The motor's<br>shock absorber.</h2>
+  <p class="lead" style="margin-top:6px">A load reactor sits between the VFD output and the motor. It protects motor insulation, the motor cable, and the motor itself from the fast PWM pulses coming out of the drive.</p>
+
+  <div class="aha-card">
+    <h3>🔌 Why the Cable Length Matters</h3>
+    <p style="color:#312E81;font-size:13px;margin-top:8px;line-height:1.6">A VFD doesn't output a true sine wave. It outputs a series of fast PWM (Pulse Width Modulation) pulses. When those pulses travel down a long cable, the cable acts like a <b>transmission line</b>. At the motor end, there's an impedance mismatch — and the voltage pulse <b>reflects back</b>, arriving at the motor terminals at nearly <b>double</b> the original amplitude.</p>
+    <div class="flow">
+      <div class="node">VFD Output<div class="sub">PWM pulses</div></div>
+      <div class="arrow">→</div>
+      <div class="node">Long Cable<div class="sub">transmission line</div></div>
+      <div class="arrow">→</div>
+      <div class="node highlight">Motor Terminals<div class="sub">2× voltage!</div></div>
+    </div>
+  </div>
+
+    <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div class="reactor-card">
+      <div class="rc-head"><span style="font-size:20px">⚠️</span><div><div class="rc-name">Without Load Reactor</div></div></div>
+      <div class="rc-list">
+        <ul>
+          <li>Sharp voltage spikes hammer motor windings on long runs</li>
+          <li>Reflected wave stress builds heat and insulation damage</li>
+          <li>Older or standard motors are the first to complain</li>
+        </ul>
+      </div>
+    </div>
+    <div class="reactor-card">
+      <div class="rc-head"><span style="font-size:20px">✅</span><div><div class="rc-name">With Load Reactor</div></div></div>
+      <div class="rc-list">
+        <ul>
+          <li>Slows rate of voltage rise (dv/dt)</li>
+          <li>Reduces reflected wave stress at the motor terminals</li>
+          <li>Smooths the PWM waveform and helps extend motor life</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:12px">
+    <h3>📌 Fast Sales Read</h3>
+    <p>"If the problem is between the drive and motor, think <b>LOAD reactor</b>."</p>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">6</div>
+</section>
+
+<!-- ============= PAGE 7 — LEARN 04: REFLECTED WAVE ============= -->
+<section class="page" data-section-id="compatibility">
+  <div class="page-tag" style="color:#818CF8">▸ LEARN · 04 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 COMPATIBILITY · REFLECTED WAVE EXPLAINED</div>
+  <h2 style="margin-top:14px">The voltage that<br>doubles back.</h2>
+  <p class="lead" style="margin-top:6px">Reflected wave is the single most important concept in load reactor sales. Once you can explain this in 30 seconds, you'll close every accessory conversation.</p>
+
+  <div style="margin-top:16px">
+    <div class="reactor-card">
+      <div class="rc-head"><span style="font-size:22px">1️⃣</span><div><div class="rc-name">The VFD outputs PWM pulses</div></div></div>
+      <div class="rc-list">A VFD doesn't produce a clean sine wave. It produces rapid on/off voltage pulses (PWM) — typically switching thousands of times per second. These pulses have very steep voltage rise times (high dv/dt).
+      </div>
+    </div>
+    <div class="reactor-card">
+      <div class="rc-head"><span style="font-size:22px">2️⃣</span><div><div class="rc-name">The cable acts as a transmission line</div></div></div>
+      <div class="rc-list">When a fast pulse travels down a cable, the cable has a characteristic "surge impedance." If the cable is long enough, the pulse behaves like a wave traveling down a wire — not just a simple voltage.
+      </div>
+    </div>
+    <div class="reactor-card">
+      <div class="rc-head"><span style="font-size:22px">3️⃣</span><div><div class="rc-name">Impedance mismatch at the motor</div></div></div>
+      <div class="rc-list">The motor's terminal impedance is very different from the cable's surge impedance. When the voltage wave hits this mismatch, it <b>reflects back</b> — and the reflected wave adds to the incoming pulse, <b>nearly doubling the voltage</b> at motor terminals.
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <h3>💬 30-Second Customer Explanation</h3>
+    <p>"Your VFD sends fast voltage pulses down that cable. On a long run, the cable behaves like a transmission line and part of the pulse reflects back at the motor like an echo. A load reactor slows that pulse down so the motor insulation takes a lot less abuse."</p>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">7</div>
+</section>
+
+<!-- ============= PAGE 8 — LEARN 05: MOTOR VULNERABILITY ============= -->
+<section class="page" data-section-id="compatibility">
+  <div class="page-tag" style="color:#818CF8">▸ LEARN · 05 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 COMPATIBILITY · MOTOR VULNERABILITY</div>
+  <h2 style="margin-top:14px">Not all motors<br>are equal on a VFD.</h2>
+  <p class="lead" style="margin-top:6px">The motor's tolerance to reflected wave depends on how it was built. Two motors can look identical on the outside — and have very different insulation systems inside.</p>
+
+  <div class="vs-grid">
+    <div class="vs-col load" style="border-color:#16A34A">
+      <h3>✅ Inverter-Duty Motor</h3>
+      <ul>
+        <li>Built specifically for VFD use</li>
+        <li>Stronger insulation system for PWM output</li>
+        <li>Can usually handle longer runs better than a standard motor</li>
+        <li><b>Still needs protection at longer distances</b></li>
+        <li>Distance and cable conditions still matter</li>
+      </ul>
+    </div>
+    <div class="vs-col" style="background:linear-gradient(160deg,#FFF1F2,#FFE4E6);border-color:#E11D48">
+      <h3 style="color:#881337">⚠️ Standard TEFC Motor</h3>
+      <ul style="">
+        <li style="color:#881337">Conventional winding insulation — not designed for PWM</li>
+        <li style="color:#881337">Lower tolerance to rapid voltage rise</li>
+        <li style="color:#881337">Especially vulnerable: older motors and rewound motors</li>
+        <li style="color:#881337">Lower threshold for recommending protection</li>
+        <li style="color:#881337"><b>Watch closely once cable length starts climbing</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top:14px;background:#FEF3C7;border:2px solid #D97706;border-radius:14px;padding:14px">
+    <div style="font-size:13px;font-weight:800;color:#78350F;margin-bottom:6px">⚠️ The Most Common Mistake in Motor/VFD Sales</div>
+    <p style="font-size:13px;color:#78350F;line-height:1.5">Selling a VFD with a standard or older motor on a long cable run — and no output protection. The motor fails early, the customer blames the drive, and the whole installation looks bad. Always ask: <b>"How far is the motor from the drive?"</b></p>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">8</div>
+</section>
+
+<!-- ============= PAGE 9 — LEARN 06: CABLE LENGTH GUIDELINES ============= -->
+<section class="page" data-section-id="compatibility">
+  <div class="page-tag" style="color:#818CF8">▸ LEARN · 06 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 COMPATIBILITY · CABLE LENGTH ZONES</div>
+  <h2 style="margin-top:14px">One number closes<br>the accessory sale.</h2>
+  <p class="lead" style="margin-top:6px">Motor lead distance is the most practical output-side trigger. Start with the common 480V rule, then remember that voltage, motor type, carrier frequency, and cable type all shift the safe zone.</p>
+
+  <table class="matrix" style="margin-top:14px;font-size:10.8px">
+    <thead><tr><th class="row-h">Voltage</th><th>When Long Leads Start Becoming a Concern</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">230V VFD</td><td>About 100–200 ft and up</td></tr>
+      <tr><td class="lbl">480V VFD</td><td>About 50–100 ft and up</td></tr>
+      <tr><td class="lbl">600V VFD</td><td>About 25–75 ft and up</td></tr>
+    </tbody>
+  </table>
+
+  <div class="zone-bar">
+    <div class="zone z0">&lt;50 ft<br>OK</div>
+    <div class="zone z1">50–100 ft<br>Monitor</div>
+    <div class="zone z2">100–250 ft<br>Load Reactor</div>
+    <div class="zone z3">250–500 ft<br>dv/dt Filter</div>
+    <div class="zone z4">500+ ft<br>Sine Wave Filter</div>
+  </div>
+
+  <table class="matrix" style="margin-top:16px">
+    <thead><tr><th class="row-h">Cable Length</th><th>Risk Level</th><th>Recommendation</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Under 50 ft</td><td class="best">Low</td><td>No output accessory required</td><td>Inverter-duty preferred but standard often OK</td></tr>
+      <tr><td class="lbl">50–100 ft</td><td class="warn">Moderate</td><td>Monitor; load reactor recommended for standard motors</td><td>Inverter-duty motor reduces risk significantly</td></tr>
+      <tr><td class="lbl">100–250 ft</td><td class="warn">High</td><td>Load reactor — standard recommendation</td><td>Required for standard TEFC motors; strongly recommended for inverter-duty</td></tr>
+      <tr><td class="lbl">250–500 ft</td><td class="bad">Very High</td><td>dv/dt filter</td><td>Load reactor alone may not limit dv/dt sufficiently</td></tr>
+      <tr><td class="lbl">Over 500 ft</td><td class="bad">Severe</td><td>Sine wave filter</td><td>Only complete solution at extreme distances</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:12px">
+    <h3>📌 What Changes Safe Cable Length?</h3>
+    <p><b>Voltage:</b> higher voltage means larger spikes. <b>Motor type:</b> older motors are more vulnerable. <b>Carrier frequency:</b> higher switching frequency creates more stress. <b>Cable type:</b> proper VFD cable helps reduce EMI, leakage current, and reflected-wave headaches.</p>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">9</div>
+</section>
+
+<!-- ============= PAGE 10 — LEARN 07: HARMONIC DISTORTION & 3% vs 5% ============= -->
+<section class="page" data-section-id="compatibility">
+  <div class="page-tag" style="color:#818CF8">▸ LEARN · 07 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 COMPATIBILITY · HARMONICS &amp; IMPEDANCE</div>
+  <h2 style="margin-top:14px">The noise your VFD<br>puts back on the line.</h2>
+  <p class="lead" style="margin-top:6px">Every VFD distorts the current it draws from the utility. That distortion — called <b>harmonic distortion</b> — can cause interference with other equipment on the same service. A line reactor is the first and easiest fix.</p>
+
+  <div style="margin-top:16px">
+    <div class="reactor-card">
+      <div class="rc-head"><span style="font-size:22px">🎵</span><div><div class="rc-name">What Are Harmonics?</div></div></div>
+      <div class="rc-list">A pure 60 Hz power supply is a single, clean sine wave. VFDs draw current in choppy, non-sinusoidal pulses — which contain additional frequencies riding on top of the normal power wave. These extra frequencies are called harmonics. They cause heat in wiring, flicker in lights, errors in meters, and nuisance trips in other drives.
+      </div>
+    </div>
+
+    <div class="reactor-card">
+      <div class="rc-head"><span style="font-size:22px">📉</span><div><div class="rc-name">How a Line Reactor Helps</div></div></div>
+      <div class="rc-list">The line reactor's inductance smooths the pulsed current draw, reducing harmonic spikes and making life easier for the rest of the power system. A 5% reactor gives stronger smoothing than a 3% reactor, but with more voltage drop.
+      </div>
+    </div>
+  </div>
+
+  <table class="matrix" style="margin-top:14px">
+    <thead><tr><th class="row-h">Impedance</th><th>Harmonic Reduction</th><th>Voltage Drop</th><th>Best For</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">3%</td><td class="warn">Standard reduction</td><td>Lower voltage drop</td><td>Most common, standard protection</td></tr>
+      <tr><td class="lbl">5%</td><td class="best">Stronger reduction</td><td>More voltage drop</td><td>Generator power, difficult systems, higher harmonics, sensitive installs</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:12px">
+    <h3>📌 When to Specify 5%</h3>
+    <p>Generator-fed systems • Difficult or dirty power • Multiple drives on the same service • Sensitive facilities or electronics nearby • Customer complaints that point to stronger input-side protection</p>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">10</div>
+</section>
+
+<!-- ============= PAGE 11 — LEARN 08: SYSTEM INTEGRATION + MINI-BOSS ============= -->
+<section class="page" data-section-id="compatibility">
+  <div class="page-tag" style="color:#818CF8">▸ LEARN · 08 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📖 COMPATIBILITY · BOTH REACTORS TOGETHER</div>
+  <h2 style="margin-top:14px">When do you spec<br>both reactors?</h2>
+  <p class="lead" style="margin-top:6px">Line and load reactors solve different problems. On the right installation, you quote both — and the system is protected end to end.</p>
+
+  <div class="aha-card" style="margin-top:14px">
+    <h3>🔌 The Complete Protected System</h3>
+    <div class="flow">
+      <div class="node">Utility / Gen<div class="sub">incoming power</div></div>
+      <div class="arrow">→</div>
+      <div class="node highlight">Line Reactor<div class="sub">input protection</div></div>
+      <div class="arrow">→</div>
+      <div class="node">VFD<div class="sub">speed control</div></div>
+      <div class="arrow">→</div>
+      <div class="node highlight">Load Reactor<div class="sub">output protection</div></div>
+      <div class="arrow">→</div>
+      <div class="node">Motor<div class="sub">protected</div></div>
+    </div>
+  </div>
+
+  <table class="matrix" style="margin-top:14px;font-size:10.3px">
+    <thead><tr><th class="row-h">Feature</th><th>Line Reactor</th><th>Load Reactor</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Installed</td><td>Before the VFD</td><td>After the VFD</td></tr>
+      <tr><td class="lbl">Protects</td><td>Drive and incoming power system</td><td>Motor, insulation, and motor cable</td></tr>
+      <tr><td class="lbl">Main purpose</td><td>Reduce harmonics and surges</td><td>Reduce reflected wave and motor stress</td></tr>
+      <tr><td class="lbl">Helps with</td><td>Dirty power, generators, multiple drives</td><td>Long motor leads, older motors, overheating</td></tr>
+      <tr><td class="lbl">Memory hook</td><td>Protect the drive from the power</td><td>Protect the motor from the drive</td></tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="callout">
+      <h3>✅ Spec BOTH when:</h3>
+      <p>Generator power and a long motor lead • Critical uptime matters • Input-side power issues and output-side motor risk both show up in the same job</p>
+    </div>
+    <div class="callout">
+      <h3>📌 Easy Read</h3>
+      <p>Problem <b>before</b> the drive = line reactor. Problem <b>after</b> the drive = load reactor. Problems on both sides = quote both.</p>
+    </div>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="harmonic-haunter">
+    <div class="icon">👁️</div>
+    <h3>The Harmonic Haunter blocks the path!</h3>
+    <div class="sub">5 questions on reactor fundamentals, line vs load, and when to use each · Defeat to continue</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">11</div>
+</section>
+
+<!-- ============= PAGE 12 — APPLY 01: dv/dt FILTERS ============= -->
+<section class="page" data-section-id="accessories">
+  <div class="page-tag" style="color:#6366F1">▸ APPLY · 01 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ ACCESSORIES · dv/dt FILTERS</div>
+  <h2 style="margin-top:14px">When a reactor<br>isn't enough.</h2>
+  <p class="lead" style="margin-top:6px">A load reactor slows voltage rise. A dv/dt filter slows it much more aggressively — and it's the right call when cable runs push past 250 feet.</p>
+
+  <div class="reactor-card">
+    <div class="rc-head"><span style="font-size:22px">⚡</span><div><div class="rc-name">What Is a dv/dt Filter?</div><div class="rc-tag">Output Side · 250–500 ft Cable Runs</div></div></div>
+    <div class="rc-list">
+      dv/dt (pronounced "dee-vee dee-tee") is the mathematical notation for the rate of voltage change over time. A dv/dt filter is a more sophisticated LC (inductor-capacitor) circuit that <b>limits the steepness of voltage rise</b> in the PWM pulses far more effectively than a simple load reactor. It's installed on the VFD output side, same location as a load reactor.
+    </div>
+  </div>
+
+  <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="reactor-card">
+      <div class="rc-head"><span style="font-size:18px">✅</span><div><div class="rc-name">When to Use dv/dt</div></div></div>
+      <div class="rc-list"><ul>
+        <li>Motor cable run: 250–500 feet</li>
+        <li>Standard TEFC motor at 100–250 ft (borderline)</li>
+        <li>Customer has had motor insulation failures with only a load reactor</li>
+        <li>High carrier frequency settings on the VFD</li>
+      </ul></div>
+    </div>
+    <div class="reactor-card">
+      <div class="rc-head"><span style="font-size:18px">📊</span><div><div class="rc-name">vs Load Reactor</div></div></div>
+      <div class="rc-list"><ul>
+        <li>More components (L + C) → more aggressive filtering</li>
+        <li>Higher cost, larger physical size</li>
+        <li>Tuned to specific VFD carrier frequency ranges</li>
+        <li>Not a substitute for a sine wave filter at 500+ ft</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:12px">
+    <h3>💬 Customer Conversation</h3>
+    <p>"Your cable run is 350 feet — that's past what a standard load reactor covers well. We'd recommend a dv/dt filter. It's more aggressive voltage protection and it'll keep the motor healthy at that distance."</p>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">12</div>
+</section>
+
+<!-- ============= PAGE 13 — APPLY 02: SINE WAVE FILTERS ============= -->
+<section class="page" data-section-id="accessories">
+  <div class="page-tag" style="color:#6366F1">▸ APPLY · 02 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ ACCESSORIES · SINE WAVE FILTERS</div>
+  <h2 style="margin-top:14px">The cleanest<br>output possible.</h2>
+  <p class="lead" style="margin-top:6px">A sine wave filter reconstitutes a near-true sine wave from the VFD's PWM output. It eliminates reflected wave problems entirely — and it's the only practical solution for very long cable runs.</p>
+
+  <div class="reactor-card">
+    <div class="rc-head"><span style="font-size:22px">🌊</span><div><div class="rc-name">What Is a Sine Wave Filter?</div><div class="rc-tag">Output Side · 500+ ft Cable Runs</div></div></div>
+    <div class="rc-list">
+      A sine wave filter is a more complete LC filter tuned to reconstruct a smooth, near-sinusoidal voltage from the drive's pulsed output. The motor "sees" something very close to a normal utility supply — eliminating reflected wave, reducing audible motor noise, and virtually eliminating insulation stress from dv/dt.
+    </div>
+  </div>
+
+  <table class="matrix" style="margin-top:14px">
+    <thead><tr><th class="row-h">Accessory</th><th>Cable Range</th><th>What It Does</th><th>Cost Tier</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Load Reactor</td><td>100–250 ft</td><td>Slows voltage rise (basic)</td><td>$</td></tr>
+      <tr><td class="lbl">dv/dt Filter</td><td>250–500 ft</td><td>Aggressively limits dv/dt</td><td>$$</td></tr>
+      <tr><td class="lbl">Sine Wave Filter</td><td class="best">500+ ft</td><td class="best">Reconstructs true sine wave</td><td>$$$</td></tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="reactor-card">
+      <div class="rc-head"><span style="font-size:18px">✅</span><div><div class="rc-name">Pros</div></div></div>
+      <div class="rc-list"><ul>
+        <li>Motor sees near-sinusoidal voltage</li>
+        <li>Any motor (even standard) is fully protected</li>
+        <li>Eliminates reflected wave completely</li>
+        <li>Reduces motor audible noise</li>
+      </ul></div>
+    </div>
+    <div class="reactor-card">
+      <div class="rc-head"><span style="font-size:18px">⚠️</span><div><div class="rc-name">Trade-offs</div></div></div>
+      <div class="rc-list"><ul>
+        <li>Highest cost of the three output accessories</li>
+        <li>Largest physical size</li>
+        <li>Some efficiency trade-off</li>
+        <li>Must be matched to VFD switching frequency</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">13</div>
+</section>
+
+<!-- ============= PAGE 14 — APPLY 03: QUICK COMPARISON ============= -->
+<section class="page" data-section-id="accessories">
+  <div class="page-tag" style="color:#6366F1">▸ APPLY · 03 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ ACCESSORIES · FULL COMPARISON</div>
+  <h2 style="margin-top:14px">Four accessories.<br>One simple decision.</h2>
+  <p class="lead" style="margin-top:6px">Use this master reference to pick the right input or output accessory for any VFD installation in one look.</p>
+
+  <table class="matrix" style="margin-top:14px;font-size:11px">
+    <thead><tr>
+      <th class="row-h">Accessory</th>
+      <th>Side</th>
+      <th>Primary Problem</th>
+      <th>Cable Trigger</th>
+      <th>Motor Type</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td class="lbl">Line Reactor (3%)</td>
+        <td class="best">Input</td>
+        <td>Harmonics, voltage transients</td>
+        <td>N/A (input side)</td>
+        <td>Any motor</td>
+      </tr>
+      <tr>
+        <td class="lbl">Line Reactor (5%)</td>
+        <td class="best">Input</td>
+        <td>Generator power, very dirty utility</td>
+        <td>N/A (input side)</td>
+        <td>Any motor</td>
+      </tr>
+      <tr>
+        <td class="lbl">Load Reactor</td>
+        <td style="background:#DCFCE7;color:#14532D;font-weight:800">Output</td>
+        <td>Reflected wave, basic dv/dt</td>
+        <td>100–250 ft</td>
+        <td>Standard TEFC most critical</td>
+      </tr>
+      <tr>
+        <td class="lbl">dv/dt Filter</td>
+        <td style="background:#DCFCE7;color:#14532D;font-weight:800">Output</td>
+        <td>High dv/dt, moderate cable</td>
+        <td>250–500 ft</td>
+        <td>Standard or inverter-duty</td>
+      </tr>
+      <tr>
+        <td class="lbl">Sine Wave Filter</td>
+        <td style="background:#DCFCE7;color:#14532D;font-weight:800">Output</td>
+        <td>Very long cable, full protection</td>
+        <td class="bad">500+ ft</td>
+        <td>Any motor fully protected</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:16px">
+    <h3>🔑 Plain-English Accessory Explanations</h3>
+    <p><b>Reactor:</b> "Helps smooth and protect the system."<br>
+    <b>dv/dt Filter:</b> "Further reduces voltage spikes."<br>
+    <b>Sine Wave Filter:</b> "Makes the VFD output almost like utility power."</p>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">14</div>
+</section>
+
+<!-- ============= PAGE 15 — APPLY 04: QUALIFYING THE CUSTOMER ============= -->
+<section class="page" data-section-id="application">
+  <div class="page-tag" style="color:#6366F1">▸ APPLY · 04 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ APPLICATION · QUALIFYING QUESTIONS</div>
+  <h2 style="margin-top:14px">Seven questions.<br>Every reactor call.</h2>
+  <p class="lead" style="margin-top:6px">The source training pack keeps coming back to the same first questions. Ask them in this order and the right recommendation usually surfaces fast.</p>
+
+  <table class="matrix" style="margin-top:16px;font-size:10.6px">
+    <thead><tr><th class="row-h">Question</th><th>Why It Matters</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">1. Is the issue before or after the drive?</td><td>Before the drive points toward line-reactor logic. After the drive points toward load-reactor or output-filter logic.</td></tr>
+      <tr><td class="lbl">2. How long is the motor cable?</td><td>The most important output-side number. This decides whether you stay with none, quote a load reactor, or step up to filters.</td></tr>
+      <tr><td class="lbl">3. Are there multiple drives on the system?</td><td>That is a classic input-side harmonic clue for a line reactor.</td></tr>
+      <tr><td class="lbl">4. Is incoming power unstable?</td><td>Generator power, weak utility, and dirty power all push the conversation toward line-reactor protection.</td></tr>
+      <tr><td class="lbl">5. Is it an older motor?</td><td>Older and rewound motors are more vulnerable to PWM stress and reflected wave.</td></tr>
+      <tr><td class="lbl">6. Is nuisance tripping happening?</td><td>Unexpected trips often point to input-side stress that deserves a line reactor.</td></tr>
+      <tr><td class="lbl">7. Is the motor inverter-duty rated?</td><td>Motor type changes how much output-side protection you should recommend at a given cable length.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="translate-row" style="display:flex;gap:10px;margin-top:14px;font-size:11.2px">
+    <div class="says" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🗣️ "The pump is way out back in the field."</div>
+    <div class="means" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🧠 Long motor lead clue — now ask exact footage, motor type, and whether the job is on generator power.</div>
+    <div class="quote-it" style="flex:1;padding:12px;border-radius:10px;font-weight:700">💬 "Let's pin down the distance first, then we can tell if this stays at a load reactor or needs a stronger output filter."</div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">15</div>
+</section>
+
+<!-- ============= PAGE 16 — APPLY 05: DECISION PATH ============= -->
+<section class="page" data-section-id="application">
+  <div class="page-tag" style="color:#6366F1">▸ APPLY · 05 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ REACTOR QUICK DECISION PATH</div>
+  <h2 style="margin-top:14px">Six questions.<br>One reactor spec.</h2>
+  <p class="lead" style="margin-top:6px">Run this path on every VFD + motor call. Each answer either closes the input-side story or the output-side story — or both.</p>
+
+  <div style="margin-top:18px">
+    <div class="decision-card"><div class="q">1. Is the VFD fed by a generator, weak utility, or unstable incoming power?</div><div class="y">YES → Start with line-reactor logic. 5% is the stronger call when the power side is clearly difficult.</div><div class="n">NO → Move to Q2 and keep checking whether the input side still needs protection.</div></div>
+    <div class="decision-card"><div class="q">2. Are there multiple drives, sensitive electronics, nuisance trips, or a large transformer very close to the VFD?</div><div class="y">YES → Recommend a line reactor. Those are all classic input-side clues.</div><div class="n">NO → Input side may be simple enough to leave alone if the utility is clean.</div></div>
+    <div class="decision-card"><div class="q">3. How far is the motor from the VFD?</div><div class="y">Under 50 ft → Usually fine, especially with a modern inverter-duty motor.</div><div class="n">50–100 ft → Watch the application closely, especially with older or standard motors.</div></div>
+    <div class="decision-card"><div class="q">4. Is cable run 100–250 ft?</div><div class="y">YES → Load reactor. Standard call — quote it automatically.</div><div class="n">NO → Continue to Q5</div></div>
+    <div class="decision-card"><div class="q">5. Is cable run 250–500 ft?</div><div class="y">YES → dv/dt filter. This is the medium-long lead zone where a simple reactor is often no longer enough.</div><div class="n">NO → Continue to Q6</div></div>
+    <div class="decision-card"><div class="q">6. Is cable run over 500 ft?</div><div class="y">YES → Sine wave filter. This is the strongest output-side solution for very long motor leads.</div><div class="n">NO → Finish by checking motor type; older or non-inverter-duty motors justify protection sooner.</div></div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">16</div>
+</section>
+
+<!-- ============= PAGE 17 — APPLY 06: APPLICATION MATRIX + REFLECTED-WAVE-WRAITH ============= -->
+<section class="page" data-section-id="application">
+  <div class="page-tag" style="color:#6366F1">▸ APPLY · 06 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ REACTOR APPLICATION MATRIX</div>
+  <h2 style="margin-top:14px">Scenario first.<br>Spec second.</h2>
+  <p class="lead" style="margin-top:6px">Use this matrix when a customer describes their setup. One pass gives you input recommendation, output recommendation, and priority level.</p>
+
+  <table class="matrix" style="margin-top:14px;font-size:10.5px">
+    <thead><tr><th class="row-h">Scenario</th><th>Input Rec.</th><th>Output Rec.</th><th>Priority</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Generator power, 75 ft cable, standard motor</td><td class="best">5% line reactor</td><td>Load reactor</td><td class="bad">High</td></tr>
+      <tr><td class="lbl">Utility power, 40 ft cable, inverter-duty motor</td><td>3% if harmonics concern</td><td class="best">None needed</td><td class="best">Low</td></tr>
+      <tr><td class="lbl">Utility power, 180 ft cable, standard TEFC</td><td>3% line reactor optional</td><td class="warn">Load reactor</td><td class="warn">Medium</td></tr>
+      <tr><td class="lbl">Generator power, 300 ft cable, standard TEFC</td><td class="best">5% line reactor</td><td class="bad">dv/dt filter</td><td class="bad">Critical</td></tr>
+      <tr><td class="lbl">Utility power, 600 ft cable, any motor</td><td>3% line reactor</td><td class="bad">Sine wave filter</td><td class="bad">Critical</td></tr>
+      <tr><td class="lbl">3 VFDs on same panel, 50 ft each, inverter-duty</td><td class="warn">3% line reactors (all 3)</td><td class="best">None needed</td><td class="warn">Medium</td></tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="callout">
+      <h3>⚠️ Common Sales Mistakes</h3>
+      <p>Mixing up input side and output side • Ignoring long motor leads • Assuming inverter-duty means "no accessory ever" • Treating nuisance tripping like a random drive issue instead of an input-power clue</p>
+    </div>
+    <div class="callout">
+      <h3>📈 When to Upsell</h3>
+      <p>Long motor cable • Older motor • Generator-fed drive • Multiple drives on the same system • Expensive motor or costly downtime</p>
+    </div>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="reflected-wave-wraith">
+    <div class="icon">👾</div>
+    <h3>The Reflected Wave Wraith blocks the path!</h3>
+    <div class="sub">5 questions on load reactors, reflected wave, and cable length thresholds · Defeat to unlock the Boss Fight</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">17</div>
+</section>
+
+<!-- ============= PAGE 18 — BOSS INTRO ============= -->
+<section class="page boss-page" data-section-id="finalboss" style="display:flex;flex-direction:column;align-items:center;text-align:center">
+  <div class="page-tag" style="color:#C7D2FE">▸ TEST · BOSS FIGHT</div>
+  <div style="margin-top:.6in"><div class="level-banner lvl-test" style="margin:0 auto">🎯 TEST LEVEL</div></div>
+  <h2 style="margin-top:20px;font-size:54px">The Reactor<br>Core.</h2>
+  <svg width="320" height="320" viewBox="0 0 320 320" style="margin-top:14px">
+    <defs>
+      <linearGradient id="bossR" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#C7D2FE"/>
+        <stop offset="100%" stop-color="#1E1B4B"/>
+      </linearGradient>
+      <filter id="bossglow9"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <g transform="translate(160 160)">
+      <!-- Boss reactor housing -->
+      <rect x="-110" y="-130" width="220" height="260" rx="16" fill="url(#bossR)" stroke="#FACC15" stroke-width="3" filter="url(#bossglow9)"/>
+      <!-- Label -->
+      <rect x="-78" y="-110" width="156" height="22" rx="4" fill="#1E1B4B"/>
+      <text x="0" y="-94" text-anchor="middle" font-size="11" fill="#FACC15" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="2">REACTOR CORE</text>
+      <!-- Evil display -->
+      <rect x="-82" y="-82" width="164" height="54" rx="6" fill="#0F172A" stroke="#FACC15" stroke-width="1.5"/>
+      <text x="0" y="-47" text-anchor="middle" font-family="JetBrains Mono" font-size="28" fill="#EF4444" font-weight="800">∞Ω</text>
+      <text x="0" y="-33" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#64748B" letter-spacing="2">HOSTILE  IMPEDANCE</text>
+      <!-- Evil coil eyes -->
+      <path d="M -48 -4 Q -40 -16 -32 -4 Q -24 8 -16 -4" fill="none" stroke="#EF4444" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 16 -4 Q 24 -16 32 -4 Q 40 8 48 -4" fill="none" stroke="#EF4444" stroke-width="3" stroke-linecap="round"/>
+      <!-- Snarl -->
+      <path d="M -42 28 L -28 18 L -14 28 L 0 18 L 14 28 L 28 18 L 42 28" fill="none" stroke="#FACC15" stroke-width="3"/>
+      <!-- Big coil symbol -->
+      <path d="M -68 70 Q -56 54 -44 70 Q -32 86 -20 70 Q -8 54 4 70 Q 16 86 28 70 Q 40 54 52 70" fill="none" stroke="#4F46E5" stroke-width="4" stroke-linecap="round"/>
+      <path d="M -68 92 Q -56 76 -44 92 Q -32 108 -20 92 Q -8 76 4 92 Q 16 108 28 92 Q 40 76 52 92" fill="none" stroke="#4F46E5" stroke-width="4" stroke-linecap="round"/>
+      <!-- Terminal feet -->
+      <g fill="#0F172A" stroke="#C7D2FE" stroke-width="2">
+        <rect x="-70" y="110" width="14" height="28" rx="3"/>
+        <rect x="-7" y="110" width="14" height="28" rx="3"/>
+        <rect x="56" y="110" width="14" height="28" rx="3"/>
+      </g>
+    </g>
+  </svg>
+  <div style="width:80%;margin-top:14px">
+    <div style="display:flex;justify-content:space-between;color:#FACC15;font-weight:800;font-size:11px;letter-spacing:.1em;margin-bottom:6px">
+      <span>REACTOR CORE · ∞Ω</span><span>STATUS: HOSTILE</span>
+    </div>
+    <div class="hp-bar"><div class="fill"></div></div>
+  </div>
+  <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:18px 24px;margin-top:24px;width:80%">
+    <p style="color:#fff;font-size:14px"><b>30 questions · 2 XP each · 80%+ to win</b></p>
+    <p style="color:#94A3B8;font-size:13px;margin-top:8px">No peeking. Score honest. 24/30 = 🔌 Reactor Master badge.</p>
+  </div>
+  <div class="page-num" style="color:#64748B">18</div>
+</section>
+
+<!-- ============= PAGE 19 — ROUND 1 (Q1-6) FUNDAMENTALS ============= -->
+<section class="page boss-page" data-quiz-page="1" data-section-id="finalboss">
+  <div class="page-tag" style="color:#C7D2FE">▸ FINAL BOSS · ROUND 1 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 1 · FUNDAMENTALS</div>
+    <div style="color:#C7D2FE;font-weight:800;font-size:11px;letter-spacing:.1em">Q 1 → 6 · OPENING SALVO</div>
+  </div>
+  <div class="hp-bar r1" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="1"></div><div class="qcard" data-q="2"></div>
+    <div class="qcard" data-q="3"></div><div class="qcard" data-q="4"></div>
+    <div class="qcard" data-q="5"></div><div class="qcard" data-q="6"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">19</div>
+</section>
+
+<!-- ============= PAGE 20 — ROUND 2 (Q7-12) LINE REACTORS ============= -->
+<section class="page boss-page" data-quiz-page="2" data-section-id="finalboss">
+  <div class="page-tag" style="color:#C7D2FE">▸ FINAL BOSS · ROUND 2 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 2 · LINE REACTORS</div>
+    <div style="color:#C7D2FE;font-weight:800;font-size:11px;letter-spacing:.1em">Q 7 → 12 · POWER SURGE</div>
+  </div>
+  <div class="hp-bar r2" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="7"></div><div class="qcard" data-q="8"></div>
+    <div class="qcard" data-q="9"></div><div class="qcard" data-q="10"></div>
+    <div class="qcard" data-q="11"></div><div class="qcard" data-q="12"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">20</div>
+</section>
+
+<!-- ============= PAGE 21 — ROUND 3 (Q13-18) REFLECTED WAVE ============= -->
+<section class="page boss-page" data-quiz-page="3" data-section-id="finalboss">
+  <div class="page-tag" style="color:#C7D2FE">▸ FINAL BOSS · ROUND 3 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 3 · LOAD REACTORS &amp; REFLECTED WAVE</div>
+    <div style="color:#C7D2FE;font-weight:800;font-size:11px;letter-spacing:.1em">Q 13 → 18 · FULL CHARGE</div>
+  </div>
+  <div class="hp-bar r3" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="13"></div><div class="qcard" data-q="14"></div>
+    <div class="qcard" data-q="15"></div><div class="qcard" data-q="16"></div>
+    <div class="qcard" data-q="17"></div><div class="qcard" data-q="18"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">21</div>
+</section>
+
+<!-- ============= PAGE 22 — ROUND 4 (Q19-24) ACCESSORIES ============= -->
+<section class="page boss-page" data-quiz-page="4" data-section-id="finalboss">
+  <div class="page-tag" style="color:#C7D2FE">▸ FINAL BOSS · ROUND 4 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 4 · ACCESSORIES &amp; APPLICATIONS</div>
+    <div style="color:#C7D2FE;font-weight:800;font-size:11px;letter-spacing:.1em">Q 19 → 24 · OVERLOAD</div>
+  </div>
+  <div class="hp-bar r4" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="19"></div><div class="qcard" data-q="20"></div>
+    <div class="qcard" data-q="21"></div><div class="qcard" data-q="22"></div>
+    <div class="qcard" data-q="23"></div><div class="qcard" data-q="24"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">22</div>
+</section>
+
+<!-- ============= PAGE 23 — ROUND 5 (Q25-30) SALES & DECISIONS ============= -->
+<section class="page boss-page" data-quiz-page="5" data-section-id="finalboss">
+  <div class="page-tag" style="color:#C7D2FE">▸ FINAL BOSS · ROUND 5 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 FINAL ROUND · SALES &amp; DECISIONS</div>
+    <div style="color:#EF4444;font-weight:800;font-size:11px;letter-spacing:.1em">Q 25 → 30 · KILL SHOT</div>
+  </div>
+  <div class="hp-bar r5" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="25"></div><div class="qcard" data-q="26"></div>
+    <div class="qcard" data-q="27"></div><div class="qcard" data-q="28"></div>
+    <div class="qcard" data-q="29"></div><div class="qcard" data-q="30"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">23</div>
+</section>
+
+<!-- ============= PAGE 24 — ANSWER KEY / RESULTS ============= -->
+<section class="page" id="resultsPage" data-section-id="results">
+  <div class="page-tag" style="color:#4F46E5">▸ FINAL BOSS · RESULTS</div>
+  <div class="level-banner lvl-test" style="margin-top:.4in">🎯 ANSWER KEY · YOUR RESULTS</div>
+  <h2 style="margin-top:14px">🗝️ The Key.</h2>
+  <p class="lead print-only" style="display:none">Score yourself. Tier yourself. Earn the badge.</p>
+
+  <div id="liveResults" class="interactive-only" style="margin-top:18px;background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:18px;padding:24px;color:#fff">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+      <div>
+        <p style="color:#94A3B8;font-size:11px;letter-spacing:.18em;font-weight:800;margin:0">▸ YOUR LIVE SCORE</p>
+        <p style="font-family:'Bricolage Grotesque';font-size:54px;font-weight:800;color:#FACC15;margin-top:4px;line-height:1">
+          <span id="scoreCorrect">0</span><span style="color:#475569">/30</span>
+        </p>
+        <p style="font-size:13px;color:#CBD5E1;margin-top:4px">Total XP: <b id="scoreXP" style="color:#34D399">0</b> <span style="color:#475569">/ 280</span></p>
+      </div>
+      <div id="tierBadge" style="text-align:center"></div>
+    </div>
+    <div style="margin-top:14px;background:#334155;height:14px;border-radius:7px;overflow:hidden;border:1px solid #475569">
+      <div id="scoreBar" style="height:100%;width:0%;background:linear-gradient(90deg,#4F46E5,#818CF8);transition:width .4s ease"></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button id="submitBtn" style="background:linear-gradient(135deg,#4F46E5,#312E81);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📤 SUBMIT TO TRAINER</button>
+      <button id="copyBtn" style="background:#4F46E5;color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📋 COPY RESULTS</button>
+      <button id="resetBtn" style="background:#1E293B;color:#FACC15;border:1px solid #475569;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">↻ RESTART QUIZ</button>
+    </div>
+    <div id="submitStatus" style="margin-top:10px;font-size:12px;font-weight:700;color:#94A3B8;min-height:18px;white-space:pre-wrap"></div>
+  </div>
+
+  <div class="answer-key-static">
+  <div class="key-grid">
+    <div class="key-cell"><span>Q1</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q2</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q3</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q4</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q5</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q6</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q7</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q8</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q9</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q10</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q11</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q12</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q13</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q14</span><span class="a">A</span></div>
+    <div class="key-cell"><span>Q15</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q16</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q17</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q18</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q19</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q20</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q21</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q22</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q23</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q24</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q25</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q26</span><span class="a">A</span></div>
+    <div class="key-cell"><span>Q27</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q28</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q29</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q30</span><span class="a">C</span></div>
+  </div>
+
+  <h3 style="margin-top:24px">🏆 Scoring tiers</h3>
+  <div class="tier tier-gold"><div class="medal">🥇</div><div><b>24–30 correct → REACTOR MASTER.</b> Earn the 🔌 badge. You spec reactors like an engineer.</div></div>
+  <div class="tier tier-silver"><div class="medal">🥈</div><div><b>18–23 correct → REACTOR-READY.</b> Re-run the APPLY level and re-fight.</div></div>
+  <div class="tier tier-bronze"><div class="medal">🥉</div><div><b>0–17 correct → BACK TO THE COILS.</b> Re-read LEARN. The Wraith waits.</div></div>
+  </div>
+  <div class="page-num">24</div>
+</section>
+
+<!-- ============= PAGE 25 — FINAL TAKEAWAYS ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ FINAL TAKEAWAYS</div>
+  <div class="level-banner" style="background:#EEF2FF;color:#1E1B4B;margin-top:.4in">🧠 THE PLAYBOOK</div>
+  <h2 style="margin-top:14px">The memory hook<br>that keeps you straight.</h2>
+  <p class="lead">The clearest line in the source docs is still the best one: <b>LINE = protect the DRIVE</b>. <b>LOAD = protect the MOTOR</b>.</p>
+
+  <div class="vs-grid" style="margin-top:18px">
+    <div class="vs-col line">
+      <h3>🔵 Input-Side Clues</h3>
+      <ul>
+        <li>Generator-fed, weak, or dirty incoming power</li>
+        <li>Multiple drives, sensitive facilities, or nuisance tripping</li>
+        <li>Large transformer very close to the VFD</li>
+        <li>That means line-reactor logic: protect the drive from the power</li>
+      </ul>
+    </div>
+    <div class="vs-col load">
+      <h3>🟢 Output-Side Clues</h3>
+      <ul>
+        <li>Long motor lead length, especially on 480V systems</li>
+        <li>Older, standard, or rewound motors</li>
+        <li>250–500 ft pushes you toward dv/dt; 500+ ft pushes you toward sine wave filtering</li>
+        <li>That means load-reactor logic: protect the motor from the drive</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top:14px">
+    <div class="decision-card"><div class="q">Line Reactor</div><div class="y">"Protects the drive from incoming power problems and reduces harmonics."</div><div class="n">Think before the VFD: power quality, generator issues, nuisance trips, multiple drives.</div></div>
+    <div class="decision-card"><div class="q">Load Reactor</div><div class="y">"Protects the motor from the high-frequency output of the VFD."</div><div class="n">Think after the VFD: long cable, motor insulation stress, reflected wave, older motors.</div></div>
+    <div class="decision-card"><div class="q">First Number</div><div class="y">"How far is the motor from the drive?" Distance is still the fastest way to unlock the output-side story.</div><div class="n">No footage yet means you are still qualifying, not finalizing the accessory.</div></div>
+    </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>🎥 Source Support</h3>
+    <p>Review the Loom walkthrough tied to this doc pack here:<br><a href="https://www.loom.com/share/3cf55e767114431f8236b82815bfbd98" target="_blank" rel="noopener noreferrer">https://www.loom.com/share/3cf55e767114431f8236b82815bfbd98</a></p>
+  </div>
+  <div class="page-num">25</div>
+</section>
+
+<!-- ============= PAGE 26 — TROPHY CASE ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ FINAL XP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">🏅 TROPHY CASE</div>
+  <h2 style="margin-top:14px">Your earned XP.</h2>
+
+  <div class="trophy-grid">
+    <div class="trophy"><div class="icon">🔌</div><h3>REACTOR BASICS LOCKED</h3><div class="xp-num">+80 XP</div></div>
+    <div class="trophy"><div class="icon">👻</div><h3>MINI BOSSES</h3><div class="xp-num">+50 XP</div></div>
+    <div class="trophy"><div class="icon">🛠️</div><h3>ACCESSORY LOGIC</h3><div class="xp-num">+90 XP</div></div>
+    <div class="trophy"><div class="icon">🏆</div><h3>REACTOR MASTER</h3><div class="xp-num">+60 XP</div></div>
+  </div>
+
+  <div class="factbox" style="margin-top:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="font-size:16px">TOTAL POSSIBLE XP</h3>
+      <div style="font-family:'Bricolage Grotesque';font-size:46px;font-weight:800;color:#CA8A04">280</div>
+    </div>
+    <hr class="faint">
+    <p style="font-size:12px;color:var(--slate-500)">You can now separate input-side protection from output-side protection, explain reflected wave in plain English, and quote the right accessory ladder without guessing.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:18px">
+    🔓 <b>NEXT UNLOCKS:</b> Harmonic filters are the next step when a line reactor helps but the whole system still needs deeper THD cleanup, compliance support, or generator-friendly performance.
+  </div>
+  <div class="page-num">26</div>
+</section>
+
+<!-- ============= PAGE 27 — CLOSING ============= -->
+<section class="page closing-page" data-section-id="results">
+  <h1 style="font-size:84px">🔌</h1>
+  <h1 style="margin-top:14px">Protect it.<br>Filter it.<br>Quote the right reactor.</h1>
+  <p style="font-size:20px;max-width:5.5in;margin:24px auto 0">Reactors are the difference between a VFD installation that lasts 20 years and one that fails in 18 months. Master the two questions — cable length and power quality — and every drive call becomes a complete, protected solution.</p>
+</section>
+
+<!-- ADMIN OVERLAY (browser only) -->
+<div id="adminOverlay" class="interactive-only"></div>
+
+<script src="../shared/module.js?v=editor-blocks-2-page-delete"></script>
+<script>
+RSPModule.init({
+  moduleId:   "reactor-mastery",
+  moduleName: "Line & Load Reactor Mastery",
+  moduleIcon: "🔌",
+
+  totalQuestions: 30,
+  passGold:       24,
+  passSilver:     18,
+  pageXpTotal:    170,   // 8 LEARN × 10 + 6 APPLY × 15
+  minibossXpTotal: 50,
+  adminPassword:  (window.RSP_CONFIG && window.RSP_CONFIG.adminPassword) || "",
+  pumbleWebhookUrl: "",
+  storageKey: "rsp_reactor_mastery_progress",
+
+  tierBadges: {
+    gold:   { name:"REACTOR MASTER",      msg:"You spec reactors like an engineer." },
+    silver: { name:"REACTOR-READY",       msg:"Re-run APPLY level and re-fight." },
+    bronze: { name:"BACK TO THE COILS",   msg:"Re-read LEARN. The Wraith waits." }
+  },
+  tierSubmitText: {
+    gold:   "🥇 Reactor Master",
+    silver: "🥈 Reactor-Ready — Re-run APPLY level",
+    bronze: "🥉 Needs Re-do — Back to LEARN"
+  },
+
+  // -------- THE 30-QUESTION BOSS FIGHT --------
+  quiz: [
+    // ROUND 1 — Fundamentals
+    {n:1,  q:"A reactor is fundamentally which type of electrical component?", opts:{A:"A capacitor that stores electrical charge",B:"A transformer that steps voltage",C:"An inductor — a coil that resists rapid changes in current",D:"A resistor that dissipates power as heat"}, c:"C"},
+    {n:2,  q:"Where is a LINE reactor installed in a VFD system?", opts:{A:"Inside the motor terminal box",B:"Between the VFD and motor on the output side",C:"On the input side, before the VFD",D:"After the motor junction box"}, c:"C"},
+    {n:3,  q:"Where is a LOAD reactor installed in a VFD system?", opts:{A:"On the input side, before the VFD",B:"On the output side, between VFD and motor",C:"Inside the VFD enclosure",D:"Inside the motor terminal box"}, c:"B"},
+    {n:4,  q:"A line reactor primarily protects:", opts:{A:"Motor windings from reflected wave",B:"Motor bearings from bearing current damage",C:"The VFD and incoming power system from voltage spikes and harmonics",D:"Only the motor from overloads"}, c:"C"},
+    {n:5,  q:"A load reactor primarily protects:", opts:{A:"The VFD from harmonic distortion",B:"The incoming utility from drive-generated harmonics",C:"The motor from reflected wave voltage spikes caused by long VFD output cable runs",D:"The VFD output capacitors from ripple"}, c:"C"},
+    {n:6,  q:"Which best describes 'reflected wave' in a VFD/motor system?", opts:{A:"Harmonic energy traveling back from motor to utility",B:"Heat radiation from a motor running at elevated frequency",C:"Voltage spikes that occur when PWM pulses travel down long cables and reflect at the motor terminals due to impedance mismatch",D:"AC ripple present on the VFD DC bus"}, c:"C"},
+
+    // ROUND 2 — Line Reactors
+    {n:7,  q:"On a 480V system, at approximately what motor lead length should you start recommending a load reactor?", opts:{A:"Over 500 feet",B:"100 feet or more",C:"Only if motor is over 50 HP",D:"Under 25 feet only"}, c:"B"},
+    {n:8,  q:"What VFD output waveform creates reflected wave problems for motors?", opts:{A:"True sine wave output",B:"PWM (Pulse Width Modulation) switching waveform",C:"DC output only",D:"60 Hz pure AC output"}, c:"B"},
+    {n:9,  q:"On a long 480V motor lead, what is the main reflected-wave risk at the motor terminals?", opts:{A:"The voltage is always cut in half before it reaches the motor",B:"The voltage pulse can reflect and rise dramatically at the motor — nearly doubling the stress on insulation",C:"The motor only sees clean utility-quality sine wave power",D:"The cable blocks all PWM pulses automatically"}, c:"B"},
+    {n:10, q:"Which type of motor is most vulnerable to damage from reflected wave voltage spikes?", opts:{A:"New inverter-duty motors with class H insulation",B:"Older standard TEFC motors with conventional winding insulation",C:"Large 100 HP+ motors only",D:"Single-phase motors only"}, c:"B"},
+    {n:11, q:"Why does a large transformer mounted very close to a VFD often push you toward a line reactor?", opts:{A:"It lowers the motor's output frequency automatically",B:"It raises available fault current and drive stress, so the reactor helps buffer the VFD",C:"It eliminates the need for any output-side protection",D:"It turns a 3% reactor into a sine wave filter"}, c:"B"},
+    {n:12, q:"Which situation most strongly calls for installing a LINE reactor?", opts:{A:"A 150-foot cable run between VFD and motor",B:"VFD fed from a generator or a weak, dirty utility supply",C:"Motor running above nameplate speed",D:"A load reactor is already installed"}, c:"B"},
+
+    // ROUND 3 — Load Reactors & Reflected Wave
+    {n:13, q:"Which situation most strongly calls for installing a LOAD reactor?", opts:{A:"VFD connected to a generator",B:"150-foot cable run between VFD and a standard TEFC motor on a 480V system",C:"High THD on incoming utility power",D:"Motor running below nameplate frequency"}, c:"B"},
+    {n:14, q:"A 3% line reactor vs. a 5% line reactor — which provides stronger harmonic suppression?", opts:{A:"5% — higher impedance means more harmonic reduction and better voltage spike limiting",B:"3% — lower impedance means less voltage drop and therefore more protection",C:"Both provide identical protection at different costs",D:"3% is always preferred regardless of application"}, c:"A"},
+    {n:15, q:"The main trade-off of a 5% reactor compared to a 3% reactor is:", opts:{A:"5% costs less but offers less protection",B:"5% causes a slightly larger voltage drop because it adds more series impedance",C:"5% only works on single-phase systems",D:"3% causes higher harmonics than 5%"}, c:"B"},
+    {n:16, q:"For motor cable runs in the 250–500 foot range, what is typically recommended?", opts:{A:"A braking resistor",B:"A larger line reactor on the input side",C:"A dv/dt filter, which limits the rate of voltage rise more aggressively than a load reactor",D:"No accessory needed — 250 ft is within the safe zone"}, c:"C"},
+    {n:17, q:"For motor cable runs exceeding 500 feet, the most complete protection solution is:", opts:{A:"A standard load reactor",B:"A dv/dt filter",C:"A sine wave filter, which reconstitutes a near-true sine wave from the VFD's PWM output",D:"A line reactor on the input side"}, c:"C"},
+    {n:18, q:"Which output filter provides the closest approximation to a true sine wave from a VFD?", opts:{A:"Line reactor",B:"Load reactor",C:"Sine wave filter",D:"dv/dt filter"}, c:"C"},
+
+    // ROUND 4 — Accessories & Applications
+    {n:19, q:"A customer's pump motor is connected to a VFD with 75 feet of cable. The motor is inverter-duty rated. Your recommendation:", opts:{A:"Sine wave filter — required at any distance with VFDs",B:"Probably fine — 75 ft with an inverter-duty motor is acceptable; consider a load reactor if problems arise",C:"Both a load reactor AND a dv/dt filter are required",D:"Replace the motor immediately with a standard TEFC unit"}, c:"B"},
+    {n:20, q:"A customer has 350 feet of cable from a VFD to a standard TEFC motor on 480V. Best recommendation:", opts:{A:"Standard load reactor only",B:"Nothing needed — 350 ft is still acceptable",C:"A dv/dt filter — 350 ft exceeds the load reactor range and needs more aggressive voltage-rise limiting",D:"Line reactor on the input side only"}, c:"C"},
+    {n:21, q:"Which combination most directly changes how much motor lead length a VFD system can tolerate safely?", opts:{A:"Motor paint color, shaft diameter, and enclosure finish",B:"Voltage, motor type, carrier frequency, and cable type",C:"Only motor horsepower and frame size",D:"Only the brand of VFD"}, c:"B"},
+    {n:22, q:"Harmonics from VFD drives can cause problems for:", opts:{A:"Only the motor directly connected to that drive",B:"Other equipment on the same electrical service — other drives, computers, PLCs, and sensitive electronics",C:"Only equipment installed downstream of the VFD",D:"Only equipment in other buildings sharing the same utility feed"}, c:"B"},
+    {n:23, q:"Which of the following best describes a 'dv/dt filter'?", opts:{A:"A filter that converts AC to DC more efficiently inside the VFD",B:"An input filter that removes utility harmonics before they reach the VFD",C:"An output filter that limits the rate of voltage rise (dv/dt) of PWM pulses, reducing stress on motor windings for long cable runs",D:"A braking circuit used for fast motor deceleration"}, c:"C"},
+    {n:24, q:"When both a line reactor AND a load reactor are installed in the same VFD system, the line reactor goes:", opts:{A:"After the VFD on the output side",B:"Before the VFD on the input (line) side",C:"Between the dv/dt filter and the motor",D:"Inside the motor's junction box"}, c:"B"},
+
+    // ROUND 5 — Sales Mastery
+    {n:25, q:"A customer's VFD keeps tripping on overvoltage and they're running on generator power. You should recommend:", opts:{A:"A load reactor to protect the motor output side",B:"A line reactor on the input — generator power is unregulated and a line reactor smooths voltage spikes before they reach the VFD",C:"A sine wave filter on the output side",D:"A braking resistor to dissipate excess energy"}, c:"B"},
+    {n:26, q:"A 480V inverter-duty motor with a 40-foot cable run to its VFD. What output accessory is needed?", opts:{A:"Probably none — 40 ft is well within the safe range for an inverter-duty motor",B:"Load reactor required at all distances regardless of motor type",C:"dv/dt filter required for all VFD installations",D:"Sine wave filter required"}, c:"A"},
+    {n:27, q:"What does 'impedance mismatch' mean in the context of reflected wave?", opts:{A:"The motor is too large for the VFD's output rating",B:"The VFD output voltage is too high for the cable insulation rating",C:"The cable's surge impedance doesn't match the motor's terminal impedance, causing the voltage wave to reflect and nearly double at motor terminals",D:"The reactor is the wrong impedance percentage for the system"}, c:"C"},
+    {n:28, q:"A customer asks: 'Do I need a reactor if I already have an inverter-duty motor?' Correct answer:", opts:{A:"No — inverter-duty motors never need any reactors",B:"No — inverter-duty motors are completely immune to reflected wave at any cable length",C:"Inverter-duty motors tolerate VFD output better, but for cable runs of 100+ ft a load reactor is still recommended",D:"Yes — a reactor is always mandatory with inverter-duty motors"}, c:"C"},
+    {n:29, q:"The primary purpose of a LINE reactor in a drive system is to:", opts:{A:"Protect the motor from reflected wave voltage spikes",B:"Protect the VFD and power system by smoothing incoming power irregularities and reducing harmonics fed back to the utility",C:"Convert single-phase to three-phase power for the VFD",D:"Limit the motor's maximum speed range"}, c:"B"},
+    {n:30, q:"When selling reactors, the key qualifying questions are cable length, motor type (standard vs inverter-duty), and:", opts:{A:"Motor RPM nameplate value only",B:"VFD brand preference only",C:"Quality of the incoming power — utility vs. generator, presence of sensitive loads on the same service",D:"Motor color code and temperature rating only"}, c:"C"}
+  ],
+
+  // -------- MINI-BOSSES --------
+  minibosses: {
+    'harmonic-haunter': {
+      name: 'HARMONIC HAUNTER',
+      icon: '👁️',
+      tagline: 'Warden of the Input Side',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"A reactor is primarily which type of electrical component?", opts:{A:"A capacitor",B:"A transformer",C:"A resistor",D:"An inductor — a coil that resists rapid changes in current"}, c:"D"},
+        {q:"A line reactor is installed:", opts:{A:"Inside the motor terminal box",B:"After the motor on the output side",C:"Before the VFD on the input side",D:"Between VFD and motor"}, c:"C"},
+        {q:"Line reactors primarily protect:", opts:{A:"Motor windings from reflected wave",B:"Motor bearings from current damage",C:"The VFD and incoming power system from voltage spikes and harmonics",D:"Only the output cable from overheating"}, c:"C"},
+        {q:"Which situation most strongly requires a line reactor?", opts:{A:"A long motor cable run over 200 feet",B:"VFD fed from dirty incoming power or a generator",C:"Motor overheating at low speed",D:"Bearing damage from shaft current"}, c:"B"},
+        {q:"A load reactor protects the motor primarily from:", opts:{A:"Low incoming voltage from a weak utility",B:"Harmonics injected by the utility",C:"Overload current from the drive",D:"Reflected wave voltage spikes caused by long PWM cable runs"}, c:"D"}
+      ]
+    },
+    'reflected-wave-wraith': {
+      name: 'REFLECTED WAVE WRAITH',
+      icon: '👾',
+      tagline: 'Specter of the Motor Lead',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"A load reactor is installed:", opts:{A:"Inside the VFD enclosure",B:"Between VFD and motor — on the output side",C:"Before the VFD on the input side",D:"After the motor junction box"}, c:"B"},
+        {q:"Reflected wave voltage spikes occur primarily because:", opts:{A:"Harmonics from the utility",B:"VFD carrier frequency set too low",C:"Long motor cables act like transmission lines — impedance mismatch causes voltage to nearly double at motor terminals",D:"Motor running above nameplate speed"}, c:"C"},
+        {q:"On a 480V system, at what motor lead length should you strongly recommend a load reactor?", opts:{A:"Any cable length, even under 10 ft",B:"Over 500 ft only",C:"100 ft or more",D:"Under 25 ft only"}, c:"C"},
+        {q:"Which accessory is most appropriate for motor cable runs of 250–500 ft?", opts:{A:"Only a larger load reactor",B:"A dv/dt filter — provides more aggressive voltage rise limiting than a load reactor",C:"No accessory needed at this distance",D:"A line reactor on the input side"}, c:"B"},
+        {q:"A customer has an old standard TEFC motor with 200 ft of cable to the VFD. You recommend:", opts:{A:"Nothing — standard motors are fine at any distance",B:"A line reactor to protect the drive input",C:"A braking resistor to slow the motor",D:"A load reactor between VFD and motor"}, c:"D"}
+      ]
+    }
+  },
+
+  // -------- SIDE MAP --------
+  mapSections: [
+    {id:'intro',         name:'Start',           icon:'🏁', meta:'Pages 1–3',   firstPage:1},
+    {id:'foundation',    name:'Reactor Basics',  icon:'🔌', meta:'Pages 4–6',   firstPage:4},
+    {id:'compatibility', name:'Compatibility',   icon:'⚡', meta:'Pages 7–11',  firstPage:7},
+    {id:'mb1',           name:'Harm. Haunter',   icon:'👁️', meta:'Mini Boss',   firstPage:11, isBoss:true, bossId:'harmonic-haunter'},
+    {id:'accessories',   name:'Accessories',     icon:'🛠️', meta:'Pages 12–14', firstPage:12},
+    {id:'application',   name:'Application',     icon:'💼', meta:'Pages 15–17', firstPage:15},
+    {id:'mb2',           name:'Wave Wraith',     icon:'👾', meta:'Mini Boss',   firstPage:17, isBoss:true, bossId:'reflected-wave-wraith'},
+    {id:'finalboss',     name:'Reactor Core',    icon:'🐉', meta:'30 Questions',firstPage:18, isBoss:true, isFinal:true},
+    {id:'results',       name:'Results',         icon:'🏆', meta:'Trophy Case', firstPage:24}
+  ],
+
+  pageRanges: [
+    {section:'intro',         from:1,  to:3},
+    {section:'foundation',    from:4,  to:6},
+    {section:'compatibility', from:7,  to:11},
+    {section:'accessories',   from:12, to:14},
+    {section:'application',   from:15, to:17},
+    {section:'finalboss',     from:18, to:23},
+    {section:'results',       from:24, to:27}
+  ]
+});
+</script>
+
+</body>
+</html>

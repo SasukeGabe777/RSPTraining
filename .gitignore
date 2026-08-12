@@ -1,0 +1,31 @@
+# ── Credentials ──
+# Real Supabase URL/key and the admin password. Copy config.example.js to
+# config.local.js and fill it in. This file must ship with the deployed site
+# (a Netlify folder drag includes it automatically) but must never be
+# committed — public repos are swept continuously by credential scanners.
+config.local.js
+
+# ── Local backups ──
+# Snapshot zips and pre-edit copies. One is >100 MB, which GitHub rejects
+# outright, and none of it belongs in version history now that git is the
+# backup.
+.backups/
+
+# ── Browser QA profiles ──
+# Chromium/Edge user-data directories left behind by automated testing,
+# including multi-MB Crashpad dumps.
+.chrome-qa/
+.edge-qa/
+
+# ── Tooling scratch ──
+.artifacts/
+.agents/
+.claude/settings.local.json
+
+# ── OS / editor noise ──
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+*~

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RSP Training · Mastery Progress</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:radial-gradient(circle at top right,#1E293B 0%,#0F172A 70%);
+    font-family:'Inter',system-ui,sans-serif;color:#fff;min-height:100vh;
+  }
+  h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;line-height:1.05}
+  .wrap{max-width:1280px;margin:0 auto;padding:30px 32px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding-bottom:24px;border-bottom:1px solid #1E293B}
+  .pretitle{color:#FACC15;font-size:11px;letter-spacing:.18em;font-weight:800}
+  h1{font-size:42px;color:#fff;margin-top:4px}
+  .tagline{color:#CBD5E1;margin-top:6px}
+  .navbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .nav-link{padding:8px 14px;border-radius:8px;background:#1E293B;color:#94A3B8;text-decoration:none;font-weight:700;font-size:12px;letter-spacing:.05em;border:1px solid #334155}
+  .nav-link:hover{background:#334155;color:#fff}
+  .nav-link.active{background:#FACC15;color:#0F172A;border-color:#FACC15}
+
+  /* Hero current-tier display */
+  .hero{
+    margin-top:30px;background:linear-gradient(135deg,#1E1B4B,#0F172A);
+    border:2px solid #312E81;border-radius:24px;padding:36px;
+    display:flex;align-items:center;gap:30px;flex-wrap:wrap;position:relative;overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;top:-30px;right:-30px;
+    width:200px;height:200px;border-radius:50%;
+    background:radial-gradient(circle,rgba(250,204,21,.15) 0%,transparent 70%);
+  }
+  .tier-badge{
+    width:140px;height:140px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:90px;flex:0 0 140px;
+    background:linear-gradient(135deg,#1E293B,#0F172A);
+    border:4px solid currentColor;
+    box-shadow:0 0 40px currentColor;
+  }
+  .hero-info{flex:1;min-width:240px;position:relative;z-index:1}
+  .hero-info .label{color:#FACC15;font-size:11px;letter-spacing:.18em;font-weight:800}
+  .hero-info h2{font-size:54px;color:#fff;margin-top:6px;line-height:1}
+  .hero-info .blurb{color:#CBD5E1;font-size:15px;margin-top:8px;line-height:1.5;max-width:520px}
+  .hero-info .next{margin-top:20px;background:rgba(250,204,21,.08);border:1px solid rgba(250,204,21,.3);padding:14px 18px;border-radius:14px;display:inline-block}
+  .hero-info .next .small{color:#94A3B8;font-size:11px;letter-spacing:.1em;font-weight:800}
+  .hero-info .next .big{color:#FACC15;font-weight:800;margin-top:4px;font-size:16px}
+
+  /* Progress road */
+  .road{margin-top:48px;background:linear-gradient(160deg,#1E293B,#0F172A);border:1px solid #334155;border-radius:24px;padding:36px}
+  .road h2{color:#fff;font-size:22px;margin-bottom:24px}
+  .stations{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;position:relative;align-items:start}
+  @media(max-width:900px){.stations{grid-template-columns:repeat(4,1fr)}}
+  @media(max-width:600px){.stations{grid-template-columns:repeat(2,1fr)}}
+  .station{text-align:center;padding:14px 6px;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid #334155;position:relative}
+  .station.earned{border-color:#FACC15;background:rgba(250,204,21,.08)}
+  .station.current{border-color:#10B981;background:rgba(16,185,129,.12);box-shadow:0 0 22px rgba(16,185,129,.3)}
+  .station.locked{opacity:.5}
+  .station.extreme{border-style:dashed}
+  .station .icon{font-size:42px;line-height:1}
+  .station h3{font-size:13px;color:#fff;margin-top:6px}
+  .station .pct{color:#94A3B8;font-size:10px;font-weight:800;letter-spacing:.05em;margin-top:4px}
+  .station.earned .pct{color:#FACC15}
+  .station.current .pct{color:#10B981}
+  .station .extreme-tag{position:absolute;top:6px;right:6px;font-size:8px;font-weight:800;color:#DC2626;background:#FEE2E2;padding:2px 5px;border-radius:4px;letter-spacing:.05em}
+
+  /* XP bar */
+  .xp-track{margin-top:36px;background:#0F172A;border-radius:14px;padding:20px;border:1px solid #334155}
+  .xp-track .meta{display:flex;justify-content:space-between;color:#94A3B8;font-size:11px;font-weight:800;letter-spacing:.1em;margin-bottom:8px}
+  .xp-track .bar-wrap{position:relative;height:18px;background:#1E293B;border-radius:9px;border:1px solid #334155;overflow:hidden}
+  .xp-track .bar-fill{height:100%;background:linear-gradient(90deg,#FACC15,#CA8A04);transition:width .6s ease}
+  .xp-track .markers{display:flex;justify-content:space-between;margin-top:4px;color:#475569;font-size:9px;font-weight:700}
+
+  /* Module breakdown */
+  .breakdown{margin-top:36px}
+  .breakdown h2{color:#fff;font-size:22px;margin-bottom:16px}
+  .module-list{display:flex;flex-direction:column;gap:10px}
+  .module-row{display:flex;align-items:center;gap:14px;background:#1E293B;border:1px solid #334155;border-radius:12px;padding:14px 18px}
+  .module-row .icon{font-size:30px}
+  .module-row .info{flex:1}
+  .module-row h4{color:#fff;font-size:15px}
+  .module-row .row-meta{color:#64748B;font-size:11px;font-weight:600;letter-spacing:.05em;margin-top:2px}
+  .module-row .xp-amt{color:#FACC15;font-weight:800;font-size:14px;font-family:'Bricolage Grotesque'}
+  .module-row .xp-amt small{color:#475569;font-size:11px;font-weight:600;font-family:inherit}
+
+  .footer{margin-top:60px;padding:20px 0;border-top:1px solid #1E293B;color:#64748B;font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap}
+  .footer a{color:#64748B;text-decoration:none}
+  .footer a:hover{color:#FACC15}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <div class="pretitle">RSP INDUSTRIAL · TRAINING PORTAL</div>
+      <h1>🏆 Mastery Progress</h1>
+      <p class="tagline">Your journey from new hire to RSP Sovereign.</p>
+      <div class="navbar">
+        <a class="nav-link" href="index.html">← Hub</a>
+        <a class="nav-link" href="badges.html">🏅 Badges</a>
+        <a class="nav-link active" href="mastery.html">🏆 Mastery</a>
+        <a class="nav-link" href="team.html">🤝 Team</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Current tier hero -->
+  <div class="hero">
+    <div class="tier-badge" id="heroBadge" style="color:#475569">🎯</div>
+    <div class="hero-info">
+      <div class="label" id="heroLabel">CURRENT TIER</div>
+      <h2 id="heroName">Not yet ranked</h2>
+      <p class="blurb" id="heroBlurb">Take your first module to earn your first tier.</p>
+      <div class="next" id="heroNext" style="display:none">
+        <div class="small">NEXT TIER</div>
+        <div class="big" id="heroNextText"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tier road -->
+  <div class="road">
+    <h2>The Path</h2>
+    <div class="stations" id="stations"></div>
+
+    <div class="xp-track">
+      <div class="meta">
+        <span>LIFETIME XP</span>
+        <span><b id="xpEarned">0</b> / <b id="xpTotal">0</b> · <b id="xpPct" style="color:#FACC15">0%</b></span>
+      </div>
+      <div class="bar-wrap"><div class="bar-fill" id="xpBar"></div></div>
+      <div class="markers" id="markers"></div>
+    </div>
+  </div>
+
+  <!-- Module breakdown -->
+  <div class="breakdown">
+    <h2>Where Your XP Comes From</h2>
+    <div class="module-list" id="moduleList"></div>
+  </div>
+
+  <div class="footer">
+    <div>RSP Industrial · Training Portal</div>
+    <div><a href="admin.html?admin=true">Admin →</a></div>
+  </div>
+</div>
+
+<script src="manifest.js"></script>
+<script src="badges.js"></script>
+<script>
+(function(){
+  const KEY_USER = 'rsp_user';
+  const KEY_LEDGER = 'rsp_ledger';
+  function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+
+  const user = JSON.parse(lsGet(KEY_USER) || 'null');
+  if(!user){ location.href = 'index.html'; return; }
+  const ledger = JSON.parse(lsGet(KEY_LEDGER) || '{}');
+  const learner = ledger[user.name] || { name: user.name, modules: {} };
+  const manifest = window.RSP_MANIFEST;
+
+  const lifetimeXP = Object.values(learner.modules || {}).reduce((s,m) => s + (m.totalXP || 0), 0);
+  const earnedTiers = learner.earnedTiers || [];
+  const info = window.computeTier(lifetimeXP, earnedTiers);
+  // For the bar % display, target is the top tier's minXP
+  const SOVEREIGN_XP = window.RSP_TIERS[window.RSP_TIERS.length - 1].minXP;
+  const xpPct = Math.min(100, Math.round(lifetimeXP / SOVEREIGN_XP * 100));
+
+  // Hero
+  if(info.current){
+    document.getElementById('heroBadge').textContent = info.current.icon;
+    document.getElementById('heroBadge').style.color = info.current.color;
+    document.getElementById('heroLabel').textContent = info.current.extreme ? 'CURRENT TIER · ⚡ EXTREME' : 'CURRENT TIER';
+    document.getElementById('heroName').textContent = info.current.name;
+    document.getElementById('heroBlurb').textContent = info.current.blurb;
+  }
+  if(info.next){
+    document.getElementById('heroNext').style.display = 'inline-block';
+    document.getElementById('heroNextText').textContent = info.next.icon + ' ' + info.next.name + ' · ' + info.toNext.toLocaleString() + ' XP to go';
+  }
+
+  // Stations — ratcheted earned tiers come from the user record
+  const earnedIds = new Set(earnedTiers.map(e => e.tier_id));
+  // Also count threshold-earned tiers (in case award hasn't synced yet)
+  window.tiersByThreshold(lifetimeXP).forEach(t => earnedIds.add(t.id));
+
+  const stations = document.getElementById('stations');
+  window.RSP_TIERS.forEach(t => {
+    const earned = earnedIds.has(t.id);
+    const isCurrent = info.current && t.id === info.current.id;
+    const cls = ['station', earned?'earned':'', isCurrent?'current':'', !earned?'locked':'', t.extreme?'extreme':''].filter(Boolean).join(' ');
+    const node = document.createElement('div');
+    node.className = cls;
+    node.innerHTML = (t.extreme ? '<div class="extreme-tag">EXTREME</div>' : '') +
+      '<div class="icon">'+t.icon+'</div>'+
+      '<h3>'+t.name+'</h3>'+
+      '<div class="pct">'+t.minXP.toLocaleString()+' XP</div>';
+    stations.appendChild(node);
+  });
+
+  // XP bar
+  document.getElementById('xpEarned').textContent = lifetimeXP.toLocaleString();
+  document.getElementById('xpTotal').textContent = SOVEREIGN_XP.toLocaleString();
+  document.getElementById('xpPct').textContent = xpPct + '%';
+  document.getElementById('xpBar').style.width = xpPct + '%';
+  // Markers underneath the bar
+  const markers = document.getElementById('markers');
+  window.RSP_TIERS.forEach(t => {
+    const span = document.createElement('span');
+    span.textContent = t.icon + ' ' + (t.minXP/1000) + 'k';
+    markers.appendChild(span);
+  });
+
+  // Module breakdown
+  const list = document.getElementById('moduleList');
+  manifest.modules.forEach(mod => {
+    const m = (learner.modules || {})[mod.id];
+    const xp = m ? (m.totalXP || 0) : 0;
+    const status = !m ? 'Not started' : (m.completedAt ? '✓ Completed' : 'In progress');
+    const tier = m && m.tier ? ' · ' + (m.tier === 'gold' ? '🥇 Mastery' : m.tier === 'silver' ? '🥈 Solid' : '🥉 Re-do') : '';
+    const row = document.createElement('div');
+    row.className = 'module-row';
+    row.innerHTML = '<div class="icon">'+mod.icon+'</div>'+
+      '<div class="info">'+
+        '<h4>'+mod.name+'</h4>'+
+        '<div class="row-meta">'+status+tier+'</div>'+
+      '</div>'+
+      '<div class="xp-amt">'+xp+' <small>/ '+mod.xp+' XP</small></div>';
+    list.appendChild(row);
+  });
+})();
+</script>
+</body>
+</html>

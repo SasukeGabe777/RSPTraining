@@ -1,0 +1,18 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+
+# Learner pages intentionally allow framing for the RSP Kiosk app.
+# Keep the administrative interface protected from third-party framing.
+/admin.html
+  X-Frame-Options: SAMEORIGIN
+
+/*.html
+  Cache-Control: no-cache, must-revalidate
+
+/manifest.js
+  Cache-Control: no-cache, must-revalidate
+
+/cloud.js
+  Cache-Control: no-cache, must-revalidate

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RSP Training · Team</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:radial-gradient(circle at top right,#1E293B 0%,#0F172A 70%);
+    font-family:'Inter',system-ui,sans-serif;color:#fff;min-height:100vh;
+  }
+  h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;line-height:1.05}
+  .wrap{max-width:1280px;margin:0 auto;padding:30px 32px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding-bottom:24px;border-bottom:1px solid #1E293B}
+  .pretitle{color:#FACC15;font-size:11px;letter-spacing:.18em;font-weight:800}
+  h1{font-size:42px;color:#fff;margin-top:4px}
+  .tagline{color:#CBD5E1;margin-top:6px}
+  .navbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .nav-link{padding:8px 14px;border-radius:8px;background:#1E293B;color:#94A3B8;text-decoration:none;font-weight:700;font-size:12px;letter-spacing:.05em;border:1px solid #334155}
+  .nav-link:hover{background:#334155;color:#fff}
+  .nav-link.active{background:#FACC15;color:#0F172A;border-color:#FACC15}
+
+  .layout{display:grid;grid-template-columns:1fr 360px;gap:24px;margin-top:30px}
+  @media(max-width:900px){.layout{grid-template-columns:1fr}}
+
+  .panel{background:linear-gradient(160deg,#1E293B,#0F172A);border:1px solid #334155;border-radius:18px;padding:22px}
+  .panel h2{color:#fff;font-size:18px;font-family:'Bricolage Grotesque',sans-serif;display:flex;align-items:center;gap:10px}
+  .panel .count{margin-left:auto;color:#64748B;font-size:11px;font-weight:800;letter-spacing:.1em}
+
+  /* Leaderboard rows */
+  .lb-row{
+    display:flex;align-items:center;gap:14px;padding:12px 6px;border-bottom:1px solid #1E293B;cursor:pointer;
+    border-radius:10px;transition:all .15s ease;
+  }
+  .lb-row:hover{background:rgba(255,255,255,.03);padding-left:12px}
+  .lb-row .rank{
+    width:36px;height:36px;border-radius:50%;background:#1E293B;border:2px solid #334155;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#94A3B8;flex:0 0 36px;
+  }
+  .lb-row.r1 .rank{background:linear-gradient(135deg,#FACC15,#CA8A04);color:#0F172A;border-color:#FACC15}
+  .lb-row.r2 .rank{background:linear-gradient(135deg,#E2E8F0,#94A3B8);color:#0F172A;border-color:#CBD5E1}
+  .lb-row.r3 .rank{background:linear-gradient(135deg,#FED7AA,#F97316);color:#0F172A;border-color:#FB923C}
+  .lb-row .av{width:44px;height:44px;border-radius:50%;flex:0 0 44px;overflow:hidden;background:#0F172A}
+  .lb-row .av svg{display:block;width:100%;height:100%}
+  .lb-row .name{font-weight:800;color:#fff;font-size:14px}
+  .lb-row .who{flex:1}
+  .lb-row .meta{color:#94A3B8;font-size:11px;font-weight:600;display:flex;gap:8px;flex-wrap:wrap}
+  .tier-pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.05em;border:1px solid currentColor}
+  .lb-row .xp{font-family:'Bricolage Grotesque';color:#FACC15;font-weight:800;font-size:18px;text-align:right}
+  .lb-row .xp small{display:block;color:#64748B;font-size:10px;font-weight:600;font-family:inherit}
+  .lb-row.me{background:rgba(250,204,21,.05);border:1px solid rgba(250,204,21,.3);border-radius:10px}
+
+  /* Kudos column */
+  .kudos-feed{display:flex;flex-direction:column;gap:10px}
+  .kudo{
+    background:#0F172A;border:1px solid #334155;border-radius:12px;padding:12px 14px;
+  }
+  .kudo .header{display:flex;align-items:center;gap:8px;font-size:12px;color:#94A3B8;font-weight:600}
+  .kudo .header b{color:#fff}
+  .kudo .body{color:#E2E8F0;font-size:13px;margin-top:6px;line-height:1.4}
+  .kudo .module{font-size:11px;color:#FACC15;font-weight:700;margin-top:4px}
+  .kudo .when{color:#475569;font-size:10px;font-weight:700;letter-spacing:.05em}
+  .kudo .emoji{font-size:18px}
+
+  .send-btn{
+    margin-top:10px;width:100%;padding:12px;
+    background:linear-gradient(135deg,#FACC15,#CA8A04);color:#0F172A;
+    border:none;border-radius:10px;font-weight:800;cursor:pointer;font-family:inherit;font-size:13px;letter-spacing:.05em;
+  }
+  .send-btn:hover{transform:translateY(-1px)}
+
+  .empty{text-align:center;padding:30px 14px;color:#64748B;font-size:13px}
+
+  /* Active-now card */
+  .active-card{margin-top:14px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);border-radius:14px;padding:16px}
+  .active-card h3{color:#34D399;font-size:13px;font-family:'Bricolage Grotesque'}
+  .active-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .active-pill{display:flex;align-items:center;gap:6px;background:#0F172A;border:1px solid #047857;border-radius:999px;padding:4px 10px 4px 4px;font-size:11px;color:#A7F3D0;font-weight:700}
+  .active-pill .av{width:22px;height:22px;border-radius:50%;overflow:hidden;flex:0 0 22px}
+  .active-pill .pulse{width:6px;height:6px;border-radius:50%;background:#10B981;animation:pulse 1.5s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+  /* Profile popup */
+  #profileOverlay{position:fixed;inset:0;background:rgba(15,23,42,.92);z-index:9998;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+  #profileOverlay.show{display:flex}
+  .profile-card{
+    background:linear-gradient(160deg,#1E293B,#0F172A);
+    border:2px solid #312E81;border-radius:24px;padding:30px;max-width:480px;width:100%;
+  }
+  .profile-card .header{display:flex;align-items:center;gap:18px}
+  .profile-card .pav{width:80px;height:80px;border-radius:50%;overflow:hidden;flex:0 0 80px;background:#0F172A}
+  .profile-card h2{color:#fff;font-size:26px}
+  .profile-card .ptier{margin-top:4px}
+  .profile-card .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+  .profile-card .stat{background:#0F172A;border:1px solid #334155;border-radius:10px;padding:12px;text-align:center}
+  .profile-card .stat .lbl{color:#94A3B8;font-size:9px;letter-spacing:.1em;font-weight:800}
+  .profile-card .stat .num{font-family:'Bricolage Grotesque';font-size:24px;color:#FACC15;font-weight:800;margin-top:2px}
+  .profile-card .modules-line{margin-top:16px;display:flex;flex-wrap:wrap;gap:4px}
+  .profile-card .mod-dot{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px}
+  .profile-card .mod-dot.done{background:#10B981}
+  .profile-card .mod-dot.progress{background:#F59E0B}
+  .profile-card .mod-dot.new{background:#1E293B;border:1px solid #334155}
+  .profile-card .actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
+  .profile-card button.close{background:transparent;color:#94A3B8;border:1px solid #475569;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:700;font-family:inherit}
+  .profile-card button.send{background:linear-gradient(135deg,#FACC15,#CA8A04);color:#0F172A;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:800;font-family:inherit;font-size:13px}
+
+  /* Send kudos modal */
+  #kudosOverlay{position:fixed;inset:0;background:rgba(15,23,42,.92);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+  #kudosOverlay.show{display:flex}
+  .kudos-modal{background:linear-gradient(160deg,#1E293B,#0F172A);border:2px solid #312E81;border-radius:20px;padding:28px;max-width:460px;width:100%}
+  .kudos-modal h2{color:#FACC15;font-size:24px;font-family:'Bricolage Grotesque'}
+  .kudos-modal label{display:block;color:#94A3B8;font-size:11px;font-weight:800;letter-spacing:.1em;margin-top:14px}
+  .kudos-modal select, .kudos-modal input, .kudos-modal textarea{
+    width:100%;background:#0F172A;border:1px solid #334155;color:#fff;padding:12px;border-radius:8px;
+    font-family:inherit;font-size:13px;margin-top:6px;
+  }
+  .kudos-modal textarea{min-height:90px;resize:vertical}
+  .emoji-row{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+  .emoji-pick{background:#0F172A;border:2px solid #334155;border-radius:8px;padding:6px 10px;font-size:18px;cursor:pointer}
+  .emoji-pick.selected{border-color:#FACC15;background:rgba(250,204,21,.1)}
+  .kudos-modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+  .kudos-modal button.cancel{background:transparent;color:#94A3B8;border:1px solid #475569;padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:700;font-family:inherit}
+  .kudos-modal button.send{background:linear-gradient(135deg,#FACC15,#CA8A04);color:#0F172A;border:none;padding:10px 22px;border-radius:8px;cursor:pointer;font-weight:800;font-family:inherit;font-size:13px}
+  .kudos-modal .err{color:#EF4444;font-size:11px;font-weight:700;margin-top:8px;min-height:14px}
+
+  .footer{margin-top:60px;padding:20px 0;border-top:1px solid #1E293B;color:#64748B;font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap}
+  .footer a{color:#64748B;text-decoration:none}
+  .footer a:hover{color:#FACC15}
+
+  .config-warning{background:rgba(239,68,68,.1);border:1px solid #EF4444;border-radius:12px;padding:18px;margin-top:24px;color:#FCA5A5}
+  .config-warning b{color:#EF4444}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <div class="pretitle">RSP INDUSTRIAL · TRAINING PORTAL</div>
+      <h1>🤝 The Team</h1>
+      <p class="tagline">Where everybody knows your XP. Send kudos, watch the leaderboard, see who's training right now.</p>
+      <div class="navbar">
+        <a class="nav-link" href="index.html">← Hub</a>
+        <a class="nav-link" href="badges.html">🏅 Badges</a>
+        <a class="nav-link" href="mastery.html">🏆 Mastery</a>
+        <a class="nav-link active" href="team.html">🤝 Team</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="configWarning" class="config-warning" style="display:none">
+    <b>⚠ Cloud not configured.</b> Set up Supabase (see <code>SUPABASE_SETUP.md</code>)
+    and paste your URL + key into <code>cloud.js</code> to enable team features.
+  </div>
+
+  <div class="layout">
+    <!-- LEADERBOARD COLUMN -->
+    <div>
+      <div class="panel">
+        <h2>📊 Leaderboard <span class="count" id="lbCount">0 LEARNERS</span></h2>
+        <p style="color:#94A3B8;font-size:13px;margin-top:4px">Ranked by lifetime XP across all modules. Click any name to see their profile.</p>
+        <div id="lbList" style="margin-top:16px">
+          <div class="empty" id="lbEmpty">Loading…</div>
+        </div>
+      </div>
+
+      <!-- Active-now card -->
+      <div class="active-card" id="activeCard" style="display:none">
+        <h3>🟢 Active right now</h3>
+        <div class="active-list" id="activeList"></div>
+      </div>
+    </div>
+
+    <!-- KUDOS COLUMN -->
+    <div>
+      <div class="panel">
+        <h2>🎉 Recent Kudos <span class="count" id="kudosCount">0</span></h2>
+        <p style="color:#94A3B8;font-size:13px;margin-top:4px">Recognition from your teammates.</p>
+        <button class="send-btn" id="sendKudosBtn">🎉 Send Kudos to a Teammate</button>
+        <div class="kudos-feed" id="kudosFeed" style="margin-top:14px">
+          <div class="empty">Loading…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>RSP Industrial · Training Portal</div>
+    <div><a href="admin.html?admin=true">Admin →</a></div>
+  </div>
+</div>
+
+<!-- Profile popup -->
+<div id="profileOverlay">
+  <div class="profile-card" id="profileCard"></div>
+</div>
+
+<!-- Send kudos modal -->
+<div id="kudosOverlay">
+  <div class="kudos-modal">
+    <h2>🎉 Send Kudos</h2>
+    <p style="color:#94A3B8;font-size:13px;margin-top:6px">Recognize a teammate for crushing a module.</p>
+    <label>To</label>
+    <select id="kudosTo"></select>
+    <label>For module (optional)</label>
+    <select id="kudosModule">
+      <option value="">— Any / general kudos —</option>
+    </select>
+    <label>Vibe</label>
+    <div class="emoji-row" id="emojiRow"></div>
+    <label>Message <span style="color:#475569;font-size:10px;font-weight:600">(optional)</span></label>
+    <textarea id="kudosMsg" placeholder="e.g. Crushed the Voltage Wraith first try — way to go!"></textarea>
+    <div class="err" id="kudosErr"></div>
+    <div class="actions">
+      <button class="cancel" id="kudosCancel">Cancel</button>
+      <button class="send" id="kudosSend">Send Kudos →</button>
+    </div>
+  </div>
+</div>
+
+<script src="manifest.js"></script>
+<script src="avatars.js"></script>
+<script src="badges.js"></script>
+<script src="../../config.local.js"></script>
+<script src="cloud.js"></script>
+<script>
+(function(){
+  const KEY_USER = 'rsp_user';
+  const KEY_LEDGER = 'rsp_ledger';
+  function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+
+  const user = JSON.parse(lsGet(KEY_USER) || 'null');
+  if(!user){ location.href = 'index.html'; return; }
+  const manifest = window.RSP_MANIFEST;
+  const totalAvailable = manifest.modules.filter(x=>x.published).reduce((s,x)=>s+x.xp,0);
+
+  let allUsers = [], allProgress = [], activePresence = [], kudosFeed = [];
+  let selectedEmoji = '🎉';
+  const EMOJI_OPTIONS = ['🎉','🔥','⚡','🚀','💪','👑','🏆','🧠','💎','🤝'];
+
+  // Show config warning if not connected
+  if(!window.RSPCloud || !window.RSPCloud.isConfigured){
+    document.getElementById('configWarning').style.display = 'block';
+  }
+
+  async function init(){
+    // Render emoji picker
+    const er = document.getElementById('emojiRow');
+    EMOJI_OPTIONS.forEach((em,i) => {
+      const b = document.createElement('div');
+      b.className = 'emoji-pick' + (i===0?' selected':'');
+      b.textContent = em;
+      b.addEventListener('click', () => {
+        Array.from(er.children).forEach(c => c.classList.remove('selected'));
+        b.classList.add('selected');
+        selectedEmoji = em;
+      });
+      er.appendChild(b);
+    });
+
+    // Module dropdown
+    const ms = document.getElementById('kudosModule');
+    manifest.modules.filter(x=>x.published).forEach(m => {
+      const o = document.createElement('option');
+      o.value = m.id; o.textContent = m.icon + ' ' + m.name;
+      ms.appendChild(o);
+    });
+
+    if(window.RSPCloud && window.RSPCloud.isConfigured){
+      try{
+        // Make sure my own user is upserted
+        await window.RSPCloud.upsertUser(user);
+        await window.RSPCloud.syncUp(user.name);
+
+        const [users, progress, kudos, presence] = await Promise.all([
+          window.RSPCloud.listUsers().catch(()=>[]),
+          window.RSPCloud.getAllProgress().catch(()=>[]),
+          window.RSPCloud.listKudos(25).catch(()=>[]),
+          window.RSPCloud.getActivePresence(120).catch(()=>[])
+        ]);
+        allUsers = users || [];
+        allProgress = progress || [];
+        kudosFeed = kudos || [];
+        activePresence = presence || [];
+      }catch(e){
+        console.warn('cloud load failed:', e);
+      }
+    } else {
+      // Fall back to local-only data — just show me + my progress
+      const localLedger = JSON.parse(lsGet(KEY_LEDGER) || '{}');
+      allUsers = Object.values(localLedger).map(l => ({
+        name: l.name, employee_id: l.id, avatar: l.avatar || 'sparky',
+        last_active: new Date().toISOString()
+      }));
+      allProgress = Object.values(localLedger).flatMap(l =>
+        Object.entries(l.modules || {}).map(([modId, p]) => ({
+          user_name: l.name, module_id: modId, total_xp: p.totalXP || 0,
+          completed_at: p.completedAt, tier: p.tier
+        }))
+      );
+    }
+
+    renderLeaderboard();
+    renderKudos();
+    renderActive();
+    populateKudosTo();
+  }
+
+  function userXP(userName){
+    return allProgress.filter(p => p.user_name === userName).reduce((s,p) => s + (p.total_xp||0), 0);
+  }
+  function userCompleted(userName){
+    return allProgress.filter(p => p.user_name === userName && p.completed_at).length;
+  }
+  function userTier(userName){
+    const u = allUsers.find(x => x.name === userName);
+    const earnedTiers = (u && u.earned_tiers) || [];
+    return window.computeTier(userXP(userName), earnedTiers);
+  }
+
+  function renderLeaderboard(){
+    const list = document.getElementById('lbList');
+    document.getElementById('lbCount').textContent = allUsers.length + ' LEARNER' + (allUsers.length===1?'':'S');
+    if(allUsers.length === 0){
+      list.innerHTML = '<div class="empty">No teammates yet. Once others sign in they\'ll appear here.</div>';
+      return;
+    }
+    const ranked = allUsers.slice()
+      .map(u => ({ ...u, _xp: userXP(u.name), _completed: userCompleted(u.name), _tier: userTier(u.name) }))
+      .sort((a,b) => b._xp - a._xp);
+
+    list.innerHTML = '';
+    ranked.forEach((u, idx) => {
+      const isMe = u.name === user.name;
+      const tier = u._tier.current;
+      const row = document.createElement('div');
+      row.className = 'lb-row r' + (idx+1) + (isMe ? ' me' : '');
+      row.innerHTML = '<div class="rank">'+(idx+1)+'</div>'+
+        '<div class="av">'+window.renderAvatar(u.avatar || 'sparky', 44)+'</div>'+
+        '<div class="who">'+
+          '<div class="name">'+escapeHtml(u.name)+(isMe?' <span style="color:#FACC15;font-size:10px">(you)</span>':'')+'</div>'+
+          '<div class="meta">'+
+            (tier ? '<span class="tier-pill" style="color:'+tier.color+'">'+tier.icon+' '+tier.name.toUpperCase()+'</span>' : '<span class="tier-pill" style="color:#64748B">UNRANKED</span>')+
+            '<span>'+u._completed+' module'+(u._completed===1?'':'s')+' done</span>'+
+          '</div>'+
+        '</div>'+
+        '<div class="xp">'+u._xp+'<small>XP</small></div>';
+      row.addEventListener('click', () => openProfile(u.name));
+      list.appendChild(row);
+    });
+  }
+
+  function renderKudos(){
+    document.getElementById('kudosCount').textContent = kudosFeed.length;
+    const feed = document.getElementById('kudosFeed');
+    if(kudosFeed.length === 0){
+      feed.innerHTML = '<div class="empty">Be the first to send kudos! Click the button above.</div>';
+      return;
+    }
+    feed.innerHTML = kudosFeed.map(k => {
+      const mod = manifest.modules.find(m => m.id === k.module_id);
+      return '<div class="kudo">'+
+        '<div class="header"><span class="emoji">'+(k.emoji||'🎉')+'</span><div><b>'+escapeHtml(k.from_user)+'</b> → <b>'+escapeHtml(k.to_user)+'</b></div></div>'+
+        (k.message ? '<div class="body">"'+escapeHtml(k.message)+'"</div>' : '')+
+        (mod ? '<div class="module">'+mod.icon+' '+escapeHtml(mod.name)+'</div>' : '')+
+        '<div class="when">'+timeAgo(k.created_at)+'</div>'+
+      '</div>';
+    }).join('');
+  }
+
+  function renderActive(){
+    const others = activePresence.filter(p => p.user_name !== user.name);
+    const card = document.getElementById('activeCard');
+    if(others.length === 0){ card.style.display='none'; return; }
+    card.style.display='block';
+    const list = document.getElementById('activeList');
+    list.innerHTML = others.map(p => {
+      const u = allUsers.find(x => x.name === p.user_name);
+      const mod = manifest.modules.find(m => m.id === p.module_id);
+      return '<div class="active-pill"><div class="av">'+window.renderAvatar(u?.avatar||'sparky',22)+'</div><b>'+escapeHtml(p.user_name)+'</b>'+
+        (mod ? ' on '+mod.icon+' '+escapeHtml(mod.name) : '')+
+        ' <span class="pulse"></span></div>';
+    }).join('');
+  }
+
+  function populateKudosTo(){
+    const sel = document.getElementById('kudosTo');
+    sel.innerHTML = '';
+    allUsers.filter(u => u.name !== user.name).forEach(u => {
+      const o = document.createElement('option');
+      o.value = u.name; o.textContent = u.name;
+      sel.appendChild(o);
+    });
+    if(sel.children.length === 0){
+      const o = document.createElement('option');
+      o.disabled = true;
+      o.textContent = '(no teammates yet)';
+      sel.appendChild(o);
+    }
+  }
+
+  // ===== PROFILE POPUP =====
+  function openProfile(name){
+    const u = allUsers.find(x => x.name === name);
+    if(!u) return;
+    const tier = userTier(name);
+    const xp = userXP(name);
+    const completed = userCompleted(name);
+    const mods = manifest.modules.filter(x=>x.published);
+    const learnerProgress = allProgress.filter(p => p.user_name === name);
+    const earnedBadges = []; // simplified for popup
+    const dots = mods.map(m => {
+      const p = learnerProgress.find(x => x.module_id === m.id);
+      const status = !p ? 'new' : p.completed_at ? 'done' : (p.total_xp > 0 ? 'progress' : 'new');
+      return '<div class="mod-dot '+status+'" title="'+escapeHtml(m.name)+'">'+m.icon+'</div>';
+    }).join('');
+    const card = document.getElementById('profileCard');
+    card.innerHTML = '<div class="header">'+
+      '<div class="pav">'+window.renderAvatar(u.avatar||'sparky', 80)+'</div>'+
+      '<div><h2>'+escapeHtml(u.name)+'</h2>'+
+        (u.employee_id ? '<div style="color:#94A3B8;font-size:12px">'+escapeHtml(u.employee_id)+'</div>' : '')+
+        '<div class="ptier">'+(tier.current ? '<span class="tier-pill" style="color:'+tier.current.color+'">'+tier.current.icon+' '+tier.current.name.toUpperCase()+'</span>' : '<span class="tier-pill" style="color:#64748B">UNRANKED</span>')+'</div>'+
+      '</div></div>'+
+      '<div class="stats">'+
+        '<div class="stat"><div class="lbl">LIFETIME XP</div><div class="num">'+xp+'</div></div>'+
+        '<div class="stat"><div class="lbl">COMPLETED</div><div class="num">'+completed+'</div></div>'+
+        '<div class="stat"><div class="lbl">PROGRESS</div><div class="num">'+tier.pct+'%</div></div>'+
+      '</div>'+
+      '<div style="margin-top:14px;color:#94A3B8;font-size:11px;font-weight:800;letter-spacing:.1em">MODULE PROGRESS</div>'+
+      '<div class="modules-line">'+dots+'</div>'+
+      '<div class="actions">'+
+        '<button class="close" id="profCloseBtn">Close</button>'+
+        (name !== user.name ? '<button class="send" id="profKudosBtn">🎉 Send Kudos</button>' : '')+
+      '</div>';
+    document.getElementById('profileOverlay').classList.add('show');
+    document.getElementById('profCloseBtn').addEventListener('click', () => {
+      document.getElementById('profileOverlay').classList.remove('show');
+    });
+    if(name !== user.name){
+      document.getElementById('profKudosBtn').addEventListener('click', () => {
+        document.getElementById('profileOverlay').classList.remove('show');
+        openKudos(name);
+      });
+    }
+  }
+
+  // ===== SEND KUDOS =====
+  function openKudos(toName){
+    if(!window.RSPCloud || !window.RSPCloud.isConfigured){
+      alert('Cloud not configured. See SUPABASE_SETUP.md to enable kudos.');
+      return;
+    }
+    document.getElementById('kudosOverlay').classList.add('show');
+    if(toName){
+      const sel = document.getElementById('kudosTo');
+      Array.from(sel.options).forEach(o => { if(o.value === toName) sel.value = toName; });
+    }
+    document.getElementById('kudosErr').textContent = '';
+    document.getElementById('kudosMsg').value = '';
+  }
+
+  document.getElementById('sendKudosBtn').addEventListener('click', () => openKudos(null));
+  document.getElementById('kudosCancel').addEventListener('click', () => document.getElementById('kudosOverlay').classList.remove('show'));
+
+  document.getElementById('kudosSend').addEventListener('click', async () => {
+    const to = document.getElementById('kudosTo').value;
+    const modId = document.getElementById('kudosModule').value || null;
+    const msg = document.getElementById('kudosMsg').value.trim();
+    if(!to){ document.getElementById('kudosErr').textContent = 'Pick a teammate.'; return; }
+    document.getElementById('kudosErr').textContent = 'Sending…';
+    try{
+      await window.RSPCloud.sendKudos(user.name, to, modId, msg, selectedEmoji);
+      document.getElementById('kudosOverlay').classList.remove('show');
+      // Reload kudos feed
+      kudosFeed = await window.RSPCloud.listKudos(25);
+      renderKudos();
+      // Optionally also send to Pumble if configured at module level
+      // (left for module-level webhook to handle on completion)
+    }catch(e){
+      document.getElementById('kudosErr').textContent = 'Failed: ' + (e.message || e);
+    }
+  });
+
+  function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function timeAgo(iso){
+    const t = new Date(iso).getTime();
+    const diff = Date.now() - t;
+    if(diff < 60000) return 'just now';
+    if(diff < 3600000) return Math.floor(diff/60000) + 'm ago';
+    if(diff < 86400000) return Math.floor(diff/3600000) + 'h ago';
+    return Math.floor(diff/86400000) + 'd ago';
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Enclosure Types — RSP Industrial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/module.css?v=editor-blocks-1">
+<style>
+  /* === ENCLOSURE TYPES · SKY / CYAN THEME === */
+  :root{
+    --theme-primary:#0284C7;
+    --theme-primary-deep:#075985;
+    --theme-accent:#BAE6FD;
+    --theme-obj-num:#0284C7;
+    --theme-login-btn-1:#0284C7;
+    --theme-login-btn-2:#0EA5E9;
+    --theme-login-pretitle:#0284C7;
+    --theme-login-focus:#0284C7;
+    --theme-side-bg:#075985;
+    --theme-side-border:#0C4A6E;
+    --theme-side-toggle:#0C4A6E;
+    --theme-loot-border:#0284C7;
+    --theme-loot-bg-1:#F0F9FF;
+    --theme-loot-bg-2:#E0F2FE;
+    --theme-loot-h3:#0284C7;
+    --theme-admin-btn:#0284C7;
+    --theme-admin-loginbox-border:#0C4A6E;
+  }
+
+  /* === MODULE-SPECIFIC COMPONENTS === */
+
+  /* The 4-category grid */
+  .cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px}
+  .cat-card{border-radius:16px;padding:18px;border:2px solid;display:flex;flex-direction:column;gap:6px}
+  .cat-card .ico{font-size:36px;line-height:1}
+  .cat-card h3{font-size:18px;line-height:1.2}
+  .cat-card p{font-size:12px;line-height:1.45;margin-top:4px}
+  .cat-card .types{font-size:11px;font-weight:800;letter-spacing:.04em;margin-top:6px}
+  .cat-standard{background:linear-gradient(160deg,#E0F2FE,#BAE6FD);border-color:#0284C7;color:#075985}
+  .cat-standard h3,.cat-standard .types{color:#075985}
+  .cat-operator{background:linear-gradient(160deg,#FEF3C7,#FDE68A);border-color:#CA8A04;color:#78350F}
+  .cat-operator h3,.cat-operator .types{color:#78350F}
+  .cat-wireway{background:linear-gradient(160deg,#D1FAE5,#A7F3D0);border-color:#047857;color:#065F46}
+  .cat-wireway h3,.cat-wireway .types{color:#065F46}
+  .cat-specialty{background:linear-gradient(160deg,#FED7AA,#FDBA74);border-color:#9A3412;color:#7C2D12}
+  .cat-specialty h3,.cat-specialty .types{color:#7C2D12}
+
+  /* Type card (used for individual enclosure types) */
+  .type-card{background:var(--slate-50);border:2px solid var(--slate-200);border-radius:14px;padding:14px;margin-bottom:10px}
+  .type-card .tc-name{font-family:'Bricolage Grotesque';font-size:16px;font-weight:800;color:#075985}
+  .type-card .tc-tag{font-size:10px;font-weight:700;color:#64748B;letter-spacing:.05em;text-transform:uppercase;margin-top:1px}
+  .type-card .tc-desc{font-size:12px;color:#334155;margin-top:6px;line-height:1.45}
+  .type-card .tc-use{font-size:11.5px;color:#0284C7;font-weight:700;margin-top:6px}
+
+  /* When / when-not list */
+  .when-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+  .when-grid > div{padding:8px 10px;border-radius:8px;font-size:11.5px;font-weight:600;line-height:1.4}
+  .when-grid .yes{background:#D1FAE5;color:#065F46}
+  .when-grid .no{background:#FEE2E2;color:#7F1D1D}
+
+  /* Matrix tables (sky palette) */
+  .matrix{width:100%;border-collapse:collapse;margin-top:12px;font-size:11.5px}
+  .matrix th{background:#E0F2FE;color:#075985;text-align:center;padding:10px 6px;font-weight:800;border:1px solid #BAE6FD;letter-spacing:.05em}
+  .matrix th.row-h{background:#F1F5F9;color:#0F172A;text-align:left;width:160px}
+  .matrix td{padding:10px 8px;border:1px solid #E2E8F0;color:#1E293B;font-weight:600}
+  .matrix td.lbl{background:#F8FAFC;font-weight:800;color:#0F172A;font-size:12px}
+  .matrix td.best{background:#E0F2FE;color:#075985;font-weight:800}
+
+  /* Decision card (sky palette) */
+  .decision-card{background:linear-gradient(160deg,#E0F2FE,#BAE6FD);border:2px solid #0284C7;border-radius:16px;padding:18px;margin-bottom:10px}
+  .decision-card .num-d{display:inline-block;background:#0284C7;color:#fff;width:32px;height:32px;border-radius:50%;text-align:center;line-height:32px;font-weight:800;margin-right:10px;font-family:'Bricolage Grotesque'}
+  .decision-card h3{display:inline-block;color:#075985;font-size:17px;vertical-align:middle}
+  .decision-card .body-d{color:#075985;font-size:13px;margin-top:8px}
+  .decision-card ul{margin-top:6px;padding-left:24px}
+  .decision-card li{font-size:12px;color:#075985;font-weight:600;margin:2px 0}
+
+  /* Override .translate-row for sky palette */
+  .translate-row .says{background:#E0F2FE;color:#075985}
+  .translate-row .means{background:#FEF3C7;color:#78350F}
+  .translate-row .quote-it{background:#D1FAE5;color:#065F46}
+
+  /* Upsell callout (positive listener box) */
+  .upsell{display:flex;gap:14px;background:#ECFDF5;padding:14px 16px;border-radius:14px;border-left:5px solid #047857;margin-bottom:8px}
+  .upsell .check{flex:0 0 28px;height:28px;border-radius:50%;background:#047857;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
+  .upsell h3{font-size:14px;margin-bottom:2px;color:#065F46}
+  .upsell p{font-size:13px;color:#065F46}
+</style>
+</head>
+<body>
+
+<a href="../index.html" id="portalLink" class="interactive-only">← PORTAL</a>
+
+<aside id="sideMap" class="interactive-only">
+  <button class="map-toggle" id="mapToggle" title="Toggle map">‹</button>
+  <div class="map-title">🗂️ TYPE MAP</div>
+  <div class="map-hint">YOUR JOURNEY</div>
+  <div class="map-path" id="mapPath"></div>
+</aside>
+
+<div id="minibossOverlay" class="interactive-only">
+  <div class="miniboss-modal" id="minibossModal"></div>
+</div>
+
+<div id="loginOverlay" class="interactive-only">
+  <div class="login-card">
+    <div class="bolt-bg">🗂️</div>
+    <div class="pretitle">RSP INDUSTRIAL · PRODUCT MASTERY</div>
+    <h1>Enclosure<br>Types</h1>
+    <p class="sub">Sign in to track your XP and unlock the Boss Fight.</p>
+    <label for="loginName">Your name</label>
+    <input type="text" id="loginName" placeholder="e.g. Gabe Ebmeyer" autocomplete="off"/>
+    <label for="loginId">Employee ID <span style="font-weight:500;color:#94A3B8;letter-spacing:0">(optional)</span></label>
+    <input type="text" id="loginId" placeholder="e.g. RSP-1234" autocomplete="off"/>
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn">Begin Training →</button>
+    <p class="footer-note">Your progress is saved on this device. No data leaves your browser.</p>
+  </div>
+</div>
+
+<div id="xpTracker" class="interactive-only">
+  <div>
+    <div class="username" id="trackerUser">🗂️ READY</div>
+    <div class="label">XP EARNED</div>
+    <div><span class="num" id="trackerXP">0</span><span style="color:#475569;font-size:14px"> / 280</span></div>
+    <span class="reset-link" id="resetProgress">↻ Reset</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+    <div style="display:flex;gap:10px;font-size:10px;color:#94A3B8;white-space:nowrap;flex-wrap:wrap">
+      <span>📖&nbsp;<b style="color:#fff"><span id="trackerPages">0</span>/14</b></span>
+      <span>🎯&nbsp;<b style="color:#fff"><span id="trackerAnswered">0</span>/30</b></span>
+      <span>✓&nbsp;<b style="color:#34D399"><span id="trackerCorrect">0</span></b></span>
+    </div>
+    <div class="bar"><div class="fill" id="trackerFill"></div></div>
+  </div>
+</div>
+
+<!-- ============= PAGE 1 — COVER ============= -->
+<section class="page cover">
+  <div class="ribbon">
+    <span class="badge">RSP INDUSTRIAL</span>
+    <span class="badge">PRODUCT MASTERY · MODULE 03</span>
+  </div>
+  <svg width="500" height="500" viewBox="0 0 500 500" style="position:absolute;right:-60px;top:120px;opacity:.95">
+    <defs>
+      <linearGradient id="boxstack" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#BAE6FD"/>
+        <stop offset="100%" stop-color="#0284C7"/>
+      </linearGradient>
+    </defs>
+    <g transform="translate(250 250)">
+      <!-- Standard box -->
+      <rect x="-150" y="-110" width="100" height="120" rx="8" fill="url(#boxstack)" stroke="#BAE6FD" stroke-width="3" opacity=".85"/>
+      <rect x="-130" y="-90" width="60" height="80" fill="#0F172A" opacity=".3"/>
+      <!-- Console (angled top) -->
+      <polygon points="-30,-110 70,-110 70,10 -30,10 -30,-90" fill="url(#boxstack)" stroke="#BAE6FD" stroke-width="3" opacity=".85"/>
+      <circle cx="20" cy="-50" r="14" fill="#0F172A" opacity=".4"/>
+      <!-- Wireway (long horizontal) -->
+      <rect x="-150" y="40" width="220" height="36" rx="6" fill="url(#boxstack)" stroke="#BAE6FD" stroke-width="3" opacity=".85"/>
+      <line x1="-150" y1="58" x2="70" y2="58" stroke="#0F172A" stroke-width="2" opacity=".4"/>
+      <!-- Pushbutton (small sloped) -->
+      <polygon points="100,-50 160,-50 160,20 100,20 100,-40" fill="url(#boxstack)" stroke="#BAE6FD" stroke-width="3" opacity=".85"/>
+      <circle cx="120" cy="-10" r="6" fill="#EF4444"/>
+      <circle cx="140" cy="-10" r="6" fill="#10B981"/>
+    </g>
+  </svg>
+  <div style="position:absolute;bottom:2.4in;left:.5in;right:.5in">
+    <div class="pill" style="background:rgba(186,230,253,.25);color:#BAE6FD;border:1px solid rgba(186,230,253,.4);margin-bottom:18px">PRODUCT MASTERY · ENCLOSURE TYPES</div>
+    <h1>ENCLOSURE<br>TYPES</h1>
+    <div class="sub">Application first. Size last. Pick the right category before you quote.</div>
+  </div>
+  <div class="tagline">
+    <div>Standard. Operator. Wireway. Specialty.</div>
+    <div>RSP · PROD 03</div>
+  </div>
+</section>
+
+<!-- ============= PAGE 2 — MISSION ============= -->
+<section class="page">
+  <div class="page-tag">▸ THE PROMISE</div>
+  <div style="display:flex;gap:30px;margin-top:.5in;height:8.6in">
+    <div style="flex:1;display:flex;flex-direction:column">
+      <h2>Pick the right<br>enclosure every time.</h2>
+      <p class="lead" style="margin-top:14px">By the last page you will be able to:</p>
+      <ul class="objectives" style="margin-top:18px">
+        <li><span class="obj-num">1</span><span>Name the <b>four categories</b> of enclosure and which sub-type belongs in each.</span></li>
+        <li><span class="obj-num">2</span><span>Ask the <b>six questions</b> that determine the right enclosure before quoting anything.</span></li>
+        <li><span class="obj-num">3</span><span>Decide between <b>wall, freestanding, or modular</b> in under 30 seconds.</span></li>
+        <li><span class="obj-num">4</span><span>Recognize when the customer needs an <b>operator-facing</b> enclosure (HMI / console / pushbutton).</span></li>
+        <li><span class="obj-num">5</span><span>Match the <b>environment</b> (clean, dust, washdown, marine, hazardous) to the right enclosure material.</span></li>
+        <li><span class="obj-num">6</span><span>Pass the 30-question Boss Fight at 80%+ to earn the badge.</span></li>
+      </ul>
+      <div class="powerup" style="margin-top:20px">
+        💡 <b>The mindset:</b> Enclosures are not selected by size first — they are selected by <i>application</i> first. Understand <i>which problem you're solving</i> and the enclosure type becomes obvious.
+      </div>
+    </div>
+    <div style="flex:0 0 2.4in;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="100" fill="none" stroke="#0284C7" stroke-width="6"/>
+        <circle cx="110" cy="110" r="75" fill="none" stroke="#0284C7" stroke-width="6" opacity=".6"/>
+        <circle cx="110" cy="110" r="50" fill="none" stroke="#0284C7" stroke-width="6" opacity=".4"/>
+        <circle cx="110" cy="110" r="25" fill="#0284C7"/>
+        <text x="110" y="118" text-anchor="middle" font-size="22" fill="#fff" font-weight="800" font-family="Bricolage Grotesque">XP</text>
+      </svg>
+      <div style="background:var(--ink);color:#FCD34D;padding:10px 18px;border-radius:999px;font-weight:800;font-size:13px;letter-spacing:.1em">EARN: 🗂️ TYPE MASTER</div>
+    </div>
+  </div>
+  <div class="page-num">02</div>
+</section>
+
+<!-- ============= PAGE 3 — HOW TO PLAY ============= -->
+<section class="page">
+  <div class="page-tag">▸ HOW TO PLAY</div>
+  <h2 style="margin-top:.4in">Three levels.<br>Two mini-bosses.<br>One badge.</h2>
+  <div style="display:flex;gap:14px;margin-top:30px">
+    <div class="level-card learn">
+      <div class="num">01</div>
+      <h3>LEARN</h3>
+      <p>8 pages. The four-category framework, every sub-type with use cases, plus a category quick-lookup matrix.</p>
+      <div class="xp-pill">+10 XP / page</div>
+    </div>
+    <div class="level-card apply">
+      <div class="num">02</div>
+      <h3>APPLY</h3>
+      <p>6 pages. The 6 questions to ask first, two decision matrices, the wall-vs-floor decision tree, customer translation, and 5 mistakes / upsell listeners.</p>
+      <div class="xp-pill">+15 XP / page</div>
+    </div>
+    <div class="level-card test">
+      <div class="num">03</div>
+      <h3>TEST</h3>
+      <p>30-question Boss Fight. Score 80%+ for the 🗂️ Type Mastery badge.</p>
+      <div class="xp-pill">+2 XP / correct</div>
+    </div>
+  </div>
+  <div class="powerup" style="margin-top:30px">
+    💡 <b>Two Mini-Bosses block the path.</b> The Type Troll guards the four-category framework; the Scope Wraith guards the selling process. Each is worth +25 XP.
+  </div>
+  <div class="page-num">03</div>
+</section>
+
+<!-- ============= PAGE 4 — LEARN 01: THE CORE MINDSET ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 01 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🗂️ THE CORE MINDSET</div>
+  <h2 style="margin-top:14px">Application first.<br>Size last.</h2>
+  <p class="lead" style="margin-top:6px">If you remember one sentence from this entire module, make it this: <b>"Enclosures are not selected by size first — they are selected by application first."</b> The customer almost always leads with size. Your job is to redirect them to application.</p>
+
+  <div class="factbox" style="margin-top:20px">
+    <h3 style="font-size:16px">📌 Every enclosure exists to solve one of four problems:</h3>
+    <ul class="biglist" style="margin-top:12px">
+      <li><span class="bullet">1</span><b>Protect equipment</b> — keep the gear inside safe from the environment outside.</li>
+      <li><span class="bullet">2</span><b>Allow human interaction</b> — a screen, a button, a control someone touches.</li>
+      <li><span class="bullet">3</span><b>Manage wiring</b> — route cables between panels, splice wires, terminate signals.</li>
+      <li><span class="bullet">4</span><b>Handle environment</b> — heat, water, dust, corrosion, hazardous gas.</li>
+    </ul>
+    <p style="margin-top:12px;font-size:13px;color:var(--slate-700)">Once you know <i>which</i> of the four the customer needs, the enclosure type becomes obvious.</p>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #EF4444">
+    <h3 style="color:#7F1D1D;font-size:16px">🚨 The trap</h3>
+    <p style="color:#7F1D1D;margin-top:6px;font-size:13px">Customer says "I need a 24×24×8 NEMA 12." If you just quote that, you'll miss whether they actually needed an HMI cutout, a wireway connection, or a stainless washdown rating. <b>Always pull back to application first.</b></p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Let's choose the right enclosure based on how it's being used — then we'll size it from there." Memorize that line.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">04</div>
+</section>
+
+<!-- ============= PAGE 5 — LEARN 02: THE FOUR CATEGORIES ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 02 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🗂️ THE FOUR-CATEGORY FRAMEWORK</div>
+  <h2 style="margin-top:14px">Four categories.<br>Every enclosure fits one.</h2>
+  <p class="lead" style="margin-top:6px">Once you can sort any enclosure into the right category, you've solved 80% of the selection problem. The next four pages walk through each category in detail.</p>
+
+  <div class="cat-grid">
+    <div class="cat-card cat-standard">
+      <div class="ico">📦</div>
+      <h3>1. STANDARD</h3>
+      <p>Hold equipment. Components-only. No human interacts directly with the box.</p>
+      <div class="types">Wall-mount · Freestanding · Modular</div>
+    </div>
+    <div class="cat-card cat-operator">
+      <div class="ico">🖐️</div>
+      <h3>2. OPERATOR</h3>
+      <p>Human interaction. Screens, controls, displays, buttons that someone touches every day.</p>
+      <div class="types">HMI · Console / Consolet · Pushbutton</div>
+    </div>
+    <div class="cat-card cat-wireway">
+      <div class="ico">🔌</div>
+      <h3>3. WIREWAY</h3>
+      <p>Route cables. Connect multiple panels, splice wires, terminate signals between enclosures.</p>
+      <div class="types">Wireway (lay-in / pull-through / gasketed) · Junction Box</div>
+    </div>
+    <div class="cat-card cat-specialty">
+      <div class="ico">🛡️</div>
+      <h3>4. SPECIALTY</h3>
+      <p>Environment or safety. Materials for corrosion, washdown, hazardous locations, or specific-use boxes.</p>
+      <div class="types">Non-metallic · Stainless · Hazloc · Disconnect · Dual-access · Climate-controlled</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Standard holds. Operator interacts. Wireway routes. Specialty protects. Four verbs. Every enclosure on Earth.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">05</div>
+</section>
+
+<!-- ============= PAGE 6 — LEARN 03: STANDARD EQUIPMENT ENCLOSURES ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 03 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📦 STANDARD EQUIPMENT ENCLOSURES</div>
+  <h2 style="margin-top:14px">Wall. Floor. Modular.</h2>
+  <p class="lead" style="margin-top:6px">These house components. No screens, no buttons, no human interaction at the box itself. The decision is almost always about <b>size and growth</b>.</p>
+
+  <div style="margin-top:14px">
+    <div class="type-card">
+      <div class="tc-name">WALL-MOUNT ENCLOSURES</div>
+      <div class="tc-tag">SMALL CONTROL SYSTEMS · DISTRIBUTED I/O</div>
+      <div class="tc-desc">Fully enclosed, sealed units that bolt to a wall or structure. Default for small PLC panels, remote I/O drops, and junction control points.</div>
+      <div class="when-grid">
+        <div class="yes">✔ Limited space · smaller systems · distributed control</div>
+        <div class="no">✗ Large drives · heavy equipment · systems that will grow</div>
+      </div>
+      <div class="tc-use">💡 "If it's a small control system going on a wall — this is your default."</div>
+    </div>
+    <div class="type-card">
+      <div class="tc-name">FREESTANDING ENCLOSURES</div>
+      <div class="tc-tag">FLOOR-MOUNTED · LARGER INTERNAL SPACE</div>
+      <div class="tc-desc">Floor-mounted cabinets with much larger internal volume. The right answer for VFD panels, motor control centers (MCCs), and large automation systems with higher heat loads and more wiring.</div>
+      <div class="when-grid">
+        <div class="yes">✔ Larger components · higher heat loads · more wiring</div>
+        <div class="no">✗ Small simple systems · space-constrained installs</div>
+      </div>
+      <div class="tc-use">💡 "If it won't comfortably fit on a wall, it belongs on the floor."</div>
+    </div>
+    <div class="type-card">
+      <div class="tc-name">MODULAR ENCLOSURES</div>
+      <div class="tc-tag">MULTI-BAY · EXPANDABLE BY DESIGN</div>
+      <div class="tc-desc">Multi-bay systems connected together — picture freestanding cabinets that bolt side-by-side. Designed for systems that will grow: PLC + drives + networking, OEM machines with future-expansion plans.</div>
+      <div class="when-grid">
+        <div class="yes">✔ Scalability · clean separation of functions · OEM systems</div>
+        <div class="no">✗ One-and-done small panels · budget-tight one-off jobs</div>
+      </div>
+      <div class="tc-use">💡 "If the system will grow — go modular from the start."</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:8px">
+    💡 <b>POWER-UP:</b> Customer says "this is just phase one"? → modular. Customer says "MCC"? → freestanding. Customer says "small PLC panel"? → wall-mount.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">06</div>
+</section>
+
+<!-- ============= PAGE 7 — LEARN 04: OPERATOR INTERFACE ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 04 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🖐️ OPERATOR INTERFACE ENCLOSURES</div>
+  <h2 style="margin-top:14px">A human stands<br>in front of these.</h2>
+  <p class="lead" style="margin-top:6px">The single biggest miss in enclosure sales: <b>not realizing the customer needs an operator-facing box</b>. If a human will read a screen, push a button, or twist a switch on the enclosure itself — it's not a standard enclosure.</p>
+
+  <div style="margin-top:14px">
+    <div class="type-card">
+      <div class="tc-name">HMI ENCLOSURES</div>
+      <div class="tc-tag">SCREENS · OFTEN ON SWING ARMS</div>
+      <div class="tc-desc">Built around a touchscreen / display. Cutouts, gasketing, and mounting designed for the screen. Often paired with a swing arm so the operator can position it ergonomically.</div>
+      <div class="tc-use">✔ Operator control stations · machine interfaces · production lines</div>
+    </div>
+    <div class="type-card">
+      <div class="tc-name">CONSOLE / CONSOLET ENCLOSURES</div>
+      <div class="tc-tag">ANGLED FRONT · DESIGNED FOR VIEWING</div>
+      <div class="tc-desc">Angled front face so the operator can comfortably read and reach controls. Larger versions are full consoles in control rooms; smaller consolets sit on a benchtop next to the machine.</div>
+      <div class="tc-use">✔ Control rooms · manufacturing lines · operator-standing-all-day stations</div>
+    </div>
+    <div class="type-card">
+      <div class="tc-name">PUSHBUTTON ENCLOSURES</div>
+      <div class="tc-tag">SMALL · SLOPED-TOP COMMON</div>
+      <div class="tc-desc">Compact boxes for buttons, switches, e-stops, pilot lights. Sloped tops are the standard for a reason: <b>dust and liquid don't pool</b> on a slope, which keeps the enclosure clean in food / pharma / washdown environments.</div>
+      <div class="tc-use">✔ Start/stop stations · machine controls · e-stop assemblies</div>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FEF3C7,#FDE68A);border:2px solid #F59E0B">
+    <h3 style="color:#78350F;font-size:16px">📌 The sales question that uncovers operator needs</h3>
+    <p style="color:#78350F;margin-top:6px;font-size:13px">"Is anyone going to be standing in front of this enclosure looking at it or pressing things on it?" — if yes, you're in the operator category.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "If a human is actively using it — it's not a standard enclosure." The cutout, gasket, and mounting requirements are all different.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">07</div>
+</section>
+
+<!-- ============= PAGE 8 — LEARN 05: WIREWAY & CABLE MANAGEMENT ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 05 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🔌 WIREWAY &amp; CABLE MANAGEMENT</div>
+  <h2 style="margin-top:14px">The category most<br>reps undersell.</h2>
+  <p class="lead" style="margin-top:6px">Whenever two or more enclosures need to be connected, there's a wireway opportunity. This category is the single biggest add-on miss in enclosure sales.</p>
+
+  <div style="margin-top:14px">
+    <div class="type-card">
+      <div class="tc-name">WIREWAY (WIRING TROUGH)</div>
+      <div class="tc-tag">LONG RECTANGULAR METAL · ROUTES CABLES BETWEEN PANELS</div>
+      <div class="tc-desc">A rectangular metal duct that routes cables horizontally (or vertically) between two or more enclosures. Easier to install than conduit, easier to modify, and much better for large cable bundles.</div>
+    </div>
+    <table class="matrix" style="margin-top:6px">
+      <thead><tr><th class="row-h">Wireway type</th><th>What's special</th><th>Best for</th></tr></thead>
+      <tbody>
+        <tr><td class="lbl">Lay-In</td><td>Removable covers for easy access</td><td class="best">Frequent maintenance, complex wiring</td></tr>
+        <tr><td class="lbl">Pull-Through</td><td>Designed for pulling cables through long runs</td><td class="best">Long runs, permanent installs</td></tr>
+        <tr><td class="lbl">Gasketed</td><td>Sealed against dust and moisture</td><td class="best">Outdoor or dirty environments</td></tr>
+      </tbody>
+    </table>
+
+    <div class="type-card" style="margin-top:14px">
+      <div class="tc-name">JUNCTION / TERMINAL BOXES</div>
+      <div class="tc-tag">WIRE SPLICES · SIGNAL TERMINATIONS · FIELD CONNECTIONS</div>
+      <div class="tc-desc">Small enclosures that protect wire splices, terminate field signals, or break out a cable bundle. Used for code compliance (you can't splice wires in free air) and for clean field installs.</div>
+      <div class="tc-use">✔ Wire splicing · signal termination · field connections · organize and protect</div>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#D1FAE5,#A7F3D0);border:2px solid #047857">
+    <h3 style="color:#065F46;font-size:16px">📞 Sales line that works</h3>
+    <p style="color:#065F46;margin-top:6px;font-size:13px">"If multiple enclosures need to be connected, wireway is almost always the right answer." Most reps default to conduit because that's what comes to mind first. Wireway is faster to install, easier to modify, and almost always a bigger order.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Hear "two panels need to talk to each other" → quote wireway. Hear "splice some wires in the field" → quote a junction box.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">08</div>
+</section>
+
+<!-- ============= PAGE 9 — LEARN 06: ENVIRONMENT-SPECIFIC ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 06 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🛡️ ENVIRONMENT-SPECIFIC ENCLOSURES</div>
+  <h2 style="margin-top:14px">When the outside<br>fights the inside.</h2>
+  <p class="lead" style="margin-top:6px">When the environment is challenging — chemicals, washdown, hazardous gas — material trumps form factor. These are sub-types of the specialty category.</p>
+
+  <div style="margin-top:14px">
+    <div class="type-card">
+      <div class="tc-name">NON-METALLIC (POLYCARBONATE / FIBERGLASS)</div>
+      <div class="tc-tag">CORROSIVE · OUTDOOR · CHEMICAL PLANTS</div>
+      <div class="tc-desc">Lightweight. UV-stable. Immune to most corrosion. The right pick when chemicals are around or the box sits outdoors and a metal enclosure would rust.</div>
+      <div class="tc-use">✔ Corrosion resistance · lightweight · UV resistance</div>
+    </div>
+    <div class="type-card">
+      <div class="tc-name">STAINLESS STEEL (304 / 316)</div>
+      <div class="tc-tag">FOOD · WASHDOWN · PHARMA · MARINE</div>
+      <div class="tc-desc">Easy to clean, hygienic, resists corrosion. <b>304</b> is the food / pharma standard. <b>316</b> adds molybdenum for chloride resistance — coastal, marine, harsh-chemical environments.</div>
+      <div class="tc-use">✔ Cleanability · hygienic surfaces · marine and chemical corrosion (316)</div>
+    </div>
+    <div class="type-card">
+      <div class="tc-name">HAZARDOUS LOCATION ENCLOSURES</div>
+      <div class="tc-tag">EXPLOSION-PROOF · OIL &amp; GAS · CHEMICAL · NEMA 7/9</div>
+      <div class="tc-desc">Contain an internal ignition without releasing flame to the outside atmosphere. Cast metal, threaded conduit entries, certified hardware. Required by code in Class I/II Div 1 areas. <b>You cannot substitute an IP66 enclosure for a NEMA 7.</b></div>
+      <div class="tc-use">✔ Explosion protection · code compliance · oil/gas/chem installs</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:8px">
+    💡 <b>POWER-UP:</b> Washdown / food → stainless 304. Marine / chlorine → stainless 316. Chemical / corrosive → non-metallic. Explosive → hazloc, full stop.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">09</div>
+</section>
+
+<!-- ============= PAGE 10 — LEARN 07: SPECIALTY ENCLOSURES ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 07 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🛡️ SPECIALTY ENCLOSURES</div>
+  <h2 style="margin-top:14px">When the application<br>is the spec.</h2>
+  <p class="lead" style="margin-top:6px">Three more sub-types in the specialty category — each one solves a specific application problem that a generic enclosure can't.</p>
+
+  <div style="margin-top:14px">
+    <div class="type-card">
+      <div class="tc-name">DISCONNECT ENCLOSURES</div>
+      <div class="tc-tag">HOUSE A DISCONNECT SWITCH · SAFETY &amp; CODE COMPLIANCE</div>
+      <div class="tc-desc">Purpose-built to house a disconnect switch with the right handle, padlocking provision, and clearance for the switch mechanism. Used at every motor and major load for lockout/tagout.</div>
+      <div class="tc-use">✔ Safety · code compliance · LOTO at the equipment</div>
+    </div>
+    <div class="type-card">
+      <div class="tc-name">DUAL-ACCESS ENCLOSURES</div>
+      <div class="tc-tag">FRONT AND REAR DOORS · SERVICE FROM BOTH SIDES</div>
+      <div class="tc-desc">Doors on both the front and rear. Service technicians can reach the back of the panel without pulling the entire assembly out. Common on complex automation systems and dense control rooms.</div>
+      <div class="tc-use">✔ Complex systems · maintenance-heavy applications · back-of-panel access</div>
+    </div>
+    <div class="type-card">
+      <div class="tc-name">CLIMATE-CONTROLLED ENCLOSURES</div>
+      <div class="tc-tag">DESIGNED FOR AC / HEAT-EXCHANGER MOUNTING</div>
+      <div class="tc-desc">Pre-configured to accept enclosure air conditioners, heat exchangers, or filter fans. Mounting cutouts, gland plates, drainage, and gaskets are already there. Used for heat-sensitive electronics in hot environments.</div>
+      <div class="tc-use">✔ Air conditioners · heat exchangers · drives in hot ambients · sensitive electronics</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>POWER-UP:</b> Customer mentions a disconnect, back-side service access, or "the cabinet keeps overheating"? You're in specialty territory. None of those are off-the-shelf wall-mounts.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">10</div>
+</section>
+
+<!-- ============= PAGE 11 — LEARN 08: CATEGORY MATRIX + TYPE TROLL ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 08 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🗂️ CATEGORY QUICK-LOOKUP MATRIX</div>
+  <h2 style="margin-top:14px">The pocket lookup.</h2>
+  <p class="lead" style="margin-top:6px">When the customer describes the situation in plain English, this matrix tells you which enclosure to lead with. Memorize the left column — the right column will follow.</p>
+
+  <table class="matrix" style="margin-top:14px">
+    <thead><tr><th class="row-h">If the situation is…</th><th>Lead with this enclosure</th><th>Category</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Small control system</td><td>Wall-Mount</td><td class="best">Standard</td></tr>
+      <tr><td class="lbl">Large system / VFD / MCC</td><td>Freestanding</td><td class="best">Standard</td></tr>
+      <tr><td class="lbl">System will grow</td><td>Modular</td><td class="best">Standard</td></tr>
+      <tr><td class="lbl">Operator screen / controls</td><td>HMI / Console</td><td class="best">Operator</td></tr>
+      <tr><td class="lbl">Just buttons &amp; switches</td><td>Pushbutton (sloped)</td><td class="best">Operator</td></tr>
+      <tr><td class="lbl">Connecting multiple panels</td><td>Wireway</td><td class="best">Wireway</td></tr>
+      <tr><td class="lbl">Wire splices / terminals</td><td>Junction Box</td><td class="best">Wireway</td></tr>
+      <tr><td class="lbl">Outdoor / corrosive</td><td>Non-Metallic</td><td class="best">Specialty</td></tr>
+      <tr><td class="lbl">Washdown / food / pharma</td><td>Stainless 304 / 316</td><td class="best">Specialty</td></tr>
+      <tr><td class="lbl">Hazardous / explosive area</td><td>Hazardous Location</td><td class="best">Specialty</td></tr>
+    </tbody>
+  </table>
+
+  <div class="powerup" style="margin-top:14px">
+    🏅 <b>LEARN LEVEL CLEARED — +80 XP · BADGE EARNED: 🧠 "FOUR CATEGORIES LOCKED."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="type-troll" style="margin-top:14px;padding:18px">
+    <div class="icon">🧌</div>
+    <h3>The Type Troll blocks the path!</h3>
+    <div class="sub">5 questions on the four-category framework · Defeat to unlock APPLY level</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">11</div>
+</section>
+
+<!-- ============= PAGE 12 — APPLY 01: THE 6 QUESTIONS ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 01 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ THE 6 QUESTIONS TO ASK FIRST</div>
+  <h2 style="margin-top:14px">Six questions.<br>Sixty seconds.<br>Right enclosure.</h2>
+  <p class="lead" style="margin-top:6px">Burn these six into muscle memory. If you ask them in order on every call, the right enclosure quotes itself.</p>
+
+  <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="decision-card" style="margin-bottom:0;padding:14px"><span class="num-d" style="width:28px;height:28px;line-height:28px;font-size:13px">1</span><h3 style="font-size:15px">What is going inside?</h3><div class="body-d" style="font-size:12px;margin-top:6px">PLC? VFD? Disconnect? HMI? Drives the size and the category.</div></div>
+    <div class="decision-card" style="margin-bottom:0;padding:14px"><span class="num-d" style="width:28px;height:28px;line-height:28px;font-size:13px">2</span><h3 style="font-size:15px">Operator-facing or equipment-only?</h3><div class="body-d" style="font-size:12px;margin-top:6px">If a human interacts with the enclosure, you're in the operator category — not a standard wall-mount.</div></div>
+    <div class="decision-card" style="margin-bottom:0;padding:14px"><span class="num-d" style="width:28px;height:28px;line-height:28px;font-size:13px">3</span><h3 style="font-size:15px">Indoor or outdoor?</h3><div class="body-d" style="font-size:12px;margin-top:6px">Outdoor → minimum NEMA 3R, often non-metallic or stainless. Indoor opens up painted steel and NEMA 12.</div></div>
+    <div class="decision-card" style="margin-bottom:0;padding:14px"><span class="num-d" style="width:28px;height:28px;line-height:28px;font-size:13px">4</span><h3 style="font-size:15px">Heat, moisture, dust, corrosion?</h3><div class="body-d" style="font-size:12px;margin-top:6px">Drives rating and material. Washdown → stainless. Chemical → non-metallic. Hot electronics → climate-controlled.</div></div>
+    <div class="decision-card" style="margin-bottom:0;padding:14px"><span class="num-d" style="width:28px;height:28px;line-height:28px;font-size:13px">5</span><h3 style="font-size:15px">How much space — and will it grow?</h3><div class="body-d" style="font-size:12px;margin-top:6px">Defines wall vs floor vs modular. "Phase one of three"? → modular from day one.</div></div>
+    <div class="decision-card" style="margin-bottom:0;padding:14px"><span class="num-d" style="width:28px;height:28px;line-height:28px;font-size:13px">6</span><h3 style="font-size:15px">How do cables enter and exit?</h3><div class="body-d" style="font-size:12px;margin-top:6px">Drives gland plate, wireway, and junction-box add-ons. Multiple panels talking to each other = wireway opportunity.</div></div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Six questions. One minute. Quote written. Same script. Every call.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">12</div>
+</section>
+
+<!-- ============= PAGE 13 — APPLY 02: APPLICATION → ENCLOSURE MATRIX ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 02 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ APPLICATION → ENCLOSURE</div>
+  <h2 style="margin-top:14px">From situation<br>to SKU.</h2>
+  <p class="lead" style="margin-top:6px">When you've finished asking the six questions, this is the lookup that converts what the customer told you into the enclosure you quote.</p>
+
+  <table class="matrix" style="margin-top:14px">
+    <thead><tr><th class="row-h">Customer situation</th><th>Lead enclosure</th><th>Watch-fors</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Small PLC panel on a wall</td><td class="best">Wall-Mount NEMA 12</td><td>Confirm cable entry &amp; lock provision</td></tr>
+      <tr><td class="lbl">VFD or MCC on the floor</td><td class="best">Freestanding</td><td>Heat load &amp; climate control</td></tr>
+      <tr><td class="lbl">"This is phase one of three"</td><td class="best">Modular</td><td>Plan side-by-side bays from day one</td></tr>
+      <tr><td class="lbl">Operator with a screen at a workstation</td><td class="best">HMI on swing arm or console</td><td>Glare, mounting height, swing-arm clearance</td></tr>
+      <tr><td class="lbl">Start / stop / e-stop assembly</td><td class="best">Pushbutton (sloped top)</td><td>Sloped top in any wet area</td></tr>
+      <tr><td class="lbl">Two panels need to talk to each other</td><td class="best">Wireway between them</td><td>Lay-in for service; gasketed if dirty</td></tr>
+      <tr><td class="lbl">Splice wires in the field</td><td class="best">Junction box</td><td>NEMA rating must match environment</td></tr>
+      <tr><td class="lbl">Outdoor near chemical plant</td><td class="best">Non-metallic (fiberglass / polycarbonate)</td><td>UV rating; tamper-resistant latches</td></tr>
+      <tr><td class="lbl">Food / washdown line</td><td class="best">Stainless 304</td><td>Sloped top, compression latches, drainage</td></tr>
+      <tr><td class="lbl">Class I Div 1 hazardous gas</td><td class="best">Hazloc (NEMA 7) — Killark / Adalet</td><td>No IP66 substitutes ever; threaded entries</td></tr>
+    </tbody>
+  </table>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> The left column is what the customer says. The middle column is what you quote. The right column is the follow-up that grows the order.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">13</div>
+</section>
+
+<!-- ============= PAGE 14 — APPLY 03: ENVIRONMENT → MATERIAL MATRIX ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 03 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ ENVIRONMENT → MATERIAL</div>
+  <h2 style="margin-top:14px">Outside fights inside.<br>Pick the right armor.</h2>
+  <p class="lead" style="margin-top:6px">The form factor (wall, floor, modular, operator) only solves half the problem. Material has to match the environment too.</p>
+
+  <table class="matrix" style="margin-top:14px">
+    <thead><tr><th class="row-h">If the environment is…</th><th>Pick this material</th><th>NEMA / typical rating</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Indoor clean</td><td class="best">Painted Steel</td><td>NEMA 1 / 12</td></tr>
+      <tr><td class="lbl">Dust / debris</td><td class="best">Painted Steel NEMA 12</td><td>NEMA 12</td></tr>
+      <tr><td class="lbl">Outdoor (rain, sleet, snow)</td><td class="best">Painted Steel or Aluminum</td><td>NEMA 3R or 4</td></tr>
+      <tr><td class="lbl">Washdown / food / pharma</td><td class="best">Stainless 304</td><td>NEMA 4X · IP66</td></tr>
+      <tr><td class="lbl">Chemicals / marine / chloride / salt</td><td class="best">Stainless 316</td><td>NEMA 4X · IP66</td></tr>
+      <tr><td class="lbl">Corrosive (chemical plant)</td><td class="best">Fiberglass or Polycarbonate</td><td>NEMA 4X</td></tr>
+      <tr><td class="lbl">Hazardous / explosive (Class I/II Div)</td><td class="best">Cast metal Hazloc</td><td>NEMA 7 / 9 — no IP equivalent</td></tr>
+    </tbody>
+  </table>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #EF4444">
+    <h3 style="color:#7F1D1D;font-size:16px">🚨 The substitution rule</h3>
+    <p style="color:#7F1D1D;margin-top:6px;font-size:13px"><b>Never downgrade material to save money.</b> Painted steel near saltwater rusts inside 18 months. ABS outdoors cracks in one summer. The customer pays once for material — they pay forever when they skip on it.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Outdoor UV → polycarbonate. Salt / chlorine → 316. Chemical → fiberglass. Explosive → hazloc. Indoor clean → painted steel. Five rules, every quote.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">14</div>
+</section>
+
+<!-- ============= PAGE 15 — APPLY 04: WALL VS FLOOR VS MODULAR ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 04 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ WALL · FLOOR · MODULAR</div>
+  <h2 style="margin-top:14px">The 30-second<br>decision tree.</h2>
+  <p class="lead" style="margin-top:6px">Once you've confirmed the customer is in the standard category, this is how you pick between the three sub-types in under 30 seconds.</p>
+
+  <div style="margin-top:18px">
+    <div class="decision-card"><span class="num-d">1</span><h3>Will it grow?</h3><div class="body-d">"Phase one of three" · "we'll add drives next quarter" · "OEM machine line" → <b>Modular.</b> Stop the decision tree right here. Anything else, continue.</div></div>
+    <div class="decision-card"><span class="num-d">2</span><h3>Is it a VFD, MCC, or large drive system?</h3><div class="body-d">High heat load, big footprint, lots of wiring → <b>Freestanding.</b> Drives need the airflow and the cabinet depth a wall-mount can't give you.</div></div>
+    <div class="decision-card"><span class="num-d">3</span><h3>Does it fit comfortably on a wall?</h3><div class="body-d">Small PLC, remote I/O, junction control, sensor concentrator → <b>Wall-mount.</b> The default for almost every small system.</div></div>
+  </div>
+
+  <div class="factbox" style="margin-top:14px">
+    <h3 style="font-size:16px">📞 The customer scripts</h3>
+    <p style="font-size:13px;margin-top:6px"><b>"Will the system grow at all?"</b> → if yes, go modular even on phase one.<br><b>"What's going inside — any drives or VFDs?"</b> → if yes, default to freestanding for thermal headroom.<br><b>"Roughly how big does it need to be?"</b> → only after the application questions, never before.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "If it won't comfortably fit on a wall, it belongs on the floor. And if the system will grow — modular from the start."
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">15</div>
+</section>
+
+<!-- ============= PAGE 16 — APPLY 05: CUSTOMER TRANSLATION ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 05 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ CUSTOMER PHRASE TRANSLATION</div>
+  <h2 style="margin-top:14px">What they say.<br>What you ask. What you sell.</h2>
+  <p class="lead" style="margin-top:6px">Customers describe the situation in plain English. Translate to the underlying enclosure category before you reply.</p>
+
+  <div style="margin-top:18px">
+    <div class="translate-row" style="font-weight:800;font-size:11px;letter-spacing:.05em;text-transform:uppercase"><div style="background:transparent;color:#64748B">Customer says</div><div style="background:transparent;color:#64748B">It means</div><div style="background:transparent;color:#64748B">You quote / ask</div></div>
+    <div class="translate-row"><div class="says">"I just need a box for a PLC"</div><div class="means">Small control system</div><div class="quote-it">Wall-mount NEMA 12 · ask about cable entry</div></div>
+    <div class="translate-row"><div class="says">"We're adding a VFD"</div><div class="means">Standard, freestanding, climate considerations</div><div class="quote-it">Freestanding · "What's the ambient temp?"</div></div>
+    <div class="translate-row"><div class="says">"This is phase one"</div><div class="means">System will grow → modular from day one</div><div class="quote-it">Modular system · plan side-by-side bays</div></div>
+    <div class="translate-row"><div class="says">"The operator stands here all day"</div><div class="means">Operator-facing → HMI or console</div><div class="quote-it">HMI swing arm or console with angled front</div></div>
+    <div class="translate-row"><div class="says">"Just need a start / stop"</div><div class="means">Operator → pushbutton enclosure</div><div class="quote-it">Pushbutton (sloped top in any wet area)</div></div>
+    <div class="translate-row"><div class="says">"Two panels need to be connected"</div><div class="means">Wireway opportunity</div><div class="quote-it">Wireway between them · ask lay-in vs gasketed</div></div>
+    <div class="translate-row"><div class="says">"Splice some wires in the field"</div><div class="means">Junction box with right NEMA rating</div><div class="quote-it">Junction box · confirm environment first</div></div>
+    <div class="translate-row"><div class="says">"It's outside, near the cooling tower"</div><div class="means">Outdoor + chloride + corrosion</div><div class="quote-it">Stainless 316 or non-metallic · NEMA 4X</div></div>
+    <div class="translate-row"><div class="says">"The cabinet keeps overheating"</div><div class="means">Climate-controlled enclosure or add AC</div><div class="quote-it">Climate-controlled cabinet OR retrofit AC + filter fan</div></div>
+    <div class="translate-row"><div class="says">"It's a Class I Div 1 area"</div><div class="means">Hazardous location · NEMA 7</div><div class="quote-it">Hazloc (Killark / Adalet) · never substitute IP66</div></div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Repeat the customer's phrase, name the underlying need, quote the fix. Three steps. Every call.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">16</div>
+</section>
+
+<!-- ============= PAGE 17 — APPLY 06: MISTAKES + UPSELLS + SCOPE WRAITH ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 06 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ 5 MISTAKES · 6 UPSELL LISTENERS</div>
+  <h2 style="margin-top:14px">What to avoid.<br>What to listen for.</h2>
+
+  <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div>
+      <h3 style="font-size:15px;color:#7F1D1D">🚨 AVOID THESE MISTAKES</h3>
+      <div style="margin-top:6px">
+        <div class="mistake" style="padding:8px 12px;margin-bottom:6px"><span class="x" style="width:22px;height:22px;flex-basis:22px;font-size:11px">1</span><div><h3 style="font-size:12.5px">Choosing size before application.</h3><p style="font-size:11.5px;line-height:1.3">Biggest miss. Start with dimensions → wrong category.</p></div></div>
+        <div class="mistake" style="padding:8px 12px;margin-bottom:6px"><span class="x" style="width:22px;height:22px;flex-basis:22px;font-size:11px">2</span><div><h3 style="font-size:12.5px">Forgetting operator interaction.</h3><p style="font-size:11.5px;line-height:1.3">Standard box quoted when a human presses buttons. Wrong cutouts, wrong gaskets.</p></div></div>
+        <div class="mistake" style="padding:8px 12px;margin-bottom:6px"><span class="x" style="width:22px;height:22px;flex-basis:22px;font-size:11px">3</span><div><h3 style="font-size:12.5px">Skipping wireway and fittings.</h3><p style="font-size:11.5px;line-height:1.3">Multiple panels = wireway. Reps default to conduit and leave money on the table.</p></div></div>
+        <div class="mistake" style="padding:8px 12px;margin-bottom:6px"><span class="x" style="width:22px;height:22px;flex-basis:22px;font-size:11px">4</span><div><h3 style="font-size:12.5px">Not asking about environment.</h3><p style="font-size:11.5px;line-height:1.3">Painted steel near salt. ABS outdoors. Always ask.</p></div></div>
+        <div class="mistake" style="padding:8px 12px;margin-bottom:0"><span class="x" style="width:22px;height:22px;flex-basis:22px;font-size:11px">5</span><div><h3 style="font-size:12.5px">Not planning for expansion.</h3><p style="font-size:11.5px;line-height:1.3">"Phase one" — if you don't ask, the wall-mount gets thrown out in six months.</p></div></div>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:15px;color:#065F46">✓ LISTEN FOR THESE UPSELLS</h3>
+      <div style="margin-top:6px">
+        <div class="upsell" style="padding:8px 12px;margin-bottom:6px"><span class="check" style="width:22px;height:22px;flex-basis:22px;font-size:11px">✓</span><div><h3 style="font-size:12.5px">"Multiple panels…"</h3><p style="font-size:11.5px;line-height:1.3">→ Wireway + fittings between them</p></div></div>
+        <div class="upsell" style="padding:8px 12px;margin-bottom:6px"><span class="check" style="width:22px;height:22px;flex-basis:22px;font-size:11px">✓</span><div><h3 style="font-size:12.5px">"Outdoor exposure…"</h3><p style="font-size:11.5px;line-height:1.3">→ NEMA 3R / 4 or non-metallic</p></div></div>
+        <div class="upsell" style="padding:8px 12px;margin-bottom:6px"><span class="check" style="width:22px;height:22px;flex-basis:22px;font-size:11px">✓</span><div><h3 style="font-size:12.5px">"Washdown / food…"</h3><p style="font-size:11.5px;line-height:1.3">→ Stainless 304 or 316</p></div></div>
+        <div class="upsell" style="padding:8px 12px;margin-bottom:6px"><span class="check" style="width:22px;height:22px;flex-basis:22px;font-size:11px">✓</span><div><h3 style="font-size:12.5px">"Operator stands at panel…"</h3><p style="font-size:11.5px;line-height:1.3">→ HMI / console upgrade</p></div></div>
+        <div class="upsell" style="padding:8px 12px;margin-bottom:6px"><span class="check" style="width:22px;height:22px;flex-basis:22px;font-size:11px">✓</span><div><h3 style="font-size:12.5px">"System will grow…"</h3><p style="font-size:11.5px;line-height:1.3">→ Modular system from day one</p></div></div>
+        <div class="upsell" style="padding:8px 12px;margin-bottom:0"><span class="check" style="width:22px;height:22px;flex-basis:22px;font-size:11px">✓</span><div><h3 style="font-size:12.5px">"Heat or electronics failing…"</h3><p style="font-size:11.5px;line-height:1.3">→ Climate control · AC · filter fan</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px;padding:10px 16px;font-size:13px">
+    🏅 <b>APPLY LEVEL CLEARED — +90 XP · BADGE EARNED: 💼 "QUOTE-READY."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="scope-wraith">
+    <div class="icon">👻</div>
+    <h3>The Scope Wraith blocks the path!</h3>
+    <div class="sub">5 questions on the 6-question framework &amp; selling process · Defeat to unlock the Boss Fight</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">17</div>
+</section>
+
+<!-- ============= PAGE 18 — BOSS INTRO ============= -->
+<section class="page boss-page" data-section-id="finalboss" style="display:flex;flex-direction:column;align-items:center;text-align:center">
+  <div class="page-tag" style="color:#34D399">▸ TEST · BOSS FIGHT</div>
+  <div style="margin-top:.6in"><div class="level-banner lvl-test" style="margin:0 auto">🎯 TEST LEVEL</div></div>
+  <h2 style="margin-top:20px;font-size:54px">The Type Gauntlet.</h2>
+  <svg width="320" height="320" viewBox="0 0 320 320" style="margin-top:14px">
+    <defs>
+      <linearGradient id="bossT" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#7DD3FC"/>
+        <stop offset="100%" stop-color="#7F1D1D"/>
+      </linearGradient>
+      <filter id="bossglow6"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <g transform="translate(160 160)">
+      <!-- Stacked-cabinet boss -->
+      <rect x="-110" y="-110" width="220" height="220" rx="14" fill="url(#bossT)" stroke="#FCD34D" stroke-width="3" filter="url(#bossglow6)"/>
+      <!-- divider lines like a modular cabinet -->
+      <line x1="-110" y1="-37" x2="110" y2="-37" stroke="#FCD34D" stroke-width="2" opacity=".7"/>
+      <line x1="-110" y1="37" x2="110" y2="37" stroke="#FCD34D" stroke-width="2" opacity=".7"/>
+      <line x1="0" y1="-110" x2="0" y2="110" stroke="#FCD34D" stroke-width="2" opacity=".7"/>
+      <!-- evil eyes -->
+      <circle cx="-40" cy="-65" r="9" fill="#EF4444"/>
+      <circle cx="40" cy="-65" r="9" fill="#EF4444"/>
+      <circle cx="-38" cy="-67" r="3" fill="#FCD34D"/>
+      <circle cx="42" cy="-67" r="3" fill="#FCD34D"/>
+      <!-- snarl -->
+      <path d="M -45 0 L -30 -10 L -15 0 L 0 -10 L 15 0 L 30 -10 L 45 0" fill="none" stroke="#FCD34D" stroke-width="2"/>
+      <!-- door handle -->
+      <rect x="-12" y="60" width="24" height="36" fill="#0F172A" stroke="#FCD34D" stroke-width="2"/>
+    </g>
+  </svg>
+  <div style="width:80%;margin-top:14px">
+    <div style="display:flex;justify-content:space-between;color:#FACC15;font-weight:800;font-size:11px;letter-spacing:.1em;margin-bottom:6px">
+      <span>TYPE GAUNTLET · 60 HP</span><span>STATUS: HOSTILE</span>
+    </div>
+    <div class="hp-bar"><div class="fill"></div></div>
+  </div>
+  <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:18px 24px;margin-top:24px;width:80%">
+    <p style="color:#fff;font-size:14px"><b>30 questions · 2 XP each · 80%+ to win</b></p>
+    <p style="color:#94A3B8;font-size:13px;margin-top:8px">No peeking. Score honest. 24/30 = 🗂️ Type Mastery badge.</p>
+  </div>
+  <div class="page-num" style="color:#64748B">18</div>
+</section>
+
+<!-- ============= PAGE 19 — ROUND 1 (Q1-6) CATEGORIES & STANDARD ============= -->
+<section class="page boss-page" data-quiz-page="1" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 1 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 1 · MINDSET &amp; STANDARD</div>
+    <div style="color:#34D399;font-weight:800;font-size:11px;letter-spacing:.1em">Q 1 → 6</div>
+  </div>
+  <div class="hp-bar" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="1"></div><div class="qcard" data-q="2"></div>
+    <div class="qcard" data-q="3"></div><div class="qcard" data-q="4"></div>
+    <div class="qcard" data-q="5"></div><div class="qcard" data-q="6"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">19</div>
+</section>
+
+<!-- ============= PAGE 20 — ROUND 2 (Q7-12) OPERATOR & WIREWAY ============= -->
+<section class="page boss-page" data-quiz-page="2" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 2 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 2 · OPERATOR &amp; WIREWAY</div>
+    <div style="color:#34D399;font-weight:800;font-size:11px;letter-spacing:.1em">Q 7 → 12</div>
+  </div>
+  <div class="hp-bar r2" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="7"></div><div class="qcard" data-q="8"></div>
+    <div class="qcard" data-q="9"></div><div class="qcard" data-q="10"></div>
+    <div class="qcard" data-q="11"></div><div class="qcard" data-q="12"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">20</div>
+</section>
+
+<!-- ============= PAGE 21 — ROUND 3 (Q13-18) ENVIRONMENT & SPECIALTY ============= -->
+<section class="page boss-page" data-quiz-page="3" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 3 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 3 · ENVIRONMENT &amp; SPECIALTY</div>
+    <div style="color:#FBBF24;font-weight:800;font-size:11px;letter-spacing:.1em">Q 13 → 18</div>
+  </div>
+  <div class="hp-bar r3" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="13"></div><div class="qcard" data-q="14"></div>
+    <div class="qcard" data-q="15"></div><div class="qcard" data-q="16"></div>
+    <div class="qcard" data-q="17"></div><div class="qcard" data-q="18"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">21</div>
+</section>
+
+<!-- ============= PAGE 22 — ROUND 4 (Q19-24) SPECIALTY & SELECTION ============= -->
+<section class="page boss-page" data-quiz-page="4" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 4 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 4 · SPECIALTY &amp; SELECTION</div>
+    <div style="color:#F97316;font-weight:800;font-size:11px;letter-spacing:.1em">Q 19 → 24</div>
+  </div>
+  <div class="hp-bar r4" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="19"></div><div class="qcard" data-q="20"></div>
+    <div class="qcard" data-q="21"></div><div class="qcard" data-q="22"></div>
+    <div class="qcard" data-q="23"></div><div class="qcard" data-q="24"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">22</div>
+</section>
+
+<!-- ============= PAGE 23 — ROUND 5 (Q25-30) SCENARIOS & MINDSET ============= -->
+<section class="page boss-page" data-quiz-page="5" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 5 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 FINAL ROUND · SCENARIOS &amp; MINDSET</div>
+    <div style="color:#EF4444;font-weight:800;font-size:11px;letter-spacing:.1em">Q 25 → 30 · KILL SHOT</div>
+  </div>
+  <div class="hp-bar r5" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="25"></div><div class="qcard" data-q="26"></div>
+    <div class="qcard" data-q="27"></div><div class="qcard" data-q="28"></div>
+    <div class="qcard" data-q="29"></div><div class="qcard" data-q="30"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">23</div>
+</section>
+
+<!-- ============= PAGE 24 — ANSWER KEY / RESULTS ============= -->
+<section class="page" id="resultsPage" data-section-id="results">
+  <div class="page-tag" style="color:#10B981">▸ FINAL BOSS · RESULTS</div>
+  <div class="level-banner lvl-test" style="margin-top:.4in">🎯 ANSWER KEY · YOUR RESULTS</div>
+  <h2 style="margin-top:14px">🗝️ The Key.</h2>
+  <p class="lead print-only" style="display:none">Score yourself. Tier yourself. Earn the badge.</p>
+
+  <div id="liveResults" class="interactive-only" style="margin-top:18px;background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:18px;padding:24px;color:#fff">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+      <div>
+        <p style="color:#94A3B8;font-size:11px;letter-spacing:.18em;font-weight:800;margin:0">▸ YOUR LIVE SCORE</p>
+        <p style="font-family:'Bricolage Grotesque';font-size:54px;font-weight:800;color:#FACC15;margin-top:4px;line-height:1">
+          <span id="scoreCorrect">0</span><span style="color:#475569">/30</span>
+        </p>
+        <p style="font-size:13px;color:#CBD5E1;margin-top:4px">Total XP: <b id="scoreXP" style="color:#34D399">0</b> <span style="color:#475569">/ 280</span></p>
+      </div>
+      <div id="tierBadge" style="text-align:center"></div>
+    </div>
+    <div style="margin-top:14px;background:#334155;height:14px;border-radius:7px;overflow:hidden;border:1px solid #475569">
+      <div id="scoreBar" style="height:100%;width:0%;background:linear-gradient(90deg,#10B981,#34D399);transition:width .4s ease"></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button id="submitBtn" style="background:linear-gradient(135deg,#10B981,#047857);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📤 SUBMIT TO TRAINER</button>
+      <button id="copyBtn" style="background:#0284C7;color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📋 COPY RESULTS</button>
+      <button id="resetBtn" style="background:#1E293B;color:#FACC15;border:1px solid #475569;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">↻ RESTART QUIZ</button>
+    </div>
+    <div id="submitStatus" style="margin-top:10px;font-size:12px;font-weight:700;color:#94A3B8;min-height:18px;white-space:pre-wrap"></div>
+  </div>
+
+  <div class="answer-key-static">
+  <div class="key-grid">
+    <div class="key-cell"><span>Q1</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q2</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q3</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q4</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q5</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q6</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q7</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q8</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q9</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q10</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q11</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q12</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q13</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q14</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q15</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q16</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q17</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q18</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q19</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q20</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q21</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q22</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q23</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q24</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q25</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q26</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q27</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q28</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q29</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q30</span><span class="a">C</span></div>
+  </div>
+
+  <h3 style="margin-top:24px">🏆 Scoring tiers</h3>
+  <div class="tier tier-gold"><div class="medal">🥇</div><div><b>24–30 correct → TYPE MASTERY.</b> Earn the 🗂️ badge. You pick the right enclosure from a one-sentence customer description.</div></div>
+  <div class="tier tier-silver"><div class="medal">🥈</div><div><b>18–23 correct → CATEGORY-READY.</b> Re-run the APPLY level and re-fight.</div></div>
+  <div class="tier tier-bronze"><div class="medal">🥉</div><div><b>0–17 correct → BACK TO THE CATEGORIES.</b> Re-read LEARN. The Wraith waits.</div></div>
+  </div><!-- /answer-key-static -->
+  <div class="page-num">24</div>
+</section>
+
+<!-- ============= PAGE 25 — LOOT DROP / CHEAT SHEET ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ LOOT DROP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">💎 POCKET CHEAT SHEET</div>
+  <h2 style="margin-top:14px">Tear-out card.</h2>
+  <p class="lead">Print it. Tape it next to your phone. Reference forever.</p>
+
+  <div class="loot" style="margin-top:18px">
+    <div class="stamp">✂ TEAR HERE</div>
+
+    <h3>🗂️ The Four Categories</h3>
+    <p><b>Standard</b> = hold equipment · <b>Operator</b> = human interaction · <b>Wireway</b> = route cables · <b>Specialty</b> = environment / safety</p>
+
+    <h3>📞 The 6 First Questions</h3>
+    <p>1) What goes inside? · 2) Operator-facing or equipment-only? · 3) Indoor or outdoor? · 4) Heat / moisture / dust / corrosion? · 5) How much space — and will it grow? · 6) How do cables enter and exit?</p>
+
+    <h3>🔧 Situation → Enclosure (quick lookup)</h3>
+    <p>Small control → <b>Wall-mount</b> · Large / VFD / MCC → <b>Freestanding</b> · Will grow → <b>Modular</b> · Screen → <b>HMI / Console</b> · Buttons → <b>Pushbutton (sloped)</b> · Connect panels → <b>Wireway</b> · Splices → <b>Junction box</b> · Outdoor / corrosive → <b>Non-metallic</b> · Washdown → <b>Stainless 304/316</b> · Hazardous → <b>Hazloc</b></p>
+
+    <h3>🌡️ Environment → Material</h3>
+    <p>Indoor clean → <b>Painted steel</b> · Dust → <b>NEMA 12</b> · Outdoor → <b>NEMA 3R/4</b> · Washdown → <b>304 SS</b> · Marine / chlorine → <b>316 SS</b> · Chemical plant → <b>Fiberglass / polycarb</b> · Explosive → <b>NEMA 7/9 hazloc</b></p>
+
+    <h3>🚨 5 Mistakes to Avoid</h3>
+    <p>Choosing size before application · Forgetting operator interaction · Skipping wireway and fittings · Not asking about environment · Not planning for expansion</p>
+
+    <h3>✓ Upsell Listeners</h3>
+    <p>"Multiple panels" → wireway · "Outdoor" → 3R/4 or non-metallic · "Washdown" → 304/316 · "Operator stands here" → HMI/console · "System will grow" → modular · "Cabinet overheating" → climate control</p>
+
+    <h3>🧠 The Memory Hook</h3>
+    <p style="font-size:16px;font-weight:800;color:#0284C7">Application first. Size last. Pick the right category before you quote.</p>
+  </div>
+  <div class="page-num">25</div>
+</section>
+
+<!-- ============= PAGE 26 — TROPHY CASE ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ FINAL XP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">🏅 TROPHY CASE</div>
+  <h2 style="margin-top:14px">Your earned XP.</h2>
+
+  <div class="trophy-grid">
+    <div class="trophy"><div class="icon">🧠</div><h3>FOUR CATEGORIES LOCKED</h3><div class="xp-num">+80 XP</div></div>
+    <div class="trophy"><div class="icon">🧌</div><h3>MINI BOSSES</h3><div class="xp-num">+50 XP</div></div>
+    <div class="trophy"><div class="icon">💼</div><h3>QUOTE-READY</h3><div class="xp-num">+90 XP</div></div>
+    <div class="trophy"><div class="icon">🗂️</div><h3>TYPE MASTERY</h3><div class="xp-num">+60 XP</div></div>
+  </div>
+
+  <div class="factbox" style="margin-top:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="font-size:16px">TOTAL POSSIBLE XP</h3>
+      <div style="font-family:'Bricolage Grotesque';font-size:46px;font-weight:800;color:#CA8A04">280</div>
+    </div>
+    <hr class="faint">
+    <p style="font-size:12px;color:var(--slate-500)">Three of the enclosure-family modules cleared (Mastery, Types, then Accessories next). Up next: <b>Enclosure Accessories</b> — what goes inside the enclosure once you've picked the right one.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:18px">
+    🔓 <b>NEXT UNLOCKS:</b> Enclosure Accessories — mounting hardware, cable management, thermal control, doors, and protection accessories. Pairs perfectly with what you just learned.
+  </div>
+  <div class="page-num">26</div>
+</section>
+
+<!-- ============= PAGE 27 — CLOSING ============= -->
+<section class="page closing-page" data-section-id="results">
+  <h1 style="font-size:84px">🗂️</h1>
+  <h1 style="margin-top:14px">Application first.<br>Size last.</h1>
+  <p style="font-size:20px;max-width:5.5in;margin:24px auto 0">Standard. Operator. Wireway. Specialty. Four categories cover every enclosure on the catalog. Ask the six questions, sort the customer into the right category, and the quote writes itself.</p>
+
+  <div style="margin-top:40px;display:flex;gap:18px;flex-wrap:wrap;justify-content:center">
+    <div style="background:rgba(186,230,253,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(186,230,253,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#BAE6FD">🧠 LEARN the categories</div>
+    <div style="background:rgba(186,230,253,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(186,230,253,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#BAE6FD">🛠️ APPLY the framework</div>
+    <div style="background:rgba(186,230,253,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(186,230,253,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#BAE6FD">🎯 TEST your scenarios</div>
+  </div>
+
+  <div style="margin-top:auto;padding-top:30px;text-align:center">
+    <p style="color:#FACC15;font-size:13px;letter-spacing:.18em;font-weight:800">▸ NEXT UP</p>
+    <p style="font-size:14px;color:#fff;margin-top:6px">Enclosure Accessories — mounting · cable · thermal · doors · protection</p>
+    <p style="margin-top:30px;color:#BAE6FD;font-size:12px;font-weight:800;letter-spacing:.18em">RSP INDUSTRIAL · PRODUCT MASTERY · VOL 03</p>
+  </div>
+</section>
+
+<!-- ADMIN OVERLAY (browser only) -->
+<div id="adminOverlay" class="interactive-only"></div>
+
+<script src="../shared/module.js?v=editor-blocks-2-page-delete"></script>
+<script>
+RSPModule.init({
+  moduleId:   "enclosure-types",
+  moduleName: "Enclosure Types",
+  moduleIcon: "🗂️",
+
+  totalQuestions: 30,
+  passGold:       24,
+  passSilver:     18,
+  pageXpTotal:    170,   // 8 LEARN × 10 + 6 APPLY × 15
+  minibossXpTotal: 50,
+  adminPassword:  (window.RSP_CONFIG && window.RSP_CONFIG.adminPassword) || "",
+  pumbleWebhookUrl: "",
+  storageKey: "rsp_enclosure_types_progress",
+
+  tierBadges: {
+    gold:   { name:"TYPE MASTERY",           msg:"Pick the right enclosure from one customer sentence." },
+    silver: { name:"CATEGORY-READY",         msg:"Re-run APPLY level and re-fight." },
+    bronze: { name:"BACK TO THE CATEGORIES", msg:"Re-read LEARN. The Wraith waits." }
+  },
+  tierSubmitText: {
+    gold:   "🥇 Type Mastery",
+    silver: "🥈 Category-Ready — Re-run APPLY level",
+    bronze: "🥉 Needs Re-do — Back to LEARN"
+  },
+
+  // -------- THE 30-QUESTION BOSS FIGHT --------
+  quiz: [
+    // ROUND 1 — Mindset & Standard
+    {n:1,  q:"What is the most important factor when selecting an enclosure?", opts:{A:"Price",B:"Size",C:"Application / use case",D:"Brand"}, c:"C"},
+    {n:2,  q:"A wall-mount enclosure is primarily used for:", opts:{A:"Large drive systems",B:"Small control panels and distributed I/O",C:"Outdoor solar arrays",D:"Operator stations"}, c:"B"},
+    {n:3,  q:"When should a freestanding enclosure be used?", opts:{A:"When wall space is limited",B:"For mounting on walls",C:"When the system is large, heavy, or has high heat load (VFDs, MCCs)",D:"For wire splicing only"}, c:"C"},
+    {n:4,  q:"The main advantage of modular enclosures is:", opts:{A:"Lower cost",B:"Smaller footprint",C:"Expandability — bay-by-bay growth",D:"Better corrosion resistance"}, c:"C"},
+    {n:5,  q:"Which enclosure type is BEST for future system expansion?", opts:{A:"Junction box",B:"Modular enclosure",C:"Pushbutton enclosure",D:"Wireway"}, c:"B"},
+    {n:6,  q:"Which enclosure type is designed specifically for operator interaction?", opts:{A:"Junction box",B:"Freestanding enclosure",C:"HMI or console enclosure",D:"Wireway"}, c:"C"},
+
+    // ROUND 2 — Operator & Wireway
+    {n:7,  q:"The main purpose of a console enclosure is:", opts:{A:"Wire routing",B:"Mounting PLCs out of the way",C:"Ergonomic operator interface — angled front face",D:"Outdoor protection"}, c:"C"},
+    {n:8,  q:"Why do pushbutton enclosures often have sloped tops?", opts:{A:"To reduce weight",B:"To improve airflow",C:"To prevent dust and liquid buildup",D:"To increase strength"}, c:"C"},
+    {n:9,  q:"Which enclosure is MOST appropriate for pushbuttons and switches?", opts:{A:"Junction box",B:"Modular enclosure",C:"Pushbutton enclosure (often sloped top)",D:"Wireway"}, c:"C"},
+    {n:10, q:"The primary purpose of a wireway is:", opts:{A:"Mount equipment",B:"Route and protect cables between enclosures",C:"Increase enclosure size",D:"Provide operator access"}, c:"B"},
+    {n:11, q:"When should wireway be used instead of conduit?", opts:{A:"When wiring is minimal",B:"When frequent access, modification, or large cable bundles are needed",C:"When space is extremely limited",D:"When cost must be reduced"}, c:"B"},
+    {n:12, q:"Which type of wireway is BEST for frequent maintenance access?", opts:{A:"Pull-through",B:"Gasketed",C:"Lay-in (removable covers)",D:"Rigid one-piece"}, c:"C"},
+
+    // ROUND 3 — Environment & Specialty
+    {n:13, q:"Which type of wireway is BEST for dusty or wet environments?", opts:{A:"Lay-in",B:"Pull-through",C:"Gasketed",D:"Open-frame"}, c:"C"},
+    {n:14, q:"The primary function of a junction box is to:", opts:{A:"Mount large components",B:"Route cables long distances",C:"Protect wire connections (splices, terminations)",D:"Provide an operator interface"}, c:"C"},
+    {n:15, q:"Which enclosure is BEST for corrosive environments?", opts:{A:"Painted steel",B:"Non-metallic (fiberglass or polycarbonate)",C:"Aluminum only",D:"Junction box"}, c:"B"},
+    {n:16, q:"Which enclosure material is commonly used in washdown or food environments?", opts:{A:"ABS",B:"Painted steel",C:"Stainless steel (304 or 316)",D:"PVC"}, c:"C"},
+    {n:17, q:"When should stainless 316 be used instead of 304?", opts:{A:"Indoor general-purpose applications",B:"Clean control rooms",C:"Marine, chlorine, or highly corrosive environments",D:"Standard machine control panels"}, c:"C"},
+    {n:18, q:"The purpose of hazardous-location enclosures is to:", opts:{A:"Reduce cost",B:"Improve airflow",C:"Contain ignition and meet code in explosive atmospheres",D:"Mount PLCs"}, c:"C"},
+
+    // ROUND 4 — Specialty & Selection
+    {n:19, q:"Which enclosure type is used specifically to house a disconnect switch?", opts:{A:"Modular enclosure",B:"Junction box",C:"Disconnect enclosure",D:"Wireway"}, c:"C"},
+    {n:20, q:"The benefit of dual-access enclosures is:", opts:{A:"Lower cost",B:"Better airflow",C:"Access from both front and rear for service",D:"Smaller overall footprint"}, c:"C"},
+    {n:21, q:"Which of the following is a common sales mistake?", opts:{A:"Asking about the environment",B:"Asking about the application",C:"Choosing enclosure size before application",D:"Considering cable routing"}, c:"C"},
+    {n:22, q:"What should be determined BEFORE selecting an enclosure size?", opts:{A:"Price point",B:"Application",C:"Brand preference",D:"Delivery time"}, c:"B"},
+    {n:23, q:"Which enclosure type is used for connecting multiple panels?", opts:{A:"Junction box",B:"Wireway",C:"Pushbutton enclosure",D:"Console"}, c:"B"},
+    {n:24, q:"Which is NOT a primary function of enclosure accessories?", opts:{A:"Mounting",B:"Cable management",C:"Speed control",D:"Environmental protection"}, c:"C"},
+
+    // ROUND 5 — Scenarios & Mindset
+    {n:25, q:"Which situation would MOST likely require a modular enclosure?", opts:{A:"Single small control panel",B:"Future expansion is expected (phase one of several)",C:"Wire splicing only",D:"Pushbutton control of one motor"}, c:"B"},
+    {n:26, q:"The biggest advantage of wireway over conduit is:", opts:{A:"Lower voltage rating",B:"Easier access and modification",C:"Higher mechanical strength",D:"Smaller physical size"}, c:"B"},
+    {n:27, q:"Which enclosure type is BEST for a system with many VFDs and high heat?", opts:{A:"Wall-mount",B:"Junction box",C:"Freestanding (often climate-controlled)",D:"Pushbutton enclosure"}, c:"C"},
+    {n:28, q:"The PRIMARY reason to choose a non-metallic enclosure is:", opts:{A:"Cost only",B:"Appearance",C:"Corrosion resistance and UV stability",D:"Mounting capability"}, c:"C"},
+    {n:29, q:"The correct mindset when selling enclosures is to start with:", opts:{A:"Size",B:"Brand",C:"Application",D:"Cost"}, c:"C"},
+    {n:30, q:"Which statement is TRUE?", opts:{A:"All enclosures are interchangeable",B:"Size is the most important selection factor",C:"Enclosures are selected based on application and environment first",D:"Accessories are optional"}, c:"C"}
+  ],
+
+  // -------- MINI-BOSSES --------
+  minibosses: {
+    'type-troll': {
+      name: 'TYPE TROLL',
+      icon: '🧌',
+      tagline: 'Guardian of the Four Categories',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"The four enclosure categories are:", opts:{A:"Steel, plastic, stainless, glass",B:"Standard, Operator, Wireway, Specialty",C:"Big, medium, small, mini",D:"NEMA 1, 3R, 4, 12"}, c:"B"},
+        {q:"A small PLC panel on a wall is which category?", opts:{A:"Operator",B:"Wireway",C:"Standard",D:"Specialty"}, c:"C"},
+        {q:"An HMI swing-arm enclosure is which category?", opts:{A:"Standard",B:"Operator",C:"Wireway",D:"Specialty"}, c:"B"},
+        {q:"A box that connects two panels together is which category?", opts:{A:"Standard",B:"Operator",C:"Wireway",D:"Specialty"}, c:"C"},
+        {q:"A NEMA 7 hazardous-location enclosure is which category?", opts:{A:"Standard",B:"Operator",C:"Wireway",D:"Specialty"}, c:"D"}
+      ]
+    },
+    'scope-wraith': {
+      name: 'SCOPE WRAITH',
+      icon: '👻',
+      tagline: 'Haunts every \"size first\" quote',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"The correct first question on every enclosure call is:", opts:{A:"What size do you want?",B:"What brand do you want?",C:"What's going inside and what's the application?",D:"What's your budget?"}, c:"C"},
+        {q:"Customer says \"this is phase one of three.\" Quote:", opts:{A:"Wall-mount NEMA 12",B:"Modular system from day one",C:"Junction box",D:"Pushbutton enclosure"}, c:"B"},
+        {q:"Customer says \"operator stands at the panel all day.\" Quote:", opts:{A:"Standard wall-mount",B:"HMI or console enclosure",C:"Junction box",D:"Wireway"}, c:"B"},
+        {q:"Customer says \"we need to connect three panels.\" Quote:", opts:{A:"Three separate wall-mounts",B:"Wireway between them (plus fittings)",C:"Pushbutton enclosure",D:"Console"}, c:"B"},
+        {q:"Customer says \"the cabinet keeps overheating.\" Quote:", opts:{A:"Bigger enclosure",B:"Climate-controlled cabinet or retrofit AC / filter fan",C:"Smaller enclosure",D:"Stainless 316"}, c:"B"}
+      ]
+    }
+  },
+
+  // -------- SIDE MAP --------
+  mapSections: [
+    {id:'intro',     name:'Start',          icon:'🏁', meta:'Pages 1–3',     firstPage:1},
+    {id:'mindset',   name:'Core Mindset',   icon:'🧠', meta:'Page 4',        firstPage:4},
+    {id:'framework', name:'4 Categories',   icon:'🗂️', meta:'Page 5',        firstPage:5},
+    {id:'standard',  name:'Standard',       icon:'📦', meta:'Page 6',        firstPage:6},
+    {id:'operator',  name:'Operator',       icon:'🖐️', meta:'Page 7',        firstPage:7},
+    {id:'wireway',   name:'Wireway',        icon:'🔌', meta:'Page 8',        firstPage:8},
+    {id:'specialty', name:'Specialty',      icon:'🛡️', meta:'Pages 9–10',    firstPage:9},
+    {id:'lookup',    name:'Lookup Matrix',  icon:'📊', meta:'Page 11',       firstPage:11},
+    {id:'mb1',       name:'Type Troll',     icon:'🧌', meta:'Mini Boss',     firstPage:11, isBoss:true, bossId:'type-troll'},
+    {id:'selling',   name:'6 Questions',    icon:'📞', meta:'Pages 12–15',   firstPage:12},
+    {id:'apply',     name:'Sales Skills',   icon:'💼', meta:'Pages 16–17',   firstPage:16},
+    {id:'mb2',       name:'Scope Wraith',   icon:'👻', meta:'Mini Boss',     firstPage:17, isBoss:true, bossId:'scope-wraith'},
+    {id:'finalboss', name:'Type Gauntlet',  icon:'🐲', meta:'30 Questions',  firstPage:18, isBoss:true, isFinal:true},
+    {id:'results',   name:'Results',        icon:'🏆', meta:'Trophy Case',   firstPage:24}
+  ],
+
+  pageRanges: [
+    {section:'intro',     from:1,  to:3},
+    {section:'mindset',   from:4,  to:4},
+    {section:'framework', from:5,  to:5},
+    {section:'standard',  from:6,  to:6},
+    {section:'operator',  from:7,  to:7},
+    {section:'wireway',   from:8,  to:8},
+    {section:'specialty', from:9,  to:10},
+    {section:'lookup',    from:11, to:11},
+    {section:'selling',   from:12, to:15},
+    {section:'apply',     from:16, to:17},
+    {section:'finalboss', from:18, to:23},
+    {section:'results',   from:24, to:27}
+  ]
+});
+</script>
+
+</body>
+</html>

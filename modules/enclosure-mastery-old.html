@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<title>Enclosure Mastery — RSP Industrial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=Inter:wght@400;600;800&amp;family=JetBrains+Mono:wght@700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/module.css?v=editor-blocks-1">
+<style>
+  /* === ENCLOSURE MASTERY · BLUE THEME OVERRIDES === */
+  :root{
+    --theme-primary:#1E40AF;
+    --theme-primary-deep:#1E1B4B;
+    --theme-accent:#FED7AA;
+    --theme-obj-num:#1E40AF;
+    --theme-login-btn-1:#1E40AF;
+    --theme-login-btn-2:#3B82F6;
+    --theme-login-pretitle:#1E40AF;
+    --theme-login-focus:#1E40AF;
+    --theme-side-bg:#1E1B4B;
+    --theme-side-border:#312E81;
+    --theme-side-toggle:#312E81;
+    --theme-loot-border:#1E40AF;
+    --theme-loot-bg-1:#EFF6FF;
+    --theme-loot-bg-2:#DBEAFE;
+    --theme-loot-h3:#1E40AF;
+    --theme-admin-btn:#1E40AF;
+    --theme-admin-loginbox-border:#312E81;
+  }
+
+  /* === MODULE-SPECIFIC COMPONENTS === */
+
+  /* Matrix tables (custom palette + variants) */
+  .matrix{width:100%;border-collapse:collapse;margin-top:12px;font-size:11px}
+  .matrix th{background:#FCE7F3;color:#831843;text-align:center;padding:10px 6px;font-weight:800;border:1px solid #FBCFE8;font-size:11px;letter-spacing:.05em}
+  .matrix th.row-h{background:#F1F5F9;color:#0F172A;text-align:left;width:120px}
+  .matrix td{padding:10px 6px;border:1px solid #E2E8F0;text-align:center;color:#1E293B;font-weight:600;font-size:11px}
+  .matrix td.lbl{background:#F8FAFC;text-align:left;font-weight:800;color:#0F172A;font-size:12px}
+  .matrix .good{background:#D1FAE5;color:#065F46}
+  .matrix .ok{background:#FEF3C7;color:#78350F}
+  .matrix .bad{background:#FEE2E2;color:#7F1D1D}
+  .matrix .top{background:#FEF3C7;color:#78350F;font-weight:800}
+  .matrix .info{background:#DBEAFE;color:#1E40AF}
+  .matrix.rating th{background:#FEE2E2;color:#7F1D1D;border-color:#FECACA}
+  .matrix.rating th.row-h{background:#F1F5F9;color:#0F172A}
+  .matrix.dec th{background:#A7F3D0;color:#065F46}
+  .matrix.dec td{padding:8px;font-weight:700}
+  .matrix.dec th.cat{background:#A7F3D0;color:#065F46;font-size:11px}
+  .matrix.dec td.cat-h{background:#D1FAE5;color:#065F46;font-weight:800;text-align:center;font-size:11px}
+  .matrix.simp{font-size:10px}
+  .matrix.simp th{background:#E0E7FF;color:#3730A3;font-size:10px;padding:6px 4px}
+  .matrix.simp td{padding:6px 4px;font-size:10px}
+
+  /* Manufacturer cards */
+  .mfr-card{background:var(--slate-50);border:2px solid var(--slate-200);border-radius:14px;padding:14px;margin-bottom:10px}
+  .mfr-card .mfr-name{font-family:'Bricolage Grotesque';font-size:16px;font-weight:800;color:#1E40AF}
+  .mfr-card .mfr-tag{font-size:10px;font-weight:700;color:#64748B;letter-spacing:.05em;text-transform:uppercase;margin-top:1px}
+  .mfr-card .mfr-desc{font-size:12px;color:#334155;margin-top:6px;line-height:1.4}
+  .mfr-card .mfr-mat{font-size:11px;color:#7C3AED;font-weight:700;margin-top:6px}
+  .mfr-card.limited{background:#FEF2F2;border-color:#FCA5A5}
+  .mfr-card.limited .mfr-tag{color:#7F1D1D}
+  .mfr-card.hazard{background:#FFF7ED;border-color:#FDBA74}
+  .mfr-card.hazard .mfr-name{color:#9A3412}
+
+  /* Decision flow (blue palette) */
+  .decision-card{background:linear-gradient(160deg,#DBEAFE,#BFDBFE);border:2px solid #3B82F6;border-radius:16px;padding:18px;margin-bottom:10px}
+  .decision-card .num-d{display:inline-block;background:#1E40AF;color:#fff;width:32px;height:32px;border-radius:50%;text-align:center;line-height:32px;font-weight:800;margin-right:10px;font-family:'Bricolage Grotesque'}
+  .decision-card h3{display:inline-block;color:#1E40AF;font-size:18px;vertical-align:middle}
+  .decision-card .body-d{color:#1E40AF;font-size:13px;margin-top:8px}
+  .decision-card ul{margin-top:6px;padding-left:24px}
+  .decision-card li{font-size:12px;color:#1E40AF;font-weight:600;margin:2px 0}
+
+  /* Substitution step rows */
+  .sub-step{display:flex;gap:12px;align-items:center;background:linear-gradient(135deg,#DBEAFE,#BFDBFE);padding:12px 16px;border-radius:12px;margin-bottom:8px}
+  .sub-step .arrow-d{flex:0 0 32px;font-size:22px}
+  .sub-step .step-text{font-weight:700;color:#1E40AF;font-size:14px}
+
+  /* Editable XP target */
+  .xp-target-card{display:flex;flex-direction:column;align-items:center;gap:18px;width:100%}
+  .xp-target-rings{position:relative;width:220px;height:220px;display:grid;place-items:center}
+  .xp-target-ring{position:absolute;border:6px solid #F97316;border-radius:50%;inset:0}
+  .xp-target-ring.middle{inset:25px;opacity:.6}
+  .xp-target-ring.inner{inset:50px;opacity:.38}
+  .xp-target-center{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;width:50px;height:50px;border-radius:50%;background:#F97316;color:#fff;font-family:'Bricolage Grotesque';font-size:22px;font-weight:800}
+  .xp-target-badge{background:var(--ink);color:#FCD34D;padding:10px 18px;border-radius:999px;font-weight:800;font-size:13px;letter-spacing:.1em}
+
+  /* Protected-inside diagram */
+  .protected-diagram{display:grid;grid-template-columns:210px 110px 1fr;gap:18px;align-items:center}
+  .protected-diagram-illustration{display:flex;flex-direction:column;align-items:center}
+  .protected-diagram-box{display:flex;gap:16px;align-items:center;justify-content:center;width:160px;height:92px;padding:12px;background:#F8FAFC;border:3px solid #3F51D5;border-radius:6px}
+  .protected-diagram-slot{height:58px}
+  .protected-diagram-slot.blue{width:44px;background:rgba(63,81,213,.28)}
+  .protected-diagram-slot.green{width:28px;background:rgba(76,209,170,.42)}
+  .protected-diagram-label{margin-top:10px;font-size:11px;font-weight:800;color:#2337C6;letter-spacing:.02em}
+  .protected-diagram-lines{display:flex;flex-direction:column;gap:18px}
+  .protected-diagram-line{border-top:2px dashed;width:100%}
+  .protected-diagram-line.one{border-color:#FF5A56;transform:translateY(4px) rotate(6deg)}
+  .protected-diagram-line.two{border-color:#FF8A34}
+  .protected-diagram-line.three{border-color:#A24822;transform:translateY(-4px) rotate(-6deg)}
+  .protected-diagram-list{display:flex;flex-direction:column;gap:12px}
+  .protected-diagram-item{font-size:14px;font-weight:800}
+  .protected-diagram-item.hazard{color:#8F2D1B}
+  .protected-diagram-item.impact{color:#A24C24}
+  .protected-diagram-item.chemical{color:#9A3412}
+
+  /* Three value cards */
+  .value-card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+  .value-card{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:250px;text-align:center}
+  .value-card-icon{font-size:42px;line-height:1}
+  .value-card h3{margin-top:8px}
+  .value-card p{margin-top:8px;font-size:12px;line-height:1.45}
+  .value-card.protection{background:linear-gradient(160deg,#FEE2E2,#FECACA);border-color:#EF4444}
+  .value-card.protection h3,.value-card.protection p{color:#7F1D1D}
+  .value-card.compliance{background:linear-gradient(160deg,#DBEAFE,#BFDBFE);border-color:#4C5EDB}
+  .value-card.compliance h3,.value-card.compliance p{color:#2337C6}
+  .value-card.reliability{background:linear-gradient(160deg,#D1FAE5,#A7F3D0);border-color:#047857}
+  .value-card.reliability h3,.value-card.reliability p{color:#065F46}
+</style>
+<style></style></head>
+<body class="" data-new-gr-c-s-check-loaded="14.1292.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1292.0">
+
+
+<a class="interactive-only" href="/" id="portalLink">← PORTAL</a>
+
+<aside id="sideMap" class="interactive-only">
+  <button class="map-toggle" id="mapToggle" title="Toggle map">‹</button>
+  <div class="map-title">📦 ENCLOSURE MAP</div>
+  <div class="map-hint">YOUR JOURNEY</div>
+  <div class="map-path" id="mapPath"></div>
+</aside>
+
+<div id="minibossOverlay" class="interactive-only">
+  <div class="miniboss-modal" id="minibossModal"></div>
+</div>
+
+<div id="loginOverlay" class="interactive-only">
+  <div class="login-card">
+    <div class="bolt-bg">📦</div>
+    <div class="pretitle">RSP INDUSTRIAL · PRODUCT MASTERY</div>
+    <h1>Enclosure<br>Mastery</h1>
+    <p class="sub">Sign in to track your XP and unlock the Boss Fight.</p>
+    <label for="loginName">Your name</label>
+    <input type="text" id="loginName" placeholder="e.g. Gabe Ebmeyer" autocomplete="off">
+    <label for="loginId">Employee ID <span style="font-weight:500;color:#94A3B8;letter-spacing:0">(optional)</span></label>
+    <input type="text" id="loginId" placeholder="e.g. RSP-1234" autocomplete="off">
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn">Begin Training →</button>
+    <p class="footer-note">Your progress is saved on this device. No data leaves your browser.</p>
+  </div>
+</div>
+
+<div id="xpTracker" class="interactive-only">
+  <div>
+    <div class="username" id="trackerUser">📦 READY</div>
+    <div class="label">XP EARNED</div>
+    <div><span class="num" id="trackerXP">0</span><span style="color:#475569;font-size:14px"> / 340</span></div>
+    <span class="reset-link" id="resetProgress">↻ Reset</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+    <div style="display:flex;gap:10px;font-size:10px;color:#94A3B8;white-space:nowrap;flex-wrap:wrap">
+      <span>📖&nbsp;<b style="color:#fff"><span id="trackerPages">0</span>/18</b></span>
+      <span>🎯&nbsp;<b style="color:#fff"><span id="trackerAnswered">0</span>/35</b></span>
+      <span>✓&nbsp;<b style="color:#34D399"><span id="trackerCorrect">0</span></b></span>
+    </div>
+    <div class="bar"><div class="fill" id="trackerFill"></div></div>
+  </div>
+</div>
+
+<!-- ============= PAGE 1 — COVER ============= -->
+
+
+<!-- ============= PAGE 2 — MISSION ============= -->
+
+
+<!-- ============= PAGE 3 — HOW TO PLAY ============= -->
+
+
+<!-- ============= PAGE 4 — WHAT IS AN ENCLOSURE ============= -->
+
+
+<!-- ============= PAGE 5 — WHAT ENCLOSURES DO ============= -->
+
+
+<!-- ============= PAGE 6 — RSP LINE PART 1 ============= -->
+
+
+<!-- ============= PAGE 7 — RSP LINE PART 2 ============= -->
+
+
+<!-- ============= PAGE 8 — THREE CORE DECISIONS ============= -->
+
+
+<!-- ============= PAGE 9 — STEEL MATERIAL MATRIX ============= -->
+
+
+<!-- ============= PAGE 10 — NON-METALLIC MATRIX ============= -->
+
+
+<!-- ============= PAGE 11 — NEMA RATING MATRIX ============= -->
+
+
+<!-- ============= PAGE 12 — SIMPLE DECISION TABLES ============= -->
+
+
+<!-- ============= PAGE 13 — NEMA vs IP NOTES ============= -->
+
+
+<!-- ============= PAGE 14 — APPLY 01 · THREE DECISIONS IN PRACTICE ============= -->
+
+
+<!-- ============= PAGE 15 — APPLY 02 · MATERIAL ADVANTAGES ============= -->
+
+
+<!-- ============= PAGE 16 — APPLY 03 · SUBSTITUTION LOGIC ============= -->
+
+
+<!-- ============= PAGE 17 — APPLY 04 · COMMON MISTAKES ============= -->
+
+
+<!-- ============= PAGE 18 — APPLY 05 · CUSTOMER TRANSLATION ============= -->
+
+
+<!-- ============= PAGE 19 — APPLY 06 · MANUFACTURER CROSS-REFERENCE ============= -->
+
+
+<!-- ============= PAGE 20 — APPLY 07 · 5-QUESTION SCRIPT ============= -->
+
+
+<!-- ============= PAGE 21 — APPLY 08 · COMMON SCENARIOS + SPHINX GATE ============= -->
+
+
+<!-- ============= PAGE 22 — BOSS INTRO ============= -->
+
+
+<!-- ============= PAGE 23 — ROUND 1 (Q1-7) BASICS & BRANDS ============= -->
+
+
+<!-- ============= PAGE 24 — ROUND 2 (Q8-14) MATERIALS ============= -->
+
+
+<!-- ============= PAGE 25 — ROUND 3 (Q15-21) RATINGS ============= -->
+
+
+<!-- ============= PAGE 26 — ROUND 4 (Q22-28) DECISIONS & SUBSTITUTION ============= -->
+
+
+<!-- ============= PAGE 27 — ROUND 5 (Q29-35) CUSTOMER & SCENARIOS ============= -->
+
+
+<!-- ============= PAGE 28 — ANSWER KEY / RESULTS ============= -->
+
+
+<!-- ============= PAGE 29 — LOOT DROP / CHEAT SHEET ============= -->
+
+
+<!-- ============= PAGE 30 — TROPHY CASE ============= -->
+
+
+<!-- ============= PAGE 31 — CLOSING ============= -->
+<section class="page cover" data-section-id="intro" data-page-id="p0">
+  <div class="ribbon">
+    <span class="badge">RSP INDUSTRIAL</span>
+    <span class="badge">PRODUCT MASTERY · MODULE 01</span>
+  </div>
+  <svg width="500" height="500" viewBox="0 0 500 500" style="position:absolute;right:-60px;top:120px;opacity:.95">
+    <defs>
+      <linearGradient id="boxg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FED7AA"></stop>
+        <stop offset="100%" stop-color="#F97316"></stop>
+      </linearGradient>
+    </defs>
+    <polygon points="100,140 250,80 400,140 400,360 250,420 100,360" fill="url(#boxg)" stroke="#FED7AA" stroke-width="3" opacity=".9"></polygon>
+    <polygon points="100,140 250,200 400,140" fill="none" stroke="#FED7AA" stroke-width="2"></polygon>
+    <line x1="250" y1="200" x2="250" y2="420" stroke="#FED7AA" stroke-width="2"></line>
+    <rect x="190" y="240" width="80" height="100" fill="#FFF7ED" stroke="#9A3412" stroke-width="2"></rect>
+    <circle cx="230" cy="290" r="4" fill="#9A3412"></circle>
+  </svg>
+  <div style="position:absolute;bottom:2.4in;left:.5in;right:.5in">
+    <div class="pill" style="background:rgba(254,215,170,.25);color:#FED7AA;border:1px solid rgba(254,215,170,.4);margin-bottom:18px">PRODUCT MASTERY · ENCLOSURES</div>
+    <h1 class="">ENCLOSURE<br>MASTERY</h1>
+    <div class="sub">Three decisions, two matrices, one confident quote.</div>
+  </div>
+  <div class="tagline">
+    <div>Learn it. Apply it. Test it. Sell it.</div>
+    <div>RSP · PROD 01</div>
+  </div>
+</section><section class="page" data-section-id="intro" data-page-id="p1">
+  <div class="page-tag">▸ THE PROMISE</div>
+  <div style="display:flex;gap:30px;margin-top:.5in;height:8.6in">
+    <div style="flex:1;display:flex;flex-direction:column">
+      <h2 class="">Quote enclosures<br>like a pro.</h2>
+      <p class="lead" style="margin-top:14px">By the last page you will be able to:</p>
+      <ul class="objectives" style="margin-top:18px">
+        <li class=""><span class="obj-num">1</span><span>Walk a customer through the <b>Three Core Decisions</b> in 60 seconds.</span></li>
+        <li class=""><span class="obj-num">2</span><span>Pick the right material from a 9-property matrix without flinching.</span></li>
+        <li class=""><span class="obj-num">3</span><span>Translate any environment into the right NEMA / IP rating.</span></li>
+        <li class=""><span class="obj-num">4</span><span>Recognize when to suggest Hoffman vs. Stahlin vs. Killark.</span></li>
+        <li class=""><span class="obj-num">5</span><span>Spot the 5 enclosure mistakes that lose deals or cause callbacks.</span></li>
+        <li class=""><span class="obj-num">6</span><span>Pass the 35-question Boss Fight at 80%+ to earn the badge.</span></li>
+      </ul>
+      <div class="powerup" style="margin-top:20px">
+        💡 <b>The promise:</b> 75 minutes of reading. A career's worth of confident enclosure quotes.
+      </div>
+    </div>
+    <div style="flex:0 0 2.4in;display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <div class="xp-target-card">
+        <div class="xp-target-rings">
+          <div class="xp-target-ring outer"></div>
+          <div class="xp-target-ring middle"></div>
+          <div class="xp-target-ring inner"></div>
+          <div class="xp-target-center">XP</div>
+        </div>
+        <div class="xp-target-badge">EARN: 📦 MASTER</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">02</div>
+</section><section class="page" data-section-id="intro" data-page-id="p2">
+  <div class="page-tag">▸ HOW TO PLAY</div>
+  <h2 style="margin-top:.4in" class="">Three levels.<br>Two mini-bosses.<br>One badge.</h2>
+  <div style="display:flex;gap:14px;margin-top:30px">
+    <div class="level-card learn">
+      <div class="num">01</div>
+      <h3 class="">LEARN</h3>
+      <p class="">10 pages. The matrices, the manufacturers, the three decisions that drive every quote.</p>
+      <div class="xp-pill">+10 XP / page</div>
+    </div>
+    <div class="level-card apply">
+      <div class="num">02</div>
+      <h3 class="">APPLY</h3>
+      <p class="">8 pages. Customer translation, substitution rules, common mistakes, the 5-question script.</p>
+      <div class="xp-pill">+15 XP / page</div>
+    </div>
+    <div class="level-card test">
+      <div class="num">03</div>
+      <h3 class="">TEST</h3>
+      <p class="">35-question Boss Fight. Score 80%+ for the 📦 Enclosure Mastery badge.</p>
+      <div class="xp-pill">+2 XP / correct</div>
+    </div>
+  </div>
+  <div class="powerup" style="margin-top:30px">
+    💡 <b>Two Mini-Bosses block the path.</b> Defeat the Material Mauler after LEARN and the Spec Sphinx after APPLY. Each is worth +25 XP.
+  </div><figure class="rsp-media-block"><img src="https://rspsupply.com/images/content/Screenshot%202024-05-23%20at%2010.27.31%E2%80%AFAM.png" alt="Training image"><figcaption>Image caption</figcaption></figure>
+  <div class="page-num">03</div>
+</section><section class="page" data-section-id="fundamentals" data-page-id="p3">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 01 OF 10</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📦 LEARN LEVEL · THE BASICS</div>
+  <h2 style="margin-top:14px" class="">What IS an enclosure? </h2>
+  <p class="lead" style="margin-top:8px">A purpose-built box or cabinet designed to <b>isolate electrical and electronic devices from their environment.</b> That's it. That's the whole job.</p>
+
+  <div class="factbox" style="margin-top:20px">
+    <div class="protected-diagram">
+      <div class="protected-diagram-illustration">
+        <div class="protected-diagram-box">
+          <div class="protected-diagram-slot blue"></div>
+          <div class="protected-diagram-slot green"></div>
+        </div>
+        <div class="protected-diagram-label">PROTECTED INSIDE</div>
+      </div>
+      <div class="protected-diagram-lines" aria-hidden="true">
+        <div class="protected-diagram-line one"></div>
+        <div class="protected-diagram-line two"></div>
+        <div class="protected-diagram-line three"></div>
+      </div>
+      <div class="protected-diagram-list">
+        <div class="protected-diagram-item hazard">⚡ Environmental hazards</div>
+        <div class="protected-diagram-item impact">🔧 Mechanical impacts</div>
+        <div class="protected-diagram-item chemical">🧪 Chemical exposure</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:18px" class="">What goes inside:</h3>
+  <ul class="biglist" style="margin-top:10px">
+    <li class=""><span class="bullet">▸</span><b>Control panels</b> — the brains of every machine</li>
+    <li class=""><span class="bullet">▸</span><b>PLCs, sensors, instruments</b> — sensitive electronics</li>
+    <li class=""><span class="bullet">▸</span><b>Radios, communication systems</b> — keep them dry</li>
+    <li class=""><span class="bullet">▸</span><b>VFDs, drives, breakers</b> — heat-generating, accessible</li>
+  </ul>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Enclosures are one of the most common products RSP sells. Master this and you own a huge chunk of the order book.
+  </div><figure class="rsp-media-block"><img src="https://rspsupply.com/images/product/medium/Hoffman-A1086CHSCFGW.jpg" alt="Training image" class=""><figcaption>Image caption</figcaption></figure>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">04</div>
+</section><section class="page" data-section-id="fundamentals" data-page-id="p4">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 02 OF 10</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📦 WHAT ENCLOSURES DO</div>
+  <h2 style="margin-top:14px" class="">Protection. Compliance. Reliability.</h2>
+  <p class="lead" style="margin-top:6px">Three jobs in one box.</p>
+
+  <div class="value-card-grid">
+    <div class="factbox value-card protection">
+      <div class="value-card-icon">🛡️</div>
+      <h3 class="">PROTECTION</h3>
+      <p class="">Environmental, mechanical, and chemical hazards. Dust, water, impact, corrosion all kept out.</p>
+    </div>
+    <div class="factbox value-card compliance">
+      <div class="value-card-icon">📋</div>
+      <h3 class="">COMPLIANCE</h3>
+      <p class="">NEMA, UL, IP the right rating means the panel passes inspection and the customer's insurance is happy.</p>
+    </div>
+    <div class="factbox value-card reliability">
+      <div class="value-card-icon">⚙️</div>
+      <h3 class="">RELIABILITY</h3>
+      <p class="">Sensitive gear (PLCs, VFDs, radios) inside cheap or wrong enclosures dies early. The right box = years of uptime.</p>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:24px">
+    <h3 style="font-size:16px" class="">📦 What lives in there</h3>
+    <p style="font-size:13px;margin-top:6px" class="">Control panels · sensors · PLCs · radios · VFDs · communication systems · breakers · contactors · terminal blocks · power supplies · operator interfaces · and basically anything else electrical that needs to stay alive.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> When a customer says "I just need a box," they're really asking for protection + compliance + reliability. Treat the conversation that way.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">05</div>
+</section><section class="page" data-section-id="fundamentals" data-page-id="p5">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 03 OF 10</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📦 THE RSP ENCLOSURE LINE · PART 1</div>
+  <h2 style="margin-top:14px" class="">Know your brands.</h2>
+  <p class="lead" style="margin-top:6px">Each manufacturer earns its spot for a specific reason. The right brand is part of the right quote.</p>
+
+  <div style="margin-top:18px">
+    <div class="mfr-card">
+      <div class="mfr-name">HOFFMAN <span style="font-weight:600;color:#64748B;font-size:12px">— nVent</span><span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View Hoffman product">📸 SEE IT</button><span class="img-peek-popup" data-count="2"><img src="../images/enclosures/mfr-hoffman.png" alt="Hoffman enclosure"><img src="https://rspsupply.com/images/content/Hoffman%20Hazardous%20Location%20Enclosures.jpg" alt="Hoffman enclosure"></span></span></div>
+      <div class="mfr-tag">⭐ THE ANCHOR · BROADEST RANGE</div>
+      <div class="mfr-desc">Covers nearly every environment. Easiest brand substitution anchor. Default for any metallic enclosure application.</div>
+      <div class="mfr-mat">Materials: Painted carbon steel · Stainless 304 &amp; 316 · Aluminum · Fiberglass (FRP) · Polycarbonate</div>
+    </div>
+    <div class="mfr-card">
+      <div class="mfr-name">RITTAL<span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View Rittal product">📸 SEE IT</button><span class="img-peek-popup" data-count="2"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStufhMclSSQ8shdsW9HvVQICrPQTXWRyOzeg&amp;s" alt="Rittal cabinet"><img src="/images/enclosures/mfr-rittal.png" alt="Rittal cabinet"></span></span></div>
+      <div class="mfr-tag">PREMIUM · MODULAR · INDUSTRIAL AUTOMATION</div>
+      <div class="mfr-desc">Premium modular systems for industrial automation and control panels. Not focused on non-metallic.</div>
+      <div class="mfr-mat">Materials: Painted steel · Stainless 304 &amp; 316 · Aluminum</div>
+    </div>
+    <div class="mfr-card">
+      <div class="mfr-name">STAHLIN <span style="font-weight:600;color:#64748B;font-size:12px">— Robroy Enclosures Brand</span><span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View Stahlin product">📸 SEE IT</button><span class="img-peek-popup" data-count="2"><img src="https://fpeautomation.com/wp-content/uploads/2019/02/Stahlin.png" alt="Stahlin enclosure"><img src="https://robroy.com/sites/default/files/styles/content_image_600/public/2017-12/NW_BondedWindow_Config.jpg?itok=gCX1Qg8y" alt="Stahlin enclosure"></span></span></div>
+      <div class="mfr-tag">NON-METALLIC SPECIALIST · NEMA 4X</div>
+      <div class="mfr-desc">Best source, stock, and customer service for non-metallic enclosures. Outdoor, corrosive, industrial environments. Strong NEMA 4X portfolio.</div>
+      <div class="mfr-mat">Materials: Polycarbonate · Fiberglass (FRP)</div>
+    </div>
+    <div class="mfr-card">
+      <div class="mfr-name">ALLIED MOULDED<span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View Allied Moulded product">📸 SEE IT</button><span class="img-peek-popup" data-count="2"><img src="https://rspsupply.com/images/manufacturer/icon/97.jpg" alt="Allied Moulded enclosure"><img src="https://alliedmoulded.com/wp-content/uploads/AMP1648CCNLF.jpg" alt="Allied Moulded enclosure"></span></span></div>
+      <div class="mfr-tag">COST-EFFECTIVE NON-METALLIC · STAHLIN ALTERNATIVE</div>
+      <div class="mfr-desc">Cost-effective non-metallic for chemical plants, wastewater, outdoor. The price-sensitive alternative to Stahlin.</div>
+      <div class="mfr-mat">Materials: Polycarbonate · Fiberglass (FRP)</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> If unsure → <b>Hoffman</b>. Outdoor &amp; corrosive non-metallic → <b>Stahlin</b>. Budget non-metallic → <b>Allied Moulded</b>.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">06</div>
+</section><section class="page" data-section-id="fundamentals" data-page-id="p6">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 04 OF 10</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📦 THE RSP ENCLOSURE LINE · PART 2</div>
+  <h2 style="margin-top:14px" class="">Specialty plays.</h2>
+  <p class="lead" style="margin-top:6px">When the request gets specific, these are your specialists.</p>
+
+  <div style="margin-top:18px">
+    <div class="mfr-card limited">
+      <div class="mfr-name" style="color:#7F1D1D">SCHNEIDER ELECTRIC <span style="font-weight:600;font-size:12px;color:#64748B">[Limited Selections]</span><span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View Schneider product">📸 SEE IT</button><span class="img-peek-popup" data-count="2"><img src="https://rspsupply.com/images/manufacturer/icon/99.jpg" alt="Schneider enclosure"><img src="https://rspsupply.com/images/product/medium/Schneider-NSYCRN64250P.jpg" alt="Schneider enclosure"></span></span></div>
+      <div class="mfr-tag">INTEGRATED ELECTRICAL SYSTEMS</div>
+      <div class="mfr-desc">Designed for integrated electrical systems. Often paired with Schneider gear. Not a primary non-metallic enclosure brand.</div>
+      <div class="mfr-mat">Materials: Painted steel · Stainless steel · Thermoplastic (limited housings)</div>
+    </div>
+    <div class="mfr-card hazard">
+      <div class="mfr-name">KILLARK<span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View Killark product">📸 SEE IT</button><span class="img-peek-popup" data-count="2"><img src="../images/enclosures/mfr-killark.png" alt="Killark enclosure"><img src="https://rspsupply.com/images/product/medium/Killark-GRKP.jpg" alt="Killark enclosure"></span></span></div>
+      <div class="mfr-tag">⚠️ HAZARDOUS LOCATIONS · EXPLOSION-PROOF</div>
+      <div class="mfr-desc">Primary designed for hazardous locations, explosion-proof, oil &amp; gas, Class I/II Div environments. Heavy-duty specialty enclosures.</div>
+      <div class="mfr-mat">Materials: Cast aluminum · Cast iron · Stainless steel</div>
+    </div>
+    <div class="mfr-card hazard">
+      <div class="mfr-name">ADALET <span style="font-weight:600;color:#64748B;font-size:12px">— A Scott Fetzer Company</span><span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View Adalet product">📸 SEE IT</button><span class="img-peek-popup" data-count="2"><img src="https://rspsupply.com/images/manufacturer/icon/8761.jpg" alt="Adalet junction box"><img src="../images/enclosures/mfr-adalet.png" alt="Adalet junction box"></span></span></div>
+      <div class="mfr-tag">⚠️ HAZARDOUS &amp; INDUSTRIAL JUNCTION BOXES</div>
+      <div class="mfr-desc">Hazardous &amp; industrial junction boxes. Rugged, compliance-driven applications. Solid Killark alternative.</div>
+      <div class="mfr-mat">Materials: Cast aluminum · Cast iron · Stainless steel</div>
+    </div>
+    <div class="mfr-card limited">
+      <div class="mfr-name" style="color:#7F1D1D">PHOENIX CONTACT <span style="font-weight:600;font-size:12px;color:#64748B">[Limited Selections]</span><span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View Phoenix Contact product">📸 SEE IT</button><span class="img-peek-popup" data-count="2"><img src="../images/enclosures/mfr-phoenix-contact.png" alt="Phoenix Contact housing"><img src="https://rspsupply.com/images/product/medium/Phoenix-1557797.jpg" alt="Phoenix Contact housing"></span></span></div>
+      <div class="mfr-tag">SMALL ELECTRONICS · DIN RAIL</div>
+      <div class="mfr-desc">Primarily for small electronics, DIN rail, and terminal housings. Compact &amp; component-level enclosures.</div>
+      <div class="mfr-mat">Materials: Thermoplastic / plastic housings</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Hazardous (Class I/II Div) → <b>Killark</b> first, <b>Adalet</b> as alternative. Small electronics / DIN-rail housings → <b>Phoenix Contact</b>.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">07</div>
+</section><section class="page" data-section-id="decisions" data-page-id="p7">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 05 OF 10</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📦 THE THREE CORE DECISIONS</div>
+  <h2 style="margin-top:14px" class="">Three questions.<br>Every enclosure quote.</h2>
+  <p class="lead" style="margin-top:6px">When helping a customer choose an enclosure, there are three things you'll always want to keep in mind. <b>Application first, part number second.</b></p>
+
+  <div style="margin-top:24px">
+    <div class="decision-card">
+      <span class="num-d">1</span><h3 class="">Size &amp; Form Factor&nbsp; &nbsp; <span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View images">📸 SEE IT</button><span class="img-peek-popup" data-count="3"><img src="https://rspsupply.com/images/product/medium/Allied-Moulded-AMP1206CCL.jpg" alt="Product photo"><img src="https://rspsupply.com/images/product/icon/Allied-Moulded-AM1086W.jpg" alt="Product photo"><img src="https://rspsupply.com/images/product/medium/Hoffman-A42N3013.jpg" alt="Product photo"></span></span></h3>
+      <div class="body-d">Always determine <b>height × width × depth</b>, plus:</div>
+      <ul>
+        <li class="">Interior clearance for the gear that's going inside</li>
+        <li class="">Mounting method (wall, free-standing, panel-mount)</li>
+        <li class="">Door swing direction and clearance</li>
+      </ul>
+    </div>
+    <div class="decision-card">
+      <span class="num-d">2</span><h3 class="">Material Choice&nbsp; <span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View images">📸 SEE IT</button><span class="img-peek-popup" data-count="1"><img src="https://rspsupply.com/images/product/medium/Omega-SCE-60XEL4918SS6LP.jpg" alt="Product photo"></span></span></h3>
+      <div class="body-d">Select metallic vs. non-metallic based on:</div>
+      <ul>
+        <li class=""><b>Indoor vs. Outdoor</b> environment</li>
+        <li class="">NEMA Rating requirements</li>
+        <li class="">UV exposure (sunlight)</li>
+        <li class="">Impact risk (forklift territory? high-traffic?)</li>
+        <li class="">Corrosive environments (chemicals, salt, washdown)</li>
+        <li class="">Cost constraints</li>
+      </ul>
+    </div>
+    <div class="decision-card">
+      <span class="num-d">3</span><h3 class="">Rating Requirement&nbsp; <span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View images">📸 SEE IT</button><span class="img-peek-popup" data-count="1"><img src="https://rspsupply.com/images/product/medium/Hoffman-A181610PHC.jpg" alt="Product photo"></span></span></h3>
+      <div class="body-d">Determine the correct <b>NEMA / UL Type / IP Rating</b>:</div>
+      <ul>
+        <li class="">What is it being protected from? (water, dust, oil, hazardous gas)</li>
+        <li class="">Indoor or outdoor?</li>
+        <li class="">Hazardous location classification (Class/Division)?</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> The matrices on the next pages turn these three decisions into clear, confident enclosure recommendations.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">08</div>
+</section><section class="page" data-section-id="decisions" data-page-id="p8">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 06 OF 10</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📦 STEEL ENCLOSURE MATRIX</div>
+  <h2 style="margin-top:14px" class="">Material Selection<br>— Steel Enclosures.</h2>
+  <p class="lead" style="margin-top:6px">Use this matrix to determine which steel material fits the customer's application.</p>
+
+  <table class="matrix" style="margin-top:18px">
+    <thead><tr>
+      <th class="row-h">Property / Material</th>
+      <th>Painted Steel</th>
+      <th>Stainless 304</th>
+      <th>Stainless 316</th>
+    </tr></thead>
+    <tbody>
+      <tr><td class="lbl">UV Resistance</td><td class="good">🟢 Good</td><td class="top">⭐ Excellent</td><td class="top">⭐ Excellent</td></tr>
+      <tr><td class="lbl">Impact Strength</td><td class="top">⭐ Excellent</td><td class="top">⭐ Excellent</td><td class="top">⭐ Excellent</td></tr>
+      <tr><td class="lbl">Chemical Resistance</td><td class="ok">⚠️ Moderate</td><td class="good">🟢 Good</td><td class="top">⭐ Excellent</td></tr>
+      <tr><td class="lbl">Corrosion Resistance</td><td class="bad">❌ Poor (if coating fails)</td><td class="top">⭐ Excellent</td><td class="top">👑 Highest</td></tr>
+      <tr><td class="lbl">Temperature Tolerance</td><td class="top">⭐ Excellent</td><td class="top">⭐ Excellent</td><td class="top">⭐ Excellent</td></tr>
+      <tr><td class="lbl">Outdoor Suitability</td><td class="good">🟢 Good</td><td class="top">⭐ Excellent</td><td class="top">⭐ Excellent</td></tr>
+      <tr><td class="lbl">Weight</td><td class="bad">🔴 Heavy</td><td class="bad">🔴 Heavy</td><td class="bad">🔴 Heavy</td></tr>
+      <tr><td class="lbl">Cost</td><td class="good">💲 Low–Mid</td><td class="ok">💲💲 High</td><td class="bad">💲💲💲 Highest</td></tr>
+      <tr><td class="lbl">Best For</td><td class="info" style="font-weight:800">General Industrial</td><td class="info" style="font-weight:800">Food, Pharma, Washdown</td><td class="info" style="font-weight:800">Marine, Extreme</td></tr>
+    </tbody>
+  </table>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Painted steel = workhorse. 304 stainless = food/pharma. 316 stainless = marine or extreme corrosion. <b>Never downgrade material when substituting.</b>
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">09</div>
+</section><section class="page" data-section-id="decisions" data-page-id="p9">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 07 OF 10</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📦 NON-METALLIC MATRIX</div>
+  <h2 style="margin-top:14px" class="">Material Selection<br>— Non-Metallic.</h2>
+  <p class="lead" style="margin-top:6px">Five non-metallic materials, nine properties. Read across to find the fit.</p>
+
+  <table class="matrix" style="margin-top:18px;font-size:10px">
+    <thead><tr>
+      <th class="row-h">Property / Material</th>
+      <th>ABS</th>
+      <th>Polycarbonate</th>
+      <th>Fiberglass (FRP)</th>
+      <th>Polyester</th>
+      <th>PVC</th>
+    </tr></thead>
+    <tbody>
+      <tr><td class="lbl">UV Resistance</td><td class="bad">❌ Poor</td><td class="top">⭐ Excellent</td><td class="ok">⚠️ Moderate (may chalk)</td><td class="ok">⚠️ Moderate</td><td class="bad">❌ Poor</td></tr>
+      <tr><td class="lbl">Impact Strength</td><td class="bad">❌ Poor</td><td class="top">👑 Highest</td><td class="top">⭐ Excellent</td><td class="ok">⚠️ Moderate</td><td class="bad">❌ Poor</td></tr>
+      <tr><td class="lbl">Chemical Resistance</td><td class="ok">⚠️ Moderate</td><td class="good">🟢 Good</td><td class="top">⭐ Excellent</td><td class="good">🟢 Good</td><td class="top">⭐ Excellent</td></tr>
+      <tr><td class="lbl">Corrosion Resistance</td><td class="good">🟢 Good</td><td class="top">⭐ Excellent</td><td class="top">⭐ Excellent</td><td class="top">⭐ Excellent</td><td class="top">⭐ Excellent</td></tr>
+      <tr><td class="lbl">Temperature Tolerance</td><td class="bad">❌ Poor</td><td class="top">⭐ Excellent</td><td class="top">⭐ Excellent</td><td class="ok">⚠️ Moderate</td><td class="ok">⚠️ Moderate</td></tr>
+      <tr><td class="lbl">Outdoor Suitability</td><td class="bad">🚫 Indoor ONLY</td><td class="top">👑 Highest</td><td class="top">⭐ Excellent</td><td class="ok">⚠️ Moderate</td><td class="bad">❌ Poor</td></tr>
+      <tr><td class="lbl">Weight</td><td class="good">🟢 Light</td><td class="good">🟢 Very Light</td><td class="ok">🟡 Medium</td><td class="good">🟢 Light</td><td class="ok">🟡 Medium</td></tr>
+      <tr><td class="lbl">Cost</td><td class="good">💲 Cheapest</td><td class="ok">💲💲 Mid</td><td class="ok">💲💲 Mid/High</td><td class="ok">💲💲 Mid</td><td class="good">💲 Low/Mid</td></tr>
+      <tr><td class="lbl">Best For</td><td class="info" style="font-weight:800">Indoor Electronics</td><td class="info" style="font-weight:800">UV, Outdoor, Telecom</td><td class="info" style="font-weight:800">Chemicals, Wastewater</td><td class="info" style="font-weight:800">Light Outdoor</td><td class="info" style="font-weight:800">Corrosive Indoor</td></tr>
+    </tbody>
+  </table>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Outdoor non-metallic? <b>Polycarbonate</b>. Chemical/wastewater? <b>Fiberglass (FRP)</b>. Cheap indoor? <b>ABS</b>.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">10</div>
+</section><section class="page" data-section-id="decisions" data-page-id="p10">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 08 OF 10</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📦 THE NEMA MATRIX</div>
+  <h2 style="margin-top:14px" class="">Rating Selection.</h2>
+  <p class="lead" style="margin-top:6px">Every NEMA rating, what it protects against, and the closest IP equivalent. The single most-referenced page in your career.</p>
+
+  <table class="matrix rating" style="margin-top:14px;font-size:10px">
+    <thead><tr><th>Rating</th><th>Indoor / Outdoor</th><th>Primary Protection</th><th>Closest IP</th><th>Typical Use</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">NEMA 1</td><td>Indoor</td><td>Basic contact &amp; falling dirt</td><td>IP10 / IP20</td><td class="info">General-purpose indoor</td></tr>
+      <tr><td class="lbl">NEMA 2</td><td>Indoor</td><td>NEMA 1 + dripping water</td><td>IP22</td><td class="info">Condensation-prone areas</td></tr>
+      <tr><td class="lbl">NEMA 3</td><td>Outdoor</td><td>Windblown dust, rain, sleet, snow</td><td>IP54</td><td class="info">Outdoor industrial</td></tr>
+      <tr><td class="lbl">NEMA 3R</td><td>Outdoor</td><td>Rain, sleet, snow</td><td>IP24</td><td class="info">Outdoor service entrances</td></tr>
+      <tr><td class="lbl">NEMA 3S</td><td>Outdoor</td><td>Operable when ice-laden</td><td>IP54</td><td class="info">Outdoor mechanical</td></tr>
+      <tr><td class="lbl">NEMA 3X</td><td>Outdoor</td><td>Corrosion-resistant, weatherproof</td><td>IP54 / IP55</td><td class="info">Coastal / corrosive</td></tr>
+      <tr><td class="lbl">NEMA 3RX</td><td>Outdoor</td><td>3R + corrosion resistance</td><td>IP24</td><td class="info">Corrosive outdoor</td></tr>
+      <tr><td class="lbl">NEMA 3SX</td><td>Outdoor</td><td>3S + corrosion resistance</td><td>IP54</td><td class="info">Icy, corrosive sites</td></tr>
+      <tr><td class="lbl">NEMA 4</td><td>Indoor / Outdoor</td><td>Dust &amp; hose-directed water</td><td class="top">IP65</td><td class="info">Washdown</td></tr>
+      <tr><td class="lbl">NEMA 4X</td><td>Indoor / Outdoor</td><td>4 + corrosion resistance</td><td class="top">IP66</td><td class="info">Food, chemical</td></tr>
+      <tr><td class="lbl">NEMA 5</td><td>Indoor</td><td>Dust &amp; settling airborne fibers</td><td>IP52 / IP53</td><td class="info">Textile, paper mills</td></tr>
+      <tr><td class="lbl">NEMA 6</td><td>Indoor / Outdoor</td><td>Temporary submersion</td><td>IP67</td><td class="info">Flood-prone</td></tr>
+      <tr><td class="lbl">NEMA 6P</td><td>Indoor / Outdoor</td><td>Prolonged submersion + corrosion</td><td>IP68</td><td class="info">Marine</td></tr>
+      <tr><td class="lbl">NEMA 7</td><td>Indoor</td><td>Explosion-proof (Class I)</td><td class="bad">NONE</td><td class="info">C1D1 hazardous</td></tr>
+      <tr><td class="lbl">NEMA 8</td><td>Indoor / Outdoor</td><td>Oil-immersed explosion-proof</td><td class="bad">NONE</td><td class="info">Specialized hazardous</td></tr>
+      <tr><td class="lbl">NEMA 9</td><td>Indoor</td><td>Explosion-proof (Class II)</td><td class="bad">NONE</td><td class="info">Combustible dust</td></tr>
+      <tr><td class="lbl">NEMA 12</td><td>Indoor</td><td>Dust, dripping non-corrosive liquids</td><td>IP52 / IP54</td><td class="info">Manufacturing</td></tr>
+      <tr><td class="lbl">NEMA 12K</td><td>Indoor</td><td>NEMA 12 w/ knockouts</td><td>IP52 / IP54</td><td class="info">Control panels</td></tr>
+      <tr><td class="lbl">NEMA 13</td><td>Indoor</td><td>Dust, oil, coolant seepage</td><td>IP54 / IP65</td><td class="info">Machine tools</td></tr>
+    </tbody>
+  </table>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">11</div>
+</section><section class="page" data-section-id="decisions" data-page-id="p11">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 09 OF 10</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📦 THE SHORTCUTS</div>
+  <h2 style="margin-top:14px" class="">The cheat tables.</h2>
+  <p class="lead" style="margin-top:6px">The big matrices look intimidating, but in practice <b>these two simple decision tables handle the vast majority of real-world requests</b>. The bigger matrices stay as backup for uncommon situations.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px" class="">
+    <div>
+      <h3 style="font-size:18px;color:#1E40AF;margin-bottom:8px" class="">NEMA Rating Decision</h3>
+      <table class="matrix simp">
+        <thead><tr><th>NEMA</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="lbl">1</td><td>Indoor dust protection</td></tr>
+          <tr><td class="lbl">3R</td><td>Outdoor rain protection</td></tr>
+          <tr><td class="lbl">4</td><td>Hose-down protection</td></tr>
+          <tr><td class="lbl">4X</td><td>Hose-down + corrosion resistance</td></tr>
+          <tr><td class="lbl">12</td><td>Dust, oil, indoor industrial</td></tr>
+          <tr><td class="lbl">6 / 6P</td><td>Submersible</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3 style="font-size:18px;color:#065F46;margin-bottom:8px" class="">Environment Decision</h3>
+      <table class="matrix dec">
+        <tbody>
+          <tr><td class="cat-h" colspan="1">Outdoor UV</td></tr>
+          <tr><td>✓ Polycarbonate</td></tr>
+          <tr><td>✓ Aluminum</td></tr>
+          <tr><td>✓ Stainless 304/316</td></tr>
+          <tr><td class="cat-h">Cost-Sensitive Indoor</td></tr>
+          <tr><td>✓ ABS</td></tr>
+          <tr><td>✓ Painted Steel</td></tr>
+          <tr><td>✓ Polyester</td></tr>
+          <tr><td class="cat-h">Food / Pharma / Washdown</td></tr>
+          <tr><td>✓ 316 Stainless</td></tr>
+          <tr><td>✓ 304 Stainless</td></tr>
+          <tr><td>✓ Compression-latched 4X</td></tr>
+          <tr><td class="cat-h">Harsh Chemicals / Wastewater</td></tr>
+          <tr><td>✓ Fiberglass (FRP)</td></tr>
+          <tr><td>✓ 316 Stainless</td></tr>
+          <tr><td>✓ PVC</td></tr>
+          <tr><td class="cat-h">Wireless / Radio / Solar / Sensors</td></tr>
+          <tr><td>✓ Polycarbonate</td></tr>
+          <tr><td class="cat-h">Marine / Coastal / Chlorine</td></tr>
+          <tr><td>✓ 316 Stainless (mandatory)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Memorize the green table on the right. It answers ~80% of customer requests in one glance.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">12</div>
+</section><section class="page" data-section-id="decisions" data-page-id="p12">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 10 OF 10</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📦 NEMA vs IP · THE FINE PRINT</div>
+  <h2 style="margin-top:14px" class="">Quick safety rules.</h2>
+  <p class="lead" style="margin-top:6px">NEMA and IP look interchangeable. They aren't. Here's where they part ways.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px">
+    <div class="factbox" style="background:linear-gradient(160deg,#DBEAFE,#BFDBFE);border:2px solid #1E40AF">
+      <h3 style="color:#1E40AF" class="">📋 NEMA includes:</h3>
+      <ul class="biglist" style="margin-top:10px">
+        <li class=""><span class="bullet">▸</span>Construction quality</li>
+        <li class=""><span class="bullet">▸</span>Corrosion testing</li>
+        <li class=""><span class="bullet">▸</span>Gasket aging</li>
+        <li class=""><span class="bullet">▸</span>Sealing tests</li>
+        <li class=""><span class="bullet">▸</span>Hazardous location classification</li>
+      </ul>
+    </div>
+    <div class="factbox" style="background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #EF4444">
+      <h3 style="color:#7F1D1D" class="">⚠️ IP measures ONLY:</h3>
+      <ul class="biglist" style="margin-top:10px">
+        <li class=""><span class="bullet" style="background:#FECACA;color:#7F1D1D">▸</span>Solid object ingress (dust)</li>
+        <li class=""><span class="bullet" style="background:#FECACA;color:#7F1D1D">▸</span>Liquid ingress (water)</li>
+        <li class=""><span class="bullet" style="background:#FECACA;color:#7F1D1D">▸</span><b>Nothing else.</b></li>
+      </ul>
+      <p style="color:#7F1D1D;font-size:13px;margin-top:8px;font-weight:700" class="">IP does <u>NOT</u> address explosion, ignition, or hazardous locations.</p>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:18px;background:linear-gradient(160deg,#FEF3C7,#FDE68A);border:2px solid #F59E0B">
+    <h3 style="color:#78350F;font-size:16px" class="">🚨 The non-negotiables</h3>
+    <ul class="biglist" style="margin-top:10px">
+      <li class=""><span class="bullet" style="background:#FDE68A;color:#78350F">!</span><b>NEMA 7, 8, 9 have NO IP equivalents.</b> If it's hazardous, it's NEMA — full stop.</li>
+      <li class=""><span class="bullet" style="background:#FDE68A;color:#78350F">!</span><b>Hazardous location? Specify NEMA + Class/Division.</b> Never just IP.</li>
+      <li class=""><span class="bullet" style="background:#FDE68A;color:#78350F">!</span><b>Environmental only?</b> IP or NEMA both acceptable.</li>
+      <li class=""><span class="bullet" style="background:#FDE68A;color:#78350F">!</span><b>Never substitute IP for explosion-proof ratings.</b> Ever.</li>
+    </ul>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    🏅 <b>LEARN LEVEL CLEARED — +100 XP · BADGE EARNED: 🧠 "MATRIX LOCKED."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="material-mauler">
+    <div class="icon">👹</div>
+    <h3>The Material Mauler blocks the path!</h3>
+    <div class="sub">5 questions on materials &amp; ratings · Defeat to unlock APPLY level</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">13</div>
+</section><section class="page" data-section-id="apply-1" data-page-id="p13">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 01 OF 08</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ APPLY LEVEL · IN PRACTICE</div>
+  <h2 style="margin-top:14px" class="">Three decisions, one quote.</h2>
+  <p class="lead" style="margin-top:6px">Walk through every quote out loud. The customer hears confidence. You hit the right answer in 60 seconds.</p>
+
+  <div class="factbox" style="margin-top:18px;background:linear-gradient(160deg,#FFF7ED,#FED7AA);border-color:#F97316">
+    <h3 style="color:#9A3412" class="">📞 Live Example</h3>
+    <p style="color:#7C2D12;font-size:13px;margin-top:6px" class=""><b>Customer says:</b> "I need a panel enclosure for an outdoor pump station near the coast. It'll house a contactor, a relay, and a small breaker."</p>
+  </div>
+
+  <div style="margin-top:14px">
+    <div class="decision-card">
+      <span class="num-d">1</span><h3 class="">Size &amp; Form Factor</h3>
+      <div class="body-d">Total gear footprint with clearance → <b>~16" × 12" × 6"</b> wall-mount.<br>Confirm door-swing direction and sub-panel mounting.</div>
+    </div>
+    <div class="decision-card">
+      <span class="num-d">2</span><h3 class="">Material Choice</h3>
+      <div class="body-d">Outdoor + saltwater spray = <b>Stainless 316</b> (or polycarbonate for non-metallic). UV present, impact possible. Painted steel would rust within months.</div>
+    </div>
+    <div class="decision-card">
+      <span class="num-d">3</span><h3 class="">Rating Requirement</h3>
+      <div class="body-d">Outdoor + corrosion + occasional wash = <b>NEMA 4X</b> (IP66). If submersion is possible during flooding → 6P.</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>The quote:</b> Hoffman 16×12×6 Stainless 316 NEMA 4X · or Stahlin Polycarbonate 4X equivalent for cost.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">14</div>
+</section><section class="page" data-section-id="apply-1" data-page-id="p14">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 02 OF 08</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ MATERIAL ADVANTAGES · QUICK CARD</div>
+  <h2 style="margin-top:14px" class="">Each material's<br>kill move.</h2>
+  <p class="lead" style="margin-top:6px">Memorize one strength per material. That's the line you sell on.</p>
+
+  <table class="matrix" style="margin-top:18px">
+    <thead><tr><th class="row-h">Material</th><th>Kill Move</th><th>Avoid When</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Painted Carbon Steel</td><td class="good">Cheap, strong, indoor industrial</td><td class="bad">Salt, washdown, outdoor coastal</td></tr>
+      <tr><td class="lbl">Stainless 304</td><td class="top">Food &amp; pharma cleanability</td><td class="ok">Marine / chlorine (use 316)</td></tr>
+      <tr><td class="lbl">Stainless 316</td><td class="top">Marine, chlorine, extreme corrosion</td><td class="ok">Tight budgets — costs more</td></tr>
+      <tr><td class="lbl">Aluminum</td><td class="good">Light + corrosion-resistant</td><td class="ok">Heavy impact zones</td></tr>
+      <tr><td class="lbl">Polycarbonate</td><td class="top">Outdoor UV champion · highest impact</td><td class="ok">Strong solvents (use FRP)</td></tr>
+      <tr><td class="lbl">Fiberglass (FRP)</td><td class="top">Chemicals, wastewater, harsh plant</td><td class="ok">UV-direct (may chalk)</td></tr>
+      <tr><td class="lbl">Polyester</td><td class="good">Light outdoor non-metallic</td><td class="bad">High temp, heavy impact</td></tr>
+      <tr><td class="lbl">ABS</td><td class="good">Cheapest indoor electronics housing</td><td class="bad">Outdoor, UV, chemicals</td></tr>
+      <tr><td class="lbl">PVC</td><td class="good">Indoor corrosive (acids)</td><td class="bad">Outdoor UV, hot environments</td></tr>
+    </tbody>
+  </table>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Lead with the kill move on the call. "316 because the chlorine in your wash will eat 304 inside two years." Specific = trusted.
+  </div><figure class="rsp-media-block"><img src="https://rspsupply.com/images/product/medium/Rittal-3237085.jpg" alt="Training image" class=""><figcaption>Image caption</figcaption></figure>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">15</div>
+</section><section class="page" data-section-id="apply-1" data-page-id="p15">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 03 OF 08</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ SUBSTITUTION LOGIC</div>
+  <h2 style="margin-top:14px" class="">Swap brands.<br>Never swap protection.</h2>
+  <p class="lead" style="margin-top:6px">A safe substitute is the same form factor at the same or higher rating in the same or better material. <b>Downgrade nothing.</b></p>
+
+  <div style="margin-top:18px">
+    <div class="sub-step"><div class="arrow-d">①</div><div class="step-text">Match form factor — H × W × D, mounting style, knockouts.</div></div>
+    <div class="sub-step"><div class="arrow-d">②</div><div class="step-text">Match or upgrade material — 304→316 fine, 316→304 NEVER.</div></div>
+    <div class="sub-step"><div class="arrow-d">③</div><div class="step-text">Match or upgrade NEMA rating — 4X→6P fine, 4X→3R NEVER.</div></div>
+    <div class="sub-step"><div class="arrow-d">④</div><div class="step-text">Confirm features — hinges, latches, gland plate, window cutout.</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px">
+    <div class="factbox" style="background:#DBEAFE;border-color:#1E40AF">
+      <h3 style="color:#1E40AF;font-size:14px" class="">✅ SAFE SWAPS</h3>
+      <p style="color:#1E40AF;font-size:12px;margin-top:6px" class=""><b>Hoffman painted steel NEMA 12</b> → Rittal painted steel NEMA 12<br><b>Stahlin polycarbonate 4X</b> → Allied Moulded polycarbonate 4X<br><b>Killark NEMA 7</b> → Adalet NEMA 7</p>
+    </div>
+    <div class="factbox" style="background:#FEE2E2;border-color:#EF4444">
+      <h3 style="color:#7F1D1D;font-size:14px" class="">🚫 DEAL-KILLERS</h3>
+      <p style="color:#7F1D1D;font-size:12px;margin-top:6px" class=""><b>316SS → 304SS</b> "to save money" — corrodes early.<br><b>NEMA 4X → NEMA 12</b> outdoors — leaks.<br><b>Killark explosion-proof → Hoffman 4X</b> — code violation.</p>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> When in doubt: same size, same or better material, same or better rating. Confirm with the customer before you click "send quote."
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">16</div>
+</section><section class="page" data-section-id="apply-1" data-page-id="p16">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 04 OF 08</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ THE 5 ENCLOSURE MISTAKES</div>
+  <h2 style="margin-top:14px" class="">Mistakes that kill deals.</h2>
+  <p class="lead" style="margin-top:6px">Every one of these has cost reps a callback or a returned panel. Memorize and avoid.</p>
+
+  <div style="margin-top:18px">
+    <div class="mistake">
+      <span class="x">1</span>
+      <div><h3 class="">Specifying NEMA 1 for outdoor.</h3><p class="">NEMA 1 is indoor general-purpose ONLY. Rain pours straight in. Outdoor needs a minimum of NEMA 3R.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">2</span>
+      <div><h3 class="">Painted steel near saltwater.</h3><p class="">The coating fails within 6–18 months. Specify 316 stainless or polycarbonate from day one.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">3</span>
+      <div><h3 class="">ABS outdoors.</h3><p class="">UV light cracks ABS in a single summer. Polycarbonate is the outdoor non-metallic answer.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">4</span>
+      <div><h3 class="">Forgetting hazardous classification.</h3><p class="">Class I Div 1 needs NEMA 7 (Killark). IP66 is NOT a substitute. Always ask "is this a hazardous location?"</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">5</span>
+      <div><h3 class="">Substituting cheaper material to hit budget.</h3><p class="">You won the quote, but lost the customer when the panel rusts. Either keep spec or push back early.</p></div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>POWER-UP:</b> Most callbacks come from mistakes #1 and #2. Catch them in the discovery call, not after install.
+  </div><figure class="rsp-media-block"><img src="https://www.eabel.com/wp-content/uploads/2025/04/electrical-corrosion-scaled-1.webp" alt="Training image"><figcaption>Image caption</figcaption></figure>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">17</div>
+</section><section class="page" data-section-id="apply-2" data-page-id="p17">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 05 OF 08</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ CUSTOMER TRANSLATION TABLE</div>
+  <h2 style="margin-top:14px" class="">What they say.<br>What you quote.</h2>
+  <p class="lead" style="margin-top:6px">Customers rarely use NEMA codes. Translate the everyday phrase into the right rating before you reply.</p>
+
+  <div style="margin-top:18px">
+    <div class="translate-row" style="font-weight:800;font-size:11px;letter-spacing:.05em;text-transform:uppercase"><div style="background:transparent;color:#64748B">Customer says</div><div style="background:transparent;color:#64748B">It means</div><div style="background:transparent;color:#64748B">Quote it as</div></div>
+    <div class="translate-row"><div class="says">"Watertight"</div><div class="means">Hose-directed water</div><div class="quote-it">NEMA 4 (IP65)</div></div>
+    <div class="translate-row"><div class="says">"Drip-tight" / "splash-proof"</div><div class="means">Dripping non-corrosive liquids</div><div class="quote-it">NEMA 12 (IP54)</div></div>
+    <div class="translate-row"><div class="says">"Weatherproof"</div><div class="means">Outdoor rain, sleet, snow</div><div class="quote-it">NEMA 3R (IP24)</div></div>
+    <div class="translate-row"><div class="says">"Dust-tight"</div><div class="means">Settling dust + indoor dripping</div><div class="quote-it">NEMA 12 (IP54)</div></div>
+    <div class="translate-row"><div class="says">"Submersible"</div><div class="means">Temporary or prolonged submersion</div><div class="quote-it">NEMA 6 / 6P (IP67/68)</div></div>
+    <div class="translate-row"><div class="says">"Wash-down"</div><div class="means">High-pressure spray + cleaning chemicals</div><div class="quote-it">NEMA 4X (IP66)</div></div>
+    <div class="translate-row"><div class="says">"Explosion-proof"</div><div class="means">Hazardous gases or dust</div><div class="quote-it">NEMA 7 / 8 / 9 + Class/Div</div></div>
+    <div class="translate-row"><div class="says">"Saltwater nearby" / "coastal"</div><div class="means">Chloride corrosion</div><div class="quote-it">316 Stainless (mandatory)</div></div>
+    <div class="translate-row"><div class="says">"Outdoor in the sun"</div><div class="means">UV exposure</div><div class="quote-it">Polycarbonate or 316SS</div></div>
+    <div class="translate-row"><div class="says">"Food plant" / "pharma"</div><div class="means">Cleanable, washdown, USDA-friendly</div><div class="quote-it">304SS NEMA 4X · compression latches</div></div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Quote both NEMA AND IP when possible. International customers think IP. Domestic inspectors check NEMA. Cover both.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">18</div>
+</section><section class="page" data-section-id="apply-2" data-page-id="p18">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 06 OF 08</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ MANUFACTURER CROSS-REFERENCE</div>
+  <h2 style="margin-top:14px" class="">Brand for brand.</h2>
+  <p class="lead" style="margin-top:6px">When the requested brand is on backorder, here's the safe swap map. Always confirm with the customer before substituting brand.</p>
+
+  <table class="matrix" style="margin-top:18px">
+    <thead><tr><th class="row-h">If they ask for…</th><th>Safe swap</th><th>Why it works</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Hoffman (metallic)</td><td class="good">Rittal · Saginaw</td><td class="info">Same material/rating, premium → premium</td></tr>
+      <tr><td class="lbl">Hoffman (non-metallic)</td><td class="good">Stahlin · Allied Moulded</td><td class="info">Both stock polycarbonate &amp; FRP NEMA 4X</td></tr>
+      <tr><td class="lbl">Stahlin</td><td class="good">Allied Moulded</td><td class="info">Cost-effective non-metallic alternative</td></tr>
+      <tr><td class="lbl">Killark (haz.)</td><td class="good">Adalet · Crouse-Hinds</td><td class="info">Both certified NEMA 7/9 + Class/Div</td></tr>
+      <tr><td class="lbl">Phoenix Contact</td><td class="ok">Hoffman small-enclosure line</td><td class="info">DIN-rail housings — smaller fit only</td></tr>
+      <tr><td class="lbl">Schneider Electric</td><td class="ok">Hoffman · Rittal</td><td class="info">Confirm electrical-system pairing first</td></tr>
+      <tr><td class="lbl">Rittal premium</td><td class="ok">Hoffman ProLine</td><td class="info">Modular industrial automation cabinets</td></tr>
+    </tbody>
+  </table>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> If a customer is brand-loyal (a spec drawing names a brand), substituting requires written approval. Always document.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">19</div>
+</section><section class="page" data-section-id="apply-2" data-page-id="p19">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 07 OF 08</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ THE 5-QUESTION SCRIPT</div>
+  <h2 style="margin-top:14px" class="">Five questions.<br>Every enclosure call.</h2>
+  <p class="lead" style="margin-top:6px">If you ask these in order, the right enclosure quotes itself.</p>
+
+  <div style="margin-top:18px">
+    <div class="decision-card"><span class="num-d">1</span><h3 class="">Indoor or outdoor?</h3><div class="body-d">Drives material and minimum NEMA. Outdoor → NEMA 3R floor, polycarbonate or stainless preferred.</div></div>
+    <div class="decision-card"><span class="num-d">2</span><h3 class="">What's going inside?</h3><div class="body-d">Drives the size. Get the device list and add 25% clearance for terminations and air flow.</div></div>
+    <div class="decision-card"><span class="num-d">3</span><h3 class="">What's the environment?</h3><div class="body-d">Water, dust, chemicals, salt, hazardous gas, washdown? Determines rating + material.</div></div>
+    <div class="decision-card"><span class="num-d">4</span><h3 class="">How is it mounted?</h3><div class="body-d">Wall, floor, panel, pole. Tells you depth, gland-plate location, and door-swing.</div></div>
+    <div class="decision-card"><span class="num-d">5</span><h3 class="">Brand preference, lead time, budget?</h3><div class="body-d">Brand on the spec? Need it in 3 days? Tight budget? These three flag substitutions and stock decisions.</div></div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    🎯 <b>POWER-UP:</b> Run this script start to finish. By question 5 you've earned trust AND have everything you need to quote without a callback.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">20</div>
+</section><section class="page" data-section-id="apply-2" data-page-id="p20">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 08 OF 08</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ COMMON SCENARIOS</div>
+  <h2 style="margin-top:14px" class="">Four real calls.<br>Four right answers.</h2>
+  <p class="lead" style="margin-top:6px">If you can quote these four in your sleep, you're ready for the Sphinx.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px">
+    <div class="factbox" style="background:#DBEAFE;border-color:#1E40AF">
+      <h3 style="color:#1E40AF;font-size:14px" class="">🔵 Outdoor pump station, fresh water</h3>
+      <p style="color:#1E40AF;font-size:12px;margin-top:6px" class=""><b>→</b> Polycarbonate or 304SS, <b>NEMA 4X</b>, 16×12×6, wall mount.<br>Brand: Stahlin (non-metal) or Hoffman (metal).</p>
+    </div>
+    <div class="factbox" style="background:#D1FAE5;border-color:#047857">
+      <h3 style="color:#065F46;font-size:14px" class="">🟢 Wash-down with bleach in food plant</h3>
+      <p style="color:#065F46;font-size:12px;margin-top:6px" class=""><b>→</b> <b>316 Stainless</b>, NEMA 4X, compression latches.<br>Brand: Hoffman or Rittal stainless line.</p>
+    </div>
+    <div class="factbox" style="background:#FEE2E2;border-color:#EF4444">
+      <h3 style="color:#7F1D1D;font-size:14px" class="">🔴 Class I Div 1 hazardous gas zone</h3>
+      <p style="color:#7F1D1D;font-size:12px;margin-top:6px" class=""><b>→</b> Killark cast aluminum, <b>NEMA 7</b>, Class I Div 1 Group D.<br>Adalet as backup. NEVER substitute IP66.</p>
+    </div>
+    <div class="factbox" style="background:#FEF3C7;border-color:#F59E0B">
+      <h3 style="color:#78350F;font-size:14px" class="">🟡 Cheap indoor electronics housing</h3>
+      <p style="color:#78350F;font-size:12px;margin-top:6px" class=""><b>→</b> ABS or thermoplastic, <b>NEMA 1</b>, small.<br>Brand: Phoenix Contact (DIN) or Hoffman small-enclosure.</p>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    🏅 <b>APPLY LEVEL CLEARED — +120 XP · BADGE EARNED: 💼 "QUOTE-READY."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="spec-sphinx">
+    <div class="icon">🦁</div>
+    <h3>The Spec Sphinx blocks the path!</h3>
+    <div class="sub">5 riddles on substitution &amp; specs · Defeat to unlock the Boss Fight</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 RIDDLES</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">21</div>
+</section><section class="page boss-page" data-section-id="finalboss" style="display:flex;flex-direction:column;align-items:center;text-align:center" data-page-id="p21">
+  <div class="page-tag" style="color:#34D399">▸ TEST · BOSS FIGHT</div>
+  <div style="margin-top:.6in"><div class="level-banner lvl-test" style="margin:0 auto">🎯 TEST LEVEL</div></div>
+  <h2 style="margin-top:20px;font-size:54px" class="">The Quote Gauntlet.</h2>
+  <svg width="320" height="320" viewBox="0 0 320 320" style="margin-top:14px">
+    <defs>
+      <linearGradient id="bossB" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FB923C"></stop>
+        <stop offset="100%" stop-color="#7F1D1D"></stop>
+      </linearGradient>
+      <filter id="bossglow2"><feGaussianBlur stdDeviation="6" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
+    </defs>
+    <!-- Big enclosure boss -->
+    <polygon points="60,90 260,90 280,120 280,260 60,260 40,230" fill="url(#bossB)" stroke="#FCD34D" stroke-width="3" filter="url(#bossglow2)"></polygon>
+    <rect x="100" y="140" width="120" height="80" fill="#0F172A" stroke="#FCD34D" stroke-width="2"></rect>
+    <!-- evil eyes inside the door -->
+    <circle cx="135" cy="180" r="9" fill="#EF4444"></circle>
+    <circle cx="185" cy="180" r="9" fill="#EF4444"></circle>
+    <circle cx="135" cy="178" r="3" fill="#FCD34D"></circle>
+    <circle cx="185" cy="178" r="3" fill="#FCD34D"></circle>
+    <!-- mouth/snarl -->
+    <path d="M 130 210 L 145 200 L 160 210 L 175 200 L 190 210" fill="none" stroke="#FCD34D" stroke-width="2"></path>
+  </svg>
+  <div style="width:80%;margin-top:14px">
+    <div style="display:flex;justify-content:space-between;color:#FACC15;font-weight:800;font-size:11px;letter-spacing:.1em;margin-bottom:6px">
+      <span>QUOTE GAUNTLET · 70 HP</span><span>STATUS: HOSTILE</span>
+    </div>
+    <div class="hp-bar"><div class="fill"></div></div>
+  </div>
+  <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:18px 24px;margin-top:24px;width:80%">
+    <p style="color:#fff;font-size:14px" class=""><b>35 questions · 2 XP each · 80%+ to win</b></p>
+    <p style="color:#94A3B8;font-size:13px;margin-top:8px" class="">No peeking. Score honest. 28/35 = 📦 Enclosure Mastery badge.</p>
+  </div>
+  <div class="page-num" style="color:#64748B">22</div>
+</section><section class="page boss-page" data-quiz-page="1" data-section-id="finalboss" data-page-id="p22">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 1 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 1 · BASICS &amp; BRANDS</div>
+    <div style="color:#34D399;font-weight:800;font-size:11px;letter-spacing:.1em">Q 1 → 7</div>
+  </div>
+  <div class="hp-bar" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="1"></div><div class="qcard" data-q="2"></div>
+    <div class="qcard" data-q="3"></div><div class="qcard" data-q="4"></div>
+    <div class="qcard" data-q="5"></div><div class="qcard" data-q="6"></div>
+    <div class="qcard" data-q="7"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">23</div>
+</section><section class="page boss-page" data-quiz-page="2" data-section-id="finalboss" data-page-id="p23">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 2 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 2 · MATERIALS</div>
+    <div style="color:#34D399;font-weight:800;font-size:11px;letter-spacing:.1em">Q 8 → 14</div>
+  </div>
+  <div class="hp-bar r2" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="8"></div><div class="qcard" data-q="9"></div>
+    <div class="qcard" data-q="10"></div><div class="qcard" data-q="11"></div>
+    <div class="qcard" data-q="12"></div><div class="qcard" data-q="13"></div>
+    <div class="qcard" data-q="14"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">24</div>
+</section><section class="page boss-page" data-quiz-page="3" data-section-id="finalboss" data-page-id="p24">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 3 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 3 · NEMA &amp; IP RATINGS</div>
+    <div style="color:#FBBF24;font-weight:800;font-size:11px;letter-spacing:.1em">Q 15 → 21</div>
+  </div>
+  <div class="hp-bar r3" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="15"></div><div class="qcard" data-q="16"></div>
+    <div class="qcard" data-q="17"></div><div class="qcard" data-q="18"></div>
+    <div class="qcard" data-q="19"></div><div class="qcard" data-q="20"></div>
+    <div class="qcard" data-q="21"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">25</div>
+</section><section class="page boss-page" data-quiz-page="4" data-section-id="finalboss" data-page-id="p25">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 4 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 4 · DECISIONS &amp; SUBSTITUTION</div>
+    <div style="color:#F97316;font-weight:800;font-size:11px;letter-spacing:.1em">Q 22 → 28</div>
+  </div>
+  <div class="hp-bar r4" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="22"></div><div class="qcard" data-q="23"></div>
+    <div class="qcard" data-q="24"></div><div class="qcard" data-q="25"></div>
+    <div class="qcard" data-q="26"></div><div class="qcard" data-q="27"></div>
+    <div class="qcard" data-q="28"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">26</div>
+</section><section class="page boss-page" data-quiz-page="5" data-section-id="finalboss" data-page-id="p26">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 5 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 FINAL ROUND · CUSTOMER &amp; SCENARIOS</div>
+    <div style="color:#EF4444;font-weight:800;font-size:11px;letter-spacing:.1em">Q 29 → 35 · KILL SHOT</div>
+  </div>
+  <div class="hp-bar r5" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="29"></div><div class="qcard" data-q="30"></div>
+    <div class="qcard" data-q="31"></div><div class="qcard" data-q="32"></div>
+    <div class="qcard" data-q="33"></div><div class="qcard" data-q="34"></div>
+    <div class="qcard" data-q="35"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">27</div>
+</section><section class="page" id="resultsPage" data-section-id="results" data-page-id="p27">
+  <div class="page-tag" style="color:#10B981">▸ FINAL BOSS · RESULTS</div>
+  <div class="level-banner lvl-test" style="margin-top:.4in">🎯 ANSWER KEY · YOUR RESULTS</div>
+  <h2 style="margin-top:14px" class="">🗝️ The Key.</h2>
+  <p class="lead print-only" style="display:none">Score yourself. Tier yourself. Earn the badge.</p>
+
+  <!-- Live results panel (browser only) -->
+  <div id="liveResults" class="interactive-only" style="margin-top:18px;background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:18px;padding:24px;color:#fff">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+      <div>
+        <p style="color:#94A3B8;font-size:11px;letter-spacing:.18em;font-weight:800;margin:0">▸ YOUR LIVE SCORE</p>
+        <p style="font-family:'Bricolage Grotesque';font-size:54px;font-weight:800;color:#FACC15;margin-top:4px;line-height:1">
+          <span id="scoreCorrect">0</span><span style="color:#475569">/35</span>
+        </p>
+        <p style="font-size:13px;color:#CBD5E1;margin-top:4px">Total XP: <b id="scoreXP" style="color:#34D399">0</b> <span style="color:#475569">/ 340</span></p>
+      </div>
+      <div id="tierBadge" style="text-align:center"></div>
+    </div>
+    <div style="margin-top:14px;background:#334155;height:14px;border-radius:7px;overflow:hidden;border:1px solid #475569">
+      <div id="scoreBar" style="height:100%;width:0%;background:linear-gradient(90deg,#10B981,#34D399);transition:width .4s ease"></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button id="submitBtn" style="background:linear-gradient(135deg,#10B981,#047857);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📤 SUBMIT TO TRAINER</button>
+      <button id="copyBtn" style="background:#1E40AF;color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📋 COPY RESULTS</button>
+      <button id="resetBtn" style="background:#1E293B;color:#FACC15;border:1px solid #475569;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">↻ RESTART QUIZ</button>
+    </div>
+    <div id="submitStatus" style="margin-top:10px;font-size:12px;font-weight:700;color:#94A3B8;min-height:18px;white-space:pre-wrap"></div>
+  </div>
+
+  <div class="answer-key-static">
+  <div class="key-grid">
+    <div class="key-cell"><span>Q1</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q2</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q3</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q4</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q5</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q6</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q7</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q8</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q9</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q10</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q11</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q12</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q13</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q14</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q15</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q16</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q17</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q18</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q19</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q20</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q21</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q22</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q23</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q24</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q25</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q26</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q27</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q28</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q29</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q30</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q31</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q32</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q33</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q34</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q35</span><span class="a">C</span></div>
+  </div>
+
+  <h3 style="margin-top:24px" class="">🏆 Scoring tiers</h3>
+  <div class="tier tier-gold"><div class="medal">🥇</div><div><b>28–35 correct → ENCLOSURE MASTERY.</b> Earn the 📦 badge. You quote enclosures like a pro.</div></div>
+  <div class="tier tier-silver"><div class="medal">🥈</div><div><b>21–27 correct → SOLID GROUNDING.</b> Re-run the APPLY level and re-fight.</div></div>
+  <div class="tier tier-bronze"><div class="medal">🥉</div><div><b>0–20 correct → BACK TO THE MATRICES.</b> Re-read LEARN. The Sphinx isn't going anywhere.</div></div>
+  </div><!-- /answer-key-static -->
+  <div class="page-num">28</div>
+</section><section class="page" data-section-id="results" data-page-id="p28">
+  <div class="page-tag">▸ LOOT DROP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">💎 POCKET CHEAT SHEET</div>
+  <h2 style="margin-top:14px" class="">Tear-out card.</h2>
+  <p class="lead">Print it. Tape it to your monitor. Reference forever.</p>
+
+  <div class="loot" style="margin-top:18px">
+    <div class="stamp">✂ TEAR HERE</div>
+
+    <h3 class="">📦 The 3 Core Decisions</h3>
+    <p class=""><b>Size</b> → H × W × D + mounting · <b>Material</b> → indoor/outdoor + corrosion · <b>Rating</b> → NEMA / IP / Class-Div</p>
+
+    <h3 class="">🎯 The Big Cheat (80% of calls)</h3>
+    <p class="">Outdoor UV → <b>Polycarbonate</b> · Marine/Salt → <b>316SS</b> · Wash-down → <b>304SS or 4X</b> · Hazardous → <b>Killark NEMA 7</b> · Cheap indoor → <b>ABS NEMA 1</b></p>
+
+    <h3 class="">🏷️ Customer → NEMA Translation</h3>
+    <p class="">"Watertight" = <b>4</b> · "Drip-tight" = <b>12</b> · "Weatherproof" = <b>3R</b> · "Wash-down" = <b>4X</b> · "Submersible" = <b>6/6P</b> · "Explosion-proof" = <b>7/8/9 + Class/Div</b></p>
+
+    <h3 class="">🏭 Brand-First Picks</h3>
+    <p class=""><b>Hoffman</b> = anchor · <b>Stahlin</b> = non-metallic · <b>Killark</b> = hazardous · <b>Allied Moulded</b> = budget non-metallic · <b>Phoenix Contact</b> = DIN housings</p>
+
+    <h3 class="">🔄 Substitution Rule</h3>
+    <p class="">Same size · Same OR better material · Same OR better rating · <b>NEVER downgrade.</b></p>
+
+    <h3 class="">📞 The 5-Question Script</h3>
+    <p class="">1) Indoor or outdoor? &nbsp; 2) What's going inside? &nbsp; 3) Environment hazards? &nbsp; 4) Mounting? &nbsp; 5) Brand / lead time / budget?</p>
+
+    <h3 class="">🚨 5 Mistakes to Avoid</h3>
+    <p class="">NEMA 1 outside · Painted steel near salt · ABS outdoor · Forgetting Class/Div · Substituting cheap to hit budget</p>
+
+    <h3 class="">🧠 The Memory Hook</h3>
+    <p style="font-size:16px;font-weight:800;color:#9A3412" class="">Three decisions. Two matrices. One confident quote.</p>
+  </div>
+  <div class="page-num">29</div>
+</section><section class="page" data-section-id="results" data-page-id="p29">
+  <div class="page-tag">▸ FINAL XP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">🏅 TROPHY CASE</div>
+  <h2 style="margin-top:14px" class="">Your earned XP.</h2>
+
+  <div class="trophy-grid">
+    <div class="trophy"><div class="icon">🧠</div><h3 class="">MATRIX LOCKED</h3><div class="xp-num">+100 XP</div></div>
+    <div class="trophy"><div class="icon">👹</div><h3 class="">MINI BOSSES</h3><div class="xp-num">+50 XP</div></div>
+    <div class="trophy"><div class="icon">💼</div><h3 class="">QUOTE-READY</h3><div class="xp-num">+120 XP</div></div>
+    <div class="trophy"><div class="icon">📦</div><h3 class="">ENCLOSURE MASTERY</h3><div class="xp-num">+70 XP</div></div>
+  </div>
+
+  <div class="factbox" style="margin-top:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="font-size:16px" class="">TOTAL POSSIBLE XP</h3>
+      <div style="font-family:'Bricolage Grotesque';font-size:46px;font-weight:800;color:#CA8A04">340</div>
+    </div>
+    <hr class="faint">
+    <p style="font-size:12px;color:var(--slate-500)" class="">Cleared product mastery's first volume → keep climbing. Ice Cube Breakers · Contactors · Motor Control · VFDs · Power Supplies are all next on the trail.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:18px">
+    🔓 <b>NEXT UNLOCKS:</b> The rest of the product Mastery series. Each volume builds on what you just learned here.
+  </div>
+  <div class="page-num">30</div>
+</section><section class="page closing-page" data-section-id="results" data-page-id="p30">
+  <h1 style="font-size:84px" class="">📦</h1>
+  <h1 style="margin-top:14px" class="">Three decisions.<br>Every quote.</h1>
+  <p style="font-size:20px;max-width:5.5in;margin:24px auto 0" class="">Indoor or outdoor. What's going inside. What's the environment. From here you can quote any enclosure on the catalog without flinching — and substitute brands without losing the deal.</p>
+
+  <div style="margin-top:40px;display:flex;gap:18px;flex-wrap:wrap;justify-content:center">
+    <div style="background:rgba(250,204,21,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(250,204,21,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#FACC15">🧠 LEARN the matrices</div>
+    <div style="background:rgba(250,204,21,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(250,204,21,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#FACC15">🛠️ APPLY the decisions</div>
+    <div style="background:rgba(250,204,21,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(250,204,21,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#FACC15">🎯 TEST your quotes</div>
+  </div>
+
+  <div style="margin-top:auto;padding-top:30px;text-align:center">
+    <p style="color:#FACC15;font-size:13px;letter-spacing:.18em;font-weight:800" class="">▸ NEXT UP</p>
+    <p style="font-size:14px;color:#fff;margin-top:6px" class="">Ice Cube Breakers · Contactors · Motor Control · VFDs · Power Supplies</p>
+    <p style="margin-top:30px;color:#FDE68A;font-size:12px;font-weight:800;letter-spacing:.18em" class="">RSP INDUSTRIAL · PRODUCT MASTERY · VOL 01</p>
+  </div>
+</section>
+
+<!-- ADMIN OVERLAY (browser only) -->
+<div id="adminOverlay" class="interactive-only"></div>
+
+<script src="../shared/module.js?v=editor-blocks-2-page-delete"></script>
+<script>
+RSPModule.init({
+  moduleId:   "enclosure-mastery",
+  moduleName: "Enclosure Mastery",
+  moduleIcon: "📦",
+
+  totalQuestions: 35,
+  passGold:       28,
+  passSilver:     21,
+  pageXpTotal:    220,   // 10 LEARN × 10 + 8 APPLY × 15
+  minibossXpTotal: 50,
+  adminPassword:  (window.RSP_CONFIG && window.RSP_CONFIG.adminPassword) || "",
+  pumbleWebhookUrl: "",
+  storageKey: "rsp_enclosure_progress",
+
+  tierBadges: {
+    gold:   { name:"ENCLOSURE MASTERY",   msg:"Quote enclosures like a pro." },
+    silver: { name:"SOLID GROUNDING",     msg:"Re-run APPLY level and re-fight." },
+    bronze: { name:"BACK TO THE MATRICES", msg:"Re-read LEARN. The Sphinx waits." }
+  },
+  tierSubmitText: {
+    gold:   "🥇 Mastery — Quote-ready",
+    silver: "🥈 Solid — Re-run APPLY level",
+    bronze: "🥉 Needs Re-do — Back to LEARN"
+  },
+
+  // -------- THE 35-QUESTION BOSS FIGHT --------
+  quiz: [
+    {
+      "n": 1,
+      "q": "An enclosure's primary purpose is to:",
+      "opts": {
+        "A": "Reduce voltage",
+        "B": "Isolate electrical/electronic devices from their environment",
+        "C": "Generate power",
+        "D": "Replace a panel board"
+      },
+      "c": "B"
+    },
+    {
+      "n": 2,
+      "q": "RSP's anchor brand for nearly every metallic enclosure application:",
+      "opts": {
+        "A": "Stahlin",
+        "B": "Killark",
+        "C": "Hoffman (nVent)",
+        "D": "Phoenix Contact"
+      },
+      "c": "C"
+    },
+    {
+      "n": 3,
+      "q": "For non-metallic outdoor &amp; corrosive environments, your first stop is:",
+      "opts": {
+        "A": "Hoffman",
+        "B": "Stahlin",
+        "C": "Killark",
+        "D": "Schneider"
+      },
+      "c": "B"
+    },
+    {
+      "n": 4,
+      "q": "Class I Div 1 hazardous gas — lead with:",
+      "opts": {
+        "A": "Hoffman",
+        "B": "Phoenix Contact",
+        "C": "Killark",
+        "D": "Allied Moulded"
+      },
+      "c": "C"
+    },
+    {
+      "n": 5,
+      "q": "The three jobs every enclosure does:",
+      "opts": {
+        "A": "Heating, cooling, switching",
+        "B": "Protection, compliance, reliability",
+        "C": "Storage, mounting, wiring",
+        "D": "Disconnect, ground, bond"
+      },
+      "c": "B"
+    },
+    {
+      "n": 6,
+      "q": "Cost-effective non-metallic alternative to Stahlin:",
+      "opts": {
+        "A": "Adalet",
+        "B": "Rittal",
+        "C": "Allied Moulded",
+        "D": "Killark"
+      },
+      "c": "C"
+    },
+    {
+      "n": 7,
+      "q": "Phoenix Contact enclosures are primarily for:",
+      "opts": {
+        "A": "Outdoor industrial cabinets",
+        "B": "Hazardous Class II Div 1",
+        "C": "Small electronics, DIN rail, terminal housings",
+        "D": "Marine submersion"
+      },
+      "c": "C"
+    },
+    {
+      "n": 8,
+      "q": "Highest corrosion resistance steel material:",
+      "opts": {
+        "A": "Painted carbon steel",
+        "B": "Stainless 304",
+        "C": "Stainless 316",
+        "D": "Cast iron"
+      },
+      "c": "C"
+    },
+    {
+      "n": 9,
+      "q": "Best material for food, pharma, washdown:",
+      "opts": {
+        "A": "Painted steel",
+        "B": "Stainless 304",
+        "C": "ABS",
+        "D": "PVC"
+      },
+      "c": "B"
+    },
+    {
+      "n": 10,
+      "q": "Which non-metallic is rated indoor-only?",
+      "opts": {
+        "A": "Polycarbonate",
+        "B": "Fiberglass (FRP)",
+        "C": "ABS",
+        "D": "Polyester"
+      },
+      "c": "C"
+    },
+    {
+      "n": 11,
+      "q": "Best non-metallic for outdoor UV exposure:",
+      "opts": {
+        "A": "ABS",
+        "B": "PVC",
+        "C": "Polycarbonate",
+        "D": "Polyester"
+      },
+      "c": "C"
+    },
+    {
+      "n": 12,
+      "q": "Best non-metallic for harsh chemicals or wastewater:",
+      "opts": {
+        "A": "ABS",
+        "B": "Polycarbonate",
+        "C": "Fiberglass (FRP)",
+        "D": "PVC"
+      },
+      "c": "C"
+    },
+    {
+      "n": 13,
+      "q": "Coastal saltwater spray — specify which metal?",
+      "opts": {
+        "A": "Painted carbon steel",
+        "B": "Stainless 304",
+        "C": "Stainless 316",
+        "D": "Cast aluminum"
+      },
+      "c": "C"
+    },
+    {
+      "n": 14,
+      "q": "Substitution rule for materials:",
+      "opts": {
+        "A": "Always go cheaper",
+        "B": "Never downgrade — match or exceed protection",
+        "C": "Match the brand only",
+        "D": "Color must match"
+      },
+      "c": "B"
+    },
+    {
+      "n": 15,
+      "q": "NEMA 4 protects against:",
+      "opts": {
+        "A": "Indoor dust only",
+        "B": "Hose-directed water and dust",
+        "C": "Explosive gases",
+        "D": "Submersion"
+      },
+      "c": "B"
+    },
+    {
+      "n": 16,
+      "q": "Closest IP equivalent to NEMA 4X:",
+      "opts": {
+        "A": "IP44",
+        "B": "IP54",
+        "C": "IP66",
+        "D": "IP68"
+      },
+      "c": "C"
+    },
+    {
+      "n": 17,
+      "q": "NEMA 7 enclosures are for:",
+      "opts": {
+        "A": "Outdoor rain",
+        "B": "Indoor washdown",
+        "C": "Class I (explosion-proof) hazardous locations",
+        "D": "Marine submersion"
+      },
+      "c": "C"
+    },
+    {
+      "n": 18,
+      "q": "Prolonged submersion + corrosion (marine) → use:",
+      "opts": {
+        "A": "NEMA 4",
+        "B": "NEMA 6",
+        "C": "NEMA 6P",
+        "D": "NEMA 12"
+      },
+      "c": "C"
+    },
+    {
+      "n": 19,
+      "q": "NEMA 12 is best for:",
+      "opts": {
+        "A": "Outdoor weather",
+        "B": "Indoor manufacturing — dust, dripping non-corrosive liquids",
+        "C": "Hazardous gas",
+        "D": "Marine"
+      },
+      "c": "B"
+    },
+    {
+      "n": 20,
+      "q": "Which NEMA ratings have NO IP equivalent?",
+      "opts": {
+        "A": "3R, 4",
+        "B": "7, 8, 9",
+        "C": "1, 2",
+        "D": "12, 13"
+      },
+      "c": "B"
+    },
+    {
+      "n": 21,
+      "q": "IP ratings measure:",
+      "opts": {
+        "A": "Construction quality and corrosion testing",
+        "B": "Solid object ingress and liquid ingress only",
+        "C": "Hazardous location classification",
+        "D": "Gasket aging"
+      },
+      "c": "B"
+    },
+    {
+      "n": 22,
+      "q": "The three core decisions on every enclosure quote:",
+      "opts": {
+        "A": "Brand, color, price",
+        "B": "Size/form factor, material, rating",
+        "C": "Voltage, current, resistance",
+        "D": "NEMA, UL, IP"
+      },
+      "c": "B"
+    },
+    {
+      "n": 23,
+      "q": "\"I need a box for outdoor solar.\" Best material:",
+      "opts": {
+        "A": "ABS",
+        "B": "PVC",
+        "C": "Polycarbonate",
+        "D": "Painted steel"
+      },
+      "c": "C"
+    },
+    {
+      "n": 24,
+      "q": "\"Wash-down area, lots of chlorine.\" Specify:",
+      "opts": {
+        "A": "Painted steel, NEMA 12",
+        "B": "316 Stainless, NEMA 4X",
+        "C": "ABS, NEMA 1",
+        "D": "Fiberglass, NEMA 3R"
+      },
+      "c": "B"
+    },
+    {
+      "n": 25,
+      "q": "Application first, ___ second.",
+      "opts": {
+        "A": "Brand",
+        "B": "Color",
+        "C": "Part number",
+        "D": "Price"
+      },
+      "c": "C"
+    },
+    {
+      "n": 26,
+      "q": "The simple rule for outdoor non-metallic is:",
+      "opts": {
+        "A": "ABS",
+        "B": "Polycarbonate",
+        "C": "PVC",
+        "D": "Polyester"
+      },
+      "c": "B"
+    },
+    {
+      "n": 27,
+      "q": "Hazardous (Class I/II Div) requires which spec?",
+      "opts": {
+        "A": "IP only",
+        "B": "NEMA + Class/Division",
+        "C": "Color only",
+        "D": "Size only"
+      },
+      "c": "B"
+    },
+    {
+      "n": 28,
+      "q": "Hose-down + corrosion resistance → right rating:",
+      "opts": {
+        "A": "NEMA 1",
+        "B": "NEMA 3R",
+        "C": "NEMA 4X",
+        "D": "NEMA 12"
+      },
+      "c": "C"
+    },
+    {
+      "n": 29,
+      "q": "Customer says \"drip-tight.\" Translates to:",
+      "opts": {
+        "A": "NEMA 1",
+        "B": "NEMA 12",
+        "C": "NEMA 7",
+        "D": "NEMA 6P"
+      },
+      "c": "B"
+    },
+    {
+      "n": 30,
+      "q": "\"I need a watertight box outside.\" First clarifying Q:",
+      "opts": {
+        "A": "Brand preference?",
+        "B": "Color?",
+        "C": "Indoor or outdoor — and is hose spray possible?",
+        "D": "Budget?"
+      },
+      "c": "C"
+    },
+    {
+      "n": 31,
+      "q": "Why is NEMA 1 wrong for outdoor use?",
+      "opts": {
+        "A": "NEMA 1 is too expensive",
+        "B": "NEMA 1 is indoor general-purpose only — no weather protection",
+        "C": "NEMA 1 is hazardous-only",
+        "D": "NEMA 1 is non-metallic only"
+      },
+      "c": "B"
+    },
+    {
+      "n": 32,
+      "q": "Customer wants stainless on a tight budget. Right play:",
+      "opts": {
+        "A": "Substitute painted steel anyway",
+        "B": "Compare 304 vs 316 with the customer or suggest a cheaper stainless brand",
+        "C": "Tell them no",
+        "D": "Add features they didn't ask for"
+      },
+      "c": "B"
+    },
+    {
+      "n": 33,
+      "q": "5-question discovery script begins with:",
+      "opts": {
+        "A": "\"What's your budget?\"",
+        "B": "\"Indoor or outdoor?\"",
+        "C": "\"What brand do you like?\"",
+        "D": "\"What color?\""
+      },
+      "c": "B"
+    },
+    {
+      "n": 34,
+      "q": "Customer asks for Hoffman 16×12×6 painted steel NEMA 12. Safe substitute:",
+      "opts": {
+        "A": "Stahlin polycarbonate 16×12×6",
+        "B": "Allied Moulded fiberglass",
+        "C": "Rittal painted steel 16×12×6 NEMA 12",
+        "D": "Phoenix Contact DIN housing"
+      },
+      "c": "C"
+    },
+    {
+      "n": 35,
+      "q": "When substituting, never:",
+      "opts": {
+        "A": "Match the size",
+        "B": "Keep the rating",
+        "C": "Downgrade material or rating",
+        "D": "Tell the customer"
+      },
+      "c": "C"
+    }
+  ],
+
+  // -------- MINI-BOSSES --------
+  minibosses: {
+    'material-mauler': {
+      name: 'MATERIAL MAULER',
+      icon: '👹',
+      tagline: 'Guardian of the Matrix',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"Best non-metallic for outdoor UV:", opts:{A:"ABS",B:"Polycarbonate",C:"PVC",D:"Polyester"}, c:"B"},
+        {q:"Highest corrosion-resistance steel:", opts:{A:"Painted",B:"Stainless 304",C:"Stainless 316",D:"Galvanized"}, c:"C"},
+        {q:"NEMA 4X means:", opts:{A:"Indoor only",B:"Hose-down + corrosion resistance",C:"Hazardous gas",D:"Submersion"}, c:"B"},
+        {q:"Indoor-only non-metallic:", opts:{A:"Polycarbonate",B:"Fiberglass",C:"ABS",D:"Polyester"}, c:"C"},
+        {q:"Closest IP to NEMA 6P:", opts:{A:"IP44",B:"IP54",C:"IP66",D:"IP68"}, c:"D"}
+      ]
+    },
+    'spec-sphinx': {
+      name: 'SPEC SPHINX',
+      icon: '🦁',
+      tagline: 'Riddler of the Quote',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"Three core decisions are size, material, and:", opts:{A:"Color",B:"Brand",C:"Rating",D:"Price"}, c:"C"},
+        {q:"NEMA 7 IP equivalent:", opts:{A:"IP66",B:"IP68",C:"None — NEMA only",D:"IP54"}, c:"C"},
+        {q:"\"Wash down with chemicals\" → quote:", opts:{A:"ABS NEMA 1",B:"316 Stainless NEMA 4X",C:"Painted Steel NEMA 12",D:"PVC NEMA 3R"}, c:"B"},
+        {q:"Application first, then:", opts:{A:"Color",B:"Brand",C:"Part number",D:"Price"}, c:"C"},
+        {q:"Outdoor solar / radio enclosure → use:", opts:{A:"Painted Steel",B:"ABS",C:"Polycarbonate",D:"PVC"}, c:"C"}
+      ]
+    }
+  },
+
+  // -------- SIDE MAP --------
+  mapSections: [
+    {id:'intro',        name:'Start',              icon:'🏁', meta:'Pages 1–3',     firstPage:1},
+    {id:'fundamentals', name:'Basics & Brands',    icon:'📦', meta:'Pages 4–7',     firstPage:4},
+    {id:'decisions',    name:'Matrices',           icon:'🧮', meta:'Pages 8–13',    firstPage:8},
+    {id:'mb1',          name:'Material Mauler',    icon:'👹', meta:'Mini Boss',     firstPage:13, isBoss:true, bossId:'material-mauler'},
+    {id:'apply-1',      name:'Substitution',       icon:'🔧', meta:'Pages 14–17',   firstPage:14},
+    {id:'apply-2',      name:'Customer Skills',    icon:'💼', meta:'Pages 18–21',   firstPage:18},
+    {id:'mb2',          name:'Spec Sphinx',        icon:'🦁', meta:'Mini Boss',     firstPage:21, isBoss:true, bossId:'spec-sphinx'},
+    {id:'finalboss',    name:'Quote Gauntlet',     icon:'🐲', meta:'35 Questions',  firstPage:22, isBoss:true, isFinal:true},
+    {id:'results',      name:'Results',            icon:'🏆', meta:'Trophy Case',   firstPage:28}
+  ],
+
+  pageRanges: [
+    {section:'intro',        from:1,  to:3},
+    {section:'fundamentals', from:4,  to:7},
+    {section:'decisions',    from:8,  to:13},
+    {section:'apply-1',      from:14, to:17},
+    {section:'apply-2',      from:18, to:21},
+    {section:'finalboss',    from:22, to:27},
+    {section:'results',      from:28, to:31}
+  ]
+});
+</script>
+
+
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

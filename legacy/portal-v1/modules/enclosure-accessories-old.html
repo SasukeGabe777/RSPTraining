@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Enclosure Accessories — RSP Industrial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/module.css?v=editor-blocks-1">
+<style>
+  /* === ENCLOSURE ACCESSORIES · TEAL THEME OVERRIDES === */
+  :root{
+    --theme-primary:#0D9488;
+    --theme-primary-deep:#134E4A;
+    --theme-accent:#99F6E4;
+    --theme-obj-num:#0D9488;
+    --theme-login-btn-1:#0D9488;
+    --theme-login-btn-2:#14B8A6;
+    --theme-login-pretitle:#0D9488;
+    --theme-login-focus:#0D9488;
+    --theme-side-bg:#134E4A;
+    --theme-side-border:#115E59;
+    --theme-side-toggle:#115E59;
+    --theme-loot-border:#0D9488;
+    --theme-loot-bg-1:#F0FDFA;
+    --theme-loot-bg-2:#CCFBF1;
+    --theme-loot-h3:#0D9488;
+    --theme-admin-btn:#0D9488;
+    --theme-admin-loginbox-border:#115E59;
+  }
+
+  /* === MODULE-SPECIFIC COMPONENTS === */
+
+  /* Group cards — the 5 functional groups (page 4) */
+  .group-card{border-radius:14px;padding:16px;border:2px solid;display:flex;flex-direction:column;gap:6px}
+  .group-card .icon{font-size:32px;line-height:1}
+  .group-card h3{font-size:15px;line-height:1.2}
+  .group-card p{font-size:11px;line-height:1.4}
+  .gc-1{background:linear-gradient(160deg,#DBEAFE,#BFDBFE);border-color:#1E40AF;color:#1E40AF}
+  .gc-1 h3{color:#1E40AF}
+  .gc-1 p{color:#1E40AF}
+  .gc-2{background:linear-gradient(160deg,#FEF3C7,#FDE68A);border-color:#CA8A04;color:#78350F}
+  .gc-2 h3{color:#78350F}
+  .gc-2 p{color:#78350F}
+  .gc-3{background:linear-gradient(160deg,#D1FAE5,#A7F3D0);border-color:#047857;color:#065F46}
+  .gc-3 h3{color:#065F46}
+  .gc-3 p{color:#065F46}
+  .gc-4{background:linear-gradient(160deg,#FED7AA,#FDBA74);border-color:#9A3412;color:#7C2D12}
+  .gc-4 h3{color:#7C2D12}
+  .gc-4 p{color:#7C2D12}
+  .gc-5{background:linear-gradient(160deg,#FEE2E2,#FECACA);border-color:#EF4444;color:#7F1D1D}
+  .gc-5 h3{color:#7F1D1D}
+  .gc-5 p{color:#7F1D1D}
+
+  /* Product cards */
+  .prod-card{background:var(--slate-50);border:2px solid var(--slate-200);border-radius:14px;padding:14px;margin-bottom:10px}
+  .prod-card .prod-name{font-family:'Bricolage Grotesque';font-size:16px;font-weight:800;color:#0D9488}
+  .prod-card .prod-tag{font-size:10px;font-weight:700;color:#64748B;letter-spacing:.05em;text-transform:uppercase;margin-top:1px}
+  .prod-card .prod-desc{font-size:12px;color:#334155;margin-top:6px;line-height:1.4}
+  .prod-card .prod-fact{font-size:11px;color:#0D9488;font-weight:700;margin-top:6px}
+
+  /* Decision flow (teal palette) */
+  .decision-card{background:linear-gradient(160deg,#CCFBF1,#99F6E4);border:2px solid #0D9488;border-radius:16px;padding:18px;margin-bottom:10px}
+  .decision-card .num-d{display:inline-block;background:#0D9488;color:#fff;width:32px;height:32px;border-radius:50%;text-align:center;line-height:32px;font-weight:800;margin-right:10px;font-family:'Bricolage Grotesque'}
+  .decision-card h3{display:inline-block;color:#134E4A;font-size:18px;vertical-align:middle}
+  .decision-card .body-d{color:#134E4A;font-size:13px;margin-top:8px}
+  .decision-card ul{margin-top:6px;padding-left:24px}
+  .decision-card li{font-size:12px;color:#134E4A;font-weight:600;margin:2px 0}
+
+  /* Matrix tables (teal palette) */
+  .matrix{width:100%;border-collapse:collapse;margin-top:12px;font-size:11px}
+  .matrix th{background:#CCFBF1;color:#134E4A;text-align:center;padding:10px 6px;font-weight:800;border:1px solid #99F6E4;font-size:11px;letter-spacing:.05em}
+  .matrix th.row-h{background:#F1F5F9;color:#0F172A;text-align:left;width:140px}
+  .matrix td{padding:10px 6px;border:1px solid #E2E8F0;text-align:left;color:#1E293B;font-weight:600;font-size:11px}
+  .matrix td.lbl{background:#F8FAFC;font-weight:800;color:#0F172A;font-size:12px}
+  .matrix .info{background:#CCFBF1;color:#134E4A}
+</style>
+</head>
+<body>
+
+
+<a href="../index.html" id="portalLink" class="interactive-only">← PORTAL</a>
+
+<aside id="sideMap" class="interactive-only">
+  <button class="map-toggle" id="mapToggle" title="Toggle map">‹</button>
+  <div class="map-title">⚙️ ACCESSORY MAP</div>
+  <div class="map-hint">YOUR JOURNEY</div>
+  <div class="map-path" id="mapPath"></div>
+</aside>
+
+<div id="minibossOverlay" class="interactive-only">
+  <div class="miniboss-modal" id="minibossModal"></div>
+</div>
+
+<div id="loginOverlay" class="interactive-only">
+  <div class="login-card">
+    <div class="bolt-bg">⚙️</div>
+    <div class="pretitle">RSP INDUSTRIAL · PRODUCT MASTERY</div>
+    <h1>Enclosure<br>Accessories</h1>
+    <p class="sub">Sign in to track your XP and unlock the Boss Fight.</p>
+    <label for="loginName">Your name</label>
+    <input type="text" id="loginName" placeholder="e.g. Gabe Ebmeyer" autocomplete="off"/>
+    <label for="loginId">Employee ID <span style="font-weight:500;color:#94A3B8;letter-spacing:0">(optional)</span></label>
+    <input type="text" id="loginId" placeholder="e.g. RSP-1234" autocomplete="off"/>
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn">Begin Training →</button>
+    <p class="footer-note">Your progress is saved on this device. No data leaves your browser.</p>
+  </div>
+</div>
+
+<div id="xpTracker" class="interactive-only">
+  <div>
+    <div class="username" id="trackerUser">⚙️ READY</div>
+    <div class="label">XP EARNED</div>
+    <div><span class="num" id="trackerXP">0</span><span style="color:#475569;font-size:14px"> / 280</span></div>
+    <span class="reset-link" id="resetProgress">↻ Reset</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+    <div style="display:flex;gap:10px;font-size:10px;color:#94A3B8;white-space:nowrap;flex-wrap:wrap">
+      <span>📖&nbsp;<b style="color:#fff"><span id="trackerPages">0</span>/14</b></span>
+      <span>🎯&nbsp;<b style="color:#fff"><span id="trackerAnswered">0</span>/30</b></span>
+      <span>✓&nbsp;<b style="color:#34D399"><span id="trackerCorrect">0</span></b></span>
+    </div>
+    <div class="bar"><div class="fill" id="trackerFill"></div></div>
+  </div>
+</div>
+
+<!-- ============= PAGE 1 — COVER ============= -->
+<section class="page cover">
+  <div class="ribbon">
+    <span class="badge">RSP INDUSTRIAL</span>
+    <span class="badge">PRODUCT MASTERY · MODULE 02</span>
+  </div>
+  <svg width="500" height="500" viewBox="0 0 500 500" style="position:absolute;right:-60px;top:120px;opacity:.95">
+    <defs>
+      <linearGradient id="gearg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#99F6E4"/>
+        <stop offset="100%" stop-color="#0D9488"/>
+      </linearGradient>
+    </defs>
+    <g transform="translate(250 250)">
+      <g>
+        <circle r="120" fill="url(#gearg)" stroke="#99F6E4" stroke-width="3"/>
+        <circle r="50" fill="#0F172A" stroke="#99F6E4" stroke-width="2"/>
+        <g fill="url(#gearg)" stroke="#99F6E4" stroke-width="2">
+          <rect x="-15" y="-150" width="30" height="40"/>
+          <rect x="-15" y="110" width="30" height="40"/>
+          <rect x="-150" y="-15" width="40" height="30"/>
+          <rect x="110" y="-15" width="40" height="30"/>
+          <rect x="-15" y="-150" width="30" height="40" transform="rotate(45)"/>
+          <rect x="-15" y="110" width="30" height="40" transform="rotate(45)"/>
+          <rect x="-150" y="-15" width="40" height="30" transform="rotate(45)"/>
+          <rect x="110" y="-15" width="40" height="30" transform="rotate(45)"/>
+        </g>
+      </g>
+    </g>
+  </svg>
+  <div style="position:absolute;bottom:2.4in;left:.5in;right:.5in">
+    <div class="pill" style="background:rgba(153,246,228,.25);color:#99F6E4;border:1px solid rgba(153,246,228,.4);margin-bottom:18px">PRODUCT MASTERY · ACCESSORIES</div>
+    <h1>ENCLOSURE<br>ACCESSORIES</h1>
+    <div class="sub">Five functional groups. One working system.</div>
+  </div>
+  <div class="tagline">
+    <div>Mount it. Cool it. Cable it. Protect it.</div>
+    <div>RSP · PROD 02</div>
+  </div>
+</section>
+
+<!-- ============= PAGE 2 — MISSION ============= -->
+<section class="page">
+  <div class="page-tag">▸ THE PROMISE</div>
+  <div style="display:flex;gap:30px;margin-top:.5in;height:8.6in">
+    <div style="flex:1;display:flex;flex-direction:column">
+      <h2>Turn an empty box<br>into a working system.</h2>
+      <p class="lead" style="margin-top:14px">By the last page you will be able to:</p>
+      <ul class="objectives" style="margin-top:18px">
+        <li><span class="obj-num">1</span><span>Name the <b>five functional groups</b> of enclosure accessories cold.</span></li>
+        <li><span class="obj-num">2</span><span>Recommend the right mounting, cable, and thermal accessories from a customer's first sentence.</span></li>
+        <li><span class="obj-num">3</span><span>Position <b>Hoffman vs Rittal</b> accessory lines confidently.</span></li>
+        <li><span class="obj-num">4</span><span>Ask the <b>3 customer questions</b> that uncover every accessory need.</span></li>
+        <li><span class="obj-num">5</span><span>Avoid the <b>5 common sales mistakes</b> that lose accessory cross-sells.</span></li>
+        <li><span class="obj-num">6</span><span>Pass the 30-question Boss Fight at 80%+ to earn the badge.</span></li>
+      </ul>
+      <div class="powerup" style="margin-top:20px">
+        💡 <b>The promise:</b> Accessories are NOT optional. They turn a box into a panel that ships, runs, and lasts.
+      </div>
+    </div>
+    <div style="flex:0 0 2.4in;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="100" fill="none" stroke="#0D9488" stroke-width="6"/>
+        <circle cx="110" cy="110" r="75" fill="none" stroke="#0D9488" stroke-width="6" opacity=".6"/>
+        <circle cx="110" cy="110" r="50" fill="none" stroke="#0D9488" stroke-width="6" opacity=".4"/>
+        <circle cx="110" cy="110" r="25" fill="#0D9488"/>
+        <text x="110" y="118" text-anchor="middle" font-size="22" fill="#fff" font-weight="800" font-family="Bricolage Grotesque">XP</text>
+      </svg>
+      <div style="background:var(--ink);color:#FCD34D;padding:10px 18px;border-radius:999px;font-weight:800;font-size:13px;letter-spacing:.1em">EARN: ⚙️ MASTER</div>
+    </div>
+  </div>
+  <div class="page-num">02</div>
+</section>
+
+<!-- ============= PAGE 3 — HOW TO PLAY ============= -->
+<section class="page">
+  <div class="page-tag">▸ HOW TO PLAY</div>
+  <h2 style="margin-top:.4in">Three levels.<br>Two mini-bosses.<br>One badge.</h2>
+  <div style="display:flex;gap:14px;margin-top:30px">
+    <div class="level-card learn">
+      <div class="num">01</div>
+      <h3>LEARN</h3>
+      <p>8 pages. The five functional groups, what each accessory does, and where Hoffman & Rittal lead.</p>
+      <div class="xp-pill">+10 XP / page</div>
+    </div>
+    <div class="level-card apply">
+      <div class="num">02</div>
+      <h3>APPLY</h3>
+      <p>6 pages. The 3 customer questions, 5 sales mistakes, accessory cross-sell scenarios, and the customer-phrase translation table.</p>
+      <div class="xp-pill">+15 XP / page</div>
+    </div>
+    <div class="level-card test">
+      <div class="num">03</div>
+      <h3>TEST</h3>
+      <p>30-question Boss Fight. Score 80%+ for the ⚙️ Accessory Mastery badge.</p>
+      <div class="xp-pill">+2 XP / correct</div>
+    </div>
+  </div>
+  <div class="powerup" style="margin-top:30px">
+    💡 <b>Two Mini-Bosses block the path.</b> Defeat the Cable Kraken after LEARN and the Heat Hydra after APPLY. Each is worth +25 XP.
+  </div>
+  <div class="page-num">03</div>
+</section>
+
+<!-- ============= PAGE 4 — LEARN 01: THE BIG PICTURE / 5 GROUPS ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 01 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚙️ THE BIG PICTURE</div>
+  <h2 style="margin-top:14px">Five functional groups.</h2>
+  <p class="lead" style="margin-top:6px">Almost every enclosure accessory falls into one of these five groups. Memorize them — you'll diagnose 90% of customer needs with this single mental model.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px">
+    <div class="group-card gc-1">
+      <div class="icon">🧱</div>
+      <h3>1. Mounting &amp; Organization</h3>
+      <p>Backplates · panels · rails · racks · shelves · drawers · trays · hardware · latches · locks · wall brackets.</p>
+    </div>
+    <div class="group-card gc-2">
+      <div class="icon">🔌</div>
+      <h3>2. Cable Entry &amp; Cable Management</h3>
+      <p>Wire duct · cable channels · grommets · hole seals · ladder rack · power distribution · grounding.</p>
+    </div>
+    <div class="group-card gc-3">
+      <div class="icon">❄️</div>
+      <h3>3. Thermal &amp; Environmental Control</h3>
+      <p>Air conditioners · fans · vents · filters · heaters · sun shields · roof plates · canopies.</p>
+    </div>
+    <div class="group-card gc-4">
+      <div class="icon">🚪</div>
+      <h3>4. Doors, Access &amp; Usability</h3>
+      <p>Hinges · latches · windows · lighting · HMI accessories · door pockets.</p>
+    </div>
+    <div class="group-card gc-5">
+      <div class="icon">🛡️</div>
+      <h3>5. Protection &amp; Longevity</h3>
+      <p>Corrosion inhibitors · paint &amp; patch kits · rain hoods · drip shields · base accessories · pedestals · casters.</p>
+    </div>
+    <div class="factbox" style="background:#FEF3C7;border-color:#F59E0B">
+      <h3 style="color:#78350F;font-size:14px">📌 The line that sells</h3>
+      <p style="color:#78350F;font-size:12px;margin-top:6px"><b>"A bare enclosure protects equipment. Accessories make that enclosure usable in the real world."</b></p>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> If you can name all 5 groups in the right order, you can diagnose any accessory question in under 30 seconds.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">04</div>
+</section>
+
+<!-- ============= PAGE 5 — LEARN 02: MOUNTING & ORG PART 1 ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 02 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🧱 MOUNTING &amp; ORGANIZATION · PART 1</div>
+  <h2 style="margin-top:14px">Backplates, panels,<br>and access.</h2>
+  <p class="lead" style="margin-top:6px">These are the parts that turn an empty cabinet into something a panel-shop can actually wire up.</p>
+
+  <div style="margin-top:14px">
+    <div class="prod-card">
+      <div class="prod-name">BACKPLATES &amp; PANELS</div>
+      <div class="prod-tag">SECURE MOUNTING SURFACE FOR PLCS, RELAYS, POWER SUPPLIES</div>
+      <div class="prod-desc">Removable interior surface. Lets the panel shop pre-build the layout on the bench, then drop it into the enclosure.</div>
+      <div class="prod-fact">Materials: painted steel · galvanized · stainless · aluminum · fiberglass · composite</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">SWING-OUT PANELS<span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View product photo">📸 SEE IT</button><span class="img-peek-popup"><img src="../images/accessories/swing-out-panel.png" alt="Swing-out panel"></span></span></div>
+      <div class="prod-tag">PIVOTING SECONDARY PANEL · ACCESS UPGRADE</div>
+      <div class="prod-desc">Pivots outward like a door so service techs reach gear behind it without tearing the cabinet apart. Doubles as security — main components stay protected.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">GLAND PLATES<span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View product photo">📸 SEE IT</button><span class="img-peek-popup"><img src="../images/accessories/gland-plate.png" alt="Gland plate"></span></span></div>
+      <div class="prod-tag">REMOVABLE GASKETED CABLE-ENTRY SURFACE</div>
+      <div class="prod-desc">A bottom or side plate the panel shop drills for cable entry. Removable + gasketed = the NEMA rating survives the install.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">LATCHES, HANDLES, LOCKS<span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View product photo">📸 SEE IT</button><span class="img-peek-popup"><img src="../images/accessories/latch-handle.png" alt="Latch and handle"></span></span></div>
+      <div class="prod-tag">SECURITY + ENVIRONMENTAL SEAL</div>
+      <div class="prod-desc">Keyed, combination, padlockable, lockout/tagout — pick based on access policy. Compression latches keep NEMA 4/4X seals tight over time.</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>POWER-UP:</b> Customer says "we need to service this without shutting down the line"? → swing-out panel.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">05</div>
+</section>
+
+<!-- ============= PAGE 6 — LEARN 03: MOUNTING & ORG PART 2 ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 03 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🧱 MOUNTING &amp; ORGANIZATION · PART 2</div>
+  <h2 style="margin-top:14px">Racks, shelves,<br>brackets, fasteners.</h2>
+  <p class="lead" style="margin-top:6px">The interior layout decides whether the panel shop loves you or curses your name. These are the parts that organize what goes inside.</p>
+
+  <div style="margin-top:14px">
+    <div class="prod-card">
+      <div class="prod-name">WALL-MOUNTING BRACKETS</div>
+      <div class="prod-tag">STEEL · ALUMINUM · STAINLESS</div>
+      <div class="prod-desc">Adjustable systems handle different enclosure sizes and let installers fine-tune position. Material picks track corrosion exposure (saltwater → stainless).</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">RACKS &amp; RACK HARDWARE</div>
+      <div class="prod-tag">SUPPORT FOR RACK-MOUNTED EQUIPMENT</div>
+      <div class="prod-desc">Industrial cabinets, control rooms, data centers. Filler panels close unused U-spaces — that improves airflow AND makes the rack look professional.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">SHELVES, DRAWERS &amp; TRAYS</div>
+      <div class="prod-tag">ADJUSTABLE · LOCKING · PULL-OUT</div>
+      <div class="prod-desc">Fixed, sliding, telescoping, vented, folding, keyboard. Many drawers come with locks for secure storage of tools or sensitive devices.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">FASTENERS &amp; HARDWARE</div>
+      <div class="prod-tag">SCREWS · BOLTS · NUTS · WASHERS · GROUNDING KITS</div>
+      <div class="prod-desc">Stainless options for outdoor / corrosive jobs. Grounding kits + sealing gaskets are part of the hardware family — easy add-ons most reps forget.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">ADAPTER BRACKETS &amp; EQUIPMENT GUIDES</div>
+      <div class="prod-tag">ALIGN &amp; SECURE RACK GEAR</div>
+      <div class="prod-desc">Help center, support, and slide gear into position during install. The "make it line up" hardware that prevents stripped threads later.</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>POWER-UP:</b> Always quote grounding kit + door-stop hardware on stainless cabinets. Customers forget. You won't.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">06</div>
+</section>
+
+<!-- ============= PAGE 7 — LEARN 04: CABLE MGMT PART 1 ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 04 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🔌 CABLE MANAGEMENT · PART 1</div>
+  <h2 style="margin-top:14px">Wire duct,<br>cable channels.</h2>
+  <p class="lead" style="margin-top:6px">Most overlooked accessory category. Most consequential when ignored.</p>
+
+  <div style="margin-top:14px">
+    <div class="prod-card">
+      <div class="prod-name">SLOTTED WIRE DUCT<span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View product photo">📸 SEE IT</button><span class="img-peek-popup"><img src="../images/accessories/wire-duct-slotted.png" alt="Slotted wire duct"></span></span></div>
+      <div class="prod-tag">RIGID PATHWAY · FREQUENT ACCESS</div>
+      <div class="prod-desc">Slotted sides let wires exit anywhere along the run. Standard for control panels where commissioning + troubleshooting need wire freedom.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">SOLID WIRE DUCT</div>
+      <div class="prod-tag">RIGID PATHWAY · MAX PROTECTION</div>
+      <div class="prod-desc">No slots = no exits. Use when access is limited and you want maximum mechanical / EMI protection. Common in motor and power feeders.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">HORIZONTAL CABLE MANAGERS</div>
+      <div class="prod-tag">FRONT/REAR OF EQUIPMENT</div>
+      <div class="prod-desc">Organize cables right at connection points. Prevents the spaghetti pile that nobody can untangle six months in.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">VERTICAL CABLE MANAGERS</div>
+      <div class="prod-tag">RACK SIDE-RAIL · SAVES U-SPACE</div>
+      <div class="prod-desc">Routes cables along the height of the rack. Maintains bend radius (critical for fiber!) and frees U-space for actual gear.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">WIRE MESH TRAYS &amp; LADDER RACKS</div>
+      <div class="prod-tag">OPEN ENVIRONMENTS · LARGE BUNDLES</div>
+      <div class="prod-desc">Ceilings, under-floor, between cabinets. Open-air design = excellent airflow + easy field changes.</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>POWER-UP:</b> Good cable management prevents abrasion, improves airflow, makes troubleshooting easier, and helps the panel pass UL / NEC code review.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">07</div>
+</section>
+
+<!-- ============= PAGE 8 — LEARN 05: CABLE MGMT PART 2 ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 05 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🔌 CABLE MANAGEMENT · PART 2</div>
+  <h2 style="margin-top:14px">Entry, grommets,<br>and seals.</h2>
+  <p class="lead" style="margin-top:6px">Anywhere a cable goes through metal, you need to seal the rest of the hole. This is what keeps NEMA / IP ratings honest after install.</p>
+
+  <div style="margin-top:14px">
+    <div class="prod-card">
+      <div class="prod-name">CABLE ENTRY SYSTEMS</div>
+      <div class="prod-tag">CABLE GLANDS · MULTI-CABLE FRAMES</div>
+      <div class="prod-desc">Engineered entry points for one or many cables. Maintains seal, strain-relief, and EMI shielding all at once.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">GROMMETS<span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View product photo">📸 SEE IT</button><span class="img-peek-popup"><img src="../images/accessories/grommets-hole-seals.png" alt="Grommets and hole seals"></span></span></div>
+      <div class="prod-tag">EDGE PROTECTION FOR CABLES</div>
+      <div class="prod-desc">Soft rubber liner around drilled holes. Prevents abrasion that would otherwise short out wires after months of vibration.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">HOLE SEALS &amp; PLUGS</div>
+      <div class="prod-tag">CLOSE UNUSED OPENINGS · MAINTAIN RATING</div>
+      <div class="prod-desc">Stainless steel, aluminum, rubber, plastic. Outdoor-rated versions handle UV, moisture, corrosion. Forgetting these is a top callback cause.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">PATCH KITS</div>
+      <div class="prod-tag">FIELD REPAIR FOR DRILLED MISTAKES</div>
+      <div class="prod-desc">When the install crew drilled the wrong spot or someone added a hole on-site. Patch + seal = saves the rating without replacing the box.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">POWER DISTRIBUTION &amp; GROUNDING</div>
+      <div class="prod-tag">PDU STRIPS · BUS BARS · GROUND KITS</div>
+      <div class="prod-desc">Inside the cabinet, you still need a clean path for power and ground. Bond + ground kits are usually the smallest line-item but the one that fails inspections.</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>POWER-UP:</b> "Sealing unused openings maintains the protection rating, prevents corrosion, and stops contaminants." Memorize that exact line.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">08</div>
+</section>
+
+<!-- ============= PAGE 9 — LEARN 06: THERMAL PART 1 ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 06 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">❄️ THERMAL &amp; ENVIRONMENTAL · PART 1</div>
+  <h2 style="margin-top:14px">Cooling and heating<br>the enclosure.</h2>
+  <p class="lead" style="margin-top:6px">Heat, moisture, and condensation are the biggest enemies of electronics. The thermal accessory you pick depends on the heat load AND the outside environment.</p>
+
+  <div style="margin-top:14px">
+    <div class="prod-card">
+      <div class="prod-name">FILTER FANS<span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View product photo">📸 SEE IT</button><span class="img-peek-popup"><img src="../images/accessories/filter-fan.png" alt="Filter fan"></span></span></div>
+      <div class="prod-tag">FORCED AIR · FILTERED AMBIENT</div>
+      <div class="prod-desc">Pulls outside air in through a filter, exhausts hot air out the top. Maintains positive pressure inside the cabinet so dust and bugs stay out.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">EXHAUST FANS</div>
+      <div class="prod-tag">PUSH HOT AIR OUT</div>
+      <div class="prod-desc">Removes heat by exhausting cabinet air. Pair with intake vent for full circulation. Cheaper than filter fans, no pressure benefit.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">VENTING / LOUVER PANELS</div>
+      <div class="prod-tag">PASSIVE COOLING · STATIC PRESSURE RELIEF</div>
+      <div class="prod-desc">Free airflow, no power. Useful when ambient is clean and the cabinet just needs to "breathe." Also relieves pressure inside racks.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">ENCLOSURE AIR CONDITIONERS<span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View product photo">📸 SEE IT</button><span class="img-peek-popup"><img src="../images/accessories/enclosure-ac.png" alt="Enclosure air conditioner"></span></span></div>
+      <div class="prod-tag">CLOSED-LOOP · CONTAMINANT-PROOF</div>
+      <div class="prod-desc">Keeps internal air sealed from the outside environment. Use when ambient is dirty, hot, or humid (foundries, food, outdoor). Thermostatic models auto-cycle for efficiency.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">HEAT EXCHANGERS</div>
+      <div class="prod-tag">CLOSED-LOOP · NO COMPRESSOR</div>
+      <div class="prod-desc">Air-to-air or air-to-water. Lower-cost alternative to AC when ambient is moderate. Common in telecom and outdoor cabinets.</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>POWER-UP:</b> Picking the right cooling = enclosure size + internal heat load + ambient temp + environment + power available.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">09</div>
+</section>
+
+<!-- ============= PAGE 10 — LEARN 07: THERMAL PART 2 + DOORS ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 07 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">❄️ THERMAL · PART 2 · 🚪 DOORS &amp; ACCESS</div>
+  <h2 style="margin-top:14px">Heaters, shields,<br>doors, windows.</h2>
+  <p class="lead" style="margin-top:6px">The "outside" half of thermal — keeping cold and sun out — plus the access accessories that change how techs interact with the box.</p>
+
+  <div style="margin-top:14px">
+    <div class="prod-card">
+      <div class="prod-name">ENCLOSURE HEATERS<span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View product photo">📸 SEE IT</button><span class="img-peek-popup"><img src="../images/accessories/enclosure-heater.png" alt="Enclosure heater"></span></span></div>
+      <div class="prod-tag">CONVECTION · FAN · RADIANT · RESISTANCE · SILICONE</div>
+      <div class="prod-desc">Prevents condensation and cold-shock damage. Silicone-rubber flex heaters wrap odd shapes. Hazardous-rated heaters exist for Class I / II Div locations — never substitute a commercial heater there.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">SUN / SOLAR SHIELDS<span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View product photo">📸 SEE IT</button><span class="img-peek-popup"><img src="../images/accessories/sun-shield.png" alt="Sun shield"></span></span></div>
+      <div class="prod-tag">REDUCE SOLAR HEAT GAIN</div>
+      <div class="prod-desc">Stand-off shield over the cabinet. Massive impact on internal temp in direct-sun installs. Outdoor-rated for sun, rain, snow.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">ROOF PLATES &amp; CANOPIES</div>
+      <div class="prod-tag">ACCESSORY MOUNTING · VENTILATION</div>
+      <div class="prod-desc">Provide a flat, sealed top surface for AC units, fans, antennas, conduit hubs. Canopies add weather protection over the door.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">DOOR HARDWARE: HINGES, INSPECTION WINDOWS, LIGHTING, HMI POCKETS</div>
+      <div class="prod-tag">USABILITY · UPTIME</div>
+      <div class="prod-desc">Inspection windows let techs check status without opening — keeps the seal closed and the user safe. Internal lights speed up service. HMI cutouts and pockets put the touchscreen on the door.</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>POWER-UP:</b> Outdoor cabinet in direct sun? Always quote a sun shield. The internal-temp drop alone often outweighs the cost.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">10</div>
+</section>
+
+<!-- ============= PAGE 11 — LEARN 08: PROTECTION + KRAKEN GATE ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#1E40AF">▸ LEARN · 08 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">🛡️ PROTECTION &amp; LONGEVITY</div>
+  <h2 style="margin-top:14px">Keep the enclosure<br>alive for years.</h2>
+  <p class="lead" style="margin-top:6px">This category is what separates a cabinet that lasts a decade from one that's rusty in 18 months. Especially critical outdoor, washdown, and corrosive.</p>
+
+  <div style="margin-top:14px">
+    <div class="prod-card">
+      <div class="prod-name">CORROSION INHIBITORS</div>
+      <div class="prod-tag">VCI EMITTERS · DESICCANTS</div>
+      <div class="prod-desc">Vapor-phase corrosion inhibitors release a protective film over interior metal. Cheap, replaceable, dramatic effect on long-term reliability.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">PAINT &amp; PATCH KITS</div>
+      <div class="prod-tag">FIELD TOUCH-UP · COLOR-MATCHED</div>
+      <div class="prod-desc">When painted steel gets scratched on install, a touch-up kit prevents the rust that follows. Always quote with painted-steel cabinets.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">RAIN HOODS &amp; DRIP SHIELDS</div>
+      <div class="prod-tag">DEFLECT WATER FROM DOOR EDGES</div>
+      <div class="prod-desc">Bolt-on hood that diverts water away from the door seal. Adds years to outdoor cabinet life.</div>
+    </div>
+    <div class="prod-card">
+      <div class="prod-name">BASE HARDWARE &amp; MOBILITY</div>
+      <div class="prod-tag">PEDESTALS · FLOOR STANDS · CASTERS · LEGS</div>
+      <div class="prod-desc">Pedestals lift the cabinet off wet floors and bring controls up to ergonomic height. Casters add mobility for portable test stations; heavy-duty legs anchor floor-mount cabinets.</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:8px;padding:10px 16px;font-size:13px">
+    🏅 <b>LEARN LEVEL CLEARED — +80 XP · BADGE EARNED: 🧠 "FIVE GROUPS LOCKED."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="cable-kraken" style="margin-top:14px;padding:18px">
+    <div class="icon">🐙</div>
+    <h3>The Cable Kraken blocks the path!</h3>
+    <div class="sub">5 questions on mounting &amp; cable management · Defeat to unlock APPLY level</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">11</div>
+</section>
+
+<!-- ============= PAGE 12 — APPLY 01 · THE 3 CUSTOMER QUESTIONS ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 01 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ THE THREE CUSTOMER QUESTIONS</div>
+  <h2 style="margin-top:14px">Every customer<br>asks one of three.</h2>
+  <p class="lead" style="margin-top:6px">When customers ask about accessories, they're really asking one of three things — even if they don't say it directly. Guide the conversation around these and you sound knowledgeable instead of transactional.</p>
+
+  <div style="margin-top:18px">
+    <div class="decision-card">
+      <span class="num-d">1</span><h3>How do I mount my components?</h3>
+      <div class="body-d">Triggers Group 1 (Mounting &amp; Org). Drill into:</div>
+      <ul>
+        <li>What's going inside (PLCs, drives, terminals, HMIs)?</li>
+        <li>Will techs need to access it without shutting down? → swing-out</li>
+        <li>Outdoor / corrosive? → stainless brackets, grounding kit</li>
+      </ul>
+    </div>
+    <div class="decision-card">
+      <span class="num-d">2</span><h3>How do I manage cables and heat?</h3>
+      <div class="body-d">Triggers Groups 2 + 3. Drill into:</div>
+      <ul>
+        <li>Cable count + routing — wire duct (slotted vs solid), cable managers, mesh tray</li>
+        <li>Internal heat load + ambient — vent / filter fan / AC / heat exchanger</li>
+        <li>Sealed unused openings? → grommets + hole seals</li>
+      </ul>
+    </div>
+    <div class="decision-card">
+      <span class="num-d">3</span><h3>How do I protect this enclosure long-term?</h3>
+      <div class="body-d">Triggers Groups 4 + 5. Drill into:</div>
+      <ul>
+        <li>Outdoor sun? → sun shield · roof plate · canopy</li>
+        <li>Wet floor / chemicals? → pedestals · drip shield · corrosion inhibitor</li>
+        <li>Service access? → inspection window · interior light · hinged door</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> When you echo the customer's underlying question back, they trust you instantly. "Sounds like you're asking how to manage heat in the cabinet — let's talk thermal options."
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">12</div>
+</section>
+
+<!-- ============= PAGE 13 — APPLY 02 · 5 SALES MISTAKES ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 02 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ 5 SALES MISTAKES TO AVOID</div>
+  <h2 style="margin-top:14px">Don't lose the<br>cross-sell.</h2>
+  <p class="lead" style="margin-top:6px">Every one of these has cost a rep an accessory order or a follow-up callback. Memorize and avoid.</p>
+
+  <div style="margin-top:18px">
+    <div class="mistake">
+      <span class="x">1</span>
+      <div><h3>Treating accessories as optional.</h3><p>They aren't. A bare enclosure is a box. Accessories are what make it ship-ready, code-compliant, and serviceable.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">2</span>
+      <div><h3>Selling parts without understanding the application.</h3><p>"Customer wants a fan" → which side? what airflow? indoor or outdoor? clean or dirty ambient? Ask before you quote.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">3</span>
+      <div><h3>Ignoring heat, moisture, or corrosion.</h3><p>If you skip the environment question, the customer pays for a cooling failure or a rusted-out cabinet six months later. Always ask.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">4</span>
+      <div><h3>Forgetting service access and maintenance.</h3><p>Inspection windows, internal lights, swing-out panels, casters — these are what keep techs happy. Easy adds, big customer-experience wins.</p></div>
+    </div>
+    <div class="mistake">
+      <span class="x">5</span>
+      <div><h3>Focusing only on the enclosure, not what goes inside it.</h3><p>The cabinet is 30% of the line item. The accessories that make it work are the other 70%. Quote the full system.</p></div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>POWER-UP:</b> "Accessories solve problems customers often don't realize they're about to have." Use this exact phrase when up-selling.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">13</div>
+</section>
+
+<!-- ============= PAGE 14 — APPLY 03 · HOFFMAN vs RITTAL ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 03 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ HOFFMAN vs RITTAL · ACCESSORY POSITIONING</div>
+  <h2 style="margin-top:14px">Two anchor lines.<br>One right answer.</h2>
+  <p class="lead" style="margin-top:6px">Most accessory conversations resolve to Hoffman or Rittal. Know which one to lead with based on the customer's gear and price point.</p>
+
+  <table class="matrix" style="margin-top:18px">
+    <thead><tr><th class="row-h">Lead with…</th><th>When the customer is…</th><th>Strength</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">HOFFMAN (nVent)</td><td>U.S. industrial standard · existing Hoffman cabinets · cost-conscious</td><td class="info">Broadest stocked accessory range, easy substitution anchor.</td></tr>
+      <tr><td class="lbl">RITTAL</td><td>European-style automation · premium machine builds · modular cabinets</td><td class="info">Premium modular system, deep automation accessory line.</td></tr>
+      <tr><td class="lbl">Either (mix is fine)</td><td>Standard NEMA/IP, one-off accessory, replacement</td><td class="info">Compatible with most cabinet form factors.</td></tr>
+    </tbody>
+  </table>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px">
+    <div class="factbox" style="background:#DBEAFE;border-color:#1E40AF">
+      <h3 style="color:#1E40AF;font-size:14px">📌 Hoffman accessory hits</h3>
+      <p style="color:#1E40AF;font-size:12px;margin-top:6px">Backplates · gland plates · filter fans · door latches · wire duct · roof plates · sun shields · stainless brackets.</p>
+    </div>
+    <div class="factbox" style="background:#CCFBF1;border-color:#0D9488">
+      <h3 style="color:#134E4A;font-size:14px">📌 Rittal accessory hits</h3>
+      <p style="color:#134E4A;font-size:12px;margin-top:6px">Modular interior systems · TopTherm AC · climate control · cable entry frames · base/plinth accessories · LED lights.</p>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Don't mix accessory brands inside one cabinet without checking fit. Same nominal size ≠ same hole pattern.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">14</div>
+</section>
+
+<!-- ============= PAGE 15 — APPLY 04 · CROSS-SELL SCENARIOS ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 04 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ ACCESSORY CROSS-SELL CHEAT SHEET</div>
+  <h2 style="margin-top:14px">If they buy X,<br>also quote Y.</h2>
+  <p class="lead" style="margin-top:6px">These are the highest-hit-rate cross-sells. Quote them on every relevant order — most reps forget half of these and leave money on the table.</p>
+
+  <table class="matrix" style="margin-top:18px">
+    <thead><tr><th class="row-h">Customer ordered…</th><th>Always also quote…</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Painted steel cabinet</td><td>Paint touch-up kit, grounding kit</td><td class="info">Scratch-prevention + UL bond requirement.</td></tr>
+      <tr><td class="lbl">Outdoor cabinet</td><td>Sun shield, drip shield/rain hood, hole seals</td><td class="info">Sun + rain are the two killers.</td></tr>
+      <tr><td class="lbl">Stainless 4X for washdown</td><td>Compression latches, gland plate, hole seals</td><td class="info">Maintains 4X rating after install.</td></tr>
+      <tr><td class="lbl">PLC / drive cabinet</td><td>Filter fan + filter, wire duct, swing-out panel</td><td class="info">Heat + cable density + service access.</td></tr>
+      <tr><td class="lbl">Floor-mount cabinet</td><td>Pedestal / floor stand, casters or leveling feet</td><td class="info">Off the wet floor, level on uneven surface.</td></tr>
+      <tr><td class="lbl">Hazardous (NEMA 7)</td><td>Hazardous-rated heater, sealed conduit fittings</td><td class="info">Commercial substitutes are code violations here.</td></tr>
+      <tr><td class="lbl">Rack / data cabinet</td><td>Filler panels, vertical cable manager, fan tray</td><td class="info">Airflow + cable hygiene + U-space efficiency.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Each row is a 5-minute add to the quote and a 5x improvement in customer experience.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">15</div>
+</section>
+
+<!-- ============= PAGE 16 — APPLY 05 · CUSTOMER PHRASE TRANSLATION ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 05 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ CUSTOMER PHRASE TRANSLATION</div>
+  <h2 style="margin-top:14px">What they say.<br>What you sell.</h2>
+  <p class="lead" style="margin-top:6px">Customers describe the problem in their own words. Translate to the accessory before you reply.</p>
+
+  <div style="margin-top:18px">
+    <div class="translate-row" style="font-weight:800;font-size:11px;letter-spacing:.05em;text-transform:uppercase"><div style="background:transparent;color:#64748B">Customer says</div><div style="background:transparent;color:#64748B">It means</div><div style="background:transparent;color:#64748B">Quote it as</div></div>
+    <div class="translate-row"><div class="says">"PLC keeps overheating"</div><div class="means">Internal heat load too high</div><div class="quote-it">Filter fan, AC unit, or heat exchanger</div></div>
+    <div class="translate-row"><div class="says">"Cabinet sweats inside"</div><div class="means">Condensation</div><div class="quote-it">Heater (small wattage) + thermostat</div></div>
+    <div class="translate-row"><div class="says">"Cables get pinched at the entry"</div><div class="means">Sharp metal edge on drilled hole</div><div class="quote-it">Grommets · cable entry system</div></div>
+    <div class="translate-row"><div class="says">"Door doesn't seal anymore"</div><div class="means">Worn gasket or non-compression latch</div><div class="quote-it">Replacement gasket + compression latch</div></div>
+    <div class="translate-row"><div class="says">"Tech can't reach behind the panel"</div><div class="means">Service access issue</div><div class="quote-it">Swing-out panel · interior light</div></div>
+    <div class="translate-row"><div class="says">"Cabinet looks rusty after one summer"</div><div class="means">Paint failure + UV + moisture</div><div class="quote-it">Sun shield · paint touch-up · hole seals</div></div>
+    <div class="translate-row"><div class="says">"We're losing space in the rack"</div><div class="means">Disorganized cable + dead U-space</div><div class="quote-it">Vertical cable manager + filler panels</div></div>
+    <div class="translate-row"><div class="says">"Need to lock this for safety"</div><div class="means">LOTO or restricted access</div><div class="quote-it">Padlockable latch · keyed lock · lockout kit</div></div>
+    <div class="translate-row"><div class="says">"Floor is wet / has chemicals"</div><div class="means">Ground-level moisture damage</div><div class="quote-it">Pedestal / floor stand · drip shield</div></div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Repeat the customer's phrase, name the underlying problem, then quote the fix. Three steps. Always.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">16</div>
+</section>
+
+<!-- ============= PAGE 17 — APPLY 06 · COMMON SCENARIOS + HEAT HYDRA GATE ============= -->
+<section class="page">
+  <div class="page-tag" style="color:#9A3412">▸ APPLY · 06 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ COMMON SCENARIOS</div>
+  <h2 style="margin-top:14px">Four real calls.<br>Four right kits.</h2>
+  <p class="lead" style="margin-top:6px">Run the 3 customer questions through these. If you can quote each kit confidently, you're ready for the Hydra.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px">
+    <div class="factbox" style="background:#DBEAFE;border-color:#1E40AF">
+      <h3 style="color:#1E40AF;font-size:14px">🔵 Outdoor pump-station cabinet, hot direct sun</h3>
+      <p style="color:#1E40AF;font-size:12px;margin-top:6px"><b>→</b> Filter fan or small AC, <b>sun shield</b>, hole seals, paint kit, pedestal.<br>Service: inspection window + interior light.</p>
+    </div>
+    <div class="factbox" style="background:#CCFBF1;border-color:#0D9488">
+      <h3 style="color:#134E4A;font-size:14px">🟢 Food plant wash-down with bleach</h3>
+      <p style="color:#134E4A;font-size:12px;margin-top:6px"><b>→</b> Stainless brackets, <b>compression latches</b>, gland plate, hole seals, hinged window, stainless fasteners.</p>
+    </div>
+    <div class="factbox" style="background:#FEE2E2;border-color:#EF4444">
+      <h3 style="color:#7F1D1D;font-size:14px">🔴 Class I Div 1 hazardous gas zone</h3>
+      <p style="color:#7F1D1D;font-size:12px;margin-top:6px"><b>→</b> Hazardous-rated heater (no commercial subs), sealed conduit fittings, certified gland plates, NEMA 7 latches.</p>
+    </div>
+    <div class="factbox" style="background:#FEF3C7;border-color:#F59E0B">
+      <h3 style="color:#78350F;font-size:14px">🟡 Server / data cabinet rack</h3>
+      <p style="color:#78350F;font-size:12px;margin-top:6px"><b>→</b> Vertical cable manager, <b>filler panels</b>, fan tray, adapter brackets, grounding kit, keyboard shelf.</p>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    🏅 <b>APPLY LEVEL CLEARED — +90 XP · BADGE EARNED: 💼 "ACCESSORY-READY."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="heat-hydra">
+    <div class="icon">🐉</div>
+    <h3>The Heat Hydra blocks the path!</h3>
+    <div class="sub">5 questions on thermal, doors, protection &amp; sales · Defeat to unlock the Boss Fight</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">17</div>
+</section>
+
+<!-- ============= PAGE 18 — BOSS INTRO ============= -->
+<section class="page boss-page" data-section-id="finalboss" style="display:flex;flex-direction:column;align-items:center;text-align:center">
+  <div class="page-tag" style="color:#34D399">▸ TEST · BOSS FIGHT</div>
+  <div style="margin-top:.6in"><div class="level-banner lvl-test" style="margin:0 auto">🎯 TEST LEVEL</div></div>
+  <h2 style="margin-top:20px;font-size:54px">The Accessory<br>Gauntlet.</h2>
+  <svg width="320" height="320" viewBox="0 0 320 320" style="margin-top:14px">
+    <defs>
+      <linearGradient id="bossA" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#14B8A6"/>
+        <stop offset="100%" stop-color="#7F1D1D"/>
+      </linearGradient>
+      <filter id="bossglow3"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <g transform="translate(160 160)">
+      <circle r="120" fill="url(#bossA)" stroke="#FCD34D" stroke-width="3" filter="url(#bossglow3)"/>
+      <g fill="#0F172A">
+        <circle cx="-30" cy="-20" r="14"/>
+        <circle cx="30" cy="-20" r="14"/>
+      </g>
+      <g fill="#FCD34D">
+        <circle cx="-28" cy="-22" r="3"/>
+        <circle cx="32" cy="-22" r="3"/>
+      </g>
+      <path d="M -45 35 Q 0 65 45 35" fill="none" stroke="#FCD34D" stroke-width="3"/>
+      <g fill="url(#bossA)" stroke="#FCD34D" stroke-width="2">
+        <rect x="-10" y="-150" width="20" height="40"/>
+        <rect x="-10" y="110" width="20" height="40"/>
+        <rect x="-150" y="-10" width="40" height="20"/>
+        <rect x="110" y="-10" width="40" height="20"/>
+      </g>
+    </g>
+  </svg>
+  <div style="width:80%;margin-top:14px">
+    <div style="display:flex;justify-content:space-between;color:#FACC15;font-weight:800;font-size:11px;letter-spacing:.1em;margin-bottom:6px">
+      <span>ACCESSORY GAUNTLET · 60 HP</span><span>STATUS: HOSTILE</span>
+    </div>
+    <div class="hp-bar"><div class="fill"></div></div>
+  </div>
+  <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:18px 24px;margin-top:24px;width:80%">
+    <p style="color:#fff;font-size:14px"><b>30 questions · 2 XP each · 80%+ to win</b></p>
+    <p style="color:#94A3B8;font-size:13px;margin-top:8px">No peeking. Score honest. 24/30 = ⚙️ Accessory Mastery badge.</p>
+  </div>
+  <div class="page-num" style="color:#64748B">18</div>
+</section>
+
+<!-- ============= PAGE 19 — ROUND 1 (Q1-6) MOUNTING & ORG ============= -->
+<section class="page boss-page" data-quiz-page="1" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 1 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 1 · MOUNTING &amp; ORGANIZATION</div>
+    <div style="color:#34D399;font-weight:800;font-size:11px;letter-spacing:.1em">Q 1 → 6</div>
+  </div>
+  <div class="hp-bar" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="1"></div><div class="qcard" data-q="2"></div>
+    <div class="qcard" data-q="3"></div><div class="qcard" data-q="4"></div>
+    <div class="qcard" data-q="5"></div><div class="qcard" data-q="6"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">19</div>
+</section>
+
+<!-- ============= PAGE 20 — ROUND 2 (Q7-12) CABLE MANAGEMENT ============= -->
+<section class="page boss-page" data-quiz-page="2" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 2 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 2 · CABLE MANAGEMENT</div>
+    <div style="color:#34D399;font-weight:800;font-size:11px;letter-spacing:.1em">Q 7 → 12</div>
+  </div>
+  <div class="hp-bar r2" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="7"></div><div class="qcard" data-q="8"></div>
+    <div class="qcard" data-q="9"></div><div class="qcard" data-q="10"></div>
+    <div class="qcard" data-q="11"></div><div class="qcard" data-q="12"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">20</div>
+</section>
+
+<!-- ============= PAGE 21 — ROUND 3 (Q13-18) THERMAL ============= -->
+<section class="page boss-page" data-quiz-page="3" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 3 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 3 · THERMAL &amp; ENVIRONMENTAL</div>
+    <div style="color:#FBBF24;font-weight:800;font-size:11px;letter-spacing:.1em">Q 13 → 18</div>
+  </div>
+  <div class="hp-bar r3" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="13"></div><div class="qcard" data-q="14"></div>
+    <div class="qcard" data-q="15"></div><div class="qcard" data-q="16"></div>
+    <div class="qcard" data-q="17"></div><div class="qcard" data-q="18"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">21</div>
+</section>
+
+<!-- ============= PAGE 22 — ROUND 4 (Q19-24) DOORS & PROTECTION ============= -->
+<section class="page boss-page" data-quiz-page="4" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 4 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 4 · DOORS, ACCESS &amp; PROTECTION</div>
+    <div style="color:#F97316;font-weight:800;font-size:11px;letter-spacing:.1em">Q 19 → 24</div>
+  </div>
+  <div class="hp-bar r4" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="19"></div><div class="qcard" data-q="20"></div>
+    <div class="qcard" data-q="21"></div><div class="qcard" data-q="22"></div>
+    <div class="qcard" data-q="23"></div><div class="qcard" data-q="24"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">22</div>
+</section>
+
+<!-- ============= PAGE 23 — ROUND 5 (Q25-30) SALES & SCENARIOS ============= -->
+<section class="page boss-page" data-quiz-page="5" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 5 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 FINAL ROUND · SALES &amp; SCENARIOS</div>
+    <div style="color:#EF4444;font-weight:800;font-size:11px;letter-spacing:.1em">Q 25 → 30 · KILL SHOT</div>
+  </div>
+  <div class="hp-bar r5" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="25"></div><div class="qcard" data-q="26"></div>
+    <div class="qcard" data-q="27"></div><div class="qcard" data-q="28"></div>
+    <div class="qcard" data-q="29"></div><div class="qcard" data-q="30"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">23</div>
+</section>
+
+<!-- ============= PAGE 24 — ANSWER KEY / RESULTS ============= -->
+<section class="page" id="resultsPage" data-section-id="results">
+  <div class="page-tag" style="color:#10B981">▸ FINAL BOSS · RESULTS</div>
+  <div class="level-banner lvl-test" style="margin-top:.4in">🎯 ANSWER KEY · YOUR RESULTS</div>
+  <h2 style="margin-top:14px">🗝️ The Key.</h2>
+  <p class="lead print-only" style="display:none">Score yourself. Tier yourself. Earn the badge.</p>
+
+  <div id="liveResults" class="interactive-only" style="margin-top:18px;background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:18px;padding:24px;color:#fff">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+      <div>
+        <p style="color:#94A3B8;font-size:11px;letter-spacing:.18em;font-weight:800;margin:0">▸ YOUR LIVE SCORE</p>
+        <p style="font-family:'Bricolage Grotesque';font-size:54px;font-weight:800;color:#FACC15;margin-top:4px;line-height:1">
+          <span id="scoreCorrect">0</span><span style="color:#475569">/30</span>
+        </p>
+        <p style="font-size:13px;color:#CBD5E1;margin-top:4px">Total XP: <b id="scoreXP" style="color:#34D399">0</b> <span style="color:#475569">/ 280</span></p>
+      </div>
+      <div id="tierBadge" style="text-align:center"></div>
+    </div>
+    <div style="margin-top:14px;background:#334155;height:14px;border-radius:7px;overflow:hidden;border:1px solid #475569">
+      <div id="scoreBar" style="height:100%;width:0%;background:linear-gradient(90deg,#10B981,#34D399);transition:width .4s ease"></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button id="submitBtn" style="background:linear-gradient(135deg,#10B981,#047857);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📤 SUBMIT TO TRAINER</button>
+      <button id="copyBtn" style="background:#0D9488;color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📋 COPY RESULTS</button>
+      <button id="resetBtn" style="background:#1E293B;color:#FACC15;border:1px solid #475569;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">↻ RESTART QUIZ</button>
+    </div>
+    <div id="submitStatus" style="margin-top:10px;font-size:12px;font-weight:700;color:#94A3B8;min-height:18px;white-space:pre-wrap"></div>
+  </div>
+
+  <div class="answer-key-static">
+  <div class="key-grid">
+    <div class="key-cell"><span>Q1</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q2</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q3</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q4</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q5</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q6</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q7</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q8</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q9</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q10</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q11</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q12</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q13</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q14</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q15</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q16</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q17</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q18</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q19</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q20</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q21</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q22</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q23</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q24</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q25</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q26</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q27</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q28</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q29</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q30</span><span class="a">B</span></div>
+  </div>
+
+  <h3 style="margin-top:24px">🏆 Scoring tiers</h3>
+  <div class="tier tier-gold"><div class="medal">🥇</div><div><b>24–30 correct → ACCESSORY MASTERY.</b> Earn the ⚙️ badge. You quote full systems, not bare boxes.</div></div>
+  <div class="tier tier-silver"><div class="medal">🥈</div><div><b>18–23 correct → ACCESSORY-READY.</b> Re-run the APPLY level and re-fight.</div></div>
+  <div class="tier tier-bronze"><div class="medal">🥉</div><div><b>0–17 correct → BACK TO THE 5 GROUPS.</b> Re-read LEARN. The Hydra waits.</div></div>
+  </div><!-- /answer-key-static -->
+  <div class="page-num">24</div>
+</section>
+
+<!-- ============= PAGE 25 — LOOT DROP / CHEAT SHEET ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ LOOT DROP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">💎 POCKET CHEAT SHEET</div>
+  <h2 style="margin-top:14px">Tear-out card.</h2>
+  <p class="lead">Print it. Tape it next to your monitor. Reference forever.</p>
+
+  <div class="loot" style="margin-top:18px">
+    <div class="stamp">✂ TEAR HERE</div>
+
+    <h3>⚙️ The 5 Functional Groups</h3>
+    <p>1) Mounting &amp; Org · 2) Cable Mgmt · 3) Thermal &amp; Env · 4) Doors &amp; Access · 5) Protection &amp; Longevity</p>
+
+    <h3>📞 The 3 Customer Questions</h3>
+    <p>1) How do I mount my components? · 2) How do I manage cables and heat? · 3) How do I protect this enclosure long-term?</p>
+
+    <h3>🚨 The 5 Sales Mistakes</h3>
+    <p>1) Treating accessories as optional · 2) Selling parts without the application · 3) Ignoring heat / moisture / corrosion · 4) Forgetting service access · 5) Focusing on the box, not what's inside</p>
+
+    <h3>🏷️ Customer Translation</h3>
+    <p>"PLC overheating" = thermal · "Cabinet sweats" = small heater · "Cables pinched" = grommets · "Door doesn't seal" = compression latch + gasket · "Tech can't reach" = swing-out + light</p>
+
+    <h3>🏭 Anchor Brands</h3>
+    <p><b>Hoffman</b> = US industrial standard · <b>Rittal</b> = European premium / modular automation</p>
+
+    <h3>🛒 Always Quote With…</h3>
+    <p>Painted steel → paint kit + ground · Outdoor → sun shield + drip shield + hole seals · 4X washdown → compression latch + gland plate · PLC → fan + duct + swing-out · Hazardous → hazardous-rated heater (no subs)</p>
+
+    <h3>🧠 The Memory Hook</h3>
+    <p style="font-size:16px;font-weight:800;color:#0D9488">Mount it. Cable it. Cool it. Access it. Protect it.</p>
+  </div>
+  <div class="page-num">25</div>
+</section>
+
+<!-- ============= PAGE 26 — TROPHY CASE ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ FINAL XP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">🏅 TROPHY CASE</div>
+  <h2 style="margin-top:14px">Your earned XP.</h2>
+
+  <div class="trophy-grid">
+    <div class="trophy"><div class="icon">🧠</div><h3>FIVE GROUPS LOCKED</h3><div class="xp-num">+80 XP</div></div>
+    <div class="trophy"><div class="icon">🐙</div><h3>MINI BOSSES</h3><div class="xp-num">+50 XP</div></div>
+    <div class="trophy"><div class="icon">💼</div><h3>ACCESSORY-READY</h3><div class="xp-num">+90 XP</div></div>
+    <div class="trophy"><div class="icon">⚙️</div><h3>ACCESSORY MASTERY</h3><div class="xp-num">+60 XP</div></div>
+  </div>
+
+  <div class="factbox" style="margin-top:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="font-size:16px">TOTAL POSSIBLE XP</h3>
+      <div style="font-family:'Bricolage Grotesque';font-size:46px;font-weight:800;color:#CA8A04">280</div>
+    </div>
+    <hr class="faint">
+    <p style="font-size:12px;color:var(--slate-500)">Two product-mastery volumes down. Keep the streak: Ice Cube Breakers · Contactors · Motor Control · VFDs · Power Supplies up next.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:18px">
+    🔓 <b>NEXT UNLOCKS:</b> Continue the product Mastery series. Each volume builds on what you just learned here.
+  </div>
+  <div class="page-num">26</div>
+</section>
+
+<!-- ============= PAGE 27 — CLOSING ============= -->
+<section class="page closing-page" data-section-id="results">
+  <h1 style="font-size:84px">⚙️</h1>
+  <h1 style="margin-top:14px">Mount it. Cable it.<br>Cool it. Protect it.</h1>
+  <p style="font-size:20px;max-width:5.5in;margin:24px auto 0">Accessories are what turn a box into a working system. From here, every accessory call gets the right answer — and every cabinet quote becomes a complete system, not a bare metal shell.</p>
+
+  <div style="margin-top:40px;display:flex;gap:18px;flex-wrap:wrap;justify-content:center">
+    <div style="background:rgba(20,184,166,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(20,184,166,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#99F6E4">🧠 LEARN the groups</div>
+    <div style="background:rgba(20,184,166,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(20,184,166,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#99F6E4">🛠️ APPLY the script</div>
+    <div style="background:rgba(20,184,166,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(20,184,166,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#99F6E4">🎯 TEST your kits</div>
+  </div>
+
+  <div style="margin-top:auto;padding-top:30px;text-align:center">
+    <p style="color:#FACC15;font-size:13px;letter-spacing:.18em;font-weight:800">▸ NEXT UP</p>
+    <p style="font-size:14px;color:#fff;margin-top:6px">Ice Cube Breakers · Contactors · Motor Control · VFDs · Power Supplies</p>
+    <p style="margin-top:30px;color:#99F6E4;font-size:12px;font-weight:800;letter-spacing:.18em">RSP INDUSTRIAL · PRODUCT MASTERY · VOL 02</p>
+  </div>
+</section>
+
+<!-- ADMIN OVERLAY (browser only) -->
+<div id="adminOverlay" class="interactive-only"></div>
+
+<script src="../shared/module.js?v=editor-blocks-2-page-delete"></script>
+<script>
+RSPModule.init({
+  moduleId:   "enclosure-accessories",
+  moduleName: "Enclosure Accessories",
+  moduleIcon: "⚙️",
+
+  totalQuestions: 30,
+  passGold:       24,
+  passSilver:     18,
+  pageXpTotal:    170,   // 8 LEARN × 10 + 6 APPLY × 15
+  minibossXpTotal: 50,
+  adminPassword:  (window.RSP_CONFIG && window.RSP_CONFIG.adminPassword) || "",
+  pumbleWebhookUrl: "",
+  storageKey: "rsp_accessories_progress",
+
+  tierBadges: {
+    gold:   { name:"ACCESSORY MASTERY",    msg:"Quote full systems, not bare boxes." },
+    silver: { name:"ACCESSORY-READY",      msg:"Re-run APPLY level and re-fight." },
+    bronze: { name:"BACK TO THE 5 GROUPS", msg:"Re-read LEARN. The Hydra waits." }
+  },
+  tierSubmitText: {
+    gold:   "🥇 Mastery — Accessory-ready",
+    silver: "🥈 Solid — Re-run APPLY level",
+    bronze: "🥉 Needs Re-do — Back to LEARN"
+  },
+
+  // -------- THE 30-QUESTION BOSS FIGHT --------
+  quiz: [
+    // ROUND 1 — Mounting & Organization
+    {n:1,  q:"The five functional groups of enclosure accessories include all EXCEPT:", opts:{A:"Mounting &amp; Organization",B:"Cable Entry &amp; Cable Management",C:"Voltage Conversion",D:"Thermal &amp; Environmental Control"}, c:"C"},
+    {n:2,  q:"What's the purpose of a gland plate?", opts:{A:"Cool the enclosure",B:"A removable, gasketed surface for cable entry that maintains the NEMA rating",C:"Mount PLCs",D:"Block UV"}, c:"B"},
+    {n:3,  q:"Main benefit of a swing-out panel:", opts:{A:"Lowers cost",B:"Pivots outward for service while protecting internal components from unauthorized access",C:"Adds NEMA rating",D:"Replaces cable entry"}, c:"B"},
+    {n:4,  q:"Common materials for enclosure mounting brackets:", opts:{A:"Plastic only",B:"Steel, aluminum, or stainless steel",C:"Wood",D:"Concrete"}, c:"B"},
+    {n:5,  q:"What are rack filler panels for?", opts:{A:"Add weight",B:"Close unused rack spaces to improve airflow and protect equipment",C:"Provide power",D:"Replace shelves"}, c:"B"},
+    {n:6,  q:"Common enclosure fasteners include:", opts:{A:"Only bolts",B:"Screws, bolts, nuts, and washers in various sizes/materials",C:"Only zip-ties",D:"Concrete anchors only"}, c:"B"},
+
+    // ROUND 2 — Cable Management
+    {n:7,  q:"What is wire duct used for in control panels?", opts:{A:"Cooling",B:"A rigid pathway for routing and terminating wires inside enclosures",C:"Sealing",D:"Heating"}, c:"B"},
+    {n:8,  q:"Slotted wire duct is preferred when:", opts:{A:"High EMI protection is needed",B:"Frequent access to wires is required",C:"Cables never need to exit",D:"Outdoor weather is present"}, c:"B"},
+    {n:9,  q:"Vertical cable managers primarily:", opts:{A:"Organize cables at front/rear connection points",B:"Route cables along the height of an enclosure to save space and maintain bend radius",C:"Are cooling devices",D:"Replace fasteners"}, c:"B"},
+    {n:10, q:"Why is sealing unused enclosure openings important?", opts:{A:"Aesthetic only",B:"Maintains protection ratings, prevents corrosion, protects internal components",C:"Adds power",D:"Improves heat output"}, c:"B"},
+    {n:11, q:"Wire mesh trays and ladder racks are best used for:", opts:{A:"Sealing openings",B:"Routing larger cable bundles in open environments (ceilings, under-floor)",C:"Mounting PLCs",D:"Air conditioning"}, c:"B"},
+    {n:12, q:"Good cable management does ALL of the following EXCEPT:", opts:{A:"Prevents abrasion and strain",B:"Improves airflow",C:"Increases voltage drop",D:"Makes troubleshooting easier"}, c:"C"},
+
+    // ROUND 3 — Thermal & Environmental
+    {n:13, q:"What is a closed-loop cooling system?", opts:{A:"Uses external air for cooling",B:"Keeps the enclosure's internal air isolated from external environment, controlled internal temp",C:"Uses water cooling only",D:"Same as a fan"}, c:"B"},
+    {n:14, q:"Difference between exhaust fans and filter fans:", opts:{A:"None — they're the same",B:"Exhaust fans remove hot air; filter fans bring in filtered ambient air to maintain positive pressure",C:"Filter fans are louder",D:"Exhaust fans heat the enclosure"}, c:"B"},
+    {n:15, q:"Which heater is BEST for tight spaces or irregular surfaces?", opts:{A:"Radiant heater",B:"Silicone-rubber flexible heater",C:"Convection heater",D:"Resistance bar heater"}, c:"B"},
+    {n:16, q:"Solar shields primarily:", opts:{A:"Generate power",B:"Reduce solar heat gain on outdoor enclosures, lowering internal temperature rise",C:"Add NEMA rating",D:"Enable cable entry"}, c:"B"},
+    {n:17, q:"The biggest enemies of electronics inside an enclosure are:", opts:{A:"Color and brand",B:"Heat, moisture, and condensation",C:"Wire color",D:"Door swing direction"}, c:"B"},
+    {n:18, q:"Are enclosure heaters available for hazardous locations?", opts:{A:"No, never",B:"Yes — designed for hazardous locations and must meet specific safety standards",C:"Only Class III",D:"Only outdoors"}, c:"B"},
+
+    // ROUND 4 — Doors, Access & Protection
+    {n:19, q:"The Doors, Access &amp; Usability category covers:", opts:{A:"Power supplies",B:"Door accessories, hinges, latches, windows, lighting, HMI accessories",C:"Cooling fans only",D:"Mounting hardware"}, c:"B"},
+    {n:20, q:"Roof plates and canopies primarily:", opts:{A:"Replace doors",B:"Support accessory mounting, improve ventilation, enhance enclosure protection",C:"Power lights",D:"Add cable entry only"}, c:"B"},
+    {n:21, q:"The Protection &amp; Longevity category includes:", opts:{A:"PLC mounting only",B:"Corrosion inhibitors, paint/patch kits, rain hoods, base accessories, casters",C:"Air conditioners",D:"Wire ducts"}, c:"B"},
+    {n:22, q:"Inspection windows are useful because they:", opts:{A:"Add power",B:"Improve visibility for maintenance and reduce the need to open doors unnecessarily",C:"Cool the enclosure",D:"Replace gland plates"}, c:"B"},
+    {n:23, q:"Hole seals (stainless / rubber / plastic) resist:", opts:{A:"Voltage",B:"Moisture, corrosion, UV exposure",C:"Static electricity only",D:"Heat only"}, c:"B"},
+    {n:24, q:"The Protection &amp; Longevity category is especially important in:", opts:{A:"Indoor offices",B:"Outdoor, washdown, and corrosive applications",C:"Telecom only",D:"Server rooms only"}, c:"B"},
+
+    // ROUND 5 — Sales Skills & Scenarios
+    {n:25, q:"The three questions customers are really asking when they ask about accessories:", opts:{A:"Brand, color, price",B:"How do I mount? How do I manage cables/heat? How do I protect long-term?",C:"Voltage, current, resistance",D:"Indoor or outdoor?"}, c:"B"},
+    {n:26, q:"Which is one of the 5 common sales mistakes to avoid?", opts:{A:"Asking the application",B:"Treating accessories as optional",C:"Confirming heat load",D:"Recommending the right rating"}, c:"B"},
+    {n:27, q:"The two anchor brands for enclosure accessories at RSP are:", opts:{A:"Killark and Allied Moulded",B:"Hoffman and Rittal",C:"Phoenix Contact and Schneider",D:"Stahlin and Adalet"}, c:"B"},
+    {n:28, q:"Customer says \"PLC keeps overheating in our outdoor cabinet.\" First accessory to suggest:", opts:{A:"New backplate",B:"Thermal solution (filter fan, AC unit, or sun shield depending on environment)",C:"Bigger enclosure",D:"New door"}, c:"B"},
+    {n:29, q:"\"Cables are getting damaged at the entry point\" — fix:", opts:{A:"Bigger enclosure",B:"Grommets and proper cable entry / strain relief",C:"Sun shield",D:"Painted-steel substitution"}, c:"B"},
+    {n:30, q:"Final Takeaway: enclosure accessories are what make an enclosure:", opts:{A:"Cheaper",B:"Functional, reliable, and serviceable",C:"Smaller",D:"Outdoor-rated"}, c:"B"}
+  ],
+
+  // -------- MINI-BOSSES --------
+  minibosses: {
+    'cable-kraken': {
+      name: 'CABLE KRAKEN',
+      icon: '🐙',
+      tagline: 'Guardian of the Wire Ways',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"Gland plates are used to:", opts:{A:"Cool the enclosure",B:"Provide a removable, gasketed cable-entry surface that maintains NEMA rating",C:"Generate power",D:"Mount HMIs"}, c:"B"},
+        {q:"Slotted wire duct is best when:", opts:{A:"Outdoor only",B:"Frequent access to wires is needed",C:"High security required",D:"Hazardous location"}, c:"B"},
+        {q:"Vertical cable managers route cables:", opts:{A:"Around the door",B:"Along the height of the enclosure to save space",C:"Inside the gland plate",D:"Through the roof"}, c:"B"},
+        {q:"Rack filler panels:", opts:{A:"Add power",B:"Close unused rack spaces, improve airflow, protect equipment",C:"Replace fans",D:"Add weight"}, c:"B"},
+        {q:"Why seal unused enclosure openings?", opts:{A:"For aesthetics",B:"Maintain protection ratings, prevent corrosion, protect internal components",C:"Lower cost",D:"Add weight"}, c:"B"}
+      ]
+    },
+    'heat-hydra': {
+      name: 'HEAT HYDRA',
+      icon: '🐉',
+      tagline: 'Keeper of the Climate',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"Closed-loop cooling means:", opts:{A:"Uses external air",B:"Keeps internal air isolated from the external environment, controlled temp",C:"Has no thermostat",D:"Vented to atmosphere"}, c:"B"},
+        {q:"Filter fans bring in:", opts:{A:"Hot air",B:"Filtered ambient air to maintain positive pressure",C:"Water",D:"Refrigerant"}, c:"B"},
+        {q:"Silicone-rubber heaters are best for:", opts:{A:"Large open areas",B:"Tight spaces or irregular surfaces",C:"Replacing AC units",D:"Cooling"}, c:"B"},
+        {q:"The 3 questions customers are really asking:", opts:{A:"Indoor/outdoor, brand, color",B:"How mount, how manage cables/heat, how protect long-term",C:"NEMA, IP, UL",D:"Voltage, current, resistance"}, c:"B"},
+        {q:"Which is a sales mistake to avoid?", opts:{A:"Confirming heat load",B:"Treating accessories as optional",C:"Asking the application",D:"Recommending the right rating"}, c:"B"}
+      ]
+    }
+  },
+
+  // -------- SIDE MAP --------
+  mapSections: [
+    {id:'intro',     name:'Start',           icon:'🏁', meta:'Pages 1–3',     firstPage:1},
+    {id:'big-pic',   name:'Big Picture',     icon:'⚙️', meta:'Page 4',        firstPage:4},
+    {id:'mounting',  name:'Mounting & Org',  icon:'🧱', meta:'Pages 5–6',     firstPage:5},
+    {id:'cable',     name:'Cable Mgmt',      icon:'🔌', meta:'Pages 7–8',     firstPage:7},
+    {id:'thermal',   name:'Thermal & Doors', icon:'❄️', meta:'Pages 9–10',    firstPage:9},
+    {id:'protect',   name:'Protection',      icon:'🛡️', meta:'Page 11',       firstPage:11},
+    {id:'mb1',       name:'Cable Kraken',    icon:'🐙', meta:'Mini Boss',     firstPage:11, isBoss:true, bossId:'cable-kraken'},
+    {id:'apply-1',   name:'Customer Qs',     icon:'💬', meta:'Pages 12–13',   firstPage:12},
+    {id:'apply-2',   name:'Cross-Sell',      icon:'💼', meta:'Pages 14–17',   firstPage:14},
+    {id:'mb2',       name:'Heat Hydra',      icon:'🐉', meta:'Mini Boss',     firstPage:17, isBoss:true, bossId:'heat-hydra'},
+    {id:'finalboss', name:'Quote Gauntlet',  icon:'🐲', meta:'30 Questions',  firstPage:18, isBoss:true, isFinal:true},
+    {id:'results',   name:'Results',         icon:'🏆', meta:'Trophy Case',   firstPage:24}
+  ],
+
+  pageRanges: [
+    {section:'intro',     from:1,  to:3},
+    {section:'big-pic',   from:4,  to:4},
+    {section:'mounting',  from:5,  to:6},
+    {section:'cable',     from:7,  to:8},
+    {section:'thermal',   from:9,  to:10},
+    {section:'protect',   from:11, to:11},
+    {section:'apply-1',   from:12, to:13},
+    {section:'apply-2',   from:14, to:17},
+    {section:'finalboss', from:18, to:23},
+    {section:'results',   from:24, to:27}
+  ]
+});
+</script>
+
+</body>
+</html>

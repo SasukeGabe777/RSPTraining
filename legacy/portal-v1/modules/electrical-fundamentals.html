@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Electrical Fundamentals — RSP Industrial Prerequisite Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/module.css?v=editor-blocks-1">
+<style>
+  /* === ELECTRICAL FUNDAMENTALS · AMBER/BLUE HYBRID THEME OVERRIDES === */
+  /* Cover & chrome stay blue (legacy gradient: #1E40AF → #0F172A), */
+  /* with amber accents on cover sub/tagline and amber LEARN identity. */
+  :root{
+    --theme-primary:#1E40AF;
+    --theme-primary-deep:#1E1B4B;
+    --theme-accent:#FDE68A;
+    --theme-obj-num:#CA8A04;
+    --theme-login-btn-1:#1E40AF;
+    --theme-login-btn-2:#3B82F6;
+    --theme-login-pretitle:#1E40AF;
+    --theme-login-focus:#1E40AF;
+    --theme-side-bg:#1E1B4B;
+    --theme-side-border:#312E81;
+    --theme-side-toggle:#312E81;
+    --theme-loot-border:#1E40AF;
+    --theme-loot-bg-1:#EFF6FF;
+    --theme-loot-bg-2:#DBEAFE;
+    --theme-loot-h3:#1E40AF;
+    --theme-admin-btn:#1E40AF;
+    --theme-admin-loginbox-border:#312E81;
+  }
+
+  /* === SHARED-CSS OVERRIDES (amber LEARN identity) === */
+  .lvl-learn{background:#FEF3C7;color:#78350F}
+  .biglist .bullet{background:#FEF3C7;color:#78350F}
+  .level-card.learn{background:linear-gradient(160deg,#CA8A04,#78350F)}
+  .level-card.apply{background:linear-gradient(160deg,#F97316,#C2410C)}
+
+  /* === MODULE-SPECIFIC COMPONENTS === */
+
+  .mono{font-family:'JetBrains Mono',monospace}
+
+  /* Water analogy */
+  .analogy-box{background:linear-gradient(160deg,#DBEAFE,#BFDBFE);border-radius:18px;padding:22px;border:2px solid #3B82F6}
+
+  /* Ohm's triangle wrapper */
+  .ohm-tri{display:block;margin:20px auto}
+
+  /* Component cards (amber) */
+  .comp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px}
+  .comp{background:linear-gradient(160deg,#FEF3C7,#FDE68A);border-radius:14px;padding:16px;border:2px solid #F59E0B}
+  .comp h3{font-size:16px;color:#78350F}
+  .comp p{font-size:12px;color:#78350F;font-weight:600}
+
+  /* Phase cards */
+  .phase-card{padding:18px;border-radius:14px;flex:1}
+  .phase-1p{background:linear-gradient(160deg,#FEF3C7,#FDE68A)}
+  .phase-3p{background:linear-gradient(160deg,#DBEAFE,#BFDBFE)}
+
+  /* Split do/don't columns */
+  .split{display:flex;border-radius:20px;overflow:hidden;height:6.4in;border:1px solid var(--slate-200)}
+  .split .do{flex:1;background:linear-gradient(160deg,#ECFDF5,#D1FAE5);padding:32px}
+  .split .dont{flex:1;background:linear-gradient(160deg,#FEF2F2,#FEE2E2);padding:32px}
+  .split h3{font-size:28px;margin-bottom:14px}
+  .split ul{list-style:none}
+  .split li{padding:8px 0;font-size:14px;font-weight:600;display:flex;gap:8px}
+
+  /* Script scenes (orange numbers) */
+  .scene{display:flex;gap:14px;background:var(--slate-50);padding:16px;border-radius:14px;margin-bottom:10px;border:1px solid var(--slate-200)}
+  .scene .num{flex:0 0 44px;height:44px;border-radius:50%;background:#F97316;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:18px;font-family:'Bricolage Grotesque'}
+  .scene .body h3{font-size:15px;margin-bottom:4px}
+  .scene .body p{font-size:13px}
+  .scene .play{font-size:13px;font-weight:700;color:#F97316;margin-top:4px}
+
+  /* Radar quote (buying signals page) */
+  .radar-quote{background:linear-gradient(135deg,#1E293B,#334155);color:#FBBF24;padding:14px 18px;border-radius:12px;font-style:italic;font-size:14px;font-weight:600;margin-bottom:8px;display:flex;gap:10px;align-items:center}
+</style>
+</head>
+<body>
+
+
+<!-- BACK TO PORTAL LINK (browser only) -->
+<a href="../index.html" id="portalLink" class="interactive-only">← PORTAL</a>
+
+<!-- SIDE PROGRESS MAP (browser only) -->
+<aside id="sideMap" class="interactive-only">
+  <button class="map-toggle" id="mapToggle" title="Toggle map">‹</button>
+  <div class="map-title">⚡ FLUENCY MAP</div>
+  <div class="map-hint">YOUR JOURNEY</div>
+  <div class="map-path" id="mapPath"></div>
+</aside>
+
+<!-- MINI-BOSS MODAL (browser only) -->
+<div id="minibossOverlay" class="interactive-only">
+  <div class="miniboss-modal" id="minibossModal"></div>
+</div>
+
+<!-- ADMIN OVERLAY (browser only, ?admin=true) -->
+<div id="adminOverlay" class="interactive-only"></div>
+
+<!-- LOGIN OVERLAY (browser only) -->
+<div id="loginOverlay" class="interactive-only">
+  <div class="login-card">
+    <div class="bolt-bg">⚡</div>
+    <div class="pretitle">RSP INDUSTRIAL · PREREQUISITE TRAINING</div>
+    <h1>Electrical<br>Fundamentals</h1>
+    <p class="sub">Sign in to track your XP and unlock the Boss Fight.</p>
+    <label for="loginName">Your name</label>
+    <input type="text" id="loginName" placeholder="e.g. Gabe Ebmeyer" autocomplete="off"/>
+    <label for="loginId">Employee ID <span style="font-weight:500;color:#94A3B8;letter-spacing:0">(optional)</span></label>
+    <input type="text" id="loginId" placeholder="e.g. RSP-1234" autocomplete="off"/>
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn">Begin Training →</button>
+    <p class="footer-note">Your progress is saved on this device. No data leaves your browser.</p>
+  </div>
+</div>
+
+<!-- STICKY XP TRACKER (browser only) -->
+<div id="xpTracker" class="interactive-only">
+  <div>
+    <div class="username" id="trackerUser">⚡ READY</div>
+    <div class="label">XP EARNED</div>
+    <div><span class="num" id="trackerXP">0</span><span style="color:#475569;font-size:14px" id="trackerTotal"> / 460</span></div>
+    <span class="reset-link" id="resetProgress">↻ Reset</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+    <div style="display:flex;gap:10px;font-size:10px;color:#94A3B8;white-space:nowrap;flex-wrap:wrap">
+      <span>📖&nbsp;<b style="color:#fff"><span id="trackerPages">0</span>/27</b></span>
+      <span>🎯&nbsp;<b style="color:#fff"><span id="trackerAnswered">0</span>/40</b></span>
+      <span>✓&nbsp;<b style="color:#34D399"><span id="trackerCorrect">0</span></b></span>
+    </div>
+    <div class="bar"><div class="fill" id="trackerFill"></div></div>
+  </div>
+</div>
+
+<!-- ===================== PAGE 1 — COVER ===================== -->
+<section class="page cover">
+  <div class="ribbon">
+    <span class="badge">RSP INDUSTRIAL</span>
+    <span class="badge">PREREQUISITE TRAINING</span>
+  </div>
+  <svg width="600" height="600" viewBox="0 0 600 600" style="position:absolute;right:-100px;top:60px;opacity:.95">
+    <defs>
+      <linearGradient id="bolt" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#FEF3C7"/>
+        <stop offset="50%" stop-color="#FACC15"/>
+        <stop offset="100%" stop-color="#CA8A04"/>
+      </linearGradient>
+      <filter id="glow"><feGaussianBlur stdDeviation="14" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <path d="M 320 60 L 200 280 L 290 280 L 220 540 L 420 240 L 310 240 L 380 60 Z" fill="url(#bolt)" stroke="#FEF3C7" stroke-width="3" filter="url(#glow)"/>
+    <circle cx="120" cy="180" r="3" fill="#FACC15"/>
+    <circle cx="480" cy="120" r="2" fill="#FACC15"/>
+    <circle cx="510" cy="380" r="3" fill="#FACC15"/>
+    <circle cx="80" cy="420" r="2" fill="#FACC15"/>
+    <circle cx="450" cy="500" r="3" fill="#FACC15"/>
+  </svg>
+  <div style="position:absolute;bottom:2.4in;left:.5in;right:.5in">
+    <div class="pill" style="background:rgba(250,204,21,.2);color:#FACC15;border:1px solid rgba(250,204,21,.4);margin-bottom:18px">FOUNDATIONAL · ZERO BACKGROUND REQUIRED</div>
+    <h1>ELECTRICAL<br>FUNDAMENTALS</h1>
+    <div class="sub">You don't need to be an electrician. You need to sound like you've been around them for five years.</div>
+  </div>
+  <div class="tagline">
+    <div>Learn it. Apply it. Test it. Sell it.</div>
+    <div>RSP · PREREQ 01</div>
+  </div>
+</section>
+
+<!-- ===================== PAGE 2 — THE PROMISE ===================== -->
+<section class="page">
+  <div class="page-tag">▸ THE PROMISE</div>
+  <div style="display:flex;gap:30px;margin-top:.5in;height:8.6in">
+    <div style="flex:1;display:flex;flex-direction:column">
+      <h2>Read this.<br>Stop bluffing.</h2>
+      <p class="lead" style="margin-top:14px">By the last page you will be able to:</p>
+      <ul class="objectives" style="margin-top:18px">
+        <li><span class="obj-num">1</span><span>Explain voltage, current, and resistance using a metaphor anyone gets.</span></li>
+        <li><span class="obj-num">2</span><span>Tell single-phase from three-phase without Googling.</span></li>
+        <li><span class="obj-num">3</span><span>Translate "I need a 240 single-phase" into the right product.</span></li>
+        <li><span class="obj-num">4</span><span>Spot the 5 red flags that mean "stop, escalate, don't wing it."</span></li>
+        <li><span class="obj-num">5</span><span>Run the universal 5-question script on any electrical quote.</span></li>
+        <li><span class="obj-num">6</span><span>Pass a 40-question Boss Fight with 80%+.</span></li>
+      </ul>
+      <div class="powerup" style="margin-top:20px">
+        💡 <b>The promise:</b> 90 minutes of reading. A career's worth of confidence.
+      </div>
+    </div>
+    <div style="flex:0 0 2.4in;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="100" fill="none" stroke="#FACC15" stroke-width="6"/>
+        <circle cx="110" cy="110" r="75" fill="none" stroke="#FACC15" stroke-width="6" opacity=".6"/>
+        <circle cx="110" cy="110" r="50" fill="none" stroke="#FACC15" stroke-width="6" opacity=".4"/>
+        <circle cx="110" cy="110" r="25" fill="#FACC15"/>
+        <text x="110" y="118" text-anchor="middle" font-size="22" fill="#0F172A" font-weight="800" font-family="Bricolage Grotesque">XP</text>
+      </svg>
+      <div style="background:var(--ink);color:#FCD34D;padding:10px 18px;border-radius:999px;font-weight:800;font-size:13px;letter-spacing:.1em">EARN: ⚡ MASTER</div>
+    </div>
+  </div>
+  <div class="page-num">02</div>
+</section>
+
+<!-- ===================== PAGE 3 — HOW TO PLAY ===================== -->
+<section class="page">
+  <div class="page-tag">▸ HOW TO PLAY</div>
+  <h2 style="margin-top:.4in">Three levels.<br>One badge.</h2>
+  <div style="display:flex;gap:14px;margin-top:30px">
+    <div class="level-card learn">
+      <div class="num">01</div>
+      <h3>LEARN</h3>
+      <p>15 pages. The mental model. The vocab. The metaphors that make every other concept easy.</p>
+      <div class="xp-pill">+10 XP / page</div>
+    </div>
+    <div class="level-card apply">
+      <div class="num">02</div>
+      <h3>APPLY</h3>
+      <p>12 pages. The rep-on-the-phone layer. Customer translation, scripts, red flags, and mistakes.</p>
+      <div class="xp-pill">+15 XP / page</div>
+    </div>
+    <div class="level-card test">
+      <div class="num">03</div>
+      <h3>TEST</h3>
+      <p>40-question Boss Fight. Score 80%+ for the ⚡ Electrical Fluency badge.</p>
+      <div class="xp-pill">+2 XP / correct</div>
+    </div>
+  </div>
+  <div class="powerup" style="margin-top:30px">
+    💡 <b>Each page ends with a Power-Up</b> — a one-liner you can use on the next call.
+  </div>
+  <div class="page-num">03</div>
+</section>
+
+<!-- ===================== PAGE 4 — WATER ANALOGY ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#CA8A04">▸ LEARN · 01 OF 15</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ LEARN LEVEL · THE MASTER METAPHOR</div>
+  <h2 style="margin-top:14px">Electricity is just<br>water in a pipe.</h2>
+  <p class="lead" style="margin-top:8px">If you remember nothing else from this book, remember this analogy. Every concept you'll meet is somewhere in this picture.</p>
+
+  <div class="analogy-box" style="margin-top:20px">
+    <svg width="100%" height="240" viewBox="0 0 700 240">
+      <!-- Water tower -->
+      <rect x="40" y="20" width="100" height="140" rx="6" fill="#3B82F6" stroke="#1E40AF" stroke-width="3"/>
+      <rect x="50" y="40" width="80" height="100" fill="#60A5FA"/>
+      <text x="90" y="100" text-anchor="middle" font-size="13" fill="#fff" font-weight="800">PRESSURE</text>
+      <text x="90" y="120" text-anchor="middle" font-size="11" fill="#FEF3C7" font-weight="800">= VOLTAGE</text>
+      <!-- vertical pipe down -->
+      <rect x="80" y="160" width="20" height="40" fill="#475569"/>
+      <!-- horizontal pipe -->
+      <rect x="100" y="180" width="500" height="22" fill="#94A3B8" stroke="#334155" stroke-width="2"/>
+      <rect x="100" y="180" width="500" height="22" fill="url(#flowGrad)" opacity=".6"/>
+      <defs>
+        <linearGradient id="flowGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#3B82F6"/>
+          <stop offset="100%" stop-color="#60A5FA"/>
+        </linearGradient>
+      </defs>
+      <!-- flow arrows -->
+      <polygon points="240,191 260,185 260,197" fill="#FEF3C7"/>
+      <polygon points="380,191 400,185 400,197" fill="#FEF3C7"/>
+      <polygon points="520,191 540,185 540,197" fill="#FEF3C7"/>
+      <text x="350" y="225" text-anchor="middle" font-size="13" fill="#1E40AF" font-weight="800">FLOW = CURRENT (AMPS)</text>
+      <!-- restriction = resistance -->
+      <rect x="430" y="170" width="40" height="42" fill="#EF4444" stroke="#7F1D1D" stroke-width="2"/>
+      <text x="450" y="160" text-anchor="middle" font-size="11" fill="#7F1D1D" font-weight="800">PIPE WIDTH</text>
+      <text x="450" y="148" text-anchor="middle" font-size="11" fill="#7F1D1D" font-weight="800">= RESISTANCE</text>
+      <!-- output -->
+      <circle cx="640" cy="191" r="22" fill="#FBBF24" stroke="#92400E" stroke-width="3"/>
+      <text x="640" y="196" text-anchor="middle" font-size="11" fill="#0F172A" font-weight="800">DEVICE</text>
+    </svg>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px">
+    <div class="factbox" style="text-align:center">
+      <div style="font-size:32px">💧</div>
+      <h3 style="font-size:16px">VOLTAGE</h3>
+      <p style="font-size:12px;margin-top:4px">The <b>pressure</b> pushing the water.</p>
+    </div>
+    <div class="factbox" style="text-align:center">
+      <div style="font-size:32px">🌊</div>
+      <h3 style="font-size:16px">CURRENT</h3>
+      <p style="font-size:12px;margin-top:4px">The <b>flow rate</b> of the water.</p>
+    </div>
+    <div class="factbox" style="text-align:center">
+      <div style="font-size:32px">🚧</div>
+      <h3 style="font-size:16px">RESISTANCE</h3>
+      <p style="font-size:12px;margin-top:4px">How <b>narrow</b> the pipe is.</p>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Pressure pushes. Flow flows. Pipe restricts. The rest is just math.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">04</div>
+</section>
+
+<!-- ===================== PAGE 5 — VOLTAGE ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#CA8A04">▸ LEARN · 02 OF 15</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ VOLTAGE = PRESSURE</div>
+  <h2 style="margin-top:14px">Voltage (V) —<br>the push.</h2>
+  <p class="lead" style="margin-top:6px">How hard the electricity is being shoved through the wire. Measured in <b>volts</b>.</p>
+
+  <div style="display:flex;gap:18px;margin-top:20px">
+    <div style="flex:1">
+      <div class="analogy-box">
+        <svg width="100%" height="180" viewBox="0 0 300 180">
+          <!-- Low pressure tank -->
+          <rect x="20" y="40" width="60" height="100" fill="#60A5FA" stroke="#1E40AF" stroke-width="2"/>
+          <rect x="20" y="100" width="60" height="40" fill="#3B82F6"/>
+          <text x="50" y="160" text-anchor="middle" font-size="11" fill="#1E40AF" font-weight="800">LOW PSI</text>
+          <text x="50" y="174" text-anchor="middle" font-size="10" fill="#1E40AF">120V outlet</text>
+          <!-- High pressure tank -->
+          <rect x="180" y="20" width="80" height="120" fill="#60A5FA" stroke="#1E40AF" stroke-width="3"/>
+          <rect x="180" y="40" width="80" height="100" fill="#1E40AF"/>
+          <text x="220" y="160" text-anchor="middle" font-size="11" fill="#1E40AF" font-weight="800">HIGH PSI</text>
+          <text x="220" y="174" text-anchor="middle" font-size="10" fill="#1E40AF">480V industrial</text>
+          <!-- arrow -->
+          <line x1="100" y1="90" x2="160" y2="90" stroke="#FACC15" stroke-width="3"/>
+          <polygon points="160,82 175,90 160,98" fill="#FACC15"/>
+          <text x="130" y="80" text-anchor="middle" font-size="10" fill="#0F172A" font-weight="800">MORE PUSH</text>
+        </svg>
+      </div>
+    </div>
+    <div style="flex:1">
+      <h3 style="font-size:18px;margin-bottom:10px">In sales terms:</h3>
+      <ul class="biglist">
+        <li><span class="bullet">▸</span><b>Higher voltage</b> = more force. Industrial machines run on more force than houseplants.</li>
+        <li><span class="bullet">▸</span>Voltage is the first thing you ask. Wrong voltage = wrong product. Always.</li>
+        <li><span class="bullet">▸</span><b>Common voltages:</b> 24 VDC, 120 VAC, 240 VAC, 480 VAC.</li>
+        <li><span class="bullet">▸</span>Symbol: <b>V</b>. Sometimes <b>E</b> (for "electromotive force").</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:18px;background:linear-gradient(160deg,#FEF3C7,#FDE68A);border-color:#F59E0B">
+    <h3 style="color:#78350F;font-size:16px">🎯 What customers say</h3>
+    <p style="color:#78350F;margin-top:6px"><i>"I need 240."</i> · <i>"It's a 480 system."</i> · <i>"Can you spec a 24-volt power supply?"</i></p>
+    <p style="color:#78350F;margin-top:4px;font-size:13px"><b>That number is voltage.</b> Always confirm AC or DC.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "What voltage?" is question #1. Always. No exceptions.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">05</div>
+</section>
+
+<!-- ===================== PAGE 6 — CURRENT / AMPS ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#CA8A04">▸ LEARN · 03 OF 15</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ CURRENT = FLOW</div>
+  <h2 style="margin-top:14px">Current (I) —<br>how much is moving.</h2>
+  <p class="lead" style="margin-top:6px">The <b>volume</b> of electricity flowing past a point per second. Measured in <b>amps (A)</b>.</p>
+
+  <div class="analogy-box" style="margin-top:18px">
+    <svg width="100%" height="160" viewBox="0 0 700 160">
+      <!-- Skinny pipe -->
+      <rect x="40" y="60" width="280" height="14" fill="#94A3B8" stroke="#334155" stroke-width="2"/>
+      <polygon points="160,67 170,63 170,71" fill="#fff"/>
+      <text x="180" y="50" text-anchor="middle" font-size="11" fill="#1E40AF" font-weight="800">2 AMPS</text>
+      <text x="180" y="100" text-anchor="middle" font-size="10" fill="#475569">(LED, sensor)</text>
+      <!-- Fat pipe -->
+      <rect x="380" y="40" width="280" height="60" fill="#94A3B8" stroke="#334155" stroke-width="2"/>
+      <polygon points="460,55 480,45 480,65" fill="#fff"/>
+      <polygon points="460,75 480,65 480,85" fill="#fff"/>
+      <polygon points="460,95 480,85 480,105" fill="#fff"/>
+      <text x="520" y="32" text-anchor="middle" font-size="11" fill="#1E40AF" font-weight="800">200 AMPS</text>
+      <text x="520" y="125" text-anchor="middle" font-size="10" fill="#475569">(motor, oven)</text>
+    </svg>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px">
+    <div class="factbox">
+      <h3 style="font-size:16px">⚡ The number that matters</h3>
+      <p style="font-size:13px;margin-top:4px">Amps tell you <b>how much work the wire is doing</b>. More amps = thicker wire, bigger breaker, more heat.</p>
+    </div>
+    <div class="factbox">
+      <h3 style="font-size:16px">📏 Common ranges</h3>
+      <p style="font-size:13px;margin-top:4px">Sensor: 0.1 A. PLC: 1–2 A. Pilot light: 0.05 A. Small motor: 5–20 A. Big motor: 100+ A. House service: 200 A.</p>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FEE2E2,#FECACA);border-color:#EF4444">
+    <h3 style="color:#7F1D1D;font-size:16px">🚨 Why current matters in sales</h3>
+    <p style="color:#7F1D1D;margin-top:6px;font-size:13px">Wires, breakers, contactors, fuses, and disconnects are all sized to amps. <b>If the customer says "10 amp circuit," they're telling you what to spec.</b></p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "What's the current draw?" is question #2. Right after voltage.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">06</div>
+</section>
+
+<!-- ===================== PAGE 7 — RESISTANCE ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#CA8A04">▸ LEARN · 04 OF 15</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ RESISTANCE = THE PIPE</div>
+  <h2 style="margin-top:14px">Resistance (R) —<br>what fights the flow.</h2>
+  <p class="lead" style="margin-top:6px">How much the pipe pushes back against the water. Measured in <b>ohms (Ω)</b>.</p>
+
+  <div style="display:flex;gap:18px;margin-top:20px">
+    <div style="flex:1">
+      <div class="analogy-box">
+        <svg width="100%" height="200" viewBox="0 0 320 200">
+          <!-- thick conductor -->
+          <rect x="20" y="40" width="280" height="50" fill="#FACC15" stroke="#92400E" stroke-width="2"/>
+          <text x="160" y="35" text-anchor="middle" font-size="11" fill="#0F172A" font-weight="800">COPPER WIRE = LOW RESISTANCE</text>
+          <polygon points="80,55 100,55 100,50 110,65 100,80 100,75 80,75" fill="#0F172A"/>
+          <polygon points="180,55 200,55 200,50 210,65 200,80 200,75 180,75" fill="#0F172A"/>
+          <polygon points="220,55 240,55 240,50 250,65 240,80 240,75 220,75" fill="#0F172A"/>
+          <!-- resistor -->
+          <rect x="20" y="120" width="280" height="50" fill="#94A3B8" stroke="#334155" stroke-width="2"/>
+          <rect x="120" y="120" width="80" height="50" fill="#EF4444"/>
+          <text x="160" y="115" text-anchor="middle" font-size="11" fill="#0F172A" font-weight="800">RESISTOR = HIGH RESISTANCE</text>
+          <polygon points="40,135 60,135 60,130 70,145 60,160 60,155 40,155" fill="#0F172A"/>
+          <text x="160" y="190" text-anchor="middle" font-size="10" fill="#475569">narrow = restricts flow</text>
+        </svg>
+      </div>
+    </div>
+    <div style="flex:1">
+      <h3 style="font-size:18px;margin-bottom:10px">Three things to know:</h3>
+      <ul class="biglist">
+        <li><span class="bullet">1</span><b>Conductors</b> (copper, aluminum) → low resistance, electricity flows easily.</li>
+        <li><span class="bullet">2</span><b>Insulators</b> (plastic, rubber, air) → high resistance, electricity is blocked.</li>
+        <li><span class="bullet">3</span><b>Resistors</b> are components that intentionally restrict flow.</li>
+      </ul>
+      <div class="powerup" style="margin-top:14px">
+        💡 The wire's job: <b>be a great conductor</b>. The insulation's job: <b>be a great insulator</b>.
+      </div>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:18px;background:linear-gradient(160deg,#FEF3C7,#FDE68A);border-color:#F59E0B">
+    <h3 style="color:#78350F;font-size:16px">🌡️ Heat happens here</h3>
+    <p style="color:#78350F;margin-top:6px;font-size:13px">When current flows through resistance, energy turns into <b>heat</b>. Too much current through a too-resistive wire = fire. That's the whole reason breakers and fuses exist.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Bad connections = high resistance = hot spots = burned panels. Tightness matters.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">07</div>
+</section>
+
+<!-- ===================== PAGE 8 — OHM'S LAW ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#CA8A04">▸ LEARN · 05 OF 15</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ OHM'S LAW · THE MASTER EQUATION</div>
+  <h2 style="margin-top:14px">V = I × R</h2>
+  <p class="lead" style="margin-top:6px">Three letters. One equation. The Rosetta Stone of electricity.</p>
+
+  <!-- Ohm's triangle -->
+  <svg class="ohm-tri" width="280" height="240" viewBox="0 0 280 240">
+    <polygon points="140,20 270,220 10,220" fill="url(#triGrad)" stroke="#92400E" stroke-width="3"/>
+    <defs>
+      <linearGradient id="triGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#FEF3C7"/>
+        <stop offset="100%" stop-color="#FACC15"/>
+      </linearGradient>
+    </defs>
+    <line x1="60" y1="140" x2="220" y2="140" stroke="#92400E" stroke-width="2"/>
+    <line x1="140" y1="140" x2="140" y2="220" stroke="#92400E" stroke-width="2"/>
+    <text x="140" y="100" text-anchor="middle" font-size="48" fill="#0F172A" font-weight="800" font-family="Bricolage Grotesque">V</text>
+    <text x="90" y="195" text-anchor="middle" font-size="40" fill="#0F172A" font-weight="800" font-family="Bricolage Grotesque">I</text>
+    <text x="190" y="195" text-anchor="middle" font-size="40" fill="#0F172A" font-weight="800" font-family="Bricolage Grotesque">R</text>
+  </svg>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px">
+    <div class="factbox" style="text-align:center">
+      <p class="mono" style="font-size:22px;color:#1E40AF">V = I × R</p>
+      <p style="font-size:12px;margin-top:6px">Cover V → multiply</p>
+    </div>
+    <div class="factbox" style="text-align:center">
+      <p class="mono" style="font-size:22px;color:#1E40AF">I = V ÷ R</p>
+      <p style="font-size:12px;margin-top:6px">Cover I → divide</p>
+    </div>
+    <div class="factbox" style="text-align:center">
+      <p class="mono" style="font-size:22px;color:#1E40AF">R = V ÷ I</p>
+      <p style="font-size:12px;margin-top:6px">Cover R → divide</p>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:18px">
+    <h3 style="font-size:16px">📞 Real-world example</h3>
+    <p style="font-size:13px;margin-top:6px">Customer says: <i>"I've got a 120V circuit and a 12-ohm load. What current does it draw?"</i></p>
+    <p class="mono" style="font-size:18px;margin-top:8px;color:#10B981">I = 120 ÷ 12 = <b>10 amps</b></p>
+    <p style="font-size:12px;margin-top:6px;color:var(--slate-500)">Now you know to spec at least a 15A breaker (NEC says 125% margin).</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> If you know any two — voltage, current, resistance — you know the third. That's the whole superpower.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">08</div>
+</section>
+
+<!-- ===================== PAGE 9 — POWER ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#CA8A04">▸ LEARN · 06 OF 15</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ POWER · WHAT GETS PAID FOR</div>
+  <h2 style="margin-top:14px">P = V × I</h2>
+  <p class="lead" style="margin-top:6px">Power is the <b>actual work</b> being done. Measured in <b>watts (W)</b>. It's what your electric bill charges for.</p>
+
+  <div style="display:flex;gap:18px;margin-top:20px;align-items:center">
+    <div style="flex:1;text-align:center">
+      <svg width="220" height="180" viewBox="0 0 220 180">
+        <!-- light bulb -->
+        <circle cx="110" cy="80" r="50" fill="#FEF3C7" stroke="#CA8A04" stroke-width="3"/>
+        <circle cx="110" cy="80" r="35" fill="#FACC15" opacity=".7"/>
+        <rect x="95" y="125" width="30" height="20" fill="#94A3B8" stroke="#334155" stroke-width="2"/>
+        <rect x="100" y="145" width="20" height="8" fill="#475569"/>
+        <text x="110" y="85" text-anchor="middle" font-size="16" fill="#0F172A" font-weight="800">60 W</text>
+        <!-- rays -->
+        <line x1="110" y1="20" x2="110" y2="0" stroke="#FACC15" stroke-width="3"/>
+        <line x1="40" y1="80" x2="20" y2="80" stroke="#FACC15" stroke-width="3"/>
+        <line x1="180" y1="80" x2="200" y2="80" stroke="#FACC15" stroke-width="3"/>
+        <line x1="60" y1="30" x2="46" y2="16" stroke="#FACC15" stroke-width="3"/>
+        <line x1="160" y1="30" x2="174" y2="16" stroke="#FACC15" stroke-width="3"/>
+        <text x="110" y="170" text-anchor="middle" font-size="12" fill="#475569" font-weight="800">120V × 0.5A = 60W</text>
+      </svg>
+    </div>
+    <div style="flex:1">
+      <ul class="biglist">
+        <li><span class="bullet">▸</span><b>Watts</b> = volts × amps. Always.</li>
+        <li><span class="bullet">▸</span>1,000 watts = 1 <b>kilowatt (kW)</b>.</li>
+        <li><span class="bullet">▸</span><b>Horsepower</b> for motors: 1 HP ≈ 746 watts.</li>
+        <li><span class="bullet">▸</span>Big motors are sized in <b>HP</b>. Power supplies are sized in <b>watts</b>. Transformers in <b>VA / kVA</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:18px;background:linear-gradient(160deg,#DBEAFE,#BFDBFE);border-color:#3B82F6">
+    <h3 style="color:#1E40AF;font-size:16px">🧮 Quick conversions reps need</h3>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;font-size:12px;font-weight:700;color:#1E40AF">
+      <div>1 HP ≈ 746 W</div>
+      <div>1 kW = 1.34 HP</div>
+      <div>1 kVA ≈ 1 kW (rough)</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> If a customer gives you any two of {V, A, W}, you can derive the third. Same trick as Ohm's Law.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">09</div>
+</section>
+
+<!-- ===================== PAGE 10 — AC vs DC ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#CA8A04">▸ LEARN · 07 OF 15</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ AC vs DC · TWO FLAVORS</div>
+  <h2 style="margin-top:14px">The wave vs.<br>the line.</h2>
+
+  <div style="display:flex;gap:18px;margin-top:20px">
+    <div class="phase-card phase-1p" style="background:linear-gradient(160deg,#FEF3C7,#FDE68A)">
+      <h3 style="color:#78350F">AC — Alternating Current</h3>
+      <svg width="100%" height="100" viewBox="0 0 280 100">
+        <line x1="0" y1="50" x2="280" y2="50" stroke="#CA8A04" stroke-width="1" stroke-dasharray="4 2"/>
+        <path d="M 0 50 Q 35 0 70 50 T 140 50 T 210 50 T 280 50" fill="none" stroke="#CA8A04" stroke-width="3"/>
+      </svg>
+      <p style="font-size:13px;color:#78350F;margin-top:6px"><b>What:</b> Direction reverses 60 times per second (60 Hz in the US).</p>
+      <p style="font-size:13px;color:#78350F;margin-top:6px"><b>Where:</b> Wall outlets. Buildings. Motors. Transformers. Anything coming from the utility.</p>
+      <p style="font-size:13px;color:#78350F;margin-top:6px"><b>Why:</b> Easy to step up/down with transformers → easy to ship long distances.</p>
+      <p style="font-size:13px;color:#78350F;margin-top:6px"><b>Examples:</b> 120 VAC, 240 VAC, 480 VAC.</p>
+    </div>
+    <div class="phase-card phase-3p" style="background:linear-gradient(160deg,#DBEAFE,#BFDBFE)">
+      <h3 style="color:#1E40AF">DC — Direct Current</h3>
+      <svg width="100%" height="100" viewBox="0 0 280 100">
+        <line x1="0" y1="50" x2="280" y2="50" stroke="#1E40AF" stroke-width="1" stroke-dasharray="4 2"/>
+        <line x1="0" y1="30" x2="280" y2="30" stroke="#1E40AF" stroke-width="3"/>
+      </svg>
+      <p style="font-size:13px;color:#1E40AF;margin-top:6px"><b>What:</b> Flows in one direction. Steady.</p>
+      <p style="font-size:13px;color:#1E40AF;margin-top:6px"><b>Where:</b> Batteries. PLCs. Sensors. Solar panels. Most electronics.</p>
+      <p style="font-size:13px;color:#1E40AF;margin-top:6px"><b>Why:</b> Simpler. Electronics need it. Doesn't cross zero (matters for breakers).</p>
+      <p style="font-size:13px;color:#1E40AF;margin-top:6px"><b>Examples:</b> 12 VDC, 24 VDC, 48 VDC.</p>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:18px;background:linear-gradient(160deg,#FEE2E2,#FECACA);border-color:#EF4444">
+    <h3 style="color:#7F1D1D;font-size:16px">🚨 Sales rule</h3>
+    <p style="color:#7F1D1D;margin-top:6px;font-size:13px">A breaker rated 480 VAC may only handle 60 VDC. AC and DC are <b>not interchangeable</b>. Always confirm both — voltage AND type.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Wall = AC. Battery = DC. Electronics inside the wall device = DC (after a power supply converts it).
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">10</div>
+</section>
+
+<!-- ===================== PAGE 11 — THE 4 VOLTAGES ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#CA8A04">▸ LEARN · 08 OF 15</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ THE FOUR VOLTAGES YOU'LL HEAR</div>
+  <h2 style="margin-top:14px">120 / 240 / 480 / 24DC</h2>
+  <p class="lead" style="margin-top:6px">99% of the calls you take involve one of these four. Memorize the personality of each.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px">
+    <div class="factbox" style="background:linear-gradient(160deg,#FEF3C7,#FDE68A);border:2px solid #F59E0B">
+      <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="color:#78350F">120 VAC</h3><span class="pill" style="background:#92400E;color:#FEF3C7">SINGLE PHASE</span></div>
+      <p style="color:#78350F;margin-top:6px;font-size:13px"><b>The household voltage.</b> Outlets, lights, small tools, controls. One hot + one neutral + one ground.</p>
+      <p style="color:#78350F;margin-top:6px;font-size:12px">▸ Pilot lights · pushbuttons · small relays · small AC fans</p>
+    </div>
+    <div class="factbox" style="background:linear-gradient(160deg,#FED7AA,#FDBA74);border:2px solid #C2410C">
+      <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="color:#9A3412">240 VAC</h3><span class="pill" style="background:#9A3412;color:#FED7AA">SPLIT PHASE</span></div>
+      <p style="color:#9A3412;margin-top:6px;font-size:13px"><b>The big-appliance voltage.</b> Two hots + neutral + ground. Common on residential dryers, water heaters, light commercial.</p>
+      <p style="color:#9A3412;margin-top:6px;font-size:12px">▸ Small motors · HVAC · packaged equipment</p>
+    </div>
+    <div class="factbox" style="background:linear-gradient(160deg,#DBEAFE,#BFDBFE);border:2px solid #1E40AF">
+      <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="color:#1E40AF">480 VAC</h3><span class="pill" style="background:#1E40AF;color:#DBEAFE">3 PHASE</span></div>
+      <p style="color:#1E40AF;margin-top:6px;font-size:13px"><b>The industrial voltage.</b> Three hots + (sometimes) neutral + ground. Three-phase. Found in factories, plants, big buildings.</p>
+      <p style="color:#1E40AF;margin-top:6px;font-size:12px">▸ Industrial motors · big drives · plant power</p>
+    </div>
+    <div class="factbox" style="background:linear-gradient(160deg,#D1FAE5,#A7F3D0);border:2px solid #047857">
+      <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="color:#065F46">24 VDC</h3><span class="pill" style="background:#065F46;color:#D1FAE5">CONTROL</span></div>
+      <p style="color:#065F46;margin-top:6px;font-size:13px"><b>The control-circuit voltage.</b> Inside the panel. Powers the brains: PLCs, sensors, instrumentation, HMIs.</p>
+      <p style="color:#065F46;margin-top:6px;font-size:12px">▸ PLC I/O · sensors · prox switches · indicator lights</p>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Hear "control circuit" → think 24 VDC. Hear "industrial motor" → think 480 VAC. Hear "outlet" → think 120 VAC.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">11</div>
+</section>
+
+<!-- ===================== PAGE 12 — SINGLE vs THREE PHASE ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#CA8A04">▸ LEARN · 09 OF 15</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ SINGLE PHASE vs THREE PHASE</div>
+  <h2 style="margin-top:14px">One DJ vs.<br>three taking turns.</h2>
+  <p class="lead" style="margin-top:6px">Picture a party. Single-phase = one DJ; the music dips when they cough. Three-phase = three DJs taking turns; there's <b>always</b> someone playing.</p>
+
+  <div style="display:flex;gap:18px;margin-top:20px">
+    <div class="phase-card phase-1p">
+      <h3 style="color:#78350F">SINGLE PHASE</h3>
+      <svg width="100%" height="100" viewBox="0 0 280 100">
+        <line x1="0" y1="50" x2="280" y2="50" stroke="#CA8A04" stroke-width="1" stroke-dasharray="4 2"/>
+        <path d="M 0 50 Q 35 0 70 50 T 140 50 T 210 50 T 280 50" fill="none" stroke="#CA8A04" stroke-width="3"/>
+      </svg>
+      <p style="font-size:13px;color:#78350F;margin-top:6px"><b>One wave.</b> Power dips to zero 120x per second.</p>
+      <p style="font-size:12px;color:#78350F;margin-top:4px">→ Houses · small commercial · light loads</p>
+      <p style="font-size:12px;color:#78350F;margin-top:4px;font-weight:800">2 wires + ground</p>
+    </div>
+    <div class="phase-card phase-3p">
+      <h3 style="color:#1E40AF">THREE PHASE</h3>
+      <svg width="100%" height="100" viewBox="0 0 280 100">
+        <line x1="0" y1="50" x2="280" y2="50" stroke="#1E40AF" stroke-width="1" stroke-dasharray="4 2"/>
+        <path d="M 0 50 Q 35 5 70 50 T 140 50 T 210 50 T 280 50" fill="none" stroke="#EF4444" stroke-width="2.5"/>
+        <path d="M 0 50 Q 35 95 70 50 T 140 50 T 210 50 T 280 50" fill="none" stroke="#10B981" stroke-width="2.5"/>
+        <path d="M -23 50 Q 12 5 47 50 T 117 50 T 187 50 T 257 50 T 327 50" fill="none" stroke="#3B82F6" stroke-width="2.5"/>
+      </svg>
+      <p style="font-size:13px;color:#1E40AF;margin-top:6px"><b>Three waves staggered.</b> Power never dips to zero.</p>
+      <p style="font-size:12px;color:#1E40AF;margin-top:4px">→ Factories · industrial motors · big buildings</p>
+      <p style="font-size:12px;color:#1E40AF;margin-top:4px;font-weight:800">3 hots + (optional) neutral + ground</p>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:18px">
+    <h3 style="font-size:16px">🤔 Why does anyone care?</h3>
+    <p style="font-size:13px;margin-top:6px"><b>Three-phase power runs motors better.</b> Smoother torque, less vibration, smaller wires for the same power. That's why every factory in America runs on three-phase.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Single-phase" = 2 hot wires (or 1 hot + neutral). "Three-phase" = 3 hot wires. Count the hots — you've got the answer.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">12</div>
+</section>
+
+<!-- ===================== PAGE 13 — HOT / NEUTRAL / GROUND ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#CA8A04">▸ LEARN · 10 OF 15</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ THE THREE WIRES</div>
+  <h2 style="margin-top:14px">Hot. Neutral. Ground.</h2>
+  <p class="lead" style="margin-top:6px">Three wires. Three jobs. Three colors. Reps confuse them constantly. After this page you won't.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px">
+    <div class="factbox" style="background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #EF4444;text-align:center">
+      <div style="font-size:42px">🔥</div>
+      <h3 style="color:#7F1D1D;margin-top:6px">HOT</h3>
+      <p class="pill" style="background:#7F1D1D;color:#fff;margin-top:6px">BLACK / RED / BLUE</p>
+      <hr class="faint">
+      <p style="color:#7F1D1D;font-size:13px">Carries the <b>energy in</b>. The "live" wire. This is what shocks you.</p>
+    </div>
+    <div class="factbox" style="background:linear-gradient(160deg,#F1F5F9,#E2E8F0);border:2px solid #475569;text-align:center">
+      <div style="font-size:42px">↩️</div>
+      <h3 style="color:#1E293B;margin-top:6px">NEUTRAL</h3>
+      <p class="pill" style="background:#1E293B;color:#fff;margin-top:6px">WHITE / GRAY</p>
+      <hr class="faint">
+      <p style="color:#1E293B;font-size:13px">Carries the <b>energy back</b>. Completes the circuit. Normally near zero volts.</p>
+    </div>
+    <div class="factbox" style="background:linear-gradient(160deg,#D1FAE5,#A7F3D0);border:2px solid #047857;text-align:center">
+      <div style="font-size:42px">⏚</div>
+      <h3 style="color:#065F46;margin-top:6px">GROUND</h3>
+      <p class="pill" style="background:#065F46;color:#fff;margin-top:6px">GREEN / BARE</p>
+      <hr class="faint">
+      <p style="color:#065F46;font-size:13px"><b>Safety wire.</b> Carries fault current to earth so the breaker can trip — not your customer.</p>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:18px;background:linear-gradient(160deg,#FEF3C7,#FDE68A);border:2px solid #F59E0B">
+    <h3 style="color:#78350F;font-size:16px">🧠 The mental model</h3>
+    <p style="color:#78350F;margin-top:6px;font-size:13px"><b>Hot</b> = the freeway in. <b>Neutral</b> = the freeway back. <b>Ground</b> = the emergency exit if something goes wrong.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Neutral and ground are NOT the same wire — even though they often end up bonded together at the panel. (More on that next page.)
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">13</div>
+</section>
+
+<!-- ===================== PAGE 14 — GROUNDING vs BONDING ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#CA8A04">▸ LEARN · 11 OF 15</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ GROUNDING vs BONDING</div>
+  <h2 style="margin-top:14px">Two words. Two jobs.<br>One panel.</h2>
+  <p class="lead" style="margin-top:6px">Customers and reps mix these up daily. Once you can explain the difference, you instantly sound like you know what you're doing.</p>
+
+  <div style="display:flex;gap:18px;margin-top:20px">
+    <div class="factbox" style="flex:1;background:linear-gradient(160deg,#D1FAE5,#A7F3D0);border:2px solid #047857">
+      <h3 style="color:#065F46">🌍 GROUNDING</h3>
+      <p style="color:#065F46;font-size:13px;margin-top:8px"><b>Connecting the system to the earth.</b></p>
+      <hr class="faint">
+      <p style="color:#065F46;font-size:13px;margin-top:6px">Lightning hits the building? The grounding rod sends it harmlessly into the dirt instead of through your panel.</p>
+      <p style="color:#065F46;font-size:13px;margin-top:6px"><b>Single point. Goes to the earth.</b></p>
+      <svg width="100%" height="100" viewBox="0 0 240 100">
+        <rect x="100" y="10" width="40" height="40" fill="#94A3B8" stroke="#334155" stroke-width="2"/>
+        <text x="120" y="36" text-anchor="middle" font-size="10" fill="#fff" font-weight="800">PANEL</text>
+        <line x1="120" y1="50" x2="120" y2="80" stroke="#10B981" stroke-width="3"/>
+        <rect x="115" y="80" width="10" height="20" fill="#92400E"/>
+        <line x1="80" y1="100" x2="160" y2="100" stroke="#92400E" stroke-width="3"/>
+        <text x="120" y="98" text-anchor="middle" font-size="9" fill="#065F46" font-weight="800">EARTH</text>
+      </svg>
+    </div>
+    <div class="factbox" style="flex:1;background:linear-gradient(160deg,#DBEAFE,#BFDBFE);border:2px solid #1E40AF">
+      <h3 style="color:#1E40AF">🔗 BONDING</h3>
+      <p style="color:#1E40AF;font-size:13px;margin-top:8px"><b>Connecting metal parts together.</b></p>
+      <hr class="faint">
+      <p style="color:#1E40AF;font-size:13px;margin-top:6px">Every metal panel, conduit, and enclosure is wired together so they're all at the same voltage. A fault on any one of them trips the breaker.</p>
+      <p style="color:#1E40AF;font-size:13px;margin-top:6px"><b>All metal pieces. Tied together.</b></p>
+      <svg width="100%" height="100" viewBox="0 0 240 100">
+        <rect x="20" y="20" width="40" height="40" fill="#94A3B8" stroke="#334155" stroke-width="2"/>
+        <rect x="100" y="20" width="40" height="40" fill="#94A3B8" stroke="#334155" stroke-width="2"/>
+        <rect x="180" y="20" width="40" height="40" fill="#94A3B8" stroke="#334155" stroke-width="2"/>
+        <line x1="60" y1="40" x2="100" y2="40" stroke="#3B82F6" stroke-width="3"/>
+        <line x1="140" y1="40" x2="180" y2="40" stroke="#3B82F6" stroke-width="3"/>
+        <text x="120" y="80" text-anchor="middle" font-size="10" fill="#1E40AF" font-weight="800">METAL ↔ METAL ↔ METAL</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:18px">
+    <h3 style="font-size:16px">🧠 The mental model</h3>
+    <p style="font-size:13px;margin-top:6px"><b>Grounding goes DOWN</b> (to earth). <b>Bonding goes ACROSS</b> (between metal parts).</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Both protect people. Both involve green wires. Different jobs.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">14</div>
+</section>
+
+<!-- ===================== PAGE 15 — SHORT vs OVERLOAD ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#CA8A04">▸ LEARN · 12 OF 15</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ THE TWO WAYS THINGS GO WRONG</div>
+  <h2 style="margin-top:14px">Short circuit vs.<br>Overload.</h2>
+  <p class="lead" style="margin-top:6px">Both trip breakers. Both look like "the breaker tripped." They're not the same problem.</p>
+
+  <div style="display:flex;gap:18px;margin-top:20px">
+    <div class="factbox" style="flex:1;background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #EF4444">
+      <h3 style="color:#7F1D1D">⚡ SHORT CIRCUIT</h3>
+      <p style="color:#7F1D1D;font-size:13px;margin-top:8px">A wire-to-wire (or wire-to-ground) <b>fault</b>. Current shoots up to massive levels in milliseconds.</p>
+      <p style="color:#7F1D1D;font-size:13px;margin-top:6px"><b>Cause:</b> Bad insulation, pinched wire, water in the panel, dropped tool.</p>
+      <p style="color:#7F1D1D;font-size:13px;margin-top:6px"><b>Trip speed:</b> Instant.</p>
+      <svg width="100%" height="80" viewBox="0 0 240 80">
+        <line x1="20" y1="40" x2="220" y2="40" stroke="#7F1D1D" stroke-width="3"/>
+        <path d="M 100 30 L 120 50 L 110 50 L 130 70" stroke="#FBBF24" stroke-width="3" fill="none"/>
+        <text x="120" y="20" text-anchor="middle" font-size="11" fill="#7F1D1D" font-weight="800">FAULT!</text>
+      </svg>
+    </div>
+    <div class="factbox" style="flex:1;background:linear-gradient(160deg,#FED7AA,#FDBA74);border:2px solid #C2410C">
+      <h3 style="color:#9A3412">🔥 OVERLOAD</h3>
+      <p style="color:#9A3412;font-size:13px;margin-top:8px">More current than the wire was sized for, sustained over time. Wire heats up.</p>
+      <p style="color:#9A3412;font-size:13px;margin-top:6px"><b>Cause:</b> Too many things on one circuit. Stuck motor pulling 150% FLA. Aging device.</p>
+      <p style="color:#9A3412;font-size:13px;margin-top:6px"><b>Trip speed:</b> Slow — seconds to minutes.</p>
+      <svg width="100%" height="80" viewBox="0 0 240 80">
+        <line x1="20" y1="40" x2="220" y2="40" stroke="#9A3412" stroke-width="3"/>
+        <text x="60" y="32" font-size="14" fill="#9A3412">🔥</text>
+        <text x="100" y="32" font-size="14" fill="#9A3412">🔥</text>
+        <text x="140" y="32" font-size="14" fill="#9A3412">🔥</text>
+        <text x="180" y="32" font-size="14" fill="#9A3412">🔥</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:18px">
+    <h3 style="font-size:16px">🛡️ One device handles both</h3>
+    <p style="font-size:13px;margin-top:6px">A standard <b>thermal-magnetic breaker</b> has two trip mechanisms inside: a <b>magnetic</b> coil for short circuits (instant), and a <b>bimetal strip</b> for overloads (delayed). One device. Two jobs.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Short = sudden + huge. Overload = slow + sustained. Same breaker handles both.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">15</div>
+</section>
+
+<!-- ===================== PAGE 16 — FAULT CURRENT / AIC ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#CA8A04">▸ LEARN · 13 OF 15</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ FAULT CURRENT & AIC</div>
+  <h2 style="margin-top:14px">How big the bang<br>could be.</h2>
+  <p class="lead" style="margin-top:6px"><b>Fault current</b> is how much current would flow during a worst-case short. <b>AIC</b> is how much your breaker can safely interrupt before exploding.</p>
+
+  <div class="factbox" style="margin-top:20px;background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #EF4444">
+    <h3 style="color:#7F1D1D">🚨 The rule</h3>
+    <svg width="100%" height="60" viewBox="0 0 700 60">
+      <rect x="0" y="20" width="700" height="20" fill="#fff" rx="10"/>
+      <rect x="20" y="22" width="200" height="16" fill="#10B981" rx="8"/>
+      <text x="120" y="34" text-anchor="middle" font-size="11" fill="#fff" font-weight="800">BREAKER AIC: 10 kA ✓</text>
+      <line x1="380" y1="10" x2="380" y2="50" stroke="#0F172A" stroke-width="2" stroke-dasharray="3 2"/>
+      <text x="380" y="8" text-anchor="middle" font-size="10" fill="#0F172A" font-weight="800">FAULT: 8 kA</text>
+    </svg>
+    <p style="color:#7F1D1D;font-size:13px;margin-top:6px"><b>Breaker AIC must be ≥ available fault current.</b> If the fault is bigger than the breaker's AIC, the breaker can't safely break it. The breaker becomes a hand grenade.</p>
+  </div>
+
+  <div class="factbox" style="margin-top:14px">
+    <h3 style="font-size:16px">📞 Real-world numbers</h3>
+    <p style="font-size:13px;margin-top:6px">Houses: ~10 kA. Light commercial: 14–22 kA. Industrial panels: 22–65 kA. Service entrances: can hit 100 kA+.</p>
+    <p style="font-size:12px;color:var(--slate-500);margin-top:4px">"kA" = kiloamps = thousands of amps.</p>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FEF3C7,#FDE68A);border:2px solid #F59E0B">
+    <h3 style="color:#78350F;font-size:16px">🎯 What customers ask</h3>
+    <p style="color:#78350F;margin-top:6px;font-size:13px"><i>"What's the AIC on this breaker?"</i> — They're checking if it can survive a fault. Common AIC ratings: 5kA, 10kA, 14kA, 22kA, 65kA.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> When in doubt, ask the customer for "available fault current at the install point." If they don't know, default to 10 kA AIC for industrial control panels.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">16</div>
+</section>
+
+<!-- ===================== PAGE 17 — VOLTAGE DROP ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#CA8A04">▸ LEARN · 14 OF 15</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ VOLTAGE DROP</div>
+  <h2 style="margin-top:14px">Long wire =<br>tired electricity.</h2>
+  <p class="lead" style="margin-top:6px">The further electricity travels, the more voltage it loses to wire resistance. By the time it reaches the device, there might not be enough left.</p>
+
+  <div class="analogy-box" style="margin-top:18px">
+    <svg width="100%" height="160" viewBox="0 0 700 160">
+      <rect x="20" y="60" width="60" height="40" fill="#3B82F6" stroke="#1E40AF" stroke-width="2"/>
+      <text x="50" y="86" text-anchor="middle" font-size="11" fill="#fff" font-weight="800">480V</text>
+      <text x="50" y="120" text-anchor="middle" font-size="10" fill="#1E40AF" font-weight="800">SOURCE</text>
+      <!-- long wire -->
+      <line x1="80" y1="80" x2="600" y2="80" stroke="#FACC15" stroke-width="6"/>
+      <text x="340" y="60" text-anchor="middle" font-size="11" fill="#92400E" font-weight="800">500 FEET — voltage drops along the way</text>
+      <!-- pressure markers -->
+      <text x="180" y="105" text-anchor="middle" font-size="10" fill="#7F1D1D" font-weight="800">478V</text>
+      <text x="340" y="105" text-anchor="middle" font-size="10" fill="#7F1D1D" font-weight="800">472V</text>
+      <text x="500" y="105" text-anchor="middle" font-size="10" fill="#7F1D1D" font-weight="800">464V</text>
+      <!-- device -->
+      <rect x="600" y="60" width="60" height="40" fill="#94A3B8" stroke="#334155" stroke-width="2"/>
+      <text x="630" y="86" text-anchor="middle" font-size="11" fill="#fff" font-weight="800">456V?</text>
+      <text x="630" y="120" text-anchor="middle" font-size="10" fill="#1E40AF" font-weight="800">DEVICE</text>
+    </svg>
+  </div>
+
+  <div class="factbox" style="margin-top:18px">
+    <h3 style="font-size:16px">📐 The NEC rule of thumb</h3>
+    <p style="font-size:13px;margin-top:6px">Voltage drop should be <b>≤ 3% on a branch circuit</b> and <b>≤ 5% total</b> from service to load. Anything more = motors run hot, electronics misbehave, devices burn out early.</p>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FED7AA,#FDBA74);border:2px solid #C2410C">
+    <h3 style="color:#9A3412;font-size:16px">🔧 The fix</h3>
+    <p style="color:#9A3412;margin-top:6px;font-size:13px">Bigger wire → less resistance → less drop. When a customer mentions a long run, they may need to <b>upsize the conductor</b>. That's a quote opportunity.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Hear "long run" or "the motor is way out at the back of the building" → ask about wire size. Voltage drop is your upsell opener.
+  </div>
+  <div class="xp">+10 XP</div>
+  <div class="page-num">17</div>
+</section>
+
+<!-- ===================== PAGE 18 — AWG / WIRE SIZING ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#CA8A04">▸ LEARN · 15 OF 15</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ WIRE SIZING (AWG)</div>
+  <h2 style="margin-top:14px">Smaller number =<br>thicker wire.</h2>
+  <p class="lead" style="margin-top:6px">American Wire Gauge (AWG) is backwards from how you'd guess. <b>14 AWG</b> is small. <b>2 AWG</b> is thick. <b>4/0 AWG</b> ("four-aught") is enormous.</p>
+
+  <div class="factbox" style="margin-top:20px">
+    <svg width="100%" height="160" viewBox="0 0 700 160">
+      <!-- wires from skinny to fat -->
+      <circle cx="60" cy="80" r="6" fill="#92400E"/>
+      <text x="60" y="120" text-anchor="middle" font-size="11" fill="#0F172A" font-weight="800">14 AWG</text>
+      <text x="60" y="135" text-anchor="middle" font-size="10" fill="#475569">15A</text>
+      <circle cx="160" cy="80" r="9" fill="#92400E"/>
+      <text x="160" y="120" text-anchor="middle" font-size="11" fill="#0F172A" font-weight="800">12 AWG</text>
+      <text x="160" y="135" text-anchor="middle" font-size="10" fill="#475569">20A</text>
+      <circle cx="260" cy="80" r="13" fill="#92400E"/>
+      <text x="260" y="120" text-anchor="middle" font-size="11" fill="#0F172A" font-weight="800">10 AWG</text>
+      <text x="260" y="135" text-anchor="middle" font-size="10" fill="#475569">30A</text>
+      <circle cx="360" cy="80" r="18" fill="#92400E"/>
+      <text x="360" y="120" text-anchor="middle" font-size="11" fill="#0F172A" font-weight="800">8 AWG</text>
+      <text x="360" y="135" text-anchor="middle" font-size="10" fill="#475569">40A</text>
+      <circle cx="460" cy="80" r="24" fill="#92400E"/>
+      <text x="460" y="120" text-anchor="middle" font-size="11" fill="#0F172A" font-weight="800">6 AWG</text>
+      <text x="460" y="135" text-anchor="middle" font-size="10" fill="#475569">55A</text>
+      <circle cx="570" cy="80" r="32" fill="#92400E"/>
+      <text x="570" y="120" text-anchor="middle" font-size="11" fill="#0F172A" font-weight="800">4 AWG</text>
+      <text x="570" y="135" text-anchor="middle" font-size="10" fill="#475569">70A</text>
+      <circle cx="660" cy="80" r="42" fill="#92400E"/>
+      <text x="660" y="135" text-anchor="middle" font-size="11" fill="#0F172A" font-weight="800">2 AWG</text>
+      <text x="660" y="150" text-anchor="middle" font-size="10" fill="#475569">95A</text>
+    </svg>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px">
+    <div class="factbox">
+      <h3 style="font-size:16px">🧠 The rule</h3>
+      <p style="font-size:13px;margin-top:4px">Small AWG number = thick wire = high amp capacity. <b>4/0</b> is "0000 AWG" — the biggest common copper.</p>
+    </div>
+    <div class="factbox">
+      <h3 style="font-size:16px">📐 Sizing logic</h3>
+      <p style="font-size:13px;margin-top:4px">Wire amp capacity ("ampacity") must equal or exceed the breaker rating. Otherwise the wire melts before the breaker trips.</p>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    🏅 <b>LEARN LEVEL CLEARED — +150 XP · BADGE EARNED: 🧠 "MENTAL MODEL LOCKED."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE (interactive only) -->
+  <div class="miniboss-gate interactive-only" data-miniboss="frost-imp">
+    <div class="icon">👹</div>
+    <h3>A Frost Imp blocks the path!</h3>
+    <div class="sub">5 questions on Fundamentals · Defeat to unlock APPLY level</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">18</div>
+</section>
+
+<!-- ===================== PAGE 19 — CONTROL PANEL ANATOMY ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#F97316">▸ APPLY · 01 OF 12</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ APPLY LEVEL · THE PANEL</div>
+  <h2 style="margin-top:14px">Anatomy of a<br>control panel.</h2>
+  <p class="lead" style="margin-top:6px">99% of what RSP sells ends up inside one of these. Learn the layout, sell the layout.</p>
+
+  <div class="factbox" style="margin-top:20px;padding:18px">
+    <svg width="100%" height="320" viewBox="0 0 700 320">
+      <!-- panel enclosure -->
+      <rect x="20" y="20" width="660" height="280" rx="8" fill="#F1F5F9" stroke="#475569" stroke-width="3"/>
+      <!-- power in -->
+      <line x1="0" y1="60" x2="50" y2="60" stroke="#EF4444" stroke-width="4"/>
+      <text x="0" y="48" font-size="10" fill="#7F1D1D" font-weight="800">POWER IN (480V)</text>
+      <!-- main breaker -->
+      <rect x="50" y="40" width="80" height="100" rx="4" fill="#92400E"/>
+      <text x="90" y="80" text-anchor="middle" font-size="10" fill="#FEF3C7" font-weight="800">MAIN</text>
+      <text x="90" y="94" text-anchor="middle" font-size="10" fill="#FEF3C7" font-weight="800">BREAKER</text>
+      <text x="90" y="110" text-anchor="middle" font-size="9" fill="#FCD34D" font-weight="800">UL 489</text>
+      <!-- transformer -->
+      <rect x="160" y="40" width="80" height="100" rx="4" fill="#1E40AF"/>
+      <text x="200" y="80" text-anchor="middle" font-size="10" fill="#fff" font-weight="800">XFMR</text>
+      <text x="200" y="94" text-anchor="middle" font-size="9" fill="#BFDBFE">480→120</text>
+      <!-- 24V power supply -->
+      <rect x="270" y="40" width="80" height="100" rx="4" fill="#10B981"/>
+      <text x="310" y="80" text-anchor="middle" font-size="9" fill="#fff" font-weight="800">24VDC</text>
+      <text x="310" y="94" text-anchor="middle" font-size="9" fill="#D1FAE5">PWR SUP</text>
+      <!-- DIN rail with ice cubes -->
+      <rect x="40" y="180" width="640" height="12" fill="#94A3B8"/>
+      <g><rect x="60" y="155" width="30" height="60" rx="3" fill="#0EA5E9"/><text x="75" y="190" text-anchor="middle" font-size="7" fill="#fff" font-weight="800">CB</text></g>
+      <g><rect x="100" y="155" width="30" height="60" rx="3" fill="#0EA5E9"/><text x="115" y="190" text-anchor="middle" font-size="7" fill="#fff" font-weight="800">CB</text></g>
+      <g><rect x="140" y="155" width="30" height="60" rx="3" fill="#0EA5E9"/><text x="155" y="190" text-anchor="middle" font-size="7" fill="#fff" font-weight="800">CB</text></g>
+      <text x="115" y="148" text-anchor="middle" font-size="9" fill="#0369A1" font-weight="800">ICE CUBES</text>
+      <!-- contactor -->
+      <rect x="200" y="155" width="50" height="60" rx="3" fill="#0F172A"/>
+      <text x="225" y="190" text-anchor="middle" font-size="9" fill="#fff" font-weight="800">CONT</text>
+      <text x="225" y="148" text-anchor="middle" font-size="9" fill="#0F172A" font-weight="800">CONTACTOR</text>
+      <!-- relay -->
+      <rect x="270" y="160" width="40" height="55" rx="3" fill="#FBBF24"/>
+      <text x="290" y="190" text-anchor="middle" font-size="9" fill="#0F172A" font-weight="800">RLY</text>
+      <text x="290" y="153" text-anchor="middle" font-size="9" fill="#92400E" font-weight="800">RELAYS</text>
+      <!-- terminal blocks -->
+      <rect x="330" y="160" width="200" height="55" rx="3" fill="#94A3B8"/>
+      <g fill="#475569">
+        <rect x="340" y="168" width="6" height="40"/>
+        <rect x="354" y="168" width="6" height="40"/>
+        <rect x="368" y="168" width="6" height="40"/>
+        <rect x="382" y="168" width="6" height="40"/>
+        <rect x="396" y="168" width="6" height="40"/>
+        <rect x="410" y="168" width="6" height="40"/>
+        <rect x="424" y="168" width="6" height="40"/>
+        <rect x="438" y="168" width="6" height="40"/>
+      </g>
+      <text x="430" y="148" text-anchor="middle" font-size="9" fill="#475569" font-weight="800">TERMINAL BLOCKS</text>
+      <!-- PLC -->
+      <rect x="550" y="155" width="110" height="60" rx="3" fill="#7C3AED"/>
+      <text x="605" y="190" text-anchor="middle" font-size="11" fill="#fff" font-weight="800">PLC</text>
+      <text x="605" y="148" text-anchor="middle" font-size="9" fill="#5B21B6" font-weight="800">PLC + I/O</text>
+      <!-- ground bar -->
+      <rect x="40" y="250" width="620" height="14" fill="#10B981"/>
+      <text x="350" y="280" text-anchor="middle" font-size="11" fill="#065F46" font-weight="800">GROUND BAR / BONDING</text>
+    </svg>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;font-size:11px;color:var(--slate-700)">
+    <div><b style="color:#7F1D1D">▸ Power in</b> from 480V utility</div>
+    <div><b style="color:#92400E">▸ Main breaker</b> protects the panel</div>
+    <div><b style="color:#1E40AF">▸ Transformer</b> steps to 120V</div>
+    <div><b style="color:#10B981">▸ 24VDC supply</b> for controls</div>
+    <div><b style="color:#0369A1">▸ Ice cubes</b> protect each device</div>
+    <div><b style="color:#0F172A">▸ Contactors / relays</b> switch loads</div>
+    <div><b style="color:#475569">▸ Terminal blocks</b> = wire junctions</div>
+    <div><b style="color:#5B21B6">▸ PLC</b> = the panel's brain</div>
+    <div><b style="color:#065F46">▸ Ground bar</b> = bonding point</div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Every panel = power in → step down → protect → switch → control. That sequence repeats forever.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">19</div>
+</section>
+
+<!-- ===================== PAGE 20 — COMPONENT LINEUP ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#F97316">▸ APPLY · 02 OF 12</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ THE COMPONENT LINEUP</div>
+  <h2 style="margin-top:14px">Know your roster.</h2>
+  <p class="lead" style="margin-top:6px">The 8 components that show up on 90% of your quotes.</p>
+
+  <div class="comp-grid">
+    <div class="comp"><h3>🔌 BREAKER <span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View breaker photo">📸 SEE IT</button><span class="img-peek-popup"><img src="../images/electrical/ice-cube-breaker.png" alt="Ice cube breaker"></span></span></h3><p style="margin-top:4px">Resettable overcurrent protection. Trips on faults. UL 489 (branch) or UL 1077 (supplementary).</p></div>
+    <div class="comp"><h3>💥 FUSE</h3><p style="margin-top:4px">One-shot overcurrent protection. Cheaper, faster, but you replace it after every fault.</p></div>
+    <div class="comp"><h3>🔁 RELAY</h3><p style="margin-top:4px">Small switch with a coil. Low current. Switches signals or pilot lights. Ice cube relay = 8/11/14 pin.</p></div>
+    <div class="comp"><h3>⚙️ CONTACTOR <span class="img-peek"><button type="button" class="img-peek-btn" aria-label="View contactor photo">📸 SEE IT</button><span class="img-peek-popup"><img src="../images/electrical/contactor.png" alt="Motor contactor"></span></span></h3><p style="margin-top:4px">Big relay. Switches motor-level current. Has a coil, three power poles, and aux contacts.</p></div>
+    <div class="comp"><h3>📦 TRANSFORMER</h3><p style="margin-top:4px">Steps voltage up or down. 480→120 is the most common in panels. Sized in VA / kVA.</p></div>
+    <div class="comp"><h3>🔋 POWER SUPPLY</h3><p style="margin-top:4px">Converts AC to DC. Common: 120VAC → 24VDC. Sized in watts or amps DC.</p></div>
+    <div class="comp"><h3>🎚️ TERMINAL BLOCK</h3><p style="margin-top:4px">A junction. Connects field wires to panel wires. Stocked by the strip-foot.</p></div>
+    <div class="comp"><h3>🎛️ PLC</h3><p style="margin-top:4px">Programmable Logic Controller. The brain. Reads inputs, runs logic, writes outputs.</p></div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Customer mentions a component → know which family it's in → ask the right follow-ups.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">20</div>
+</section>
+
+<!-- ===================== PAGE 21 — RELAY vs CONTACTOR ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#F97316">▸ APPLY · 03 OF 12</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ RELAY vs CONTACTOR</div>
+  <h2 style="margin-top:14px">Same idea.<br>Different size.</h2>
+  <p class="lead" style="margin-top:6px">Both are switches with coils. One handles signals, the other handles motors. Reps confuse them weekly.</p>
+
+  <div style="display:flex;gap:18px;margin-top:20px">
+    <div class="factbox" style="flex:1;background:linear-gradient(160deg,#FEF3C7,#FDE68A);border:2px solid #F59E0B">
+      <h3 style="color:#78350F">🔁 RELAY</h3>
+      <svg width="100%" height="120" viewBox="0 0 240 120">
+        <rect x="80" y="20" width="80" height="80" rx="6" fill="#FBBF24" stroke="#92400E" stroke-width="2"/>
+        <circle cx="105" cy="50" r="6" fill="#92400E"/>
+        <circle cx="135" cy="50" r="6" fill="#92400E"/>
+        <rect x="100" y="65" width="40" height="4" fill="#92400E"/>
+        <line x1="90" y1="100" x2="90" y2="115" stroke="#475569" stroke-width="3"/>
+        <line x1="105" y1="100" x2="105" y2="115" stroke="#475569" stroke-width="3"/>
+        <line x1="120" y1="100" x2="120" y2="115" stroke="#475569" stroke-width="3"/>
+        <line x1="135" y1="100" x2="135" y2="115" stroke="#475569" stroke-width="3"/>
+        <line x1="150" y1="100" x2="150" y2="115" stroke="#475569" stroke-width="3"/>
+      </svg>
+      <ul style="font-size:13px;color:#78350F;list-style:none;margin-top:8px">
+        <li>▸ Small. Pin-base or DIN.</li>
+        <li>▸ Switches up to ~10 A.</li>
+        <li>▸ Used in <b>control circuits</b>.</li>
+        <li>▸ Coil voltages: 24 VDC, 120 VAC, etc.</li>
+        <li>▸ Switches: pilot lights, signals, small loads.</li>
+      </ul>
+    </div>
+    <div class="factbox" style="flex:1;background:linear-gradient(160deg,#DBEAFE,#BFDBFE);border:2px solid #1E40AF">
+      <h3 style="color:#1E40AF">⚙️ CONTACTOR</h3>
+      <svg width="100%" height="120" viewBox="0 0 240 120">
+        <rect x="60" y="10" width="120" height="100" rx="4" fill="#1E40AF" stroke="#0F172A" stroke-width="2"/>
+        <rect x="80" y="20" width="20" height="35" fill="#0F172A"/>
+        <rect x="110" y="20" width="20" height="35" fill="#0F172A"/>
+        <rect x="140" y="20" width="20" height="35" fill="#0F172A"/>
+        <rect x="80" y="65" width="80" height="35" fill="#3B82F6"/>
+        <text x="120" y="86" text-anchor="middle" font-size="9" fill="#fff" font-weight="800">COIL</text>
+      </svg>
+      <ul style="font-size:13px;color:#1E40AF;list-style:none;margin-top:8px">
+        <li>▸ Big. Bolts to back of panel.</li>
+        <li>▸ Switches up to hundreds of amps.</li>
+        <li>▸ Used for <b>motors and big loads</b>.</li>
+        <li>▸ Coil voltages: 24 VDC, 120 VAC, 480 VAC.</li>
+        <li>▸ Often paired with overload relay.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:18px">
+    <h3 style="font-size:16px">🧠 Mental shortcut</h3>
+    <p style="font-size:13px;margin-top:6px"><b>Relay = signals. Contactor = power.</b> Or: relay = "tells the contactor what to do."</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> If the load is a motor → contactor. If the load is a signal or pilot light → relay.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">21</div>
+</section>
+
+<!-- ===================== PAGE 22 — UL 489 vs UL 1077 ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#F97316">▸ APPLY · 04 OF 12</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ BRANCH vs SUPPLEMENTARY</div>
+  <h2 style="margin-top:14px">UL 489 vs UL 1077.</h2>
+  <p class="lead" style="margin-top:6px">The single most important breaker distinction. Mis-quote it and the panel fails UL inspection.</p>
+
+  <div class="split" style="margin-top:24px;height:6in">
+    <div class="do" style="background:linear-gradient(160deg,#DBEAFE,#BFDBFE)">
+      <div style="font-size:46px">🛡️</div>
+      <h3 style="color:#1E40AF">UL 489 — BRANCH CIRCUIT</h3>
+      <ul>
+        <li><span style="color:#1E40AF">●</span> Stand-alone branch protection.</li>
+        <li><span style="color:#1E40AF">●</span> Can be the FIRST device after the service.</li>
+        <li><span style="color:#1E40AF">●</span> Higher AIC. Tougher testing.</li>
+        <li><span style="color:#1E40AF">●</span> Required at service entrance, NEC Article 240.</li>
+        <li><span style="color:#1E40AF">●</span> Examples: main breakers, panelboard breakers.</li>
+      </ul>
+    </div>
+    <div class="dont" style="background:linear-gradient(160deg,#FEF3C7,#FDE68A)">
+      <div style="font-size:46px">🧊</div>
+      <h3 style="color:#78350F">UL 1077 — SUPPLEMENTARY</h3>
+      <ul>
+        <li><span style="color:#78350F">●</span> Supplements an upstream device.</li>
+        <li><span style="color:#78350F">●</span> Must sit DOWNSTREAM of a UL 489 breaker.</li>
+        <li><span style="color:#78350F">●</span> Lower AIC, smaller form factor.</li>
+        <li><span style="color:#78350F">●</span> Inside control panels — protects individual devices.</li>
+        <li><span style="color:#78350F">●</span> Example: Ice cube breakers.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FEE2E2,#FECACA);border:2px solid #EF4444">
+    <h3 style="color:#7F1D1D;font-size:16px">🚨 The test question</h3>
+    <p style="color:#7F1D1D;margin-top:6px;font-size:13px">"Is this the FIRST device the wire hits after the service?" — Yes → UL 489. No → UL 1077 is fine.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> 489 = first line. 1077 = second line. Never first line.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">22</div>
+</section>
+
+<!-- ===================== PAGE 23 — MOTORS 101 ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#F97316">▸ APPLY · 05 OF 12</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ MOTORS 101</div>
+  <h2 style="margin-top:14px">3 numbers off the<br>motor nameplate.</h2>
+  <p class="lead" style="margin-top:6px">Every motor sale starts with three numbers. Get them, get the right product.</p>
+
+  <div class="factbox" style="margin-top:20px;background:#0F172A;color:#FACC15;border:none">
+    <p style="font-size:11px;color:#94A3B8;letter-spacing:.18em;font-weight:800">▸ MOTOR NAMEPLATE</p>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px">
+      <div style="background:#1E293B;padding:12px;border-radius:8px;border:1px solid #FACC15">
+        <p style="font-size:10px;color:#FACC15;font-weight:800;letter-spacing:.1em">HORSEPOWER (HP)</p>
+        <p style="font-size:24px;color:#fff;font-weight:800;font-family:'JetBrains Mono'">5 HP</p>
+      </div>
+      <div style="background:#1E293B;padding:12px;border-radius:8px;border:1px solid #FACC15">
+        <p style="font-size:10px;color:#FACC15;font-weight:800;letter-spacing:.1em">VOLTAGE</p>
+        <p style="font-size:24px;color:#fff;font-weight:800;font-family:'JetBrains Mono'">480V / 3φ</p>
+      </div>
+      <div style="background:#1E293B;padding:12px;border-radius:8px;border:1px solid #FACC15">
+        <p style="font-size:10px;color:#FACC15;font-weight:800;letter-spacing:.1em">FLA (FULL LOAD AMPS)</p>
+        <p style="font-size:24px;color:#fff;font-weight:800;font-family:'JetBrains Mono'">7.6 A</p>
+      </div>
+      <div style="background:#1E293B;padding:12px;border-radius:8px;border:1px solid #FACC15">
+        <p style="font-size:10px;color:#FACC15;font-weight:800;letter-spacing:.1em">SERVICE FACTOR</p>
+        <p style="font-size:24px;color:#fff;font-weight:800;font-family:'JetBrains Mono'">1.15</p>
+      </div>
+    </div>
+  </div>
+
+  <ul class="biglist" style="margin-top:18px">
+    <li><span class="bullet">1</span><b>HP (Horsepower)</b> — how much work the motor can do. Common: 0.5, 1, 2, 5, 10, 20, 50, 100 HP.</li>
+    <li><span class="bullet">2</span><b>Voltage + Phase</b> — must match the panel feed. 480V three-phase is the industrial default.</li>
+    <li><span class="bullet">3</span><b>FLA (Full Load Amps)</b> — current the motor draws at rated load. Drives breaker, contactor, and overload sizing.</li>
+  </ul>
+
+  <div class="factbox" style="margin-top:14px;background:linear-gradient(160deg,#FED7AA,#FDBA74);border:2px solid #C2410C">
+    <h3 style="color:#9A3412;font-size:16px">🔧 The sizing rule (NEC)</h3>
+    <p style="color:#9A3412;margin-top:6px;font-size:13px"><b>Motor branch breaker = 250% of FLA.</b> A 7.6 FLA motor → 19 A → round up to a 20A breaker. <i>(Yes, that's bigger than you'd expect — motors have inrush current.)</i></p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "What's on the nameplate?" beats every other motor question. Get those 4 numbers → quote anything.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">23</div>
+</section>
+
+<!-- ===================== PAGE 24 — STARTER vs SOFT vs VFD ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#F97316">▸ APPLY · 06 OF 12</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ STARTER · SOFT START · VFD</div>
+  <h2 style="margin-top:14px">Three ways to<br>start a motor.</h2>
+
+  <div style="display:flex;gap:14px;margin-top:20px">
+    <div class="factbox" style="flex:1;background:linear-gradient(160deg,#FEF3C7,#FDE68A);border:2px solid #F59E0B">
+      <h3 style="color:#78350F">🔌 STARTER</h3>
+      <p style="color:#78350F;font-size:11px;font-weight:800;letter-spacing:.1em;margin-top:4px">FULL VOLTAGE / "ACROSS-THE-LINE"</p>
+      <hr class="faint">
+      <p style="color:#78350F;font-size:13px;margin-top:6px"><b>How:</b> Full voltage hits the motor instantly.</p>
+      <p style="color:#78350F;font-size:13px;margin-top:4px"><b>Inrush:</b> 6–8x FLA. Hard kick.</p>
+      <p style="color:#78350F;font-size:13px;margin-top:4px"><b>Cost:</b> Cheapest.</p>
+      <p style="color:#78350F;font-size:13px;margin-top:4px"><b>Use when:</b> Small motors, simple loads, no speed control needed.</p>
+    </div>
+    <div class="factbox" style="flex:1;background:linear-gradient(160deg,#FED7AA,#FDBA74);border:2px solid #C2410C">
+      <h3 style="color:#9A3412">🌊 SOFT STARTER</h3>
+      <p style="color:#9A3412;font-size:11px;font-weight:800;letter-spacing:.1em;margin-top:4px">RAMP UP THE VOLTAGE</p>
+      <hr class="faint">
+      <p style="color:#9A3412;font-size:13px;margin-top:6px"><b>How:</b> Ramps voltage up from 0 to full over a few seconds.</p>
+      <p style="color:#9A3412;font-size:13px;margin-top:4px"><b>Inrush:</b> Reduced. Smoother start.</p>
+      <p style="color:#9A3412;font-size:13px;margin-top:4px"><b>Cost:</b> Mid.</p>
+      <p style="color:#9A3412;font-size:13px;margin-top:4px"><b>Use when:</b> Reduce mechanical wear, high-inertia loads (conveyors, pumps).</p>
+    </div>
+    <div class="factbox" style="flex:1;background:linear-gradient(160deg,#DBEAFE,#BFDBFE);border:2px solid #1E40AF">
+      <h3 style="color:#1E40AF">🎛️ VFD</h3>
+      <p style="color:#1E40AF;font-size:11px;font-weight:800;letter-spacing:.1em;margin-top:4px">VARIABLE FREQUENCY DRIVE</p>
+      <hr class="faint">
+      <p style="color:#1E40AF;font-size:13px;margin-top:6px"><b>How:</b> Controls voltage AND frequency → controls speed.</p>
+      <p style="color:#1E40AF;font-size:13px;margin-top:4px"><b>Inrush:</b> Minimal.</p>
+      <p style="color:#1E40AF;font-size:13px;margin-top:4px"><b>Cost:</b> Highest.</p>
+      <p style="color:#1E40AF;font-size:13px;margin-top:4px"><b>Use when:</b> Need speed control, energy savings, precise process control.</p>
+    </div>
+  </div>
+
+  <div class="factbox" style="margin-top:18px">
+    <h3 style="font-size:16px">🧠 The rep's decision tree</h3>
+    <p style="font-size:13px;margin-top:6px">Need speed control? → <b>VFD</b>. Just need a softer start? → <b>Soft starter</b>. Cheap, simple, on/off? → <b>Starter</b>.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Do you need to vary the speed?" answers most of the question in one shot.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">24</div>
+</section>
+
+<!-- ===================== PAGE 25 — SCHEMATIC READING ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#F97316">▸ APPLY · 07 OF 12</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ READING A LADDER SCHEMATIC</div>
+  <h2 style="margin-top:14px">Read it like a book.<br>Top to bottom.</h2>
+  <p class="lead" style="margin-top:6px">Two vertical rails (left = power, right = neutral). Each "rung" is one circuit. Read each rung from left to right: <i>"if these conditions are true, energize this output."</i></p>
+
+  <div class="factbox" style="margin-top:20px">
+    <svg width="100%" height="280" viewBox="0 0 700 280">
+      <!-- left rail -->
+      <line x1="60" y1="20" x2="60" y2="260" stroke="#EF4444" stroke-width="4"/>
+      <text x="60" y="14" text-anchor="middle" font-size="11" fill="#7F1D1D" font-weight="800">L1 (HOT)</text>
+      <!-- right rail -->
+      <line x1="640" y1="20" x2="640" y2="260" stroke="#475569" stroke-width="4"/>
+      <text x="640" y="14" text-anchor="middle" font-size="11" fill="#1E293B" font-weight="800">L2 (NEUTRAL)</text>
+      <!-- rung 1 -->
+      <line x1="60" y1="60" x2="180" y2="60" stroke="#0F172A" stroke-width="2"/>
+      <line x1="220" y1="60" x2="380" y2="60" stroke="#0F172A" stroke-width="2"/>
+      <!-- pushbutton -->
+      <line x1="180" y1="50" x2="180" y2="70" stroke="#0F172A" stroke-width="2"/>
+      <line x1="220" y1="50" x2="220" y2="70" stroke="#0F172A" stroke-width="2"/>
+      <line x1="180" y1="50" x2="218" y2="42" stroke="#0F172A" stroke-width="2"/>
+      <text x="200" y="38" text-anchor="middle" font-size="10" fill="#0F172A" font-weight="800">PB1</text>
+      <!-- coil M1 -->
+      <line x1="380" y1="60" x2="540" y2="60" stroke="#0F172A" stroke-width="2"/>
+      <circle cx="560" cy="60" r="20" fill="none" stroke="#0F172A" stroke-width="2"/>
+      <text x="560" y="64" text-anchor="middle" font-size="11" fill="#0F172A" font-weight="800">M1</text>
+      <line x1="580" y1="60" x2="640" y2="60" stroke="#0F172A" stroke-width="2"/>
+      <text x="80" y="56" font-size="10" fill="#475569" font-weight="800">RUNG 1</text>
+      <!-- rung 2 -->
+      <line x1="60" y1="140" x2="180" y2="140" stroke="#0F172A" stroke-width="2"/>
+      <line x1="220" y1="140" x2="380" y2="140" stroke="#0F172A" stroke-width="2"/>
+      <!-- contact M1 -->
+      <line x1="180" y1="130" x2="180" y2="150" stroke="#0F172A" stroke-width="2"/>
+      <line x1="220" y1="130" x2="220" y2="150" stroke="#0F172A" stroke-width="2"/>
+      <line x1="180" y1="140" x2="220" y2="140" stroke="#0F172A" stroke-width="2"/>
+      <text x="200" y="160" text-anchor="middle" font-size="10" fill="#0F172A" font-weight="800">M1</text>
+      <!-- light bulb -->
+      <line x1="380" y1="140" x2="540" y2="140" stroke="#0F172A" stroke-width="2"/>
+      <circle cx="560" cy="140" r="20" fill="#FBBF24" stroke="#0F172A" stroke-width="2"/>
+      <text x="560" y="144" text-anchor="middle" font-size="10" fill="#0F172A" font-weight="800">LT1</text>
+      <line x1="580" y1="140" x2="640" y2="140" stroke="#0F172A" stroke-width="2"/>
+      <text x="80" y="136" font-size="10" fill="#475569" font-weight="800">RUNG 2</text>
+      <!-- annotations -->
+      <text x="200" y="220" text-anchor="start" font-size="11" fill="#0F172A" font-weight="800">Read me out loud:</text>
+      <text x="200" y="238" text-anchor="start" font-size="11" fill="#475569">"When PB1 is pressed → M1 energizes."</text>
+      <text x="200" y="252" text-anchor="start" font-size="11" fill="#475569">"When M1 is energized → its contact closes → LT1 lights up."</text>
+    </svg>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Coil = circle. Contact = two parallel lines. Read each rung as an "if this, then that" sentence.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">25</div>
+</section>
+
+<!-- ===================== PAGE 26 — TRANSLATION TABLE ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#F97316">▸ APPLY · 08 OF 12</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ CUSTOMER TRANSLATION TABLE</div>
+  <h2 style="margin-top:14px">What they say.<br>What they mean.<br>What you quote.</h2>
+
+  <div style="margin-top:20px">
+    <div class="translate-row" style="font-size:11px;font-weight:800;letter-spacing:.1em">
+      <div class="says">CUSTOMER SAYS</div>
+      <div class="means">MEANS</div>
+      <div class="quote-it">YOU QUOTE</div>
+    </div>
+    <div class="translate-row">
+      <div class="says">"I need a 240 single-phase"</div>
+      <div class="means">240 VAC, 1-phase, two hots + neutral + ground</div>
+      <div class="quote-it">2-pole breaker, 240V-rated devices</div>
+    </div>
+    <div class="translate-row">
+      <div class="says">"It's a 480 three-phase system"</div>
+      <div class="means">480 VAC, 3-phase, three hots</div>
+      <div class="quote-it">3-pole devices, 480V rated</div>
+    </div>
+    <div class="translate-row">
+      <div class="says">"I need a step-down transformer"</div>
+      <div class="means">Higher voltage in, lower voltage out (e.g., 480→120)</div>
+      <div class="quote-it">Control transformer, sized in VA</div>
+    </div>
+    <div class="translate-row">
+      <div class="says">"I'm blowing fuses on my PLC"</div>
+      <div class="means">Sensitive control circuit needing better protection</div>
+      <div class="quote-it">UL 1077 ice cube breaker</div>
+    </div>
+    <div class="translate-row">
+      <div class="says">"My motor keeps tripping the breaker"</div>
+      <div class="means">Breaker may be undersized for inrush, or overload</div>
+      <div class="quote-it">Verify FLA, check breaker curve (D), confirm overload relay</div>
+    </div>
+    <div class="translate-row">
+      <div class="says">"I need a 24-volt power supply"</div>
+      <div class="means">120 VAC → 24 VDC for control circuits</div>
+      <div class="quote-it">DIN-rail 24 VDC PSU, sized in watts or amps</div>
+    </div>
+    <div class="translate-row">
+      <div class="says">"I want speed control on this pump"</div>
+      <div class="means">Variable speed drive</div>
+      <div class="quote-it">VFD sized to motor HP and voltage</div>
+    </div>
+    <div class="translate-row">
+      <div class="says">"My panel is too crowded"</div>
+      <div class="means">Need compact, DIN-rail components</div>
+      <div class="quote-it">Compact breakers, slim contactors, modular relays</div>
+    </div>
+    <div class="translate-row">
+      <div class="says">"How do I know which device tripped?"</div>
+      <div class="means">Wants remote diagnostics</div>
+      <div class="quote-it">Auxiliary contacts wired to PLC inputs</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> Memorize the left column. The middle column unlocks the right column.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">26</div>
+</section>
+
+<!-- ===================== PAGE 27 — BUYING SIGNALS ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#F97316">▸ APPLY · 09 OF 12</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ THE 7 BUYING SIGNALS</div>
+  <h2 style="margin-top:14px">Listen for the<br>green lights.</h2>
+  <p class="lead" style="margin-top:6px">When you hear any of these phrases, your hand should already be on the line card.</p>
+
+  <div style="display:flex;gap:24px;margin-top:24px;align-items:flex-start">
+    <div style="flex:0 0 2.4in;text-align:center">
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="100" fill="#0F172A" stroke="#FACC15" stroke-width="2"/>
+        <circle cx="110" cy="110" r="75" fill="none" stroke="#FACC15" stroke-width="1" opacity=".5"/>
+        <circle cx="110" cy="110" r="50" fill="none" stroke="#FACC15" stroke-width="1" opacity=".5"/>
+        <circle cx="110" cy="110" r="25" fill="none" stroke="#FACC15" stroke-width="1" opacity=".5"/>
+        <line x1="10" y1="110" x2="210" y2="110" stroke="#FACC15" stroke-width="1" opacity=".4"/>
+        <line x1="110" y1="10" x2="110" y2="210" stroke="#FACC15" stroke-width="1" opacity=".4"/>
+        <path d="M 110 110 L 200 60 A 100 100 0 0 1 200 110 Z" fill="#FACC15" opacity=".3"/>
+        <circle cx="155" cy="80" r="6" fill="#FBBF24"/>
+        <circle cx="80" cy="160" r="5" fill="#FBBF24"/>
+        <circle cx="170" cy="140" r="4" fill="#FBBF24"/>
+        <circle cx="60" cy="90" r="5" fill="#FBBF24"/>
+        <circle cx="130" cy="50" r="4" fill="#FBBF24"/>
+        <text x="110" y="115" text-anchor="middle" font-size="14" fill="#FACC15" font-weight="800" font-family="Bricolage Grotesque">SIGNALS</text>
+      </svg>
+    </div>
+    <div class="grow">
+      <div class="radar-quote">📡 "I'm replacing an old panel."</div>
+      <div class="radar-quote">📡 "My breaker keeps tripping."</div>
+      <div class="radar-quote">📡 "The motor won't start anymore."</div>
+      <div class="radar-quote">📡 "I want to add remote monitoring."</div>
+      <div class="radar-quote">📡 "I need to step down the voltage."</div>
+      <div class="radar-quote">📡 "We're upgrading our control system."</div>
+      <div class="radar-quote">📡 "I'm running new wire to the back of the building."</div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:18px">
+    💡 <b>POWER-UP:</b> Each signal opens a different basket. Don't just answer — ask the follow-up that grows the order.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">27</div>
+</section>
+
+<!-- ===================== PAGE 28 — RED FLAGS ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#F97316">▸ APPLY · 10 OF 12</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🚨 THE 5 RED FLAGS · ESCALATE, DON'T WING IT</div>
+  <h2 style="margin-top:14px">When to stop and get<br>your team involved.</h2>
+  <p class="lead" style="margin-top:6px">Some questions are above your pay grade — and that's a good thing. Knowing when to escalate is part of the job.</p>
+
+  <div style="margin-top:20px">
+    <div class="mistake">
+      <div class="x">!</div>
+      <div>
+        <h3>1 — Customer asks for service-entrance equipment over the phone.</h3>
+        <p>Service-entrance, main switchgear, and utility-side equipment require formal sizing, code review, and stamped drawings. <b>Escalate to AE.</b></p>
+      </div>
+    </div>
+    <div class="mistake">
+      <div class="x">!</div>
+      <div>
+        <h3>2 — Customer doesn't know their voltage, phase, or fault current.</h3>
+        <p>Don't guess. Ask them to send the panel schedule or the equipment nameplate. <b>If they can't, involve a senior teammate or your AE.</b></p>
+      </div>
+    </div>
+    <div class="mistake">
+      <div class="x">!</div>
+      <div>
+        <h3>3 — "Will this pass UL inspection?"</h3>
+        <p>Be transparent: <b>RSP Supply is not a UL-certified inspector.</b> Let the customer know we offer engineering services to evaluate UL compliance — at an additional cost — and route them through your AE to scope it out.</p>
+      </div>
+    </div>
+    <div class="mistake">
+      <div class="x">!</div>
+      <div>
+        <h3>4 — "Is this safe?" or "Is this code-compliant?"</h3>
+        <p>Code compliance is the customer's licensed electrician's responsibility, not yours. <b>Don't make the call.</b></p>
+      </div>
+    </div>
+    <div class="mistake">
+      <div class="x">!</div>
+      <div>
+        <h3>5 — Anything involving arc flash hazard analysis or fault studies.</h3>
+        <p>That's an engineering deliverable. <b>Hand off, don't quote it.</b></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> "Let me get my engineer on this one" is a sign of competence, not weakness. Customers respect it.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">28</div>
+</section>
+
+<!-- ===================== PAGE 29 — THE 5 QUESTION SCRIPT ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#F97316">▸ APPLY · 11 OF 12</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ THE UNIVERSAL 5-QUESTION SCRIPT</div>
+  <h2 style="margin-top:14px">5 questions.<br>Any electrical quote.</h2>
+  <p class="lead" style="margin-top:6px">Burn this into your brain. You'll use it every day for the rest of your career here.</p>
+
+  <div style="display:flex;gap:24px;margin-top:20px;height:6.6in">
+    <div style="flex:0 0 2.6in">
+      <div style="background:#0F172A;border-radius:36px;padding:26px 14px;height:100%;border:6px solid #1E293B;display:flex;flex-direction:column">
+        <div style="background:#1F2937;height:24px;border-radius:12px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;color:#9CA3AF;font-size:10px;font-weight:600">RSP · CUSTOMER CALL</div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+          <div style="background:#3B82F6;color:#fff;padding:10px 14px;border-radius:18px;border-bottom-left-radius:4px;font-size:12px;font-weight:600;align-self:flex-start;max-width:80%">1️⃣ Voltage?</div>
+          <div style="background:#1F2937;color:#9CA3AF;padding:10px 14px;border-radius:18px;border-bottom-right-radius:4px;font-size:12px;font-weight:600;align-self:flex-end;max-width:80%">…480 3φ…</div>
+          <div style="background:#3B82F6;color:#fff;padding:10px 14px;border-radius:18px;border-bottom-left-radius:4px;font-size:12px;font-weight:600;align-self:flex-start;max-width:80%">2️⃣ Current?</div>
+          <div style="background:#1F2937;color:#9CA3AF;padding:10px 14px;border-radius:18px;border-bottom-right-radius:4px;font-size:12px;font-weight:600;align-self:flex-end;max-width:80%">…7.6 FLA…</div>
+          <div style="background:#3B82F6;color:#fff;padding:10px 14px;border-radius:18px;border-bottom-left-radius:4px;font-size:12px;font-weight:600;align-self:flex-start;max-width:80%">3️⃣ What's it for?</div>
+          <div style="background:#1F2937;color:#9CA3AF;padding:10px 14px;border-radius:18px;border-bottom-right-radius:4px;font-size:12px;font-weight:600;align-self:flex-end;max-width:80%">…motor…</div>
+          <div style="background:#3B82F6;color:#fff;padding:10px 14px;border-radius:18px;border-bottom-left-radius:4px;font-size:12px;font-weight:600;align-self:flex-start;max-width:80%">4️⃣ Upstream protection?</div>
+          <div style="background:#1F2937;color:#9CA3AF;padding:10px 14px;border-radius:18px;border-bottom-right-radius:4px;font-size:12px;font-weight:600;align-self:flex-end;max-width:80%">…20A 489…</div>
+          <div style="background:#3B82F6;color:#fff;padding:10px 14px;border-radius:18px;border-bottom-left-radius:4px;font-size:12px;font-weight:600;align-self:flex-start;max-width:80%">5️⃣ Mounting?</div>
+          <div style="background:#1F2937;color:#9CA3AF;padding:10px 14px;border-radius:18px;border-bottom-right-radius:4px;font-size:12px;font-weight:600;align-self:flex-end;max-width:80%">…DIN…</div>
+        </div>
+      </div>
+    </div>
+    <div class="grow">
+      <ol style="padding-left:20px;font-size:14px;line-height:1.8;color:var(--slate-700)">
+        <li><b>What voltage and phase?</b><br><span style="font-size:12px;color:var(--slate-500)">120, 240, 480, 24DC. 1φ or 3φ?</span></li>
+        <li><b>What's the current draw or load size?</b><br><span style="font-size:12px;color:var(--slate-500)">FLA for motors, watts for power supplies, amps for everything else.</span></li>
+        <li><b>What's it powering / protecting?</b><br><span style="font-size:12px;color:var(--slate-500)">Motor? PLC? Lighting? Drives the curve, listing, and accessory choices.</span></li>
+        <li><b>What's upstream?</b><br><span style="font-size:12px;color:var(--slate-500)">UL 489 in place? Available fault current?</span></li>
+        <li><b>How does it mount, and is space tight?</b><br><span style="font-size:12px;color:var(--slate-500)">DIN-rail? Bolted? Plug-in? Drives the SKU.</span></li>
+      </ol>
+      <div style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);border-radius:14px;padding:14px 18px;margin-top:14px">
+        <p style="font-size:13px;color:#78350F;font-weight:700">🎁 <b>BONUS:</b> "Anything else on this project I can quote at the same time?" — That's where the order grows.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    💡 <b>POWER-UP:</b> 5 questions. 60 seconds. Quote ready. Same script. Every call.
+  </div>
+  <div class="xp">+15 XP</div>
+  <div class="page-num">29</div>
+</section>
+
+<!-- ===================== PAGE 30 — COMMON MISTAKES ===================== -->
+<section class="page">
+  <div class="page-tag" style="color:#F97316">▸ APPLY · 12 OF 12</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ MISTAKES THAT KILL DEALS</div>
+  <h2 style="margin-top:14px">Don't be that rep.</h2>
+
+  <div style="margin-top:18px">
+    <div class="mistake">
+      <div class="x">✕</div>
+      <div>
+        <h3>1 — Quoting AC-rated equipment for a DC application.</h3>
+        <p>A breaker rated 480 VAC may only handle 60 VDC. Always confirm AC vs. DC.</p>
+      </div>
+    </div>
+    <div class="mistake">
+      <div class="x">✕</div>
+      <div>
+        <h3>2 — Sizing a motor breaker to FLA only.</h3>
+        <p>Motor inrush is 6–8x FLA. Branch breaker should be ~250% of FLA. Otherwise it nuisance-trips on every start.</p>
+      </div>
+    </div>
+    <div class="mistake">
+      <div class="x">✕</div>
+      <div>
+        <h3>3 — Ignoring AIC.</h3>
+        <p>Spec a 6 kA breaker on a 22 kA bus and you've sold the customer a hand grenade.</p>
+      </div>
+    </div>
+    <div class="mistake">
+      <div class="x">✕</div>
+      <div>
+        <h3>4 — Confusing single-phase 240V with three-phase 240V.</h3>
+        <p>Two completely different beasts. Always confirm phase count.</p>
+      </div>
+    </div>
+    <div class="mistake">
+      <div class="x">✕</div>
+      <div>
+        <h3>5 — Forgetting voltage drop on long runs.</h3>
+        <p>500 ft of undersized wire = motor running hot. Always ask the run length.</p>
+      </div>
+    </div>
+    <div class="mistake">
+      <div class="x">✕</div>
+      <div>
+        <h3>6 — Quoting UL 1077 as a branch breaker.</h3>
+        <p>Will fail UL inspection. UL 1077 is supplementary only.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="powerup" style="margin-top:14px">
+    🏅 <b>APPLY LEVEL CLEARED — +180 XP · BADGE EARNED: 🛠️ "FIELD READY."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE (interactive only) -->
+  <div class="miniboss-gate interactive-only" data-miniboss="sales-goblin">
+    <div class="icon">👺</div>
+    <h3>A Sales Goblin guards the gate!</h3>
+    <div class="sub">5 questions on real customer scenarios · Defeat to face the Final Boss</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">30</div>
+</section>
+
+<!-- ===================== PAGE 31 — BOSS INTRO ===================== -->
+<section class="page boss-page" data-section-id="finalboss" style="display:flex;flex-direction:column;align-items:center;text-align:center">
+  <div class="page-tag" style="color:#34D399">▸ TEST · BOSS FIGHT</div>
+  <div style="margin-top:.6in"><div class="level-banner lvl-test" style="margin:0 auto">🎯 TEST LEVEL</div></div>
+  <h2 style="margin-top:20px;font-size:54px">The Boss Fight.</h2>
+  <svg width="320" height="320" viewBox="0 0 320 320" style="margin-top:14px">
+    <defs>
+      <linearGradient id="bossE" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FBBF24"/>
+        <stop offset="100%" stop-color="#7F1D1D"/>
+      </linearGradient>
+      <filter id="bossglow"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <!-- Lightning storm boss -->
+    <path d="M 160 30 L 80 200 L 140 200 L 90 290 L 240 130 L 180 130 L 230 30 Z" fill="url(#bossE)" stroke="#FCD34D" stroke-width="3" filter="url(#bossglow)"/>
+    <!-- evil eyes -->
+    <circle cx="135" cy="160" r="8" fill="#0F172A"/>
+    <circle cx="175" cy="160" r="8" fill="#0F172A"/>
+    <circle cx="137" cy="158" r="2" fill="#fff"/>
+    <circle cx="177" cy="158" r="2" fill="#fff"/>
+    <!-- snarl -->
+    <path d="M 130 195 L 140 205 L 150 195 L 160 205 L 170 195 L 180 205" fill="none" stroke="#0F172A" stroke-width="2"/>
+  </svg>
+  <div style="width:80%;margin-top:14px">
+    <div style="display:flex;justify-content:space-between;color:#FACC15;font-weight:800;font-size:11px;letter-spacing:.1em;margin-bottom:6px">
+      <span>VOLTAGE WRAITH · 80 HP</span><span>STATUS: HOSTILE</span>
+    </div>
+    <div class="hp-bar"><div class="fill"></div></div>
+  </div>
+  <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:18px 24px;margin-top:24px;width:80%">
+    <p style="color:#fff;font-size:14px"><b>40 questions · 2 XP each · 80%+ to win</b></p>
+    <p style="color:#94A3B8;font-size:13px;margin-top:8px">No peeking. Score honest. 32/40 = 🏅 Electrical Fluency.</p>
+  </div>
+  <div class="page-num" style="color:#64748B">31</div>
+</section>
+
+<!-- ===================== PAGE 32 — ROUND 1 (Q1-8) ===================== -->
+<section class="page boss-page" data-quiz-page="1" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 1 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 1 · FUNDAMENTALS</div>
+    <div style="color:#34D399;font-weight:800;font-size:11px;letter-spacing:.1em">Q 1 → 8</div>
+  </div>
+  <div class="hp-bar" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="1"></div><div class="qcard" data-q="2"></div>
+    <div class="qcard" data-q="3"></div><div class="qcard" data-q="4"></div>
+    <div class="qcard" data-q="5"></div><div class="qcard" data-q="6"></div>
+    <div class="qcard" data-q="7"></div><div class="qcard" data-q="8"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">32</div>
+</section>
+
+<!-- ===================== PAGE 33 — ROUND 2 (Q9-16) ===================== -->
+<section class="page boss-page" data-quiz-page="2" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 2 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 2 · POWER SYSTEMS</div>
+    <div style="color:#34D399;font-weight:800;font-size:11px;letter-spacing:.1em">Q 9 → 16</div>
+  </div>
+  <div class="hp-bar" style="margin-top:8px"><div class="fill" style="width:80%"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="9"></div><div class="qcard" data-q="10"></div>
+    <div class="qcard" data-q="11"></div><div class="qcard" data-q="12"></div>
+    <div class="qcard" data-q="13"></div><div class="qcard" data-q="14"></div>
+    <div class="qcard" data-q="15"></div><div class="qcard" data-q="16"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">33</div>
+</section>
+
+<!-- ===================== PAGE 34 — ROUND 3 (Q17-24) ===================== -->
+<section class="page boss-page" data-quiz-page="3" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 3 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 3 · SAFETY & FAULTS</div>
+    <div style="color:#FBBF24;font-weight:800;font-size:11px;letter-spacing:.1em">Q 17 → 24</div>
+  </div>
+  <div class="hp-bar r2" style="margin-top:8px"><div class="fill" style="width:60%"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="17"></div><div class="qcard" data-q="18"></div>
+    <div class="qcard" data-q="19"></div><div class="qcard" data-q="20"></div>
+    <div class="qcard" data-q="21"></div><div class="qcard" data-q="22"></div>
+    <div class="qcard" data-q="23"></div><div class="qcard" data-q="24"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">34</div>
+</section>
+
+<!-- ===================== PAGE 35 — ROUND 4 (Q25-32) ===================== -->
+<section class="page boss-page" data-quiz-page="4" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 4 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 4 · COMPONENTS</div>
+    <div style="color:#F97316;font-weight:800;font-size:11px;letter-spacing:.1em">Q 25 → 32</div>
+  </div>
+  <div class="hp-bar r3" style="margin-top:8px"><div class="fill" style="width:40%"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="25"></div><div class="qcard" data-q="26"></div>
+    <div class="qcard" data-q="27"></div><div class="qcard" data-q="28"></div>
+    <div class="qcard" data-q="29"></div><div class="qcard" data-q="30"></div>
+    <div class="qcard" data-q="31"></div><div class="qcard" data-q="32"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">35</div>
+</section>
+
+<!-- ===================== PAGE 36 — FINAL ROUND (Q33-40) ===================== -->
+<section class="page boss-page" data-quiz-page="5" data-section-id="finalboss">
+  <div class="page-tag" style="color:#34D399">▸ FINAL BOSS · ROUND 5 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 FINAL ROUND · APPLY IT</div>
+    <div style="color:#EF4444;font-weight:800;font-size:11px;letter-spacing:.1em">Q 33 → 40 · KILL SHOT</div>
+  </div>
+  <div class="hp-bar r4" style="margin-top:8px"><div class="fill" style="width:20%"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="33"></div><div class="qcard" data-q="34"></div>
+    <div class="qcard" data-q="35"></div><div class="qcard" data-q="36"></div>
+    <div class="qcard" data-q="37"></div><div class="qcard" data-q="38"></div>
+    <div class="qcard" data-q="39"></div><div class="qcard" data-q="40"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">36</div>
+</section>
+
+<!-- ===================== PAGE 37 — ANSWER KEY / RESULTS ===================== -->
+<section class="page" id="resultsPage" data-section-id="results">
+  <div class="page-tag" style="color:#10B981">▸ FINAL BOSS · RESULTS</div>
+  <div class="level-banner lvl-test" style="margin-top:.4in">🎯 ANSWER KEY · YOUR RESULTS</div>
+  <h2 style="margin-top:14px">🗝️ The Key.</h2>
+  <p class="lead print-only" style="display:none">Score yourself. Tier yourself. Earn the badge.</p>
+
+  <!-- Live results panel (browser only) -->
+  <div id="liveResults" class="interactive-only" style="margin-top:18px;background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:18px;padding:24px;color:#fff">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+      <div>
+        <p style="color:#94A3B8;font-size:11px;letter-spacing:.18em;font-weight:800;margin:0">▸ YOUR LIVE SCORE</p>
+        <p style="font-family:'Bricolage Grotesque';font-size:54px;font-weight:800;color:#FACC15;margin-top:4px;line-height:1">
+          <span id="scoreCorrect">0</span><span style="color:#475569">/40</span>
+        </p>
+        <p style="font-size:13px;color:#CBD5E1;margin-top:4px">Total XP: <b id="scoreXP" style="color:#34D399">0</b> <span style="color:#475569">/ 460</span></p>
+      </div>
+      <div id="tierBadge" style="text-align:center"></div>
+    </div>
+    <div style="margin-top:14px;background:#334155;height:14px;border-radius:7px;overflow:hidden;border:1px solid #475569">
+      <div id="scoreBar" style="height:100%;width:0%;background:linear-gradient(90deg,#10B981,#34D399);transition:width .4s ease"></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button id="submitBtn" style="background:linear-gradient(135deg,#10B981,#047857);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📤 SUBMIT TO TRAINER</button>
+      <button id="copyBtn" style="background:#1E40AF;color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📋 COPY RESULTS</button>
+      <button id="resetBtn" style="background:#1E293B;color:#FACC15;border:1px solid #475569;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">↻ RESTART QUIZ</button>
+    </div>
+    <div id="submitStatus" style="margin-top:10px;font-size:12px;font-weight:700;color:#94A3B8;min-height:18px;white-space:pre-wrap"></div>
+  </div>
+
+  <div class="answer-key-static">
+  <div class="key-grid">
+    <div class="key-cell"><span>Q1</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q2</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q3</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q4</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q5</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q6</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q7</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q8</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q9</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q10</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q11</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q12</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q13</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q14</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q15</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q16</span><span class="a">A</span></div>
+    <div class="key-cell"><span>Q17</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q18</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q19</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q20</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q21</span><span class="a">A</span></div>
+    <div class="key-cell"><span>Q22</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q23</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q24</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q25</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q26</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q27</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q28</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q29</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q30</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q31</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q32</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q33</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q34</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q35</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q36</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q37</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q38</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q39</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q40</span><span class="a">B</span></div>
+  </div>
+
+  <h3 style="margin-top:24px">🏆 Scoring tiers</h3>
+  <div class="tier tier-gold"><div class="medal">🥇</div><div><b>32–40 correct → ELECTRICAL FLUENCY.</b> Earn the badge. You're cleared to attack the product mastery courses.</div></div>
+  <div class="tier tier-silver"><div class="medal">🥈</div><div><b>24–31 correct → SOLID FOUNDATION.</b> Re-run the APPLY level and re-fight.</div></div>
+  <div class="tier tier-bronze"><div class="medal">🥉</div><div><b>0–23 correct → STILL CHARGING UP.</b> Back to LEARN. The wraith isn't going anywhere.</div></div>
+  </div><!-- /answer-key-static -->
+  <div class="page-num">37</div>
+</section>
+
+<!-- ===================== PAGE 38 — LOOT DROP ===================== -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ LOOT DROP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">💎 POCKET CHEAT SHEET</div>
+  <h2 style="margin-top:14px">Tear-out card.</h2>
+  <p class="lead">Print it. Tape it to your monitor. Reference forever.</p>
+
+  <div class="loot" style="margin-top:18px">
+    <div class="stamp">✂ TEAR HERE</div>
+
+    <h3>⚡ The water analogy</h3>
+    <p><b>Voltage</b> = pressure. <b>Current</b> = flow. <b>Resistance</b> = pipe width.</p>
+
+    <h3>🧮 The two equations</h3>
+    <p><b>V = I × R</b> (Ohm's Law) &nbsp;&nbsp;|&nbsp;&nbsp; <b>P = V × I</b> (Power)</p>
+
+    <h3>🔌 The 4 voltages</h3>
+    <p><b>120 VAC</b> outlets · <b>240 VAC</b> appliances · <b>480 VAC</b> industrial · <b>24 VDC</b> controls</p>
+
+    <h3>📞 The 5-question script</h3>
+    <p>1) Voltage + phase? &nbsp; 2) Current/load? &nbsp; 3) Powering what? &nbsp; 4) Upstream protection? &nbsp; 5) Mount + space?</p>
+
+    <h3>🧊 UL 489 vs UL 1077</h3>
+    <p><b>489</b> = first device after service · <b>1077</b> = downstream supplementary only</p>
+
+    <h3>⚙️ Relay vs contactor</h3>
+    <p><b>Relay</b> = signals · <b>Contactor</b> = motors</p>
+
+    <h3>🚨 Always confirm</h3>
+    <p>AC vs DC · Single-phase vs three-phase · AIC ≥ available fault current</p>
+
+    <h3>🧠 The memory hook</h3>
+    <p style="font-size:16px;font-weight:800;color:#1E40AF">Pressure pushes. Flow flows. Pipe restricts. The rest is math.</p>
+  </div>
+  <div class="page-num">38</div>
+</section>
+
+<!-- ===================== PAGE 39 — TROPHY CASE ===================== -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ FINAL XP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">🏅 TROPHY CASE</div>
+  <h2 style="margin-top:14px">Your earned XP.</h2>
+
+  <div class="trophy-grid">
+    <div class="trophy"><div class="icon">🧠</div><h3>MENTAL MODEL LOCKED</h3><div class="xp-num">+150 XP</div></div>
+    <div class="trophy"><div class="icon">👹</div><h3>MINI BOSSES</h3><div class="xp-num">+50 XP</div></div>
+    <div class="trophy"><div class="icon">🛠️</div><h3>FIELD READY</h3><div class="xp-num">+180 XP</div></div>
+    <div class="trophy"><div class="icon">⚡</div><h3>ELECTRICAL FLUENCY</h3><div class="xp-num">+80 XP</div></div>
+  </div>
+
+  <div class="factbox" style="margin-top:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="font-size:16px">TOTAL POSSIBLE XP</h3>
+      <div style="font-family:'Bricolage Grotesque';font-size:46px;font-weight:800;color:#CA8A04">460</div>
+    </div>
+    <hr class="faint">
+    <p style="font-size:12px;color:var(--slate-500)">Cleared the prereq → graduate to product Mastery courses: Ice Cube Breakers · Contactors · VFDs · Power Supplies · and more.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:18px">
+    🔓 <b>NEXT UNLOCKS:</b> The product Mastery series. Each volume builds on what you just learned here.
+  </div>
+  <div class="page-num">39</div>
+</section>
+
+<!-- ===================== PAGE 40 — CLOSING ===================== -->
+<section class="page closing-page" data-section-id="results">
+  <h1 style="font-size:84px">⚡</h1>
+  <h1 style="margin-top:14px">You speak the<br>language now.</h1>
+  <p style="font-size:20px;max-width:5.5in;margin:24px auto 0">No more bluffing. No more nodding along when the customer mentions FLA or AIC. You've got the mental model that everything else hangs on.</p>
+
+  <div style="margin-top:40px;display:flex;gap:18px;flex-wrap:wrap;justify-content:center">
+    <div style="background:rgba(250,204,21,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(250,204,21,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#FACC15">🧠 LEARN to think</div>
+    <div style="background:rgba(250,204,21,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(250,204,21,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#FACC15">🛠️ APPLY to talk</div>
+    <div style="background:rgba(250,204,21,.18);padding:14px 20px;border-radius:12px;border:1px solid rgba(250,204,21,.4);font-weight:800;font-size:13px;letter-spacing:.1em;color:#FACC15">🎯 TEST to prove it</div>
+  </div>
+
+  <div style="margin-top:auto;padding-top:30px;text-align:center">
+    <p style="color:#FACC15;font-size:13px;letter-spacing:.18em;font-weight:800">▸ NEXT UP</p>
+    <p style="font-size:14px;color:#fff;margin-top:6px">Ice Cube Breakers · Contactors · Motor Control · VFDs · Power Supplies</p>
+    <p style="margin-top:30px;color:#FDE68A;font-size:12px;font-weight:800;letter-spacing:.18em">RSP INDUSTRIAL · PREREQUISITE TRAINING · VOL 01</p>
+  </div>
+</section>
+
+<script src="../shared/module.js?v=editor-blocks-2-page-delete"></script>
+<script>
+RSPModule.init({
+  moduleId:   "electrical-fundamentals",
+  moduleName: "Electrical Fundamentals",
+  moduleIcon: "⚡",
+
+  totalQuestions: 40,
+  passGold:       32,
+  passSilver:     24,
+  pageXpTotal:    330,   // 15 LEARN × 10 + 12 APPLY × 15
+  minibossXpTotal: 50,
+  adminPassword:  (window.RSP_CONFIG && window.RSP_CONFIG.adminPassword) || "",
+  pumbleWebhookUrl: "",
+
+  tierBadges: {
+    gold:   { name:"ELECTRICAL FLUENCY", msg:"Cleared the prereq. On to product mastery." },
+    silver: { name:"SOLID FOUNDATION",   msg:"Re-run APPLY level and re-fight." },
+    bronze: { name:"STILL CHARGING UP",  msg:"Back to LEARN. Boss isn't going anywhere." }
+  },
+  tierSubmitText: {
+    gold:   "🥇 Mastery — Cleared the prereq",
+    silver: "🥈 Solid Foundation — Re-do APPLY level",
+    bronze: "🥉 Needs Re-do — Back to LEARN"
+  },
+
+  // -------- THE 40-QUESTION BOSS FIGHT --------
+  quiz: [
+    {n:1, q:"In the water analogy, voltage is best compared to:", opts:{A:"Flow rate",B:"Pressure",C:"Pipe width",D:"The valve"}, c:"B"},
+    {n:2, q:"Current is measured in:", opts:{A:"Volts",B:"Watts",C:"Amps",D:"Ohms"}, c:"C"},
+    {n:3, q:"Resistance is measured in:", opts:{A:"Volts",B:"Ohms",C:"Amps",D:"Watts"}, c:"B"},
+    {n:4, q:"Ohm's Law states:", opts:{A:"V = I + R",B:"V = I × R",C:"V = I ÷ R",D:"V = I − R"}, c:"B"},
+    {n:5, q:"Power (in watts) equals:", opts:{A:"V ÷ I",B:"V × I",C:"V + I",D:"V − I"}, c:"B"},
+    {n:6, q:"A 120V circuit drawing 5A consumes:", opts:{A:"60 W",B:"240 W",C:"600 W",D:"24 W"}, c:"C"},
+    {n:7, q:"AC current:", opts:{A:"Flows in one direction",B:"Reverses direction periodically",C:"Comes from batteries",D:"Is always 24 volts"}, c:"B"},
+    {n:8, q:"DC is most commonly found in:", opts:{A:"Wall outlets",B:"Three-phase motors",C:"Batteries and electronics",D:"Service entrances"}, c:"C"},
+    {n:9, q:"Which voltage is typically used for control circuits inside a panel?", opts:{A:"480 VAC",B:"240 VAC",C:"24 VDC",D:"1000 VAC"}, c:"C"},
+    {n:10, q:"\"Three-phase\" means there are how many hot wires?", opts:{A:"1",B:"2",C:"3",D:"4"}, c:"C"},
+    {n:11, q:"Three-phase power is preferred for industrial motors because:", opts:{A:"It's cheaper",B:"Power is smoother and never dips to zero",C:"It uses less copper",D:"It runs at higher frequency"}, c:"B"},
+    {n:12, q:"Which voltage is most common for U.S. household outlets?", opts:{A:"24V",B:"120V",C:"240V",D:"480V"}, c:"B"},
+    {n:13, q:"Which wire is the \"live\" wire that carries energy in?", opts:{A:"Neutral",B:"Ground",C:"Hot",D:"Bonding"}, c:"C"},
+    {n:14, q:"Standard color for a ground wire:", opts:{A:"Black",B:"White",C:"Green or bare",D:"Red"}, c:"C"},
+    {n:15, q:"Grounding is the act of:", opts:{A:"Tying metal parts together",B:"Connecting the system to earth",C:"Insulating wires",D:"Stepping voltage down"}, c:"B"},
+    {n:16, q:"Bonding is the act of:", opts:{A:"Tying metal parts together",B:"Connecting to earth",C:"Stepping voltage up",D:"Reading a schematic"}, c:"A"},
+    {n:17, q:"A short circuit is best described as:", opts:{A:"A slow heating problem",B:"A sudden, very high fault current",C:"A drop in voltage",D:"A weak connection"}, c:"B"},
+    {n:18, q:"An overload is best described as:", opts:{A:"A wire-to-wire fault",B:"Slightly excess current sustained over time",C:"A grounding fault",D:"An open circuit"}, c:"B"},
+    {n:19, q:"AIC stands for:", opts:{A:"Average Industrial Current",B:"Amps Interrupting Capacity",C:"AC Insulated Conductor",D:"Auxiliary Internal Contact"}, c:"B"},
+    {n:20, q:"A breaker's AIC must be:", opts:{A:"Less than the available fault current",B:"Equal to or greater than the available fault current",C:"Equal to the load current",D:"Twice the load voltage"}, c:"B"},
+    {n:21, q:"Voltage drop is caused by:", opts:{A:"Wire resistance over distance",B:"Bonding",C:"AC frequency",D:"Bad grounding"}, c:"A"},
+    {n:22, q:"In AWG, smaller numbers mean:", opts:{A:"Thinner wire",B:"Thicker wire",C:"Cheaper wire",D:"Insulated wire"}, c:"B"},
+    {n:23, q:"UL 489 breakers are used for:", opts:{A:"Supplementary protection only",B:"Branch circuit protection",C:"Lightning protection",D:"Voltage regulation"}, c:"B"},
+    {n:24, q:"UL 1077 breakers must always be installed:", opts:{A:"As the main breaker",B:"Without upstream protection",C:"Downstream of a UL 489 breaker",D:"On the line side of a transformer"}, c:"C"},
+    {n:25, q:"A relay is best used for:", opts:{A:"Switching motor-level current",B:"Switching small control signals",C:"Stepping down voltage",D:"Storing energy"}, c:"B"},
+    {n:26, q:"A contactor is best used for:", opts:{A:"Switching small signals",B:"Switching motor-level loads",C:"Reading temperature",D:"Stepping voltage"}, c:"B"},
+    {n:27, q:"A control transformer typically:", opts:{A:"Steps 480V up to 4160V",B:"Steps 480V down to 120V for control circuits",C:"Generates DC power",D:"Stores energy"}, c:"B"},
+    {n:28, q:"A 24 VDC power supply typically converts:", opts:{A:"24 VDC to 120 VAC",B:"120 VAC to 24 VDC",C:"480 VAC to 480 VDC",D:"AC to AC"}, c:"B"},
+    {n:29, q:"FLA on a motor nameplate stands for:", opts:{A:"Frequency Load Average",B:"Full Load Amps",C:"Forward Lock Anchor",D:"Field-Limited Amps"}, c:"B"},
+    {n:30, q:"For a typical motor, branch breaker is sized at roughly:", opts:{A:"50% of FLA",B:"100% of FLA",C:"250% of FLA",D:"1000% of FLA"}, c:"C"},
+    {n:31, q:"A VFD primarily controls a motor's:", opts:{A:"Color",B:"Speed (frequency)",C:"Direction only",D:"Voltage rating"}, c:"B"},
+    {n:32, q:"A soft starter primarily:", opts:{A:"Controls speed continuously",B:"Ramps voltage up to reduce inrush",C:"Replaces a contactor",D:"Generates DC"}, c:"B"},
+    {n:33, q:"In a ladder schematic, a coil is drawn as:", opts:{A:"Two parallel lines",B:"A circle with letters inside",C:"A zigzag",D:"A rectangle"}, c:"B"},
+    {n:34, q:"The first question to ask on any electrical quote is:", opts:{A:"What's your budget?",B:"What voltage and phase?",C:"What color?",D:"What brand?"}, c:"B"},
+    {n:35, q:"A customer says \"240 single-phase.\" Pole count for the breaker?", opts:{A:"1 pole",B:"2 poles",C:"3 poles",D:"4 poles"}, c:"B"},
+    {n:36, q:"A customer says \"480 three-phase.\" Pole count?", opts:{A:"1 pole",B:"2 poles",C:"3 poles",D:"6 poles"}, c:"C"},
+    {n:37, q:"Which is a red flag that should be escalated?", opts:{A:"\"I need a 24V power supply\"",B:"\"Will this pass UL inspection?\"",C:"\"I need an ice cube breaker\"",D:"\"What's a relay?\""}, c:"B"},
+    {n:38, q:"A motor with high inrush is best protected by what trip curve?", opts:{A:"B-curve",B:"C-curve",C:"D-curve",D:"Z-curve"}, c:"C"},
+    {n:39, q:"\"My PLC keeps shutting down\" is a buying signal for:", opts:{A:"A new transformer",B:"A UL 1077 ice cube breaker",C:"A motor starter",D:"A higher-voltage panel"}, c:"B"},
+    {n:40, q:"A 5 HP, 480V, 7.6 FLA motor running 600 ft from the panel — what should you ask about?", opts:{A:"Color of the wire",B:"Voltage drop / wire size",C:"Customer's budget",D:"Brand of contactor"}, c:"B"}
+  ],
+
+  // -------- MINI-BOSSES --------
+  minibosses: {
+    'frost-imp': {
+      name: 'FROST IMP',
+      icon: '👹',
+      tagline: 'Guardian of the Fundamentals',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"In the water analogy, voltage is the:", opts:{A:"Pipe width",B:"Pressure",C:"Flow rate",D:"Valve"}, c:"B"},
+        {q:"Ohm's Law:", opts:{A:"V = I + R",B:"V = I × R",C:"V = I − R",D:"V = R ÷ I"}, c:"B"},
+        {q:"AC current means current that:", opts:{A:"Flows in one direction",B:"Reverses direction periodically",C:"Comes from batteries only",D:"Is always 24V"}, c:"B"},
+        {q:"24 VDC is most commonly used for:", opts:{A:"Motors",B:"Branch panels",C:"Control circuits",D:"Service entrances"}, c:"C"},
+        {q:"Three-phase power has how many hot wires?", opts:{A:"1",B:"2",C:"3",D:"4"}, c:"C"}
+      ]
+    },
+    'sales-goblin': {
+      name: 'SALES GOBLIN',
+      icon: '👺',
+      tagline: 'Gatekeeper to the Final Boss',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"First question to ask on any electrical quote:", opts:{A:"Budget?",B:"Voltage and phase?",C:"Brand?",D:"Color?"}, c:"B"},
+        {q:"Customer says \"PLC keeps shutting down\" — quote:", opts:{A:"Larger transformer",B:"Higher voltage panel",C:"UL 1077 ice cube breaker",D:"Bigger contactor"}, c:"C"},
+        {q:"\"Will this pass UL inspection?\" — your move:", opts:{A:"Confirm yes",B:"Quote it cheap",C:"Escalate to engineering",D:"Send catalog"}, c:"C"},
+        {q:"Relay vs contactor — which switches motor-level loads?", opts:{A:"Relay",B:"Contactor",C:"Both equally",D:"Neither"}, c:"B"},
+        {q:"Motor branch breaker is sized at roughly what % of FLA?", opts:{A:"50%",B:"100%",C:"250%",D:"1000%"}, c:"C"}
+      ]
+    }
+  },
+
+  // -------- SIDE MAP --------
+  mapSections: [
+    {id:'intro',        name:'Start',          icon:'🏁', meta:'Welcome',     firstPage:1},
+    {id:'fundamentals', name:'Fundamentals',   icon:'💧', meta:'Pages 4–10',  firstPage:4},
+    {id:'systems',      name:'Power Systems',  icon:'⚡', meta:'Pages 11–12', firstPage:11},
+    {id:'safety',       name:'Safety & Wiring',icon:'🛡️', meta:'Pages 13–18', firstPage:13},
+    {id:'mb1',          name:'Frost Imp',      icon:'👹', meta:'Mini Boss',   firstPage:18, isBoss:true, bossId:'frost-imp'},
+    {id:'panels',       name:'Control Panels', icon:'🛠️', meta:'Pages 19–26', firstPage:19},
+    {id:'sales',        name:'Sales Skills',   icon:'💼', meta:'Pages 27–30', firstPage:27},
+    {id:'mb2',          name:'Sales Goblin',   icon:'👺', meta:'Mini Boss',   firstPage:30, isBoss:true, bossId:'sales-goblin'},
+    {id:'finalboss',    name:'Voltage Wraith', icon:'🐉', meta:'Final Boss',  firstPage:31, isBoss:true, isFinal:true},
+    {id:'results',      name:'Results',        icon:'🏆', meta:'Trophy Case', firstPage:37}
+  ],
+
+  pageRanges: [
+    {section:'intro',        from:1,  to:3},
+    {section:'fundamentals', from:4,  to:10},
+    {section:'systems',      from:11, to:12},
+    {section:'safety',       from:13, to:18},
+    {section:'panels',       from:19, to:26},
+    {section:'sales',        from:27, to:30},
+    {section:'finalboss',    from:31, to:36},
+    {section:'results',      from:37, to:40}
+  ]
+});
+</script>
+
+</body>
+</html>

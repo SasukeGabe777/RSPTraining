@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Harmonic Filter Mastery — RSP Industrial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/module.css?v=editor-blocks-2-page-delete">
+<style>
+  /* === HARMONIC FILTER MASTERY · LIME THEME === */
+  :root{
+    --theme-primary:#65A30D;
+    --theme-primary-deep:#365314;
+    --theme-accent:#D9F99D;
+    --theme-obj-num:#65A30D;
+    --theme-login-btn-1:#65A30D;
+    --theme-login-btn-2:#84CC16;
+    --theme-login-pretitle:#65A30D;
+    --theme-login-focus:#65A30D;
+    --theme-side-bg:#365314;
+    --theme-side-border:#4D7C0F;
+    --theme-side-toggle:#4D7C0F;
+    --theme-loot-border:#65A30D;
+    --theme-loot-bg-1:#F7FEE7;
+    --theme-loot-bg-2:#ECFCCB;
+    --theme-loot-h3:#365314;
+    --theme-admin-btn:#65A30D;
+    --theme-admin-loginbox-border:#4D7C0F;
+  }
+
+  /* Module-specific components */
+  .harm-card{background:var(--slate-50);border:2px solid var(--slate-200);border-radius:14px;padding:16px;margin-bottom:10px}
+  .harm-card .hc-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .harm-card .hc-name{font-family:'Bricolage Grotesque';font-size:18px;font-weight:800;color:#365314}
+  .harm-card .hc-tag{font-size:10px;font-weight:700;color:#64748B;letter-spacing:.08em;text-transform:uppercase}
+  .harm-card .hc-body,.harm-card .hc-list{font-size:12.5px;color:#334155;line-height:1.5;margin-top:4px}
+  .harm-card .hc-list li{margin-left:18px}
+
+  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .compare-card{border-radius:14px;padding:18px;border:2px solid}
+  .compare-card h3{font-size:16px}
+  .compare-card p,.compare-card li{font-size:12.5px;line-height:1.5}
+  .compare-card ul{margin-top:8px}
+  .compare-card li{margin-left:18px}
+  .compare-card.reactor{background:linear-gradient(160deg,#EEF2FF,#E0E7FF);border-color:#4F46E5;color:#1E1B4B}
+  .compare-card.filter{background:linear-gradient(160deg,#F7FEE7,#ECFCCB);border-color:#65A30D;color:#365314}
+  .compare-card.passive{background:linear-gradient(160deg,#F0FDF4,#DCFCE7);border-color:#16A34A;color:#14532D}
+  .compare-card.active{background:linear-gradient(160deg,#ECFEFF,#CFFAFE);border-color:#0891B2;color:#164E63}
+
+  .wave-demo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .wave-box{background:#fff;border:2px solid #E2E8F0;border-radius:14px;padding:14px}
+  .wave-box .wave-label{font-size:10px;font-weight:800;letter-spacing:.12em;color:#64748B;text-transform:uppercase}
+  .wave-box .wave-sub{font-size:12px;font-weight:700;color:#334155;margin-top:6px}
+  .wave-box svg{width:100%;height:90px;display:block;margin-top:10px}
+
+  .signal-flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .signal-flow .node{background:#fff;border:2px solid #D9F99D;border-radius:12px;padding:14px 16px;min-width:120px;text-align:center;font-size:13px;font-weight:800;color:#365314;line-height:1.3}
+  .signal-flow .node .sub{display:block;font-size:10px;color:#64748B;font-weight:700;letter-spacing:.05em;margin-top:3px;text-transform:uppercase}
+  .signal-flow .node.alert{background:#FEF2F2;border-color:#FCA5A5;color:#991B1B}
+  .signal-flow .node.filter{background:#F7FEE7;border-color:#65A30D}
+  .signal-flow .arrow{font-size:26px;color:#65A30D;line-height:1}
+
+  .problem-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+  .problem-pill{background:#fff;border:2px solid #E2E8F0;border-radius:14px;padding:12px 14px}
+  .problem-pill .k{font-size:11px;font-weight:800;letter-spacing:.08em;color:#991B1B;text-transform:uppercase}
+  .problem-pill .v{font-size:13px;font-weight:700;color:#0F172A;margin-top:4px;line-height:1.35}
+
+  .thd-gauge{margin-top:14px}
+  .thd-gauge .meta{display:flex;justify-content:space-between;color:#64748B;font-size:11px;font-weight:800;letter-spacing:.06em}
+  .thd-gauge .track{display:flex;height:22px;border-radius:999px;overflow:hidden;border:1px solid #D9F99D;margin-top:8px}
+  .thd-gauge .seg{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;letter-spacing:.05em}
+  .thd-gauge .clean{flex:1;background:#DCFCE7;color:#166534}
+  .thd-gauge .watch{flex:1.2;background:#FEF9C3;color:#854D0E}
+  .thd-gauge .rough{flex:1.3;background:#FED7AA;color:#9A3412}
+  .thd-gauge .ugly{flex:1.5;background:#FCA5A5;color:#7F1D1D}
+
+  .matrix{width:100%;border-collapse:collapse;margin-top:12px;font-size:11.5px}
+  .matrix th{background:#ECFCCB;color:#365314;text-align:center;padding:10px 6px;font-weight:800;border:1px solid #D9F99D;letter-spacing:.05em}
+  .matrix th.row-h{background:#F1F5F9;color:#0F172A;text-align:left;width:170px}
+  .matrix td{padding:10px 8px;border:1px solid #E2E8F0;color:#1E293B;font-weight:600;vertical-align:top}
+  .matrix td.lbl{background:#F8FAFC;font-weight:800;color:#0F172A;font-size:12px}
+  .matrix td.best{background:#DCFCE7;color:#166534;font-weight:800}
+  .matrix td.warn{background:#FEF9C3;color:#854D0E;font-weight:800}
+  .matrix td.bad{background:#FEE2E2;color:#991B1B;font-weight:800}
+
+  .callout{background:linear-gradient(160deg,#F7FEE7,#ECFCCB);border:2px solid #65A30D;border-radius:14px;padding:16px;margin-top:10px}
+  .callout h3{color:#365314;font-size:16px}
+  .callout p{color:#3F6212;font-size:13px;margin-top:6px;line-height:1.5}
+
+  .question-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .question-pill{background:#fff;border:2px solid #D9F99D;border-radius:14px;padding:14px}
+  .question-pill .num{font-size:11px;font-weight:800;letter-spacing:.08em;color:#65A30D}
+  .question-pill .ask{font-size:13px;font-weight:800;color:#0F172A;line-height:1.35;margin-top:6px}
+  .question-pill .why{font-size:12px;color:#475569;line-height:1.45;margin-top:6px}
+
+  .translate-row .says{background:#ECFCCB;color:#365314}
+  .translate-row .means{background:#FEF3C7;color:#78350F}
+  .translate-row .quote-it{background:#DCFCE7;color:#14532D}
+
+  .decision-card{background:#fff;border:2px solid #D9F99D;border-radius:14px;padding:14px 16px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start}
+  .decision-card .q{flex:0 0 230px;font-size:12.5px;font-weight:800;color:#365314}
+  .decision-card .y,.decision-card .n{flex:1;font-size:12px;font-weight:700;padding:8px 10px;border-radius:8px}
+  .decision-card .y{background:#DCFCE7;color:#166534}
+  .decision-card .n{background:#FEF9C3;color:#854D0E}
+</style>
+</head>
+<body>
+
+<a href="../index.html" id="portalLink" class="interactive-only">← PORTAL</a>
+
+<aside id="sideMap" class="interactive-only">
+  <button class="map-toggle" id="mapToggle" title="Toggle map">‹</button>
+  <div class="map-title">🌀 FILTER MAP</div>
+  <div class="map-hint">YOUR JOURNEY</div>
+  <div class="map-path" id="mapPath"></div>
+</aside>
+
+<div id="minibossOverlay" class="interactive-only">
+  <div class="miniboss-modal" id="minibossModal"></div>
+</div>
+
+<div id="loginOverlay" class="interactive-only">
+  <div class="login-card">
+    <div class="bolt-bg">🌀</div>
+    <div class="pretitle">RSP INDUSTRIAL · PRODUCT MASTERY</div>
+    <h1>Harmonic Filter<br>Mastery</h1>
+    <p class="sub">Sign in to track your XP and unlock the Boss Fight.</p>
+    <label for="loginName">Your name</label>
+    <input type="text" id="loginName" placeholder="e.g. Gabe Ebmeyer" autocomplete="off"/>
+    <label for="loginId">Employee ID <span style="font-weight:500;color:#94A3B8;letter-spacing:0">(optional)</span></label>
+    <input type="text" id="loginId" placeholder="e.g. RSP-1234" autocomplete="off"/>
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn">Begin Training →</button>
+    <p class="footer-note">Your progress is saved on this device. No data leaves your browser.</p>
+  </div>
+</div>
+
+<div id="xpTracker" class="interactive-only">
+  <div>
+    <div class="username" id="trackerUser">🌀 READY</div>
+    <div class="label">XP EARNED</div>
+    <div><span class="num" id="trackerXP">0</span><span style="color:#475569;font-size:14px"> / 280</span></div>
+    <span class="reset-link" id="resetProgress">↻ Reset</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+    <div style="display:flex;gap:10px;font-size:10px;color:#94A3B8;white-space:nowrap;flex-wrap:wrap">
+      <span>📖&nbsp;<b style="color:#fff"><span id="trackerPages">0</span>/14</b></span>
+      <span>🎯&nbsp;<b style="color:#fff"><span id="trackerAnswered">0</span>/30</b></span>
+      <span>✓&nbsp;<b style="color:#fff"><span id="trackerCorrect">0</span></b></span>
+    </div>
+    <div class="bar"><div class="fill" id="trackerFill"></div></div>
+  </div>
+</div>
+
+<!-- ============= PAGE 1 — COVER ============= -->
+<section class="page cover">
+  <div class="ribbon">
+    <span class="badge">RSP INDUSTRIAL</span>
+    <span class="badge">PRODUCT MASTERY · MODULE 10</span>
+  </div>
+  <svg width="500" height="430" viewBox="0 0 500 430" style="position:absolute;right:-10px;top:85px;opacity:.96">
+    <defs>
+      <linearGradient id="harmg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#D9F99D"/>
+        <stop offset="100%" stop-color="#65A30D"/>
+      </linearGradient>
+      <filter id="hglow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <g transform="translate(250 210)">
+      <rect x="-42" y="-96" width="84" height="192" rx="14" fill="url(#harmg)" stroke="#F7FEE7" stroke-width="3" filter="url(#hglow)"/>
+      <text x="0" y="-58" text-anchor="middle" font-size="11" fill="#fff" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="1">HARMONIC</text>
+      <text x="0" y="-42" text-anchor="middle" font-size="11" fill="#fff" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="1">FILTER</text>
+      <circle cx="-12" cy="0" r="10" fill="#365314" stroke="#D9F99D" stroke-width="2"/>
+      <circle cx="12" cy="0" r="10" fill="#365314" stroke="#D9F99D" stroke-width="2"/>
+      <line x1="-12" y1="-28" x2="-12" y2="-10" stroke="#fff" stroke-width="3"/>
+      <line x1="12" y1="-28" x2="12" y2="-10" stroke="#fff" stroke-width="3"/>
+      <line x1="-24" y1="28" x2="24" y2="28" stroke="#fff" stroke-width="3"/>
+      <line x1="0" y1="28" x2="0" y2="58" stroke="#fff" stroke-width="3"/>
+
+      <path d="M -205 -48 L -180 -48 L -170 -18 L -150 -78 L -128 20 L -104 -96 L -82 36 L -58 -48 L -42 -48" fill="none" stroke="#EF4444" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M -205 26 L -188 26 L -180 54 L -160 -8 L -138 88 L -112 -36 L -90 62 L -62 10 L -42 10" fill="none" stroke="#FCA5A5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>
+      <text x="-118" y="118" text-anchor="middle" font-size="10" fill="#FCA5A5" font-weight="800" letter-spacing="1">DISTORTED INPUT CURRENT</text>
+
+      <path d="M 42 -48 C 62 -84 82 -84 102 -48 S 142 -12 162 -48 S 202 -84 222 -48" fill="none" stroke="#D9F99D" stroke-width="5" stroke-linecap="round"/>
+      <path d="M 42 12 C 62 -24 82 -24 102 12 S 142 48 162 12 S 202 -24 222 12" fill="none" stroke="#86EFAC" stroke-width="4" stroke-linecap="round" opacity=".9"/>
+      <text x="136" y="118" text-anchor="middle" font-size="10" fill="#D9F99D" font-weight="800" letter-spacing="1">CLEANER POWER QUALITY</text>
+
+      <line x1="-42" y1="-48" x2="-70" y2="-48" stroke="#D9F99D" stroke-width="3"/>
+      <line x1="-42" y1="10" x2="-70" y2="10" stroke="#D9F99D" stroke-width="3"/>
+      <line x1="42" y1="-48" x2="70" y2="-48" stroke="#D9F99D" stroke-width="3"/>
+      <line x1="42" y1="10" x2="70" y2="10" stroke="#D9F99D" stroke-width="3"/>
+    </g>
+  </svg>
+  <div style="position:absolute;bottom:2.4in;left:.5in;right:.5in">
+    <div class="pill" style="background:rgba(217,249,157,.25);color:#D9F99D;border:1px solid rgba(217,249,157,.4);margin-bottom:18px">PRODUCT MASTERY · POWER QUALITY</div>
+    <h1>HARMONIC<br>FILTER<br>MASTERY</h1>
+    <div class="sub">Clean it up. Meet compliance. Quote the right filter.</div>
+  </div>
+  <div class="tagline">
+    <div>The VFD accessory that solves power-quality problems reactors alone cannot fully fix.</div>
+    <div>RSP · PROD 10</div>
+  </div>
+  <div class="page-num">1</div>
+</section>
+
+<!-- ============= PAGE 2 — MISSION ============= -->
+<section class="page" data-section-id="intro">
+  <div class="page-tag">▸ THE PROMISE</div>
+  <div style="display:flex;gap:30px;margin-top:.5in;height:8.6in">
+    <div style="flex:1;display:flex;flex-direction:column">
+      <h2>Quote the right<br>harmonic fix<br>every time.</h2>
+      <p class="lead" style="margin-top:14px">By the last page you will be able to:</p>
+      <ul class="objectives" style="margin-top:18px">
+        <li><span class="obj-num">1</span><span>Explain what <b>harmonics</b> are and why VFD rectifiers create them on the <b>input side</b>.</span></li>
+        <li><span class="obj-num">2</span><span>Distinguish <b>reactors vs harmonic filters</b> without mixing up "some reduction" and "real mitigation."</span></li>
+        <li><span class="obj-num">3</span><span>Know when <b>passive vs active</b> filter logic makes sense for the application.</span></li>
+        <li><span class="obj-num">4</span><span>Hear <b>THD, IEEE-519, generator trouble, hot transformers, or nuisance trips</b> and know the conversation just changed.</span></li>
+        <li><span class="obj-num">5</span><span>Ask the right qualifying questions and turn <b>system-wide symptoms</b> into the right recommendation.</span></li>
+        <li><span class="obj-num">6</span><span>Pass the 30-question Boss Fight at 80%+ to earn the badge.</span></li>
+      </ul>
+      <div class="powerup" style="margin-top:20px">
+        💡 <b>The promise:</b> Stop treating every dirty-power complaint like a motor problem. Once you can hear harmonic clues, you start quoting whole-system fixes instead of one-off accessories.
+      </div>
+    </div>
+    <div style="flex:0 0 2.4in;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="100" fill="none" stroke="#65A30D" stroke-width="6"/>
+        <circle cx="110" cy="110" r="75" fill="none" stroke="#65A30D" stroke-width="6" opacity=".6"/>
+        <circle cx="110" cy="110" r="50" fill="none" stroke="#65A30D" stroke-width="6" opacity=".4"/>
+        <circle cx="110" cy="110" r="25" fill="#65A30D"/>
+        <text x="110" y="115" text-anchor="middle" font-family="JetBrains Mono" font-size="13" fill="#fff" font-weight="800">THD</text>
+      </svg>
+      <div style="text-align:center">
+        <div style="font-family:'Bricolage Grotesque';font-size:28px;font-weight:800;color:#365314">280 XP</div>
+        <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.1em;text-transform:uppercase">Total reward</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">02</div>
+</section>
+
+<!-- ============= PAGE 3 — HOW TO PLAY ============= -->
+<section class="page" data-section-id="intro">
+  <div class="page-tag">▸ HOW TO PLAY</div>
+  <h2 style="margin-top:.4in">Three levels.<br>Two mini-bosses.<br>One badge.</h2>
+  <div style="display:flex;gap:14px;margin-top:30px">
+    <div class="level-card learn">
+      <div class="num">01</div>
+      <h3>LEARN</h3>
+      <p>8 pages. Harmonics, why VFDs create them, reactor vs filter logic, passive vs active, THD, IEEE-519, and when filters are actually justified.</p>
+      <div class="xp-pill">+10 XP / page</div>
+    </div>
+    <div class="level-card apply">
+      <div class="num">02</div>
+      <h3>APPLY</h3>
+      <p>6 pages. Reactor-enough logic, the 8 qualifying questions, real-world symptom translation, mistakes, the decision path, and the scenario matrix.</p>
+      <div class="xp-pill">+15 XP / page</div>
+    </div>
+    <div class="level-card test">
+      <div class="num">03</div>
+      <h3>TEST</h3>
+      <p>30-question Boss Fight. Score 80%+ for the 🌀 Harmonic Master badge.</p>
+      <div class="xp-pill">+2 XP / correct</div>
+    </div>
+  </div>
+  <div class="powerup" style="margin-top:30px">
+    💡 <b>Two Mini-Bosses block the path.</b> The Waveform Warlock guards the harmonic basics; the Compliance Phantom guards the real-world filter recommendation logic. Each is worth +25 XP.
+  </div>
+  <div class="page-num">03</div>
+</section>
+
+<!-- ============= PAGE 4 — LEARN 01: WHAT HARMONICS ARE ============= -->
+<section class="page" data-section-id="foundation">
+  <div class="page-tag" style="color:#84CC16">▸ LEARN · 01 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📘 HARMONICS BASICS</div>
+  <h2 style="margin-top:14px">What harmonics are.</h2>
+  <p class="lead" style="margin-top:6px">In a perfect electrical system, current is drawn as a smooth sine wave. VFDs interrupt that smooth shape by pulling current in pulses.</p>
+
+  <div class="wave-demo">
+    <div class="wave-box">
+      <div class="wave-label">Clean Utility Current</div>
+      <div class="wave-sub">Smooth sine wave = normal power flow.</div>
+      <svg viewBox="0 0 260 90">
+        <path d="M 0 45 C 22 8 44 8 66 45 S 110 82 132 45 S 176 8 198 45 S 242 82 260 45" fill="none" stroke="#16A34A" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="wave-box">
+      <div class="wave-label">VFD Pulse Draw</div>
+      <div class="wave-sub">Current pulses distort the waveform and create harmonics.</div>
+      <svg viewBox="0 0 260 90">
+        <path d="M 0 45 L 25 45 L 34 20 L 56 68 L 78 10 L 102 78 L 126 18 L 150 64 L 176 24 L 200 56 L 230 34 L 260 34" fill="none" stroke="#EF4444" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="harm-card" style="margin-top:14px">
+    <div class="hc-head"><span style="font-size:24px">🌀</span><div><div class="hc-name">Definition</div><div class="hc-tag">Distorted Electrical Waveforms</div></div></div>
+    <div class="hc-body">Harmonics are unwanted waveform distortion caused when nonlinear loads draw current unevenly. In this module, the load causing the distortion is usually a VFD rectifier pulling current in short bursts instead of smoothly.</div>
+  </div>
+
+  <div class="powerup" style="margin-top:10px">
+    💡 <b>ONE-LINER:</b> Harmonics are what smooth AC current looks like after a VFD chews it into pulses.
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">4</div>
+</section>
+
+<!-- ============= PAGE 5 — LEARN 02: WHY VFDS CREATE THEM ============= -->
+<section class="page" data-section-id="foundation">
+  <div class="page-tag" style="color:#84CC16">▸ LEARN · 02 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📘 HARMONICS BASICS</div>
+  <h2 style="margin-top:14px">Why drives create them.</h2>
+  <p class="lead" style="margin-top:6px">The rectifier section inside a VFD converts AC to DC. That front-end rectifier is where the pulsed current draw begins.</p>
+
+  <div class="signal-flow">
+    <div class="node">Utility AC<span class="sub">smooth source</span></div>
+    <div class="arrow">→</div>
+    <div class="node">Rectifier<span class="sub">AC to DC</span></div>
+    <div class="arrow">→</div>
+    <div class="node">DC Bus<span class="sub">inside drive</span></div>
+    <div class="arrow">→</div>
+    <div class="node alert">Current Pulses<span class="sub">uneven draw</span></div>
+    <div class="arrow">→</div>
+    <div class="node filter">Input Harmonics<span class="sub">dirty line side</span></div>
+  </div>
+
+  <div class="compare-grid" style="margin-top:16px">
+    <div class="compare-card filter">
+      <h3>Before the VFD = the key clue</h3>
+      <p>Most harmonic filters are installed <b>before the VFD</b> because the problem is mainly created on the incoming power side.</p>
+    </div>
+    <div class="compare-card passive">
+      <h3>Normal for drives, not harmless</h3>
+      <p>Harmonics are a normal side effect of VFDs. The sales job is not to panic about them — it is to know when the distortion is bad enough to justify mitigation.</p>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">5</div>
+</section>
+
+<!-- ============= PAGE 6 — LEARN 03: WHY HARMONICS MATTER ============= -->
+<section class="page" data-section-id="foundation">
+  <div class="page-tag" style="color:#84CC16">▸ LEARN · 03 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">📘 HARMONICS BASICS</div>
+  <h2 style="margin-top:14px">Why power quality suffers.</h2>
+  <p class="lead" style="margin-top:6px">Harmonics are not just a drive problem. They stress the whole electrical system and can cause symptoms far away from the VFD itself.</p>
+
+  <div class="problem-grid">
+    <div class="problem-pill"><div class="k">Heat</div><div class="v">Transformer overheating from extra RMS current.</div></div>
+    <div class="problem-pill"><div class="k">Cables</div><div class="v">Cable heating and avoidable conductor stress.</div></div>
+    <div class="problem-pill"><div class="k">Protection</div><div class="v">Breaker nuisance tripping and unstable protection behavior.</div></div>
+    <div class="problem-pill"><div class="k">Generator</div><div class="v">Generator instability when distorted current hits a weak source.</div></div>
+    <div class="problem-pill"><div class="k">Capacitors</div><div class="v">Power-factor capacitor overheating and shortened life.</div></div>
+    <div class="problem-pill"><div class="k">Noise</div><div class="v">Electrical noise that leaks into controls and instrumentation.</div></div>
+    <div class="problem-pill"><div class="k">Electronics</div><div class="v">Sensitive equipment malfunctions on a shared service.</div></div>
+    <div class="problem-pill"><div class="k">Quality</div><div class="v">Poor power quality that engineers and utilities will notice fast.</div></div>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>📣 Translation</h3>
+    <p>If a customer says, "The transformer runs hot," "The generator hates these drives," or "The PLC gets weird when the VFD starts," think input-side harmonics before you think motor-side accessories.</p>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">6</div>
+</section>
+
+<!-- ============= PAGE 7 — LEARN 04: REACTORS VS FILTERS ============= -->
+<section class="page" data-section-id="powerquality">
+  <div class="page-tag" style="color:#84CC16">▸ LEARN · 04 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ POWER QUALITY</div>
+  <h2 style="margin-top:14px">Reactors help.<br>Filters clean.</h2>
+  <p class="lead" style="margin-top:6px">This is the most important distinction in the whole module. If the rep gets this right, the rest of the product logic falls into place.</p>
+
+  <div class="compare-grid" style="margin-top:16px">
+    <div class="compare-card reactor">
+      <h3>Line Reactor</h3>
+      <ul>
+        <li>Smooths current and reduces spikes</li>
+        <li>Provides some harmonic reduction</li>
+        <li>Great first layer on smaller or simpler systems</li>
+        <li><b>Not</b> a dedicated harmonic-mitigation solution</li>
+      </ul>
+    </div>
+    <div class="compare-card filter">
+      <h3>Harmonic Filter</h3>
+      <ul>
+        <li>Designed to reduce Total Harmonic Distortion (THD)</li>
+        <li>Improves incoming power quality aggressively</li>
+        <li>Used when reactors are not enough</li>
+        <li>Common for compliance, generators, and shared sensitive systems</li>
+      </ul>
+    </div>
+  </div>
+
+  <table class="matrix" style="margin-top:14px">
+    <thead><tr><th class="row-h">Device</th><th>Main Job</th><th>Typical Trigger</th><th>Sales Message</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Line Reactor</td><td>Basic smoothing + some harmonic reduction</td><td>Smaller systems, weak utility, first layer</td><td class="warn">"Helps reduce harmonics."</td></tr>
+      <tr><td class="lbl">Harmonic Filter</td><td class="best">Aggressive THD reduction + cleaner power</td><td class="best">Compliance, generators, multiple drives, sensitive facilities</td><td class="best">"Designed to clean up harmonics."</td></tr>
+    </tbody>
+  </table>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">7</div>
+</section>
+
+<!-- ============= PAGE 8 — LEARN 05: PASSIVE FILTERS ============= -->
+<section class="page" data-section-id="powerquality">
+  <div class="page-tag" style="color:#84CC16">▸ LEARN · 05 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ FILTER TYPES · PASSIVE</div>
+  <h2 style="margin-top:14px">Passive filters.</h2>
+  <p class="lead" style="margin-top:6px">The most common industrial harmonic filter. Lower cost, reliable, and purpose-built for cleaning up the incoming line side of a VFD.</p>
+
+  <div class="harm-card">
+    <div class="hc-head"><span style="font-size:24px">🧩</span><div><div class="hc-name">What It Is</div><div class="hc-tag">Capacitors + Inductors + Tuned Circuits</div></div></div>
+    <div class="hc-body">A passive harmonic filter uses inductors and capacitors arranged to block or absorb targeted harmonic content. In plain English: it shapes the incoming current so the drive pulls cleaner power from the source.</div>
+  </div>
+
+  <div class="compare-grid">
+    <div class="compare-card passive">
+      <h3>✅ Advantages</h3>
+      <ul>
+        <li>Lower cost than active filtering</li>
+        <li>Reliable, common industrial solution</li>
+        <li>Excellent fit for dedicated-drive applications</li>
+      </ul>
+    </div>
+    <div class="compare-card reactor">
+      <h3>⚠️ Limitations</h3>
+      <ul>
+        <li>Performance is fixed, not dynamic</li>
+        <li>Less adaptable to rapidly changing loads</li>
+        <li>Still needs correct sizing and application</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>💬 Customer Version</h3>
+    <p>"This is the standard industrial answer when a drive needs cleaner incoming power. It is dependable and usually the first harmonic-filter style we quote."</p>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">8</div>
+</section>
+
+<!-- ============= PAGE 9 — LEARN 06: ACTIVE FILTERS ============= -->
+<section class="page" data-section-id="powerquality">
+  <div class="page-tag" style="color:#84CC16">▸ LEARN · 06 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ FILTER TYPES · ACTIVE</div>
+  <h2 style="margin-top:14px">Active filters.</h2>
+  <p class="lead" style="margin-top:6px">Active filters monitor the harmonics present and inject opposite current to cancel them — basically noise-canceling headphones for electrical systems.</p>
+
+  <div class="harm-card">
+    <div class="hc-head"><span style="font-size:24px">🎧</span><div><div class="hc-name">Noise-Canceling Logic</div><div class="hc-tag">Dynamic Harmonic Correction</div></div></div>
+    <div class="hc-body">Instead of relying on fixed inductors and capacitors alone, an active filter senses distortion in real time and electronically pushes back against it. That makes active filters stronger where loads vary a lot or multiple drives share a system.</div>
+  </div>
+
+  <table class="matrix" style="margin-top:14px">
+    <thead><tr><th class="row-h">Filter Type</th><th>Strength</th><th>Trade-Off</th><th>Best Fit</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Passive</td><td class="best">Lower cost, reliable, common</td><td>Fixed performance</td><td>Dedicated drive applications</td></tr>
+      <tr><td class="lbl">Active</td><td class="best">Dynamic correction, handles changing loads</td><td class="warn">Higher cost, more complex</td><td>Multiple drives, changing load profiles, tougher compliance problems</td></tr>
+    </tbody>
+  </table>
+
+  <div class="compare-grid" style="margin-top:14px">
+    <div class="compare-card active">
+      <h3>When Active Makes Sense</h3>
+      <p>Loads change, multiple drives share the same system, or the customer needs a smarter whole-system response instead of a fixed single-drive solution.</p>
+    </div>
+    <div class="compare-card filter">
+      <h3>What Not to Say</h3>
+      <p>Do not pitch active filters as "always better." Pitch them as <b>more adaptive</b> when the application actually needs that flexibility.</p>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">9</div>
+</section>
+
+<!-- ============= PAGE 10 — LEARN 07: THD + IEEE-519 ============= -->
+<section class="page" data-section-id="powerquality">
+  <div class="page-tag" style="color:#84CC16">▸ LEARN · 07 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ THD & COMPLIANCE</div>
+  <h2 style="margin-top:14px">THD and IEEE-519.</h2>
+  <p class="lead" style="margin-top:6px">THD is the scorecard for waveform distortion. IEEE-519 is the phrase that tells you the customer cares about harmonic control formally, not casually.</p>
+
+  <div class="thd-gauge">
+    <div class="meta"><span>LOWER THD = CLEANER POWER</span><span>HIGHER THD = ROUGHER POWER</span></div>
+    <div class="track">
+      <div class="seg clean">CLEAN</div>
+      <div class="seg watch">WATCH</div>
+      <div class="seg rough">ROUGH</div>
+      <div class="seg ugly">COMPLIANCE RISK</div>
+    </div>
+  </div>
+
+  <div class="compare-grid" style="margin-top:16px">
+    <div class="compare-card filter">
+      <h3>THD</h3>
+      <p><b>Total Harmonic Distortion</b> measures how distorted the waveform has become. Lower THD means cleaner power. Higher THD means more harmonic trouble.</p>
+    </div>
+    <div class="compare-card reactor">
+      <h3>IEEE-519</h3>
+      <p>An industry guideline for harmonic control. If an engineer, consultant, or utility says "IEEE-519," you should immediately think harmonic filter conversation.</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>🧠 Extra Context</h3>
+    <p>Multi-pulse drives like 12-pulse and 18-pulse designs can also reduce harmonics naturally. They are effective, but often larger and more expensive. Harmonic filters are frequently the more practical retrofit or standard quote path.</p>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">10</div>
+</section>
+
+<!-- ============= PAGE 11 — LEARN 08: WHEN TO USE FILTERS ============= -->
+<section class="page" data-section-id="powerquality">
+  <div class="page-tag" style="color:#84CC16">▸ LEARN · 08 OF 08</div>
+  <div class="level-banner lvl-learn" style="margin-top:.4in">⚡ WHEN FILTERS MAKE SENSE</div>
+  <h2 style="margin-top:14px">When filters make sense.</h2>
+  <p class="lead" style="margin-top:6px">These are the classic harmonic-filter trigger points. The more of these you hear, the faster you move from "reactor maybe" to "filter discussion now."</p>
+
+  <table class="matrix" style="margin-top:14px">
+    <thead><tr><th class="row-h">Trigger</th><th>Why It Matters</th><th>Filter Signal</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Multiple VFDs on one system</td><td>Shared distortion stacks up across the service</td><td class="best">Strong</td></tr>
+      <tr><td class="lbl">Generator-powered system</td><td>Generators struggle with distorted current</td><td class="bad">Immediate</td></tr>
+      <tr><td class="lbl">Sensitive facility</td><td>Hospitals, data centers, labs hate dirty power</td><td class="bad">Immediate</td></tr>
+      <tr><td class="lbl">IEEE-519 / utility compliance</td><td>Formal harmonic requirement exists</td><td class="bad">Required conversation</td></tr>
+      <tr><td class="lbl">Hot transformer or nuisance trips</td><td>System-level symptom already visible</td><td class="best">High</td></tr>
+      <tr><td class="lbl">Large horsepower drives</td><td>Bigger loads can create bigger distortion problems</td><td class="best">High</td></tr>
+    </tbody>
+  </table>
+
+  <div class="compare-grid" style="margin-top:14px">
+    <div class="compare-card filter">
+      <h3>Filter Needed</h3>
+      <p>Compliance is mentioned, the source is a generator, multiple drives are on the same service, or the customer already has distortion symptoms.</p>
+    </div>
+    <div class="compare-card passive">
+      <h3>Reactor May Be Enough</h3>
+      <p>Small, simple, isolated VFD application. Limited harmonics. No sensitive loads. No compliance requirement. No visible system complaints.</p>
+    </div>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="waveform-warlock">
+    <div class="icon">🧙</div>
+    <h3>The Waveform Warlock blocks the path!</h3>
+    <div class="sub">5 questions on harmonics, THD, and why VFDs dirty the input side · Defeat to unlock APPLY</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+10 XP</div>
+  <div class="page-num">11</div>
+</section>
+
+<!-- ============= PAGE 12 — APPLY 01: REACTOR ENOUGH? ============= -->
+<section class="page" data-section-id="application">
+  <div class="page-tag" style="color:#84CC16">▸ APPLY · 01 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ APPLICATION · SOLUTION TIERING</div>
+  <h2 style="margin-top:14px">When reactors may be enough.</h2>
+  <p class="lead" style="margin-top:6px">Do not oversell filters onto every drive. The win is accurate escalation: know when basic smoothing is enough and when true mitigation is justified.</p>
+
+  <table class="matrix" style="margin-top:14px">
+    <thead><tr><th class="row-h">System Profile</th><th>Recommendation</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Single small VFD, clean utility, no sensitive loads nearby</td><td class="warn">Line reactor may be enough</td><td>Basic smoothing without full harmonic-mitigation cost</td></tr>
+      <tr><td class="lbl">Large VFD on generator</td><td class="bad">Harmonic filter discussion now</td><td>Generators are sensitive to distortion and need cleaner input current</td></tr>
+      <tr><td class="lbl">Hospital or data center application</td><td class="bad">Harmonic filter strongly favored</td><td>Shared sensitive infrastructure and higher power-quality expectations</td></tr>
+      <tr><td class="lbl">Multiple drives on one service, shared controls</td><td class="best">Filter likely justified</td><td>Distortion can stack and bother other equipment</td></tr>
+      <tr><td class="lbl">No complaints, no compliance, simple isolated install</td><td class="best">Reactor or no filter path</td><td>Mitigate only if actual symptoms or requirements exist</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>💬 Simple Sales Framing</h3>
+    <p>"If this is just a small clean-power drive with no shared sensitive loads, a reactor may be plenty. If you have generator power, compliance language, or system-wide power-quality symptoms, we should move up to a harmonic filter."</p>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">12</div>
+</section>
+
+<!-- ============= PAGE 13 — APPLY 02: QUESTIONS TO ASK ============= -->
+<section class="page" data-section-id="application">
+  <div class="page-tag" style="color:#84CC16">▸ APPLY · 02 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ APPLICATION · CUSTOMER QUALIFYING</div>
+  <h2 style="margin-top:14px">Eight questions to ask.</h2>
+  <p class="lead" style="margin-top:6px">These are the exact conversation openers from the training pack. Ask them early, and the correct recommendation starts showing itself.</p>
+
+  <div class="question-grid">
+    <div class="question-pill"><div class="num">QUESTION 1</div><div class="ask">Multiple VFDs on the system?</div><div class="why">More shared distortion usually means stronger filter logic.</div></div>
+    <div class="question-pill"><div class="num">QUESTION 2</div><div class="ask">Generator-powered?</div><div class="why">Generators are a classic harmonic-filter trigger.</div></div>
+    <div class="question-pill"><div class="num">QUESTION 3</div><div class="ask">Harmonic compliance required?</div><div class="why">IEEE-519 or utility requirements move this from optional to serious.</div></div>
+    <div class="question-pill"><div class="num">QUESTION 4</div><div class="ask">Transformer overheating?</div><div class="why">A hot transformer is one of the cleanest symptom clues.</div></div>
+    <div class="question-pill"><div class="num">QUESTION 5</div><div class="ask">Sensitive equipment nearby?</div><div class="why">Controls, instrumentation, hospitals, and data centers care about clean power.</div></div>
+    <div class="question-pill"><div class="num">QUESTION 6</div><div class="ask">Large horsepower drives involved?</div><div class="why">Bigger drives can create bigger harmonic problems.</div></div>
+    <div class="question-pill"><div class="num">QUESTION 7</div><div class="ask">Existing nuisance problems?</div><div class="why">Trips, instability, and odd behavior are signs the system already feels it.</div></div>
+    <div class="question-pill"><div class="num">QUESTION 8</div><div class="ask">Has a harmonic study been performed?</div><div class="why">A study usually means the customer is already thinking beyond basic smoothing.</div></div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">13</div>
+</section>
+
+<!-- ============= PAGE 14 — APPLY 03: REAL-WORLD SALES CLUES ============= -->
+<section class="page" data-section-id="application">
+  <div class="page-tag" style="color:#84CC16">▸ APPLY · 03 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">🛠️ SALES LOGIC · REAL-WORLD CLUES</div>
+  <h2 style="margin-top:14px">Hear the clue.<br>Sell the fix.</h2>
+  <p class="lead" style="margin-top:6px">Customers often describe symptoms, not harmonic theory. Your job is to translate their pain into the right mitigation conversation.</p>
+
+  <div class="translate-row" style="display:flex;gap:10px;margin-top:14px;font-size:11.5px">
+    <div class="says" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🗣️ "The generator struggles when the drives start."</div>
+    <div class="means" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🧠 Distorted current is rough on a weak source.</div>
+    <div class="quote-it" style="flex:1;padding:12px;border-radius:10px;font-weight:700">💬 "Let's look at a harmonic filter to clean up what the generator is seeing."</div>
+  </div>
+  <div class="translate-row" style="display:flex;gap:10px;margin-top:10px;font-size:11.5px">
+    <div class="says" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🗣️ "The engineer put IEEE-519 on the drawing."</div>
+    <div class="means" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🧠 Formal harmonic-control requirement exists.</div>
+    <div class="quote-it" style="flex:1;padding:12px;border-radius:10px;font-weight:700">💬 "Then we need to talk harmonic mitigation, not just a reactor."</div>
+  </div>
+  <div class="translate-row" style="display:flex;gap:10px;margin-top:10px;font-size:11.5px">
+    <div class="says" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🗣️ "The transformer runs hot."</div>
+    <div class="means" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🧠 Harmonic heating may already be showing up.</div>
+    <div class="quote-it" style="flex:1;padding:12px;border-radius:10px;font-weight:700">💬 "That's one of the classic clues we may need harmonic filtering."</div>
+  </div>
+  <div class="translate-row" style="display:flex;gap:10px;margin-top:10px;font-size:11.5px">
+    <div class="says" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🗣️ "We've got a bunch of drives on the same service and the controls get weird."</div>
+    <div class="means" style="flex:1;padding:12px;border-radius:10px;font-weight:700">🧠 Shared-system distortion is affecting other equipment.</div>
+    <div class="quote-it" style="flex:1;padding:12px;border-radius:10px;font-weight:700">💬 "A harmonic filter can clean up what all those drives are feeding back."</div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">14</div>
+</section>
+
+<!-- ============= PAGE 15 — APPLY 04: MISTAKES + UPSELL ============= -->
+<section class="page" data-section-id="sales">
+  <div class="page-tag" style="color:#84CC16">▸ APPLY · 04 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">💼 SALES LOGIC · MISTAKES & UPSELLS</div>
+  <h2 style="margin-top:14px">Don't make these mistakes.</h2>
+  <p class="lead" style="margin-top:6px">Most bad harmonic-filter calls come from one of two misses: underestimating the problem, or not asking the questions that expose it.</p>
+
+  <div class="compare-grid" style="margin-top:14px">
+    <div class="compare-card reactor">
+      <h3>❌ Common Sales Mistakes</h3>
+      <ul>
+        <li>Confusing reactors with harmonic filters</li>
+        <li>Assuming reactors eliminate harmonics</li>
+        <li>Ignoring generator applications</li>
+        <li>Missing IEEE-519 or utility requirements</li>
+        <li>Not asking about multiple drives</li>
+        <li>Forgetting THD concerns entirely</li>
+      </ul>
+    </div>
+    <div class="compare-card filter">
+      <h3>✅ Upsell Triggers</h3>
+      <ul>
+        <li>Multiple drives on the same system</li>
+        <li>Large VFDs or generator-fed systems</li>
+        <li>Hospitals, data centers, labs</li>
+        <li>Harmonic complaints or hot transformers</li>
+        <li>Utility or engineer concern about compliance</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>🔑 Fast Rule</h3>
+    <p>If the customer is only asking for a line reactor but describing generator problems, compliance language, or shared-system symptoms, you owe them a harmonic-filter conversation whether they asked for it or not.</p>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">15</div>
+</section>
+
+<!-- ============= PAGE 16 — APPLY 05: DECISION PATH ============= -->
+<section class="page" data-section-id="sales">
+  <div class="page-tag" style="color:#84CC16">▸ APPLY · 05 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">💼 HARMONIC FILTER DECISION PATH</div>
+  <h2 style="margin-top:14px">Run the decision path.</h2>
+  <p class="lead" style="margin-top:6px">Six questions will usually tell you whether you are still in reactor territory or firmly into harmonic-filter territory.</p>
+
+  <div style="margin-top:18px">
+    <div class="decision-card"><div class="q">1. Is the system generator-powered?</div><div class="y">YES → Harmonic filter discussion now. Generator applications are one of the strongest triggers.</div><div class="n">NO → Continue. Clean utility does not remove the possibility, it only lowers urgency.</div></div>
+    <div class="decision-card"><div class="q">2. Are there multiple VFDs on the same service?</div><div class="y">YES → Shared distortion can stack. Filter logic gets much stronger.</div><div class="n">NO → Single-drive system may stay in reactor territory if everything else is clean.</div></div>
+    <div class="decision-card"><div class="q">3. Did anyone mention IEEE-519, utility concern, or harmonic compliance?</div><div class="y">YES → Move from "help reduce" language to true mitigation language immediately.</div><div class="n">NO → Continue to symptom and facility checks.</div></div>
+    <div class="decision-card"><div class="q">4. Are there system symptoms like hot transformers, nuisance trips, or capacitor trouble?</div><div class="y">YES → The system is already telling you harmonics matter.</div><div class="n">NO → Continue. Absence of symptoms helps, but it is not proof.</div></div>
+    <div class="decision-card"><div class="q">5. Is the site sensitive — hospital, data center, lab, electronics-heavy?</div><div class="y">YES → Clean power matters more. Filter logic rises fast.</div><div class="n">NO → Continue to sizing and simplicity.</div></div>
+    <div class="decision-card"><div class="q">6. Is it a small, simple, isolated drive with no complaints and no compliance need?</div><div class="y">YES → Reactor may be enough. Do not oversell.</div><div class="n">NO → Harmonic filter deserves a serious recommendation.</div></div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">16</div>
+</section>
+
+<!-- ============= PAGE 17 — APPLY 06: APPLICATION MATRIX + MINI-BOSS ============= -->
+<section class="page" data-section-id="sales">
+  <div class="page-tag" style="color:#84CC16">▸ APPLY · 06 OF 06</div>
+  <div class="level-banner lvl-apply" style="margin-top:.4in">💼 SCENARIO MATRIX</div>
+  <h2 style="margin-top:14px">Scenario first.<br>Quote second.</h2>
+  <p class="lead" style="margin-top:6px">Use this matrix when the customer describes the system instead of asking for a product by name. Match the symptoms to the mitigation level.</p>
+
+  <table class="matrix" style="margin-top:14px;font-size:10.8px">
+    <thead><tr><th class="row-h">Scenario</th><th>Primary Recommendation</th><th>Why</th><th>Priority</th></tr></thead>
+    <tbody>
+      <tr><td class="lbl">Single 3 HP VFD, clean utility, isolated panel, no complaints</td><td>Line reactor or no filter path</td><td>Basic smoothing may be enough</td><td class="best">Low</td></tr>
+      <tr><td class="lbl">Three 25 HP VFDs on one MCC with shared PLCs</td><td class="best">Harmonic filter conversation</td><td>Multiple-drive distortion on a shared control system</td><td class="warn">Medium</td></tr>
+      <tr><td class="lbl">100 HP VFD on generator power</td><td class="bad">Harmonic filter strongly favored</td><td>Generator-fed source + larger drive</td><td class="bad">Critical</td></tr>
+      <tr><td class="lbl">Hospital air-handler drive with sensitive electronics nearby</td><td class="bad">Harmonic filter required discussion</td><td>Sensitive facility and low tolerance for dirty power</td><td class="bad">Critical</td></tr>
+      <tr><td class="lbl">Engineer specifies IEEE-519 on the print</td><td class="bad">Harmonic filter immediately</td><td>Formal compliance language</td><td class="bad">Critical</td></tr>
+      <tr><td class="lbl">Hot transformer + nuisance breaker trips on a multi-drive line</td><td class="best">Investigate THD and quote mitigation</td><td>Classic harmonic symptoms already visible</td><td class="bad">High</td></tr>
+    </tbody>
+  </table>
+
+  <div class="powerup" style="margin-top:14px">
+    🏆 <b>APPLY LEVEL CLEARED — +90 XP · BADGE EARNED: 🌀 "THD-READY."</b>
+  </div>
+
+  <!-- MINI-BOSS GATE -->
+  <div class="miniboss-gate interactive-only" data-miniboss="compliance-phantom">
+    <div class="icon">👻</div>
+    <h3>The Compliance Phantom blocks the path!</h3>
+    <div class="sub">5 questions on applications, compliance triggers, and sales logic · Defeat to unlock the Boss Fight</div>
+    <div class="stats">
+      <span class="stat">⚔️ 5 QUESTIONS</span>
+      <span class="stat">💰 +25 XP</span>
+      <span class="stat">🛡️ 4/5 TO PASS</span>
+    </div>
+  </div>
+
+  <div class="xp">+15 XP</div>
+  <div class="page-num">17</div>
+</section>
+
+<!-- ============= PAGE 18 — BOSS INTRO ============= -->
+<section class="page boss-page" data-section-id="finalboss" style="display:flex;flex-direction:column;align-items:center;text-align:center">
+  <div class="page-tag" style="color:#D9F99D">▸ TEST · BOSS FIGHT</div>
+  <div style="margin-top:.6in"><div class="level-banner lvl-test" style="margin:0 auto">🎯 TEST LEVEL</div></div>
+  <h2 style="margin-top:20px;font-size:54px">The THD<br>Vault.</h2>
+  <svg width="320" height="320" viewBox="0 0 320 320" style="margin-top:14px">
+    <defs>
+      <linearGradient id="bossH" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#D9F99D"/>
+        <stop offset="100%" stop-color="#365314"/>
+      </linearGradient>
+      <filter id="bossglow10"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <g transform="translate(160 160)">
+      <rect x="-112" y="-128" width="224" height="256" rx="18" fill="url(#bossH)" stroke="#FACC15" stroke-width="3" filter="url(#bossglow10)"/>
+      <rect x="-86" y="-108" width="172" height="22" rx="4" fill="#365314"/>
+      <text x="0" y="-93" text-anchor="middle" font-size="11" fill="#FACC15" font-weight="800" font-family="Bricolage Grotesque" letter-spacing="2">THD VAULT</text>
+      <rect x="-84" y="-78" width="168" height="58" rx="6" fill="#0F172A" stroke="#D9F99D" stroke-width="1.5"/>
+      <text x="0" y="-41" text-anchor="middle" font-family="JetBrains Mono" font-size="28" fill="#EF4444" font-weight="800">31% THD</text>
+      <text x="0" y="-26" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#64748B" letter-spacing="2">POWER QUALITY BREACH</text>
+      <path d="M -74 22 L -52 22 L -42 -6 L -24 46 L -6 -18 L 14 58 L 34 0 L 56 32 L 74 -8" fill="none" stroke="#EF4444" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="-44" cy="78" r="18" fill="#365314" stroke="#D9F99D" stroke-width="3"/>
+      <circle cx="44" cy="78" r="18" fill="#365314" stroke="#D9F99D" stroke-width="3"/>
+      <line x1="-44" y1="56" x2="-44" y2="100" stroke="#D9F99D" stroke-width="4"/>
+      <line x1="44" y1="56" x2="44" y2="100" stroke="#D9F99D" stroke-width="4"/>
+      <line x1="-44" y1="100" x2="44" y2="100" stroke="#D9F99D" stroke-width="4"/>
+    </g>
+  </svg>
+  <div style="width:80%;margin-top:14px">
+    <div style="display:flex;justify-content:space-between;color:#FACC15;font-weight:800;font-size:11px;letter-spacing:.1em;margin-bottom:6px">
+      <span>THD VAULT · 31%</span><span>STATUS: DISTORTED</span>
+    </div>
+    <div class="hp-bar"><div class="fill"></div></div>
+  </div>
+  <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:18px 24px;margin-top:24px;width:80%">
+    <p style="color:#fff;font-size:14px"><b>30 questions · 2 XP each · 80%+ to win</b></p>
+    <p style="color:#94A3B8;font-size:13px;margin-top:8px">No peeking. Score honest. 24/30 = 🌀 Harmonic Master badge.</p>
+  </div>
+  <div class="page-num" style="color:#64748B">18</div>
+</section>
+
+<!-- ============= PAGE 19 — ROUND 1 (Q1-6) ============= -->
+<section class="page boss-page" data-quiz-page="1" data-section-id="finalboss">
+  <div class="page-tag" style="color:#D9F99D">▸ FINAL BOSS · ROUND 1 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 1 · HARMONIC BASICS</div>
+    <div style="color:#D9F99D;font-weight:800;font-size:11px;letter-spacing:.1em">Q 1 → 6 · OPENING SURGE</div>
+  </div>
+  <div class="hp-bar r1" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="1"></div><div class="qcard" data-q="2"></div>
+    <div class="qcard" data-q="3"></div><div class="qcard" data-q="4"></div>
+    <div class="qcard" data-q="5"></div><div class="qcard" data-q="6"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">19</div>
+</section>
+
+<!-- ============= PAGE 20 — ROUND 2 (Q7-12) ============= -->
+<section class="page boss-page" data-quiz-page="2" data-section-id="finalboss">
+  <div class="page-tag" style="color:#D9F99D">▸ FINAL BOSS · ROUND 2 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 2 · THD & INPUT SIDE</div>
+    <div style="color:#D9F99D;font-weight:800;font-size:11px;letter-spacing:.1em">Q 7 → 12 · CURRENT SPIKE</div>
+  </div>
+  <div class="hp-bar r2" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="7"></div><div class="qcard" data-q="8"></div>
+    <div class="qcard" data-q="9"></div><div class="qcard" data-q="10"></div>
+    <div class="qcard" data-q="11"></div><div class="qcard" data-q="12"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">20</div>
+</section>
+
+<!-- ============= PAGE 21 — ROUND 3 (Q13-18) ============= -->
+<section class="page boss-page" data-quiz-page="3" data-section-id="finalboss">
+  <div class="page-tag" style="color:#D9F99D">▸ FINAL BOSS · ROUND 3 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 3 · FILTER TYPES</div>
+    <div style="color:#D9F99D;font-weight:800;font-size:11px;letter-spacing:.1em">Q 13 → 18 · CLEANUP MODE</div>
+  </div>
+  <div class="hp-bar r3" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="13"></div><div class="qcard" data-q="14"></div>
+    <div class="qcard" data-q="15"></div><div class="qcard" data-q="16"></div>
+    <div class="qcard" data-q="17"></div><div class="qcard" data-q="18"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">21</div>
+</section>
+
+<!-- ============= PAGE 22 — ROUND 4 (Q19-24) ============= -->
+<section class="page boss-page" data-quiz-page="4" data-section-id="finalboss">
+  <div class="page-tag" style="color:#D9F99D">▸ FINAL BOSS · ROUND 4 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 ROUND 4 · COMPLIANCE & PROBLEMS</div>
+    <div style="color:#D9F99D;font-weight:800;font-size:11px;letter-spacing:.1em">Q 19 → 24 · GRID DISTORTION</div>
+  </div>
+  <div class="hp-bar r4" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="19"></div><div class="qcard" data-q="20"></div>
+    <div class="qcard" data-q="21"></div><div class="qcard" data-q="22"></div>
+    <div class="qcard" data-q="23"></div><div class="qcard" data-q="24"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">22</div>
+</section>
+
+<!-- ============= PAGE 23 — ROUND 5 (Q25-30) ============= -->
+<section class="page boss-page" data-quiz-page="5" data-section-id="finalboss">
+  <div class="page-tag" style="color:#D9F99D">▸ FINAL BOSS · ROUND 5 OF 5</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4in">
+    <div class="level-banner lvl-test">🎯 FINAL ROUND · SALES & DECISIONS</div>
+    <div style="color:#EF4444;font-weight:800;font-size:11px;letter-spacing:.1em">Q 25 → 30 · KILL DISTORTION</div>
+  </div>
+  <div class="hp-bar r5" style="margin-top:8px"><div class="fill"></div></div>
+  <div class="quiz-grid">
+    <div class="qcard" data-q="25"></div><div class="qcard" data-q="26"></div>
+    <div class="qcard" data-q="27"></div><div class="qcard" data-q="28"></div>
+    <div class="qcard" data-q="29"></div><div class="qcard" data-q="30"></div>
+  </div>
+  <div class="page-num" style="color:#64748B">23</div>
+</section>
+
+<!-- ============= PAGE 24 — ANSWER KEY / RESULTS ============= -->
+<section class="page" id="resultsPage" data-section-id="results">
+  <div class="page-tag" style="color:#65A30D">▸ FINAL BOSS · RESULTS</div>
+  <div class="level-banner lvl-test" style="margin-top:.4in">🎯 ANSWER KEY · YOUR RESULTS</div>
+  <h2 style="margin-top:14px">🗝️ The Key.</h2>
+  <p class="lead print-only" style="display:none">Score yourself. Tier yourself. Earn the badge.</p>
+
+  <div id="liveResults" class="interactive-only" style="margin-top:18px;background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:18px;padding:24px;color:#fff">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+      <div>
+        <p style="color:#94A3B8;font-size:11px;letter-spacing:.18em;font-weight:800;margin:0">▸ YOUR LIVE SCORE</p>
+        <p style="font-family:'Bricolage Grotesque';font-size:54px;font-weight:800;color:#FACC15;margin-top:4px;line-height:1">
+          <span id="scoreCorrect">0</span><span style="color:#475569">/30</span>
+        </p>
+        <p style="font-size:13px;color:#CBD5E1;margin-top:4px">Total XP: <b id="scoreXP" style="color:#86EFAC">0</b> <span style="color:#475569">/ 280</span></p>
+      </div>
+      <div id="tierBadge" style="text-align:center"></div>
+    </div>
+    <div style="margin-top:14px;background:#334155;height:14px;border-radius:7px;overflow:hidden;border:1px solid #475569">
+      <div id="scoreBar" style="height:100%;width:0%;background:linear-gradient(90deg,#65A30D,#A3E635);transition:width .4s ease"></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button id="submitBtn" style="background:linear-gradient(135deg,#65A30D,#365314);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📤 SUBMIT TO TRAINER</button>
+      <button id="copyBtn" style="background:#65A30D;color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">📋 COPY RESULTS</button>
+      <button id="resetBtn" style="background:#1E293B;color:#FACC15;border:1px solid #475569;padding:10px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:.1em">↻ RESTART QUIZ</button>
+    </div>
+    <div id="submitStatus" style="margin-top:10px;font-size:12px;font-weight:700;color:#94A3B8;min-height:18px;white-space:pre-wrap"></div>
+  </div>
+
+  <div class="answer-key-static">
+  <div class="key-grid">
+    <div class="key-cell"><span>Q1</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q2</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q3</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q4</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q5</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q6</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q7</span><span class="a">D</span></div>
+    <div class="key-cell"><span>Q8</span><span class="a">A</span></div>
+    <div class="key-cell"><span>Q9</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q10</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q11</span><span class="a">A</span></div>
+    <div class="key-cell"><span>Q12</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q13</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q14</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q15</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q16</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q17</span><span class="a">A</span></div>
+    <div class="key-cell"><span>Q18</span><span class="a">D</span></div>
+    <div class="key-cell"><span>Q19</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q20</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q21</span><span class="a">A</span></div>
+    <div class="key-cell"><span>Q22</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q23</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q24</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q25</span><span class="a">A</span></div>
+    <div class="key-cell"><span>Q26</span><span class="a">D</span></div>
+    <div class="key-cell"><span>Q27</span><span class="a">C</span></div>
+    <div class="key-cell"><span>Q28</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q29</span><span class="a">B</span></div>
+    <div class="key-cell"><span>Q30</span><span class="a">B</span></div>
+  </div>
+
+  <h3 style="margin-top:24px">🏆 Scoring tiers</h3>
+  <div class="tier tier-gold"><div class="medal">🥇</div><div><b>24–30 correct → HARMONIC MASTER.</b> Earn the 🌀 badge. You clean up power quality like a consultant.</div></div>
+  <div class="tier tier-silver"><div class="medal">🥈</div><div><b>18–23 correct → THD-READY.</b> Re-run APPLY level and re-fight.</div></div>
+  <div class="tier tier-bronze"><div class="medal">🥉</div><div><b>0–17 correct → BACK TO THE WAVES.</b> Re-read LEARN. The Phantom waits.</div></div>
+  </div>
+  <div class="page-num">24</div>
+</section>
+
+<!-- ============= PAGE 25 — FINAL TAKEAWAYS ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ FINAL TAKEAWAYS</div>
+  <div class="level-banner" style="background:#ECFCCB;color:#365314;margin-top:.4in">🧠 THE PLAYBOOK</div>
+  <h2 style="margin-top:14px">What you should hear on the next call.</h2>
+  <p class="lead">The real win is not memorizing definitions. It is recognizing when the customer is describing a system-wide harmonic problem instead of a simple motor or drive accessory question.</p>
+
+  <div class="compare-grid" style="margin-top:18px">
+    <div class="compare-card reactor">
+      <h3>Still Reactor Territory</h3>
+      <ul>
+        <li>Single small VFD on a clean, stable utility</li>
+        <li>No shared sensitive electronics nearby</li>
+        <li>No compliance language, no hot transformer, no nuisance symptoms</li>
+        <li>Customer just needs basic smoothing and first-layer protection</li>
+      </ul>
+    </div>
+    <div class="compare-card filter">
+      <h3>Now You're in Filter Territory</h3>
+      <ul>
+        <li>Generator-fed system</li>
+        <li>Multiple drives on one service</li>
+        <li>IEEE-519, utility concern, or formal harmonic study</li>
+        <li>Hot transformers, nuisance trips, strange control behavior, or sensitive facilities</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question-grid" style="margin-top:14px">
+    <div class="question-pill"><div class="num">HEAR THIS</div><div class="ask">"The generator struggles when the drives start."</div><div class="why">Think harmonic filter, not just another line reactor.</div></div>
+    <div class="question-pill"><div class="num">HEAR THIS</div><div class="ask">"The engineer put IEEE-519 on the print."</div><div class="why">Compliance language means true mitigation is on the table immediately.</div></div>
+    <div class="question-pill"><div class="num">HEAR THIS</div><div class="ask">"We've got several drives on the same service."</div><div class="why">Shared-system distortion can stack and start bothering other equipment.</div></div>
+    <div class="question-pill"><div class="num">HEAR THIS</div><div class="ask">"The transformer runs hot and the breakers trip weird."</div><div class="why">That is a system symptom. Stop thinking motor-only.</div></div>
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <h3>💬 Best Plain-English Line</h3>
+    <p>"A reactor helps smooth the drive input and knock harmonics down some. A harmonic filter is the device built specifically to clean up THD and protect the whole power system when those problems actually matter."</p>
+  </div>
+  <div class="page-num">25</div>
+</section>
+
+<!-- ============= PAGE 26 — TROPHY CASE ============= -->
+<section class="page" data-section-id="results">
+  <div class="page-tag">▸ FINAL XP</div>
+  <div class="level-banner" style="background:#FEF3C7;color:#78350F;margin-top:.4in">🏅 TROPHY CASE</div>
+  <h2 style="margin-top:14px">Your earned XP.</h2>
+
+  <div class="trophy-grid">
+    <div class="trophy"><div class="icon">🌀</div><h3>HARMONIC BASICS LOCKED</h3><div class="xp-num">+80 XP</div></div>
+    <div class="trophy"><div class="icon">⚡</div><h3>MINI BOSSES</h3><div class="xp-num">+50 XP</div></div>
+    <div class="trophy"><div class="icon">💼</div><h3>THD-READY</h3><div class="xp-num">+90 XP</div></div>
+    <div class="trophy"><div class="icon">🏆</div><h3>HARMONIC MASTER</h3><div class="xp-num">+60 XP</div></div>
+  </div>
+
+  <div class="factbox" style="margin-top:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="font-size:16px">TOTAL POSSIBLE XP</h3>
+      <div style="font-family:'Bricolage Grotesque';font-size:46px;font-weight:800;color:#CA8A04">280</div>
+    </div>
+    <hr class="faint">
+    <p style="font-size:12px;color:var(--slate-500)">You have now cleared the full VFD power-quality story: drives create harmonics, reactors help, and filters are what you quote when the entire system needs to get cleaner.</p>
+  </div>
+
+  <div class="powerup" style="margin-top:18px">
+    🔓 <b>NEXT UNLOCKS:</b> Once you can hear harmonic clues early, generator, compliance, transformer, and shared-system conversations get a lot easier to win.
+  </div>
+  <div class="page-num">26</div>
+</section>
+
+<!-- ============= PAGE 27 — CLOSING ============= -->
+<section class="page closing-page" data-section-id="results">
+  <h1 style="font-size:84px">🌀</h1>
+  <h1 style="margin-top:14px">Clean it up.<br>Meet compliance.<br>Quote the right filter.</h1>
+  <p style="font-size:20px;max-width:5.5in;margin:24px auto 0">Harmonic filters turn "the drives are causing weird system problems" into a fixable, quotable story. Learn the trigger words, ask the right questions, and you stop selling parts — you start solving power-quality problems.</p>
+</section>
+
+<!-- ADMIN OVERLAY (browser only) -->
+<div id="adminOverlay" class="interactive-only"></div>
+
+<script src="../shared/module.js?v=editor-blocks-2-page-delete"></script>
+<script>
+RSPModule.init({
+  moduleId:   "harmonic-filter-mastery",
+  moduleName: "Harmonic Filter Mastery",
+  moduleIcon: "🌀",
+
+  totalQuestions: 30,
+  passGold:       24,
+  passSilver:     18,
+  pageXpTotal:    170,   // 8 LEARN × 10 + 6 APPLY × 15
+  minibossXpTotal: 50,
+  adminPassword:  (window.RSP_CONFIG && window.RSP_CONFIG.adminPassword) || "",
+  pumbleWebhookUrl: "",
+  storageKey: "rsp_harmonic_filter_mastery_progress",
+
+  tierBadges: {
+    gold:   { name:"HARMONIC MASTER",    msg:"You clean up power quality like a consultant." },
+    silver: { name:"THD-READY",          msg:"Re-run APPLY level and re-fight." },
+    bronze: { name:"BACK TO THE WAVES",  msg:"Re-read LEARN. The Phantom waits." }
+  },
+  tierSubmitText: {
+    gold:   "🥇 Harmonic Master",
+    silver: "🥈 THD-Ready — Re-run APPLY level",
+    bronze: "🥉 Needs Re-do — Back to LEARN"
+  },
+
+  // -------- THE 30-QUESTION BOSS FIGHT --------
+  quiz: [
+    // ROUND 1 — Harmonic Basics
+    {n:1,  q:"What are harmonics in an electrical system?", opts:{A:"Mechanical vibration",B:"Distorted electrical waveforms",C:"Low voltage conditions",D:"Ground faults"}, c:"B"},
+    {n:2,  q:"What type of equipment commonly creates harmonics?", opts:{A:"Light switches",B:"Fuses",C:"VFDs",D:"Terminal blocks"}, c:"C"},
+    {n:3,  q:"Why do VFDs create harmonics?", opts:{A:"They increase voltage",B:"They draw current in pulses",C:"They reduce amperage",D:"They create DC output only"}, c:"B"},
+    {n:4,  q:"What is the main purpose of a harmonic filter?", opts:{A:"Increase motor speed",B:"Remove harmonics and improve power quality",C:"Reduce enclosure heat",D:"Replace reactors"}, c:"B"},
+    {n:5,  q:"What is the primary purpose of a line reactor?", opts:{A:"Eliminate all harmonics",B:"Basic smoothing and some harmonic reduction",C:"Increase drive horsepower",D:"Replace the motor"}, c:"B"},
+    {n:6,  q:"Which device is specifically designed for aggressive harmonic reduction?", opts:{A:"Load reactor",B:"Harmonic filter",C:"Disconnect switch",D:"Fuse holder"}, c:"B"},
+
+    // ROUND 2 — THD & Input Side
+    {n:7,  q:"Harmonics can cause which of the following?", opts:{A:"Transformer overheating",B:"Cable heating",C:"Generator instability",D:"All of the above"}, c:"D"},
+    {n:8,  q:"What does THD stand for?", opts:{A:"Total Harmonic Distortion",B:"Thermal Heat Distribution",C:"Terminal Harmonic Device",D:"Total Heat Density"}, c:"A"},
+    {n:9,  q:"Lower THD generally means:", opts:{A:"Worse power quality",B:"Cleaner power quality",C:"More harmonics",D:"Higher motor speed"}, c:"B"},
+    {n:10, q:"Where are most harmonic filters installed?", opts:{A:"After the motor",B:"Inside the motor",C:"Before the VFD (input side)",D:"Inside the transformer"}, c:"C"},
+    {n:11, q:"Why are harmonic filters usually installed before the VFD?", opts:{A:"Harmonics are mainly created on the incoming power side",B:"Motors create harmonics",C:"They increase output voltage",D:"They reduce RPM"}, c:"A"},
+    {n:12, q:"What is a passive harmonic filter made of?", opts:{A:"Relays only",B:"Capacitors and inductors",C:"Fuses and breakers",D:"Transformers only"}, c:"B"},
+
+    // ROUND 3 — Filter Types
+    {n:13, q:"What is the main advantage of a passive harmonic filter?", opts:{A:"Dynamic correction",B:"Lower cost and reliability",C:"No installation needed",D:"Removes all harmonics completely"}, c:"B"},
+    {n:14, q:"What is the main advantage of an active harmonic filter?", opts:{A:"Lower cost",B:"Simpler design",C:"Dynamic harmonic correction",D:"No power required"}, c:"C"},
+    {n:15, q:"Active harmonic filters work similarly to what concept?", opts:{A:"Thermal overloads",B:"Noise-canceling headphones",C:"Motor starters",D:"Disconnect switches"}, c:"B"},
+    {n:16, q:"Which application strongly suggests harmonic filter use?", opts:{A:"Single small motor",B:"Multiple VFDs on one system",C:"Short conduit run",D:"Standard lighting circuit"}, c:"B"},
+    {n:17, q:"Which application strongly suggests a harmonic filter?", opts:{A:"Generator-fed systems",B:"Small relay circuits",C:"Single disconnect switch",D:"Push buttons only"}, c:"A"},
+    {n:18, q:"Which facilities commonly require harmonic mitigation?", opts:{A:"Hospitals",B:"Data centers",C:"Sensitive industrial facilities",D:"All of the above"}, c:"D"},
+
+    // ROUND 4 — Compliance & Problems
+    {n:19, q:"What industry guideline is commonly associated with harmonic control?", opts:{A:"NEC-70",B:"IEEE-519",C:"UL-489",D:"NEMA-1"}, c:"B"},
+    {n:20, q:"If a customer mentions IEEE-519 compliance, what should you immediately think about?", opts:{A:"Breakers",B:"Disconnects",C:"Harmonic filters",D:"Terminal blocks"}, c:"C"},
+    {n:21, q:"What is one common sign of harmonic problems?", opts:{A:"Transformer overheating",B:"Stable generator operation",C:"Lower current draw",D:"Reduced electrical noise"}, c:"A"},
+    {n:22, q:"Which device helps reduce some harmonics but is NOT a dedicated harmonic mitigation device?", opts:{A:"Harmonic filter",B:"Line reactor",C:"Active filter",D:"Sine wave filter"}, c:"B"},
+    {n:23, q:"Which statement is TRUE?", opts:{A:"Reactors completely eliminate harmonics",B:"Harmonic filters aggressively reduce harmonics",C:"Harmonics improve power quality",D:"Generators are unaffected by harmonics"}, c:"B"},
+    {n:24, q:"What is one common sales mistake?", opts:{A:"Asking about generators",B:"Asking about multiple drives",C:"Confusing reactors with harmonic filters",D:"Asking about harmonic studies"}, c:"C"},
+
+    // ROUND 5 — Sales & Decisions
+    {n:25, q:"Why are generators sensitive to harmonics?", opts:{A:"Harmonics can destabilize generator operation",B:"Generators eliminate harmonics",C:"Generators increase motor speed",D:"Harmonics cool the generator"}, c:"A"},
+    {n:26, q:"Which customer statement should trigger harmonic filter discussion?", opts:{A:"The transformer runs hot.",B:"The engineer mentioned IEEE-519.",C:"The generator struggles.",D:"All of the above"}, c:"D"},
+    {n:27, q:"Which situation may only require a line reactor instead of a harmonic filter?", opts:{A:"Severe harmonic compliance requirements",B:"Large multi-drive facility",C:"Small/simple VFD application",D:"Data center installation"}, c:"C"},
+    {n:28, q:"Which type of harmonic filter dynamically adjusts to changing harmonic conditions?", opts:{A:"Passive filter",B:"Active filter",C:"Load reactor",D:"Sine wave filter"}, c:"B"},
+    {n:29, q:"What is the primary purpose of harmonic mitigation?", opts:{A:"Increase motor RPM",B:"Improve power quality",C:"Reduce enclosure size",D:"Increase carrier frequency"}, c:"B"},
+    {n:30, q:"Which statement best describes harmonic filters?", opts:{A:"They are basic smoothing devices only",B:"They aggressively clean up harmonics and improve power quality",C:"They replace all VFD protection devices",D:"They only protect motors"}, c:"B"}
+  ],
+
+  // -------- MINI-BOSSES --------
+  minibosses: {
+    'waveform-warlock': {
+      name: 'WAVEFORM WARLOCK',
+      icon: '🧙',
+      tagline: 'Distorter of the Sine',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"Harmonics are best described as:", opts:{A:"Mechanical vibration in a motor shaft",B:"Distorted electrical waveforms caused by uneven current draw",C:"A type of overload relay",D:"A short circuit at the drive input"}, c:"B"},
+        {q:"VFDs create harmonics mainly because:", opts:{A:"They increase motor speed too quickly",B:"They only work on generator power",C:"Their rectifier draws current in pulses instead of smoothly",D:"They reduce voltage below line level"}, c:"C"},
+        {q:"Most harmonic filters are installed:", opts:{A:"On the motor output side",B:"Inside the transformer",C:"Before the VFD on the input side",D:"After the disconnect switch only"}, c:"C"},
+        {q:"Which phrase is the best quick distinction?", opts:{A:"Reactors eliminate harmonics; filters only smooth them",B:"Reactors help reduce harmonics; filters are designed to clean them up aggressively",C:"Reactors are output-side only; filters are motor-side only",D:"There is no meaningful difference"}, c:"B"},
+        {q:"THD stands for:", opts:{A:"Thermal Harmonic Device",B:"Total Heat Density",C:"Terminal Harmonic Design",D:"Total Harmonic Distortion"}, c:"D"}
+      ]
+    },
+    'compliance-phantom': {
+      name: 'COMPLIANCE PHANTOM',
+      icon: '👻',
+      tagline: 'Warden of IEEE-519',
+      passScore: 4,
+      xpReward: 25,
+      questions: [
+        {q:"Which application is one of the strongest harmonic-filter triggers?", opts:{A:"A small isolated drive on clean utility",B:"A hand-off-auto selector station",C:"A generator-fed VFD system",D:"A short lighting branch circuit"}, c:"C"},
+        {q:"If a customer says, 'The engineer mentioned IEEE-519,' your first thought should be:", opts:{A:"Standard disconnect",B:"Harmonic mitigation",C:"Motor enclosure type",D:"Carrier frequency only"}, c:"B"},
+        {q:"A hot transformer in a multi-drive installation most likely points you toward:", opts:{A:"Ignoring the issue until a motor fails",B:"Only output-side motor accessories",C:"Possible harmonic problems that justify filter discussion",D:"Replacing the overload relay"}, c:"C"},
+        {q:"Which filter type dynamically adjusts to changing harmonic conditions?", opts:{A:"Passive filter",B:"Line reactor",C:"Load reactor",D:"Active filter"}, c:"D"},
+        {q:"When may a line reactor be enough instead of a harmonic filter?", opts:{A:"When compliance is strict and multiple drives share the service",B:"When the source is a generator",C:"When it is a small, simple, non-critical VFD application with limited harmonics",D:"When the transformer is already overheating"}, c:"C"}
+      ]
+    }
+  },
+
+  // -------- SIDE MAP --------
+  mapSections: [
+    {id:'intro',         name:'Start',         icon:'🏁', meta:'Pages 1–3',   firstPage:1},
+    {id:'foundation',    name:'Harmonics',     icon:'🌀', meta:'Pages 4–6',   firstPage:4},
+    {id:'powerquality',  name:'Filter Logic',  icon:'⚡', meta:'Pages 7–11',  firstPage:7},
+    {id:'mb1',           name:'Warlock',       icon:'🧙', meta:'Mini Boss',   firstPage:11, isBoss:true, bossId:'waveform-warlock'},
+    {id:'application',   name:'Application',   icon:'🛠️', meta:'Pages 12–14', firstPage:12},
+    {id:'sales',         name:'Sales Logic',   icon:'💼', meta:'Pages 15–17', firstPage:15},
+    {id:'mb2',           name:'Phantom',       icon:'👻', meta:'Mini Boss',   firstPage:17, isBoss:true, bossId:'compliance-phantom'},
+    {id:'finalboss',     name:'THD Vault',     icon:'🐉', meta:'30 Questions',firstPage:18, isBoss:true, isFinal:true},
+    {id:'results',       name:'Results',       icon:'🏆', meta:'Trophy Case', firstPage:24}
+  ],
+
+  pageRanges: [
+    {section:'intro',        from:1,  to:3},
+    {section:'foundation',   from:4,  to:6},
+    {section:'powerquality', from:7,  to:11},
+    {section:'application',  from:12, to:14},
+    {section:'sales',        from:15, to:17},
+    {section:'finalboss',    from:18, to:23},
+    {section:'results',      from:24, to:27}
+  ]
+});
+</script>
+
+</body>
+</html>

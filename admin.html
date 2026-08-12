@@ -1,0 +1,2418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RSP Training Portal · Admin</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bolt:#FACC15;--bolt-deep:#CA8A04;--green:#10B981;--red:#EF4444;--purple:#7C3AED;--blue:#1E40AF;--s3:#334155;--s5:#64748B;--s9:#94A3B8}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#0F172A;font-family:'Inter',system-ui,sans-serif;color:#fff;min-height:100vh}
+h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;line-height:1.05;letter-spacing:-.01em}
+.wrap{max-width:1400px;margin:0 auto;padding:0 32px 60px}
+a{color:inherit;text-decoration:none}
+
+/* ── admin gate ── */
+#gate{position:fixed;inset:0;background:radial-gradient(circle at top right,#1E40AF 0%,#0F172A 70%);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+#gate.hidden{display:none}
+.gate-card{background:#1E293B;border-radius:20px;padding:40px;max-width:400px;width:100%;border:2px solid #312E81;text-align:center}
+.gate-card h2{color:var(--bolt);font-size:26px;margin-top:12px}
+.gate-card p{color:var(--s9);font-size:13px;margin-top:8px;line-height:1.5}
+.gate-card input{width:100%;padding:14px;background:#0F172A;border:2px solid var(--s3);border-radius:10px;color:#fff;margin-top:16px;font-size:14px;font-family:inherit}
+.gate-card input:focus{outline:none;border-color:var(--bolt)}
+.gate-err{color:var(--red);font-size:12px;font-weight:700;margin-top:8px;min-height:14px}
+.gate-card button{width:100%;padding:14px;background:linear-gradient(135deg,var(--bolt),var(--bolt-deep));color:#0F172A;border:none;border-radius:10px;font-weight:800;cursor:pointer;margin-top:14px;font-family:inherit;font-size:14px}
+
+/* ── topbar ── */
+#dash{display:none}
+#dash.show{display:block}
+.topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding:28px 0 20px;border-bottom:1px solid #1E293B}
+.topbar h1{font-size:32px;color:var(--bolt)}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── tabs ── */
+.tab-nav{display:flex;gap:4px;margin-top:24px;background:#0F172A;border:1px solid var(--s3);border-radius:12px;padding:4px;width:fit-content}
+.tab-btn{padding:8px 20px;border-radius:9px;font-size:13px;font-weight:800;color:var(--s9);cursor:pointer;border:none;background:transparent;font-family:inherit;letter-spacing:.04em;transition:all .15s}
+.tab-btn:hover{color:#fff}
+.tab-btn.active{background:#1E293B;color:#fff;border:1px solid var(--s3)}
+.tab-pane{display:none;margin-top:24px}
+.tab-pane.active{display:block}
+
+/* ── stat cards ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+@media(max-width:900px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+.stat-card{background:linear-gradient(160deg,#1E293B,#0F172A);border:1px solid var(--s3);border-radius:14px;padding:18px}
+.stat-card .label{color:var(--bolt);font-size:10px;font-weight:800;letter-spacing:.12em}
+.stat-card .num{font-family:'Bricolage Grotesque';font-size:38px;font-weight:800;color:#fff;margin-top:4px;line-height:1}
+.stat-card .sub{color:var(--s5);font-size:11px;margin-top:4px}
+
+/* ── buttons ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;font-weight:800;font-size:12px;font-family:inherit;cursor:pointer;border:none;letter-spacing:.04em;text-decoration:none;transition:all .15s}
+.btn-primary{background:linear-gradient(135deg,var(--bolt),var(--bolt-deep));color:#0F172A}
+.btn-primary:hover{transform:translateY(-1px)}
+.btn-secondary{background:#1E293B;color:#fff;border:1px solid var(--s3)}
+.btn-secondary:hover{background:var(--s3)}
+.btn-ghost{background:transparent;color:var(--s9);border:1px solid var(--s3)}
+.btn-ghost:hover{color:#fff;border-color:var(--s5)}
+.btn-danger{background:#450A0A;color:#FCA5A5;border:1px solid #7F1D1D}
+.btn-danger:hover{background:#7F1D1D}
+.btn-purple{background:#4C1D95;color:#DDD6FE;border:1px solid #6D28D9}
+.btn-purple:hover{background:#6D28D9}
+.btn-sm{padding:6px 12px;font-size:11px}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
+
+/* ── create module modal ── */
+.cm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:8000;display:flex;align-items:center;justify-content:center;padding:20px}
+.cm-overlay.hidden{display:none}
+.cm-card{background:#1E293B;border:1px solid var(--s3);border-radius:20px;padding:28px;width:100%;max-width:480px}
+.cm-card h3{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;margin-bottom:6px}
+.cm-card p{color:var(--s9);font-size:13px;margin-bottom:18px}
+.emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;max-height:240px;overflow-y:auto;padding:4px}
+.emoji-btn{font-size:24px;line-height:1;padding:8px;border-radius:10px;border:2px solid transparent;background:#0F172A;cursor:pointer;transition:all .1s;text-align:center}
+.emoji-btn:hover{background:#334155}
+.emoji-btn.selected{border-color:var(--bolt);background:#292400}
+.hub-pick-btn.selected{background:var(--bolt);color:#0F172A;border-color:var(--bolt)}
+.cm-actions{display:flex;gap:8px;margin-top:18px;justify-content:flex-end}
+
+/* ── module cards (Tab 1) ── */
+.module-grid{display:flex;flex-direction:column;gap:10px}
+.mod-card{background:linear-gradient(160deg,#1E293B,#0F172A);border:1px solid var(--s3);border-radius:16px;overflow:hidden}
+.mod-row{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;user-select:none}
+.mod-row:hover{background:rgba(255,255,255,.02)}
+.mod-icon{font-size:28px;flex:0 0 36px}
+.mod-info{flex:1;min-width:0}
+.mod-name{font-size:15px;font-weight:800;color:#fff}
+.mod-cat{font-size:11px;color:var(--s5);margin-top:2px}
+.mod-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:800;letter-spacing:.05em}
+.tag-green{background:#065F46;color:#A7F3D0}
+.tag-blue{background:#1E3A5F;color:#93C5FD}
+.tag-grey{background:#1E293B;color:#64748B;border:1px solid var(--s3)}
+.tag-amber{background:#451A03;color:#FCD34D}
+.mod-chevron{color:var(--s5);font-size:18px;transition:transform .2s;flex:0 0 20px}
+.mod-card.open .mod-chevron{transform:rotate(180deg)}
+
+/* ── module edit panel ── */
+.mod-edit{display:none;padding:20px;border-top:1px solid var(--s3);background:#0a1120}
+.mod-card.open .mod-edit{display:block}
+.edit-grid{display:grid;grid-template-columns:1fr 220px;gap:14px;margin-bottom:14px}
+@media(max-width:700px){.edit-grid{grid-template-columns:1fr}}
+.field-label{font-size:10px;font-weight:800;color:var(--s9);letter-spacing:.12em;margin-bottom:6px}
+.field-input{width:100%;padding:10px 12px;border-radius:9px;background:#0F172A;border:1px solid var(--s3);color:#fff;font-size:13px;font-family:inherit;transition:border-color .15s}
+.field-input:focus{outline:none;border-color:var(--bolt)}
+.field-msg{font-size:11px;margin-top:6px;min-height:14px;color:var(--s5)}
+
+/* ── quiz drop zone ── */
+.quiz-drop{border:2px dashed var(--s3);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;margin-top:14px}
+.quiz-drop:hover,.quiz-drop.over{border-color:#A78BFA;background:rgba(124,58,237,.06)}
+.quiz-drop-title{color:#fff;font-weight:800;font-size:13px;margin-top:6px}
+.quiz-drop-sub{color:var(--s5);font-size:11px;margin-top:3px}
+.quiz-loaded-badge{display:inline-flex;align-items:center;gap:6px;background:#065F46;color:#A7F3D0;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:800;margin-top:10px}
+
+/* ── question editor (Tab 2) ── */
+.q-layout{display:grid;grid-template-columns:1fr 400px;gap:20px;align-items:start}
+@media(max-width:1100px){.q-layout{grid-template-columns:1fr}}
+.panel{background:linear-gradient(160deg,#1E293B,#0F172A);border:1px solid var(--s3);border-radius:16px;padding:22px}
+.panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--s3)}
+.panel-title{font-size:16px;font-weight:800;color:#fff}
+.q-list{display:flex;flex-direction:column;gap:6px;max-height:600px;overflow-y:auto;padding-right:4px}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:10px;background:#0F172A;border:1px solid var(--s3);cursor:pointer;transition:all .15s}
+.q-item:hover{border-color:var(--s5)}
+.q-item.active{border-color:var(--bolt);background:rgba(250,204,21,.05)}
+.q-num{font-size:11px;font-weight:800;color:var(--s5);flex:0 0 24px;padding-top:1px}
+.q-text{flex:1;font-size:13px;color:#CBD5E1;line-height:1.4}
+.q-correct{font-size:11px;font-weight:800;color:var(--green);flex:0 0 16px}
+.q-del{font-size:16px;cursor:pointer;color:var(--s5);flex:0 0 20px;text-align:center;opacity:0;transition:opacity .15s}
+.q-item:hover .q-del{opacity:1}
+.q-del:hover{color:var(--red)}
+.edit-form{position:sticky;top:24px}
+.edit-form textarea,.edit-form input{width:100%;padding:10px 12px;border-radius:9px;background:#0F172A;border:1px solid var(--s3);color:#fff;font-size:13px;font-family:inherit;resize:vertical}
+.edit-form textarea:focus,.edit-form input:focus{outline:none;border-color:var(--bolt)}
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.opt-row{display:flex;align-items:center;gap:8px}
+.opt-letter{font-size:11px;font-weight:800;color:var(--s5);width:14px;flex:0 0 14px}
+.correct-radio{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.correct-radio label{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--s9);cursor:pointer}
+.correct-radio input[type=radio]{accent-color:var(--bolt)}
+.no-module{text-align:center;padding:60px 20px;color:var(--s5)}
+.no-module .ico{font-size:48px;margin-bottom:12px}
+
+/* ── paths (tags & roles) ── */
+.path-card{background:linear-gradient(160deg,#1E293B,#0F172A);border:1px solid var(--s3);border-radius:16px;overflow:hidden;margin-bottom:10px}
+.path-row{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;user-select:none}
+.path-row:hover{background:rgba(255,255,255,.02)}
+.path-ico{font-size:26px;flex:0 0 34px;text-align:center}
+.path-info{flex:1;min-width:0}
+.path-name{font-size:15px;font-weight:800;color:#fff}
+.path-sub{font-size:11px;color:var(--s5);margin-top:2px}
+.path-card.open .mod-chevron{transform:rotate(180deg)}
+.path-edit{display:none;padding:20px;border-top:1px solid var(--s3);background:#0a1120}
+.path-card.open .path-edit{display:block}
+.path-grid-fields{display:grid;grid-template-columns:1fr 90px 130px 90px;gap:12px;margin-bottom:14px}
+@media(max-width:820px){.path-grid-fields{grid-template-columns:1fr 1fr}}
+.switch-row{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:18px;padding:12px 14px;border-radius:10px;background:#0F172A;border:1px solid var(--s3)}
+.switch{display:flex;align-items:center;gap:8px;font-size:12px;color:#CBD5E1;cursor:pointer;font-weight:700}
+.switch input{accent-color:var(--bolt);width:15px;height:15px;cursor:pointer}
+.switch .why{color:var(--s5);font-weight:400;font-size:11px}
+.pm-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;max-height:420px;overflow-y:auto;padding-right:4px}
+.pm-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;background:#0F172A;border:1px solid var(--s3)}
+.pm-item.missing{border-color:#7F1D1D;background:#1a0a0a}
+.pm-pos{font-size:11px;font-weight:800;color:var(--s5);flex:0 0 22px}
+.pm-move{display:flex;flex-direction:column;gap:1px;flex:0 0 18px}
+.pm-move button{background:none;border:none;color:var(--s5);cursor:pointer;font-size:9px;line-height:1;padding:1px}
+.pm-move button:hover:not(:disabled){color:var(--bolt)}
+.pm-move button:disabled{opacity:.25;cursor:not-allowed}
+.pm-name{flex:1;font-size:12.5px;color:#CBD5E1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pm-hub{font-size:9px;font-weight:800;padding:2px 7px;border-radius:999px;background:#1E293B;color:var(--s9);border:1px solid var(--s3);flex:0 0 auto}
+.pm-del{background:none;border:none;color:var(--s5);cursor:pointer;font-size:14px;padding:0 4px;flex:0 0 auto}
+.pm-del:hover{color:var(--red)}
+.pm-add{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pm-add select{flex:1;min-width:220px;padding:9px 12px;border-radius:9px;background:#0F172A;border:1px solid var(--s3);color:#fff;font-size:12px;font-family:inherit}
+.path-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid var(--s3)}
+
+/* ── role assignment (profile drawer) ── */
+.role-picker{display:flex;flex-direction:column;gap:6px}
+.role-opt{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:9px;background:#0F172A;border:1px solid var(--s3);cursor:pointer;font-size:12.5px;color:#CBD5E1;transition:border-color .15s}
+.role-opt:hover{border-color:var(--s5)}
+.role-opt.on{border-color:#8B5CF6;background:rgba(139,92,246,.08);color:#fff}
+.role-opt input{accent-color:#8B5CF6;width:15px;height:15px;cursor:pointer}
+.role-opt .rc{margin-left:auto;font-size:10px;font-weight:800;color:var(--s5)}
+
+/* ── learners (Tab 3) ── */
+.filter-bar{background:#1E293B;border-radius:12px;padding:12px 16px;border:1px solid var(--s3);display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.filter-bar label{color:var(--s9);font-size:10px;font-weight:800;letter-spacing:.1em}
+.filter-bar input,.filter-bar select{background:#0F172A;border:1px solid var(--s3);color:#fff;padding:8px 12px;border-radius:7px;font-family:inherit;font-size:12px}
+.filter-bar input{min-width:200px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+table th{text-align:left;color:var(--bolt);padding:10px 8px;border-bottom:1px solid var(--s3);font-size:10px;letter-spacing:.1em;font-weight:800;cursor:pointer;user-select:none}
+table th:hover{color:#fff}
+table td{padding:12px 8px;border-bottom:1px solid #1E293B;color:#E2E8F0;vertical-align:middle}
+table tr:hover td{background:rgba(255,255,255,.02)}
+table tr.clickable{cursor:pointer}
+.tier-pill{padding:3px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.05em;display:inline-block}
+.tier-gold{background:#FEF3C7;color:#78350F}
+.tier-silver{background:#E2E8F0;color:#1E293B}
+.tier-bronze{background:#FED7AA;color:#7C2D12}
+.tier-progress{background:#1E40AF;color:#BFDBFE}
+.tier-new{background:#475569;color:#CBD5E1}
+.modules-cell{display:flex;flex-direction:column;gap:7px;min-width:360px}
+.module-hub-row{display:grid;grid-template-columns:105px minmax(150px,1fr) 42px;gap:8px;align-items:center}
+.module-hub-label{color:var(--s9);font-size:9px;font-weight:800;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.module-dot-list{display:flex;gap:3px;flex-wrap:wrap}
+.module-hub-count{color:var(--s9);font-size:10px;font-weight:800;text-align:right;white-space:nowrap}
+.m-dot{width:18px;height:18px;border-radius:4px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff}
+.m-dot.completed{background:var(--green)}
+.m-dot.progress{background:#F59E0B}
+.m-dot.new{background:#475569}
+.status-pill{display:inline-block;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.05em}
+.status-active{background:#065F46;color:#A7F3D0}
+.status-on_leave{background:#78350F;color:#FED7AA}
+.status-trainer{background:#5B21B6;color:#DDD6FE}
+.status-inactive{background:#334155;color:var(--s9)}
+.status-terminated{background:#7F1D1D;color:#FECACA;text-decoration:line-through;opacity:.7}
+.lb-avatar{width:36px;height:36px;border-radius:50%;overflow:hidden;flex:0 0 36px;background:#0F172A;display:inline-block;vertical-align:middle;margin-right:8px}
+.lb-avatar svg{display:block;width:100%;height:100%}
+.empty{text-align:center;padding:40px;color:var(--s5)}
+
+/* ── settings (Tab 4) ── */
+.settings-table{width:100%;border-collapse:collapse;font-size:13px}
+.settings-table th{text-align:left;color:var(--bolt);padding:10px 12px;border-bottom:1px solid var(--s3);font-size:10px;letter-spacing:.1em;font-weight:800}
+.settings-table td{padding:10px 12px;border-bottom:1px solid #1E293B;vertical-align:middle}
+.settings-table input[type=number]{width:70px;padding:6px 8px;border-radius:7px;background:#0F172A;border:1px solid var(--s3);color:#fff;font-family:inherit;font-size:12px;text-align:center}
+.settings-table input[type=number]:focus{outline:none;border-color:var(--bolt)}
+.toggle{position:relative;width:36px;height:20px;display:inline-block}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--s3);border-radius:10px;cursor:pointer;transition:.2s}
+.toggle-slider::before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.toggle input:checked + .toggle-slider{background:var(--green)}
+.toggle input:checked + .toggle-slider::before{transform:translateX(16px)}
+.settings-save-row{display:flex;justify-content:flex-end;margin-top:16px;gap:8px;align-items:center}
+.settings-msg{font-size:12px;color:var(--s5)}
+
+/* ── profile drawer ── */
+#drawerOverlay{position:fixed;inset:0;background:rgba(15,23,42,.75);z-index:9000;display:none;backdrop-filter:blur(2px)}
+#drawerOverlay.show{display:block}
+#drawer{position:fixed;top:0;right:-560px;width:540px;max-width:100vw;height:100vh;background:linear-gradient(160deg,#1E293B,#0F172A);border-left:1px solid var(--s3);transition:right .25s ease;z-index:9001;overflow-y:auto;padding:24px 26px;box-shadow:-20px 0 60px rgba(0,0,0,.5)}
+#drawer.open{right:0}
+.drawer-close{position:absolute;top:18px;right:18px;background:#0F172A;border:1px solid var(--s3);color:var(--s9);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;font-family:inherit;transition:all .15s}
+.drawer-close:hover{color:#fff;border-color:var(--bolt)}
+.d-header{display:flex;align-items:center;gap:16px;padding-bottom:16px;border-bottom:1px solid var(--s3)}
+.d-avatar{width:72px;height:72px;border-radius:50%;overflow:hidden;flex:0 0 72px;background:#0F172A}
+.d-avatar svg{display:block;width:100%;height:100%}
+.d-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0}
+.d-stat{background:#0F172A;border:1px solid var(--s3);border-radius:10px;padding:10px;text-align:center}
+.d-stat .dl{color:var(--s9);font-size:9px;letter-spacing:.1em;font-weight:800}
+.d-stat .dn{font-family:'Bricolage Grotesque';font-size:22px;color:var(--bolt);font-weight:800;margin-top:2px}
+.d-section{margin-top:20px}
+.d-section h3{color:var(--bolt);font-size:11px;font-weight:800;letter-spacing:.15em;margin-bottom:10px}
+.mod-row-d{background:#0F172A;border:1px solid var(--s3);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px;font-size:12px}
+.mod-row-d.done{border-color:var(--green)}
+.mod-row-d .ico{font-size:18px}
+.mod-row-d .nm{color:#fff;font-weight:700}
+.mod-row-d .meta-d{color:var(--s5);font-size:10px;margin-top:1px}
+.mod-row-d .xp-d{font-family:'Bricolage Grotesque';color:var(--bolt);font-weight:800;font-size:13px;margin-left:auto}
+.profile-hub-title{display:flex;align-items:center;justify-content:space-between;color:#CBD5E1;font-size:10px;font-weight:800;letter-spacing:.08em;margin:14px 2px 7px;padding-bottom:5px;border-bottom:1px solid var(--s3)}
+.attempt-hist{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px}
+.ah-entry{font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px;letter-spacing:.04em}
+.ah-pass{background:rgba(16,185,129,.15);color:#34D399;border:1px solid rgba(16,185,129,.3)}
+.ah-fail{background:rgba(239,68,68,.1);color:#F87171;border:1px solid rgba(239,68,68,.25)}
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
+.badge-tile{background:#0F172A;border:1px solid var(--s3);border-radius:10px;padding:12px 8px;text-align:center}
+.badge-tile .bico{font-size:28px}
+.badge-tile .bnm{color:#fff;font-size:11px;font-weight:700;margin-top:4px;line-height:1.2}
+.badge-tile.manual{border-color:#9333EA}
+.badge-tile .manual-tag{font-size:8px;color:#A78BFA;letter-spacing:.05em;margin-top:2px;font-weight:800}
+.kudo-row{background:#0F172A;border:1px solid var(--s3);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:12px;color:#E2E8F0}
+.drawer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid var(--s3)}
+.inline-form{background:#0F172A;border:1px solid var(--s3);border-radius:10px;padding:14px;margin-top:10px}
+.inline-form label{display:block;color:var(--s9);font-size:10px;font-weight:800;letter-spacing:.1em;margin-top:8px}
+.inline-form select,.inline-form input,.inline-form textarea{width:100%;background:#1E293B;border:1px solid var(--s3);color:#fff;padding:8px 10px;border-radius:6px;font-family:inherit;font-size:12px;margin-top:4px}
+.inline-form textarea{min-height:60px;resize:vertical}
+.inline-form .form-actions{display:flex;gap:6px;justify-content:flex-end;margin-top:10px}
+</style>
+<link rel="stylesheet" href="brand.css">
+</head>
+<body>
+
+<!-- ── Admin gate ── -->
+<div id="gate">
+  <div class="gate-card">
+    <img class="rsp-brand-logo" style="margin-left:auto;margin-right:auto" src="images/rsp-industrial-logo.png" alt="RSP Industrial">
+    <div style="font-size:48px">⚡</div>
+    <h2>Admin Access</h2>
+    <p>Enter the admin password to manage the training portal.</p>
+    <input type="password" id="adminPwd" placeholder="Admin password" autocomplete="off">
+    <div class="gate-err" id="gateErr"></div>
+    <button id="gateBtn">Unlock →</button>
+    <p style="margin-top:16px"><a href="index.html" style="color:#64748B;font-size:11px">← Back to portal</a></p>
+  </div>
+</div>
+
+<!-- ── Main dashboard ── -->
+<div id="dash">
+<div class="wrap">
+
+  <div class="topbar">
+    <div>
+      <img class="rsp-brand-logo" src="images/rsp-industrial-logo.png" alt="RSP Industrial">
+      <div style="font-size:10px;font-weight:800;letter-spacing:.18em;color:var(--bolt)">RSP INDUSTRIAL · ADMIN</div>
+      <h1>⚡ Training Hub</h1>
+    </div>
+    <div class="top-actions">
+      <a href="index.html" class="btn btn-ghost">← Portal</a>
+      <button class="btn btn-primary" id="createModuleBtn">+ Create Module</button>
+      <button class="btn btn-secondary" id="exportCsvBtn">⬇ Export CSV</button>
+      <button class="btn btn-danger" id="wipeBtn">🔒 Cloud Wipe Disabled</button>
+    </div>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" data-tab="modules">📦 Modules</button>
+    <button class="tab-btn" data-tab="questions">📝 Questions</button>
+    <button class="tab-btn" data-tab="paths">🎯 Paths</button>
+    <button class="tab-btn" data-tab="learners">👥 Learners</button>
+    <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
+  </div>
+
+  <!-- Hub filter — applies across Modules / Questions / Learners / Settings -->
+  <div class="tab-nav" id="hubFilterNav" style="margin-top:10px">
+    <button class="tab-btn active" data-hub="">All Hubs</button>
+    <button class="tab-btn" data-hub="onboarding">🧭 Onboarding</button>
+    <button class="tab-btn" data-hub="product_mastery">📦 Product Mastery</button>
+  </div>
+
+  <!-- Cloud sync status — makes a failed/partial module_config load visible instead of silently showing stale defaults -->
+  <div id="cloudSyncBanner" style="display:none;margin-top:14px;padding:10px 16px;border-radius:10px;font-size:12px;font-weight:700;align-items:center;gap:10px;flex-wrap:wrap"></div>
+
+  <!-- ══ TAB 1: MODULES ══ -->
+  <div class="tab-pane active" id="tab-modules">
+    <div class="stats-row">
+      <div class="stat-card"><div class="label">MODULES</div><div class="num" id="sModules">—</div><div class="sub">published</div></div>
+      <div class="stat-card"><div class="label">WITH VIDEOS</div><div class="num" id="sFlipsnack">—</div><div class="sub">video pages set up</div></div>
+      <div class="stat-card"><div class="label">QUIZZES LIVE</div><div class="num" id="sQuizzes">—</div><div class="sub">questions uploaded</div></div>
+      <div class="stat-card"><div class="label">LEARNERS</div><div class="num" id="sLearners">—</div><div class="sub">registered</div></div>
+    </div>
+    <div class="module-grid" id="moduleGrid"></div>
+  </div>
+
+  <!-- ══ TAB 2: QUESTION EDITOR ══ -->
+  <div class="tab-pane" id="tab-questions">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <select id="qModuleSelect" style="background:#1E293B;border:1px solid var(--s3);color:#fff;padding:10px 14px;border-radius:9px;font-family:inherit;font-size:13px;min-width:240px">
+          <option value="">— Select a module —</option>
+        </select>
+        <span id="qCount" style="color:var(--s9);font-size:12px"></span>
+      </div>
+      <button class="btn btn-primary" id="addQBtn" style="display:none">+ Add Question</button>
+    </div>
+    <div class="q-layout">
+      <div class="panel">
+        <div id="qListWrap"><div class="no-module"><div class="ico">📝</div><div>Select a module above to view and edit its questions.</div></div></div>
+      </div>
+      <div class="panel edit-form" id="qEditPanel" style="display:none">
+        <div class="panel-header">
+          <div class="panel-title" id="qEditTitle">Edit Question</div>
+          <button class="btn btn-ghost btn-sm" id="qCancelBtn">Cancel</button>
+        </div>
+        <div class="field-label">QUESTION</div>
+        <textarea id="qPrompt" rows="3" style="margin-bottom:12px"></textarea>
+        <div class="field-label" style="margin-bottom:8px">OPTIONS</div>
+        <div class="options-grid">
+          <div class="opt-row"><span class="opt-letter">A</span><input type="text" id="qOptA"></div>
+          <div class="opt-row"><span class="opt-letter">B</span><input type="text" id="qOptB"></div>
+          <div class="opt-row"><span class="opt-letter">C</span><input type="text" id="qOptC"></div>
+          <div class="opt-row"><span class="opt-letter">D</span><input type="text" id="qOptD"></div>
+        </div>
+        <div class="field-label" style="margin-bottom:8px">CORRECT ANSWER</div>
+        <div class="correct-radio">
+          <label><input type="radio" name="qCorrect" value="0"> A</label>
+          <label><input type="radio" name="qCorrect" value="1"> B</label>
+          <label><input type="radio" name="qCorrect" value="2"> C</label>
+          <label><input type="radio" name="qCorrect" value="3"> D</label>
+        </div>
+        <div class="field-label">EXPLANATION</div>
+        <textarea id="qExpl" rows="3" style="margin-bottom:14px;margin-top:6px"></textarea>
+        <button class="btn btn-primary" id="qSaveBtn" style="width:100%">Save Question →</button>
+        <div class="field-msg" id="qSaveMsg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB 3: LEARNERS ══ -->
+  <div class="tab-pane" id="tab-learners">
+    <div class="stats-row" style="grid-template-columns:repeat(4,1fr)">
+      <div class="stat-card"><div class="label">TOTAL LEARNERS</div><div class="num" id="sLearnersL">—</div></div>
+      <div class="stat-card"><div class="label">COMPLETIONS</div><div class="num" id="sCompletions">—</div></div>
+      <div class="stat-card"><div class="label">AVG SCORE</div><div class="num" id="sAvg">—</div></div>
+      <div class="stat-card"><div class="label">ACTIVE THIS WEEK</div><div class="num" id="sActive">—</div></div>
+    </div>
+
+    <div class="panel" style="margin-bottom:20px">
+      <div style="font-size:12px;font-weight:800;color:var(--bolt);letter-spacing:.1em;margin-bottom:14px">MODULE COMPLETION</div>
+      <div id="heatmap"></div>
+    </div>
+
+    <div class="filter-bar">
+      <label>SEARCH</label>
+      <input id="searchBox" placeholder="Name or employee ID...">
+      <label>MODULE</label>
+      <select id="moduleFilter"><option value="">All modules</option></select>
+      <label>PROGRESS</label>
+      <select id="statusFilter">
+        <option value="">Any</option>
+        <option value="completed">Completed</option>
+        <option value="progress">In progress</option>
+        <option value="new">Not started</option>
+      </select>
+      <label>STATUS</label>
+      <select id="userStatusFilter">
+        <option value="">All</option>
+        <option value="active">Active</option>
+        <option value="on_leave">On Leave</option>
+        <option value="trainer">Trainer</option>
+        <option value="inactive">Inactive</option>
+        <option value="terminated">Terminated</option>
+      </select>
+    </div>
+
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th data-sort="name">LEARNER ↕</th>
+            <th data-sort="started">STARTED ↕</th>
+            <th>MODULE PROGRESS</th>
+            <th data-sort="xp">XP ↕</th>
+            <th data-sort="completions">DONE ↕</th>
+            <th data-sort="avgScore">SCORE ↕</th>
+            <th>TIER</th>
+          </tr>
+        </thead>
+        <tbody id="ledgerBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ TAB 4: SETTINGS ══ -->
+  <div class="tab-pane" id="tab-settings">
+    <div style="display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start">
+      <div>
+        <div class="panel" style="margin-bottom:20px">
+          <div class="panel-header">
+            <div class="panel-title">Module Settings</div>
+            <div style="font-size:11px;color:var(--s5)">Changes save to Supabase and apply immediately</div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="settings-table" id="settingsTable">
+              <thead><tr>
+                <th>MODULE</th>
+                <th>XP</th>
+                <th>PASS %</th>
+                <th>PUBLISHED</th>
+                <th></th>
+              </tr></thead>
+              <tbody id="settingsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="panel" style="margin-bottom:16px">
+          <div class="panel-header">
+            <div class="panel-title">Admin Users</div>
+          </div>
+          <p style="font-size:12px;color:var(--s5);margin-bottom:14px;line-height:1.5">These names bypass the codeword gate and see admin controls. Case-insensitive.</p>
+          <div id="adminUsersList" style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px"></div>
+          <div style="display:flex;gap:8px">
+            <input type="text" id="newAdminInput" placeholder="Add admin name..." style="flex:1;padding:9px 12px;border-radius:8px;background:#0F172A;border:1px solid var(--s3);color:#fff;font-family:inherit;font-size:12px">
+            <button class="btn btn-purple btn-sm" id="addAdminBtn">Add</button>
+          </div>
+          <div class="field-msg" id="adminUsersMsg"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Danger Zone</div></div>
+          <p style="font-size:12px;color:var(--s5);margin-bottom:12px;line-height:1.5">Export a full backup before wiping. This cannot be undone.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-secondary btn-sm" id="exportCsvBtn2">⬇ Export CSV</button>
+            <button class="btn btn-danger btn-sm" id="wipeBtn2">🔒 Cloud Wipe Disabled</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: PATHS (tags & roles) ══ -->
+  <div class="tab-pane" id="tab-paths">
+    <div class="panel" style="margin-bottom:18px">
+      <div class="panel-header">
+        <div class="panel-title">Learner Paths</div>
+        <button class="btn btn-primary btn-sm" id="newPathBtn">+ New Path</button>
+      </div>
+      <p style="font-size:12px;color:var(--s5);line-height:1.6;margin-bottom:4px">
+        A path is a named set of modules that can pull from <strong style="color:#CBD5E1">any hub</strong>.
+        Turn on <strong style="color:#CBD5E1">Show on home</strong> to give it a card on the portal home screen,
+        <strong style="color:#CBD5E1">Assignable role</strong> to assign it to learners on the Learners tab, and
+        <strong style="color:#CBD5E1">Step by step</strong> to make its modules unlock in order.
+      </p>
+      <p style="font-size:11px;color:var(--s5);line-height:1.6">
+        Paths never change XP, tiers, or badges — a module always scores in its own hub, however many paths it sits in.
+      </p>
+      <div class="field-msg" id="pathsMsg"></div>
+    </div>
+    <div id="pathsList"></div>
+  </div>
+
+</div><!-- /wrap -->
+</div><!-- /dash -->
+
+<!-- ── Profile drawer ── -->
+<div id="drawerOverlay"></div>
+<div id="drawer">
+  <button class="drawer-close" id="drawerClose">✕</button>
+  <div id="drawerContent"></div>
+</div>
+
+<!-- Create Module emoji picker modal -->
+<div class="cm-overlay hidden" id="createModuleOverlay">
+  <div class="cm-card">
+    <h3>Create Module</h3>
+    <p>Choose a hub and an icon for the new module</p>
+    <div class="field-label" style="margin-bottom:8px">TRAINING HUB</div>
+    <div class="cm-actions" style="justify-content:flex-start;margin-top:0;margin-bottom:18px" id="hubPickerRow">
+      <button class="btn btn-secondary btn-sm hub-pick-btn" data-hub="onboarding">🧭 Onboarding</button>
+      <button class="btn btn-secondary btn-sm hub-pick-btn" data-hub="product_mastery">📦 Product Mastery</button>
+    </div>
+    <p>Pick an icon for the new module</p>
+    <div class="emoji-grid" id="emojiPickerGrid"></div>
+    <div class="cm-actions">
+      <button class="btn btn-ghost" id="cancelCreateBtn">Cancel</button>
+      <button class="btn btn-primary" id="confirmCreateBtn" disabled>Create Module</button>
+    </div>
+  </div>
+</div>
+
+<script src="manifest.js"></script>
+<script src="avatars.js"></script>
+<script src="badges.js"></script>
+<script src="paths.js"></script>
+<script src="config.local.js"></script>
+<script src="cloud.js"></script>
+<!-- PDF → flipbook conversion pipeline (admin) -->
+<script src="shared/flipbook-convert.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+(function(){
+
+/* ── constants ── */
+// Set in config.local.js (git-ignored) — see config.example.js. Client-side
+// only: this is a speed bump, not real access control.
+const ADMIN_PW = (window.RSP_CONFIG && window.RSP_CONFIG.adminPassword) || '';
+const ADMIN_SESSION_KEY = 'rsp_admin_session';
+const KEY_LEDGER = 'rsp_ledger';
+const KEY_ADMIN_USERS = 'rsp_admin_users';
+const KEY_MODULE_CONFIGS = 'rsp_module_configs_v1';
+const DEFAULT_ADMIN_USERS = window.RSP_MANIFEST.defaultAdminUsers.slice();
+
+/* ── storage ── */
+let _m={};
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return _m[k]||null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){_m[k]=v}}
+function ssGet(k){try{return sessionStorage.getItem(k)}catch(e){return null}}
+function ssSet(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function timeAgo(ts){
+  const d=Math.floor((Date.now()-ts)/86400000);
+  if(d===0)return 'today';if(d===1)return '1d ago';if(d<30)return d+'d ago';
+  const mo=Math.floor(d/30);return mo+'mo ago';
+}
+function fmtDate(ts){
+  if(!ts)return 'Unknown date';
+  const date=new Date(ts);
+  return Number.isNaN(date.getTime())?'Unknown date':date.toLocaleDateString();
+}
+function withTimeout(promise,ms,label){
+  return new Promise(function(resolve,reject){
+    const timer=setTimeout(function(){reject(new Error((label||'Request')+' timed out'))},ms);
+    Promise.resolve(promise).then(function(value){clearTimeout(timer);resolve(value)},function(error){clearTimeout(timer);reject(error)});
+  });
+}
+
+function readCachedModuleConfigs(){
+  try{
+    const cached=JSON.parse(lsGet(KEY_MODULE_CONFIGS)||'null');
+    const rows=Array.isArray(cached)?cached:(cached&&cached.rows);
+    if(!Array.isArray(rows))return {};
+    const map={};
+    rows.forEach(function(row){if(row&&row.module_id)map[row.module_id]=row});
+    return map;
+  }catch(e){return {}}
+}
+
+function persistModuleConfigCache(){
+  try{
+    lsSet(KEY_MODULE_CONFIGS,JSON.stringify({savedAt:Date.now(),rows:Object.values(moduleConfigs)}));
+  }catch(e){console.warn('Could not cache module configuration:',e)}
+}
+
+/* ── shared state ── */
+let ledger={};
+let paths=window.RSPPaths?window.RSPPaths.readCache():[];
+let moduleConfigs=readCachedModuleConfigs();
+let moduleConfigsReady=Object.keys(moduleConfigs).length>0||!(window.RSPCloud&&window.RSPCloud.isConfigured);
+let sortKey='xp',sortDir=-1;
+let editingQuestionIdx=null;
+let activeQuestionModId=null;
+let activeHubFilter='';   // '' = All Hubs, else 'onboarding' | 'product_mastery'
+
+/* ── hub helpers (shared by Modules / Questions / Learners / Settings tabs) ── */
+function moduleHub(mod){ return window.RSP_MANIFEST.hubOf(mod.id, moduleConfigs); }
+function hubLabel(hub){ const h=window.RSP_HUBS&&window.RSP_HUBS[hub]; return h?(h.icon+' '+h.shortLabel):hub; }
+
+function categoriesForHub(hub){
+  const categories=window.RSP_MANIFEST.categories.filter(function(c){return (c.hub||'product_mastery')===hub;}).slice();
+  const known=new Set(categories.map(function(c){return c.id}));
+  hubModulesSorted(hub).forEach(function(mod){
+    const id=String(mod.category||'Uncategorized').trim()||'Uncategorized';
+    if(!known.has(id)){categories.push({id:id,label:id});known.add(id)}
+  });
+  return categories;
+}
+
+// A single hub's modules (manifest + custom), in display order — the
+// same order/lock-chain logic the learner-facing hub pages use.
+function hubModulesSorted(hub){
+  return window.RSP_MANIFEST.hubModulesSorted(hub, moduleConfigs, true);
+}
+
+// Published modules, filtered by the active hub tab (all hubs when unset),
+// each hub's slice kept in its own display order.
+function visibleModules(){
+  if(activeHubFilter) return hubModulesSorted(activeHubFilter);
+  const all=[];
+  Object.keys(window.RSP_HUBS||{}).forEach(function(hub){
+    all.push.apply(all, hubModulesSorted(hub));
+  });
+  return all;
+}
+
+/* ── gate ── */
+function unlock(){
+  const pw=document.getElementById('adminPwd').value;
+  // Never unlock on an unset password: without config.local.js ADMIN_PW is
+  // '', and a blank input would otherwise compare equal and let anyone in.
+  if(!ADMIN_PW){
+    document.getElementById('gateErr').textContent='No admin password configured. Copy config.example.js to config.local.js and set adminPassword.';
+    return;
+  }
+  if(pw===ADMIN_PW){
+    ssSet(ADMIN_SESSION_KEY,'true');
+    document.getElementById('gate').classList.add('hidden');
+    document.getElementById('dash').classList.add('show');
+    load();
+  } else {
+    document.getElementById('gateErr').textContent='Incorrect password.';
+  }
+}
+document.getElementById('gateBtn').addEventListener('click',unlock);
+document.getElementById('adminPwd').addEventListener('keydown',e=>{if(e.key==='Enter')unlock()});
+if(ssGet(ADMIN_SESSION_KEY)==='true'){
+  document.getElementById('gate').classList.add('hidden');
+  document.getElementById('dash').classList.add('show');
+  load();
+}
+
+/* ── tabs ── */
+document.querySelectorAll('#dash > .wrap > .tab-nav:not(#hubFilterNav) .tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('#dash > .wrap > .tab-nav:not(#hubFilterNav) .tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ── hub filter (applies across Modules / Questions / Learners / Settings) ── */
+document.querySelectorAll('#hubFilterNav .tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('#hubFilterNav .tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeHubFilter=btn.dataset.hub||'';
+    renderModulesTab();
+    populateQuestionModuleSelect();
+    if(activeQuestionModId&&!visibleModules().find(x=>x.id===activeQuestionModId)){
+      activeQuestionModId=null;
+      document.getElementById('qModuleSelect').value='';
+      renderQuestionList(null);
+      document.getElementById('addQBtn').style.display='none';
+    }
+    populateModuleFilter();
+    renderStats();
+    renderLedger();
+    renderHeatmap();
+    renderSettingsTab();
+  });
+});
+
+/* ── load ── */
+async function load(){
+  try{ledger=JSON.parse(lsGet(KEY_LEDGER)||'{}')}catch(e){ledger={}}
+  renderModulesTab();
+  renderStats();
+  renderLedger();
+  renderHeatmap();
+  renderSettingsTab();
+  renderAdminUsers();
+  renderPathsTab();
+
+  if(window.RSPCloud&&window.RSPCloud.isConfigured){
+    loadPathsFromCloud();
+    try{
+      const [users,progress]=await Promise.all([
+        window.RSPCloud.listUsers(),
+        window.RSPCloud.getAllProgress(),
+        loadModuleConfigs()
+      ]);
+      const nl={};
+      (users||[]).forEach(u=>{
+        nl[u.name]={name:u.name,id:u.employee_id,avatar:u.avatar,status:u.status,notes:u.notes,
+          roles:Array.isArray(u.roles)?u.roles:[],
+          startedAt:u.started_at?new Date(u.started_at).getTime():null,
+          earnedTiers:u.earned_tiers||[],earnedBadges:u.earned_badges||[],modules:{}};
+      });
+      (progress||[]).forEach(p=>{
+        if(!nl[p.user_name])nl[p.user_name]={name:p.user_name,modules:{}};
+        nl[p.user_name].modules[p.module_id]={
+          moduleId:p.module_id,moduleName:p.module_name,moduleIcon:p.module_icon,
+          hub:p.hub,totalXP:p.total_xp,correct:p.correct,total:p.total,tier:p.tier,
+          completedAt:p.completed_at?new Date(p.completed_at).getTime():null,
+          lastUpdate:p.last_update?new Date(p.last_update).getTime():null,
+          attempts:p.attempts||0,bestPct:p.best_pct||0,attemptHistory:p.attempt_history||[]
+        };
+      });
+      // Merge with local (preserve quiz attempt detail)
+      Object.entries(nl).forEach(([name,cloudUser])=>{
+        const local=ledger[name]||{};
+        const localMods=local.modules||{};
+        Object.keys(cloudUser.modules).forEach(mid=>{
+          cloudUser.modules[mid]=Object.assign({},localMods[mid]||{},cloudUser.modules[mid]);
+        });
+        nl[name]=Object.assign({},local,cloudUser);
+      });
+      ledger=nl;
+      lsSet(KEY_LEDGER,JSON.stringify(ledger));
+      renderModulesTab();
+      renderStats();
+      renderLedger();
+      renderHeatmap();
+      renderSettingsTab();
+      renderPathsTab();
+    }catch(e){console.warn('Cloud load failed:',e)}
+  } else {
+    setCloudSyncBanner('error','Supabase is not configured in cloud.js — module details (flipbooks, quizzes, codewords, custom modules) cannot load. Showing manifest-only defaults.');
+  }
+}
+
+/* ── module configs ── */
+let cloudSyncBannerTimer=null;
+function setCloudSyncBanner(state,text){
+  const el=document.getElementById('cloudSyncBanner');
+  if(cloudSyncBannerTimer){clearTimeout(cloudSyncBannerTimer);cloudSyncBannerTimer=null;}
+  if(state==='hidden'){el.style.display='none';return}
+  el.style.display='flex';
+  if(state==='ok'){
+    el.style.background='#065F46';el.style.color='#A7F3D0';el.style.border='1px solid #10B981';
+    el.innerHTML='✓ '+esc(text);
+    cloudSyncBannerTimer=setTimeout(()=>{el.style.display='none'},4000);
+  } else {
+    el.style.background='#450A0A';el.style.color='#FCA5A5';el.style.border='1px solid #7F1D1D';
+    el.innerHTML='⚠️ <span>'+esc(text)+'</span><button class="btn btn-danger btn-sm" id="retryCloudSyncBtn" style="margin-left:auto">Retry</button>';
+    const retryBtn=document.getElementById('retryCloudSyncBtn');
+    if(retryBtn)retryBtn.addEventListener('click',()=>loadModuleConfigs());
+  }
+}
+
+let moduleConfigLoadPromise=null;
+async function loadModuleConfigs(){
+  if(moduleConfigLoadPromise)return moduleConfigLoadPromise;
+  if(!window.RSPCloud||!window.RSPCloud.isConfigured){
+    setCloudSyncBanner('error','Supabase is not configured in cloud.js — module details (flipbooks, quizzes, codewords, custom modules) cannot load. Showing manifest-only defaults.');
+    return;
+  }
+  moduleConfigLoadPromise=(async function(){
+    let lastError=null;
+    for(let attempt=0;attempt<3;attempt++){
+      try{
+        const rows=await window.RSPCloud.getAllModuleConfigs();
+        if(!Array.isArray(rows))throw new Error('Unexpected response from Supabase (not a list).');
+        if(rows.length===0&&Object.keys(moduleConfigs).length>0){
+          throw new Error('Supabase returned an unexpectedly empty module list');
+        }
+        const next={};
+        rows.forEach(function(row){if(row&&row.module_id)next[row.module_id]=row});
+        moduleConfigs=next;
+        moduleConfigsReady=true;
+        persistModuleConfigCache();
+        renderModulesTab();
+        populateQuestionModuleSelect();
+        populateModuleFilter();
+        renderStats();
+        renderLedger();
+        renderHeatmap();
+        renderSettingsTab();
+        if(activeQuestionModId)renderQuestionList(activeQuestionModId);
+        setCloudSyncBanner('ok',rows.length+' module config'+(rows.length===1?'':'s')+' loaded from Supabase — flipbooks, quizzes, codewords, and custom modules are up to date.');
+        return true;
+      }catch(e){
+        lastError=e;
+        if(attempt<2)await new Promise(function(resolve){setTimeout(resolve,300*(attempt+1))});
+      }
+    }
+    console.warn('module config load failed:',lastError);
+    // Cached data remains authoritative. With no cache, leave the counters as
+    // unavailable rather than presenting false zeroes for content that exists.
+    moduleConfigsReady=Object.keys(moduleConfigs).length>0;
+    renderModulesTab();
+    setCloudSyncBanner('error','Failed to refresh module details from Supabase'+(moduleConfigsReady?'; showing last-known-good data':'')+': '+(lastError&&lastError.message?lastError.message:lastError));
+    return false;
+  })();
+  try{return await moduleConfigLoadPromise}finally{moduleConfigLoadPromise=null}
+}
+
+/* ══════════════════════════════════════
+   TAB 1 — MODULES
+══════════════════════════════════════ */
+function renderModulesTab(){
+  const m=window.RSP_MANIFEST;
+  if(!m) return;
+  if(!moduleConfigsReady){
+    document.getElementById('sModules').textContent='—';
+    document.getElementById('sFlipsnack').textContent='—';
+    document.getElementById('sQuizzes').textContent='—';
+    document.getElementById('sLearners').textContent=Object.keys(ledger).length;
+    document.getElementById('moduleGrid').innerHTML='<div class="no-module"><div class="ico">↻</div><div>Loading module details…</div></div>';
+    return;
+  }
+  persistModuleConfigCache();
+  const published=visibleModules();
+  const withFlip=published.filter(x=>{const c=moduleConfigs[x.id];return c&&c.video_pages&&c.video_pages.length>0}).length;
+  const withQuiz=published.filter(function(mod){
+    const c=moduleConfigs[mod.id];
+    const bank=c&&Array.isArray(c.quiz_bank)?c.quiz_bank:(mod.quiz&&mod.quiz.bank);
+    return !!(bank&&bank.length);
+  }).length;
+  document.getElementById('sModules').textContent=published.length;
+  document.getElementById('sFlipsnack').textContent=withFlip;
+  document.getElementById('sQuizzes').textContent=withQuiz;
+  document.getElementById('sLearners').textContent=Object.keys(ledger).length;
+
+  const grid=document.getElementById('moduleGrid');
+  grid.innerHTML='';
+  published.forEach(mod=>grid.appendChild(buildModuleCard(mod)));
+}
+
+/**
+ * Move a module up/down within its own hub's display order. The first
+ * reorder in a hub "normalizes" every module there to an explicit
+ * sort_order (10, 20, 30…) so ties can be swapped; later reorders just
+ * swap the two adjacent values. This same order drives the sequential
+ * lock chain on the learner-facing hub pages.
+ */
+async function moveModule(modId,hub,direction){
+  if(!window.RSPCloud||!window.RSPCloud.isConfigured){alert('Supabase not connected — cannot reorder.');return}
+  const list=hubModulesSorted(hub);
+  const idx=list.findIndex(function(m){return m.id===modId});
+  const targetIdx=direction==='up'?idx-1:idx+1;
+  if(idx<0||targetIdx<0||targetIdx>=list.length)return;
+
+  const orderMap={};
+  list.forEach(function(m,i){
+    const existing=(moduleConfigs[m.id]||{}).sort_order;
+    orderMap[m.id]=existing!=null?existing:i*10;
+  });
+  const aId=list[idx].id, bId=list[targetIdx].id;
+  const aVal=orderMap[aId], bVal=orderMap[bId];
+  orderMap[aId]=bVal; orderMap[bId]=aVal;
+
+  const toSave=Object.keys(orderMap).filter(function(id){
+    return (moduleConfigs[id]||{}).sort_order!==orderMap[id];
+  });
+  try{
+    await Promise.all(toSave.map(function(id){
+      return window.RSPCloud.setModuleConfig(id,{sort_order:orderMap[id],updated_by:'admin'}).then(function(){
+        if(!moduleConfigs[id])moduleConfigs[id]={module_id:id};
+        moduleConfigs[id].sort_order=orderMap[id];
+      });
+    }));
+    renderModulesTab();
+    renderSettingsTab();
+  }catch(e){alert('Reorder failed: '+e.message)}
+}
+
+function renderVideoPagesList(cfg,card,mod){
+  const list=card.querySelector('.video-pages-list');
+  if(!list)return;
+  const vps=((cfg||{}).video_pages||[]).slice().sort(function(a,b){return a.insert_after-b.insert_after});
+  if(!vps.length){list.innerHTML='<div style="color:var(--s5);font-size:12px;padding:4px 0">No video pages yet. Add one below.</div>';return;}
+  list.innerHTML=vps.map(function(vp,i){
+    return '<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:#0F172A;border:1px solid var(--s3);border-radius:8px;margin-bottom:6px">'+
+      '<div style="color:var(--bolt);font-size:11px;font-weight:800;flex:0 0 64px;white-space:nowrap">After p.'+vp.insert_after+'</div>'+
+      '<div style="flex:1;min-width:0">'+
+        '<div style="color:#fff;font-size:12px;font-weight:700">'+esc(vp.title||'(no title)')+'</div>'+
+        '<div style="color:var(--s5);font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(vp.url)+'</div>'+
+      '</div>'+
+      '<button class="btn btn-ghost btn-sm del-vp-btn" data-idx="'+i+'">✕</button>'+
+    '</div>';
+  }).join('');
+  list.querySelectorAll('.del-vp-btn').forEach(function(btn){
+    btn.addEventListener('click',async function(){
+      const idx=parseInt(btn.dataset.idx);
+      const updated=vps.slice();updated.splice(idx,1);
+      const vpMsg=card.querySelector('.video-pages-msg');
+      try{
+        await saveVideoPages(mod.id,updated,vpMsg);
+        if(!moduleConfigs[mod.id])moduleConfigs[mod.id]={module_id:mod.id};
+        moduleConfigs[mod.id].video_pages=updated;
+        renderVideoPagesList(moduleConfigs[mod.id],card,mod);
+        renderModulesTab();
+      }catch(e){}
+    });
+  });
+}
+
+async function saveVideoPages(modId,videoPages,msgEl){
+  if(msgEl){msgEl.style.color='var(--s9)';msgEl.textContent='Saving…';}
+  if(!window.RSPCloud||!window.RSPCloud.isConfigured)throw new Error('Supabase not connected');
+  await window.RSPCloud.setModuleConfig(modId,{video_pages:videoPages,updated_by:'admin'});
+  if(msgEl){msgEl.style.color='var(--green)';msgEl.textContent='✓ Saved';setTimeout(function(){if(msgEl)msgEl.textContent=''},2000);}
+}
+
+function buildModuleCard(mod){
+  const cfg=moduleConfigs[mod.id]||{};
+  const hub=moduleHub(mod);
+  const otherHub=hub==='onboarding'?'product_mastery':'onboarding';
+  const hubList=hubModulesSorted(hub);
+  const hubPos=hubList.findIndex(function(m){return m.id===mod.id});
+  const isFirst=hubPos<=0, isLast=hubPos===hubList.length-1;
+  const hubCfg=window.RSP_HUBS&&window.RSP_HUBS[hub];
+  const quizCount=cfg.quiz_bank?cfg.quiz_bank.length:(mod.quiz&&mod.quiz.bank?mod.quiz.bank.length:0);
+  const vpCount=(cfg.video_pages||[]).length;
+  const effectiveCodeword=window.RSP_MANIFEST.effectiveCodeword(mod,cfg);
+  const hasCw=!!effectiveCodeword;
+  const fbk=cfg.flipbook||null;
+  const fbReady=!!(fbk&&fbk.status==='ready');
+  const fbTag=fbReady
+    ?'<span class="tag tag-green">📕 Flipbook · '+(fbk.page_count||'?')+'p</span>'
+    :(fbk&&(fbk.status==='processing'||fbk.status==='pending')?'<span class="tag tag-amber">📕 Building…</span>'
+      :(fbk&&fbk.status==='failed'?'<span class="tag tag-grey">📕 Failed</span>':''));
+
+  const card=document.createElement('div');
+  card.className='mod-card';
+  card.dataset.id=mod.id;
+
+  card.innerHTML=
+    '<div class="mod-row">'+
+      '<div class="mod-reorder" style="display:flex;flex-direction:column;gap:2px;flex:0 0 22px" title="Reorder within '+esc(hubLabel(hub))+'">'+
+        '<button class="move-up-btn" '+(isFirst?'disabled':'')+' title="Move up" style="padding:1px 0;font-size:10px;line-height:1.3;background:#0F172A;border:1px solid var(--s3);border-radius:4px;color:var(--s9);cursor:pointer">▲</button>'+
+        '<button class="move-down-btn" '+(isLast?'disabled':'')+' title="Move down" style="padding:1px 0;font-size:10px;line-height:1.3;background:#0F172A;border:1px solid var(--s3);border-radius:4px;color:var(--s9);cursor:pointer">▼</button>'+
+      '</div>'+
+      '<div class="mod-icon">'+esc(mod.icon)+'</div>'+
+      '<div class="mod-info">'+
+        '<div class="mod-name">'+esc(mod.name)+(hubCfg&&hubCfg.sequentialLock?' <span style="color:var(--s5);font-weight:700;font-size:11px">· Step '+(hubPos+1)+' of '+hubList.length+'</span>':'')+'</div>'+
+        '<div class="mod-cat">'+esc(mod.category)+'</div>'+
+        '<div class="mod-tags">'+
+          '<span class="tag '+(hub==='onboarding'?'tag-blue':'tag-amber')+'">'+esc(hubLabel(hub))+'</span>'+
+          (fbTag||'<span class="tag tag-grey">No flipbook</span>')+(vpCount?'<span class="tag tag-blue">▶ '+vpCount+' video'+(vpCount===1?'':'s')+'</span>':'')+
+          (quizCount?'<span class="tag tag-blue">✓ '+quizCount+' questions</span>':'<span class="tag tag-grey">No quiz</span>')+
+          (hasCw?'<span class="tag tag-amber">🔑 Codeword set</span>':'<span class="tag tag-grey">No codeword</span>')+
+        '</div>'+
+      '</div>'+
+      '<div class="mod-chevron">▾</div>'+
+    '</div>'+
+    '<div class="mod-edit">'+
+      '<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--s3);display:flex;align-items:center;gap:10px;flex-wrap:wrap">'+
+        '<div><div class="field-label">TRAINING HUB</div><div style="color:#fff;font-weight:800;font-size:13px;margin-top:4px">'+esc(hubLabel(hub))+'</div></div>'+
+        '<button class="btn btn-ghost btn-sm move-hub-btn" style="margin-left:auto" data-target-hub="'+esc(otherHub)+'">Move to '+esc(hubLabel(otherHub))+'</button>'+
+      '</div>'+
+      (mod._isCustom
+        ? '<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--s3)">'+
+            '<div class="field-label" style="margin-bottom:10px">MODULE INFO</div>'+
+            '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">'+
+              '<div style="flex:1;min-width:160px"><div class="field-label">NAME</div><input class="field-input meta-name" type="text" value="'+esc(mod.name)+'" placeholder="Module name"></div>'+
+              '<div style="flex:0 0 200px"><div class="field-label">CATEGORY</div>'+
+                '<input class="field-input meta-cat" type="text" list="cat-list-'+esc(mod.id)+'" value="'+esc(mod.category)+'" placeholder="Category">'+
+                '<datalist id="cat-list-'+esc(mod.id)+'">'+categoriesForHub(hub).map(function(c){return '<option value="'+esc(c.id)+'">'+esc(c.label||c.id)+'</option>';}).join('')+'</datalist>'+
+              '</div>'+
+              '<button class="btn btn-primary btn-sm save-meta-btn">Save Info</button>'+
+              '<button class="btn btn-danger btn-sm delete-module-btn">Delete Module</button>'+
+            '</div>'+
+            '<div class="field-msg meta-msg" style="margin-top:6px"></div>'+
+          '</div>'
+        : '')+
+      '<div style="display:flex;align-items:flex-end;gap:10px;margin-bottom:14px;flex-wrap:wrap">'+
+        '<div style="flex:1;min-width:160px">'+
+          '<div class="field-label">CODEWORD</div>'+
+          '<input class="field-input" type="text" data-field="codeword" placeholder="Leave blank = no gate" value="'+esc(effectiveCodeword||'')+'">'+
+        '</div>'+
+        '<button class="btn btn-primary btn-sm save-cfg-btn">Save Codeword</button>'+
+        '<button class="btn btn-ghost btn-sm clear-cfg-btn">Clear Codeword</button>'+
+        '<a class="btn btn-ghost btn-sm" href="training.html?id='+esc(mod.id)+'" target="_blank">Open ↗</a>'+
+      '</div>'+
+      '<div style="border-top:1px solid var(--s3);padding-top:14px;margin-bottom:14px">'+
+        '<div class="field-label" style="margin-bottom:10px">VIDEO PAGES</div>'+
+        '<div class="video-pages-list"></div>'+
+        '<button class="btn btn-ghost btn-sm add-video-btn" style="margin-top:8px">+ Add Video Page</button>'+
+        '<div class="add-video-form" style="display:none;margin-top:10px;background:#0F172A;border:1px solid var(--s3);border-radius:9px;padding:12px">'+
+          '<div style="display:grid;grid-template-columns:90px 1fr;gap:8px;margin-bottom:8px">'+
+            '<div><div class="field-label">AFTER PAGE #</div><input class="field-input vp-page" type="number" min="1" placeholder="3"></div>'+
+            '<div><div class="field-label">LOOM URL</div><input class="field-input vp-url" type="text" placeholder="https://www.loom.com/share/..."></div>'+
+          '</div>'+
+          '<div class="field-label" style="margin-bottom:6px">TITLE (SHOWN ON THE PAGE)</div>'+
+          '<input class="field-input vp-title" type="text" placeholder="Watch before continuing" style="width:100%;margin-bottom:10px">'+
+          '<div style="display:flex;gap:6px">'+
+            '<button class="btn btn-primary btn-sm save-video-btn">Add Video Page</button>'+
+            '<button class="btn btn-ghost btn-sm cancel-video-btn">Cancel</button>'+
+          '</div>'+
+        '</div>'+
+        '<div class="field-msg video-pages-msg"></div>'+
+      '</div>'+
+      '<div style="border-top:1px solid var(--s3);padding-top:14px;margin-bottom:14px">'+
+        '<div class="field-label">PDF FLIPBOOK</div>'+
+        (fbk
+          ?'<div class="quiz-loaded-badge" style="background:'+(fbReady?'#065F46':(fbk.status==='failed'?'#7F1D1D':'#78350F'))+';color:'+(fbReady?'#A7F3D0':(fbk.status==='failed'?'#FCA5A5':'#FDE68A'))+'">'+
+             (fbReady?'✓ '+(fbk.page_count||'?')+' pages ready':(fbk.status==='failed'?'⚠️ Build failed':'⏳ '+(fbk.status||'').toUpperCase()))+
+             (fbk.pdf_name?' · '+esc(fbk.pdf_name):'')+'</div>'
+          :'')+
+        '<div class="quiz-drop pdf-drop" data-modid="'+esc(mod.id)+'">'+
+          '<div style="font-size:28px">📕</div>'+
+          '<div class="quiz-drop-title">'+(fbk?'Drop a new PDF to rebuild the flipbook':'Drop a PDF to build the flipbook')+'</div>'+
+          '<div class="quiz-drop-sub">.pdf — converted to page images in your browser, then stored. Max 60 MB.</div>'+
+        '</div>'+
+        '<input type="file" class="pdf-file-input" accept="application/pdf,.pdf" style="display:none" data-modid="'+esc(mod.id)+'">'+
+        '<div class="field-msg pdf-upload-msg"></div>'+
+      '</div>'+
+      '<div style="border-top:1px solid var(--s3);padding-top:14px">'+
+        '<div class="field-label">QUIZ FILE</div>'+
+        (quizCount
+          ?'<div class="quiz-loaded-badge">✓ '+quizCount+' questions loaded '+(cfg.updated_by?'· '+esc(cfg.updated_by):'')+'</div>'
+          :'')+
+        '<div class="quiz-drop" data-modid="'+esc(mod.id)+'">'+
+          '<div style="font-size:28px">📊</div>'+
+          '<div class="quiz-drop-title">'+(quizCount?'Drop new file to replace quiz':'Drop Excel or CSV to upload quiz')+'</div>'+
+          '<div class="quiz-drop-sub">.xlsx · .csv — Question | A | B | C | D | Correct (A/B/C/D) | Explanation</div>'+
+        '</div>'+
+        '<input type="file" class="quiz-file-input" accept=".xlsx,.xls,.csv" style="display:none" data-modid="'+esc(mod.id)+'">'+
+        '<div class="field-msg quiz-upload-msg"></div>'+
+      '</div>'+
+    '</div>';
+
+  // Toggle expand
+  card.querySelector('.mod-row').addEventListener('click',()=>card.classList.toggle('open'));
+
+  // Reorder within this module's hub (drives the sequential lock chain
+  // for hubs like Onboarding — see manifest.js effectivePrerequisite()).
+  const upBtn=card.querySelector('.move-up-btn'), downBtn=card.querySelector('.move-down-btn');
+  upBtn.addEventListener('click',function(e){e.stopPropagation();moveModule(mod.id,hub,'up');});
+  downBtn.addEventListener('click',function(e){e.stopPropagation();moveModule(mod.id,hub,'down');});
+
+  // Move module to the other hub. For custom modules, also reset the
+  // category to something valid in the destination hub (the old category
+  // belongs to the hub being left).
+  card.querySelector('.move-hub-btn').addEventListener('click',async function(){
+    const targetHub=this.dataset.targetHub;
+    if(!confirm('Move "'+mod.name+'" to '+hubLabel(targetHub)+'? Its progress, quiz, and badges stay attached to the module and will now count toward '+hubLabel(targetHub)+' instead.'))return;
+    this.textContent='Moving…';this.disabled=true;
+    try{
+      if(!window.RSPCloud||!window.RSPCloud.isConfigured)throw new Error('Supabase not connected');
+      const patch={hub:targetHub,updated_by:'admin'};
+      if(mod._isCustom){
+        const destCats=window.RSP_MANIFEST.categories.filter(function(c){return (c.hub||'product_mastery')===targetHub;});
+        const meta=Object.assign({},moduleConfigs[mod.id].module_meta||{},{hub:targetHub,category:(destCats[0]&&destCats[0].id)||''});
+        patch.module_meta=meta;
+      }
+      await window.RSPCloud.setModuleConfig(mod.id,patch);
+      moduleConfigs[mod.id]=Object.assign({},moduleConfigs[mod.id]||{},patch);
+      renderModulesTab();
+    }catch(e){alert('Move failed: '+e.message);this.textContent='Move to '+hubLabel(targetHub);this.disabled=false;}
+  });
+
+  // Custom module: save name/category and delete
+  if(mod._isCustom){
+    card.querySelector('.save-meta-btn').addEventListener('click',async function(){
+      const name=card.querySelector('.meta-name').value.trim()||'New Module';
+      const category=card.querySelector('.meta-cat').value.trim()||'Uncategorized';
+      const msg=card.querySelector('.meta-msg');
+      this.textContent='Saving…';this.disabled=true;
+      try{
+        if(!window.RSPCloud||!window.RSPCloud.isConfigured)throw new Error('Supabase not connected');
+        const meta=Object.assign({},moduleConfigs[mod.id].module_meta||{},{name,category});
+        await window.RSPCloud.setModuleConfig(mod.id,{module_meta:meta,updated_by:'admin'});
+        moduleConfigs[mod.id].module_meta=meta;
+        msg.style.color='var(--green)';msg.textContent='✓ Saved';
+        this.textContent='Save Info';this.disabled=false;
+        renderModulesTab();
+      }catch(e){msg.style.color='var(--red)';msg.textContent=e.message;this.textContent='Save Info';this.disabled=false;}
+    });
+    card.querySelector('.delete-module-btn').addEventListener('click',async function(){
+      if(!confirm('Delete "'+mod.name+'"? This also removes the flipbook, quiz, and all settings for this module.')) return;
+      this.textContent='Deleting…';this.disabled=true;
+      try{
+        if(!window.RSPCloud||!window.RSPCloud.isConfigured)throw new Error('Supabase not connected');
+        await window.RSPCloud.deleteModuleConfig(mod.id);
+        delete moduleConfigs[mod.id];
+        renderModulesTab();
+      }catch(e){alert('Delete failed: '+e.message);this.textContent='Delete Module';this.disabled=false;}
+    });
+  }
+
+  // Auto-uppercase codeword
+  const cwInput=card.querySelector('[data-field="codeword"]');
+  cwInput.addEventListener('input',function(){const p=this.selectionStart;this.value=this.value.toUpperCase();this.setSelectionRange(p,p)});
+
+  // Save/clear codeword. An explicit null is persisted so manifest defaults
+  // do not reappear when this module config is loaded again.
+  const saveCodewordBtn=card.querySelector('.save-cfg-btn');
+  const clearCodewordBtn=card.querySelector('.clear-cfg-btn');
+  async function persistCodeword(rawValue,button){
+    const codeword=String(rawValue||'').trim().toUpperCase();
+    const originalLabel=button.textContent;
+    button.textContent=codeword?'Saving…':'Clearing…';
+    saveCodewordBtn.disabled=true;
+    clearCodewordBtn.disabled=true;
+    try{
+      if(!window.RSPCloud||!window.RSPCloud.isConfigured)throw new Error('Supabase not connected');
+      const verified=await window.RSPCloud.setModuleCodeword(mod.id,codeword||null,'admin');
+      moduleConfigs[mod.id]=Object.assign({},moduleConfigs[mod.id]||{module_id:mod.id},verified);
+      persistModuleConfigCache();
+      cwInput.value=codeword;
+      button.textContent=codeword?'✓ Saved':'✓ Cleared';
+      setTimeout(function(){renderModulesTab();},800);
+    }catch(e){
+      button.textContent='Error: '+e.message;
+      saveCodewordBtn.disabled=false;
+      clearCodewordBtn.disabled=false;
+      setTimeout(function(){button.textContent=originalLabel;},2200);
+    }
+  }
+  saveCodewordBtn.addEventListener('click',function(){
+    persistCodeword(cwInput.value,saveCodewordBtn);
+  });
+  clearCodewordBtn.addEventListener('click',function(){
+    if(!effectiveCodeword&&!cwInput.value.trim()){
+      this.textContent='Already clear';
+      setTimeout(()=>{this.textContent='Clear Codeword';},1200);
+      return;
+    }
+    if(!confirm('Clear the codeword for "'+mod.name+'"? Learners will no longer need a codeword to open its quiz.'))return;
+    cwInput.value='';
+    persistCodeword('',clearCodewordBtn);
+  });
+
+  // Quiz drag/drop (exclude the PDF flipbook drop, which shares .quiz-drop styling)
+  const dz=card.querySelector('.quiz-drop:not(.pdf-drop)');
+  const fi=card.querySelector('.quiz-file-input');
+  const msg=card.querySelector('.quiz-upload-msg');
+  dz.addEventListener('click',()=>fi.click());
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over')});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');if(e.dataTransfer.files[0])processQuizFile(mod.id,e.dataTransfer.files[0],msg)});
+  fi.addEventListener('change',()=>{if(fi.files[0])processQuizFile(mod.id,fi.files[0],msg);fi.value=''});
+
+  // PDF flipbook drag/drop
+  const pdz=card.querySelector('.pdf-drop');
+  const pfi=card.querySelector('.pdf-file-input');
+  const pmsg=card.querySelector('.pdf-upload-msg');
+  pdz.addEventListener('click',()=>pfi.click());
+  pdz.addEventListener('dragover',e=>{e.preventDefault();pdz.classList.add('over')});
+  pdz.addEventListener('dragleave',()=>pdz.classList.remove('over'));
+  pdz.addEventListener('drop',e=>{e.preventDefault();pdz.classList.remove('over');if(e.dataTransfer.files[0])processPdfFile(mod.id,e.dataTransfer.files[0],pmsg)});
+  pfi.addEventListener('change',()=>{if(pfi.files[0])processPdfFile(mod.id,pfi.files[0],pmsg);pfi.value=''});
+
+  // Video pages CRUD
+  renderVideoPagesList(cfg,card,mod);
+  const addVideoBtn=card.querySelector('.add-video-btn');
+  const addVideoForm=card.querySelector('.add-video-form');
+  card.querySelector('.cancel-video-btn').addEventListener('click',()=>{addVideoForm.style.display='none';addVideoBtn.style.display='inline-flex';});
+  addVideoBtn.addEventListener('click',()=>{addVideoForm.style.display='block';addVideoBtn.style.display='none';});
+  card.querySelector('.save-video-btn').addEventListener('click',async function(){
+    const page=parseInt(card.querySelector('.vp-page').value);
+    const url=card.querySelector('.vp-url').value.trim();
+    const title=card.querySelector('.vp-title').value.trim();
+    const vpMsg=card.querySelector('.video-pages-msg');
+    if(!page||page<1){vpMsg.style.color='var(--red)';vpMsg.textContent='Enter a page number.';return;}
+    if(!url||!url.includes('loom.com')){vpMsg.style.color='var(--red)';vpMsg.textContent='Enter a valid Loom URL.';return;}
+    const existing=(moduleConfigs[mod.id]||{}).video_pages||[];
+    const updated=[...existing,{insert_after:page,url,title}].sort((a,b)=>a.insert_after-b.insert_after);
+    try{
+      await saveVideoPages(mod.id,updated,vpMsg);
+      if(!moduleConfigs[mod.id])moduleConfigs[mod.id]={module_id:mod.id};
+      moduleConfigs[mod.id].video_pages=updated;
+      card.querySelector('.vp-page').value='';
+      card.querySelector('.vp-url').value='';
+      card.querySelector('.vp-title').value='';
+      addVideoForm.style.display='none';
+      addVideoBtn.style.display='inline-flex';
+      renderVideoPagesList(moduleConfigs[mod.id],card,mod);
+      renderModulesTab();
+    }catch(e){}
+  });
+
+  return card;
+}
+
+/* ── PDF → flipbook: convert in-browser and store ── */
+async function processPdfFile(modId,file,msgEl){
+  if(!window.RSPFlipbookConvert){msgEl.style.color='var(--red)';msgEl.textContent='Conversion library not loaded.';return;}
+  msgEl.style.color='var(--s9)';msgEl.textContent='Starting…';
+  try{
+    const rec=await window.RSPFlipbookConvert.convertAndUpload(modId,file,{
+      updatedBy:'admin',
+      onProgress:function(stage,pct,text){
+        msgEl.style.color=stage==='failed'?'var(--red)':(stage==='ready'?'var(--green)':'var(--s9)');
+        msgEl.textContent=text+(typeof pct==='number'&&stage==='processing'?(' ('+pct+'%)'):'');
+      }
+    });
+    if(!moduleConfigs[modId])moduleConfigs[modId]={module_id:modId};
+    moduleConfigs[modId].flipbook=rec;
+    setTimeout(()=>renderModulesTab(),1200);
+  }catch(err){msgEl.style.color='var(--red)';msgEl.textContent='Error: '+(err&&err.message?err.message:err);}
+}
+
+/* ── quiz file parser ── */
+function processQuizFile(modId,file,msgEl){
+  msgEl.style.color='var(--s9)';msgEl.textContent='Reading…';
+  const reader=new FileReader();
+  reader.onload=async function(e){
+    try{
+      let questions;
+      if(file.name.endsWith('.csv')||file.name.endsWith('.txt')){
+        questions=parseCSVToBank(e.target.result);
+      } else {
+        if(!window.XLSX)throw new Error('Excel parser not loaded yet');
+        const wb=window.XLSX.read(e.target.result,{type:'binary'});
+        const ws=wb.Sheets[wb.SheetNames[0]];
+        const rows=window.XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+        questions=parseRowsToBank(rows,modId);
+      }
+      if(!questions.length)throw new Error('No questions found — check column format');
+      msgEl.textContent='Saving '+questions.length+' questions…';
+      if(!window.RSPCloud||!window.RSPCloud.isConfigured)throw new Error('Supabase not connected');
+      await window.RSPCloud.setModuleConfig(modId,{quiz_bank:questions,updated_by:'admin'});
+      if(!moduleConfigs[modId])moduleConfigs[modId]={module_id:modId};
+      moduleConfigs[modId].quiz_bank=questions;
+      msgEl.style.color='var(--green)';msgEl.textContent='✓ '+questions.length+' questions saved — quiz is now live.';
+      setTimeout(()=>renderModulesTab(),1000);
+    }catch(err){msgEl.style.color='var(--red)';msgEl.textContent='Error: '+err.message;}
+  };
+  file.name.endsWith('.csv')||file.name.endsWith('.txt')?reader.readAsText(file):reader.readAsBinaryString(file);
+}
+
+const LETTER={A:0,B:1,C:2,D:3};
+function parseRowsToBank(rows,modId){
+  const questions=[];
+  const start=rows[0]&&String(rows[0][0]).toLowerCase().match(/question|prompt|q\b/)?1:0;
+  rows.slice(start).forEach((row,i)=>{
+    const prompt=String(row[0]||'').trim().replace(/^\d+[\.\)]\s*/,'');
+    if(!prompt)return;
+    const opts=[String(row[1]||'').trim(),String(row[2]||'').trim(),String(row[3]||'').trim(),String(row[4]||'').trim()];
+    if(opts.some(o=>!o))return;
+    const raw=String(row[5]||'').trim().toUpperCase();
+    const ansNum=raw in LETTER?LETTER[raw]:parseInt(raw,10);
+    if(isNaN(ansNum)||ansNum<0||ansNum>3)return;
+    const q={id:(modId||'q')+'-q'+(start+i+1),prompt,options:opts,answer:ansNum};
+    const expl=String(row[6]||'').trim();if(expl)q.explanation=expl;
+    questions.push(q);
+  });
+  return questions;
+}
+function parseCSVToBank(text,modId){
+  const rows=text.trim().split('\n').map(l=>{
+    const cols=[];let cur='';let inQ=false;
+    for(let i=0;i<l.length;i++){
+      const c=l[i];
+      if(c==='"'){if(inQ&&l[i+1]==='"'){cur+='"';i++}else inQ=!inQ}
+      else if(c===','&&!inQ){cols.push(cur);cur=''}
+      else cur+=c;
+    }
+    cols.push(cur);return cols;
+  });
+  return parseRowsToBank(rows,modId);
+}
+
+/* ══════════════════════════════════════
+   TAB 2 — QUESTION EDITOR
+══════════════════════════════════════ */
+const qSel=document.getElementById('qModuleSelect');
+const m=window.RSP_MANIFEST;
+function populateQuestionModuleSelect(){
+  const prev=qSel.value;
+  qSel.innerHTML='<option value="">— Select a module —</option>';
+  visibleModules().forEach(function(mod){
+    const o=document.createElement('option');
+    o.value=mod.id;
+    o.textContent=mod.icon+' '+mod.name+' · '+hubLabel(moduleHub(mod));
+    qSel.appendChild(o);
+  });
+  if(Array.from(qSel.options).some(function(o){return o.value===prev}))qSel.value=prev;
+}
+populateQuestionModuleSelect();
+
+qSel.addEventListener('change',function(){
+  activeQuestionModId=this.value||null;
+  renderQuestionList(activeQuestionModId);
+  document.getElementById('qEditPanel').style.display='none';
+  document.getElementById('addQBtn').style.display=activeQuestionModId?'inline-flex':'none';
+});
+
+document.getElementById('addQBtn').addEventListener('click',()=>{
+  editingQuestionIdx=null;
+  openQEditor(null);
+});
+document.getElementById('qCancelBtn').addEventListener('click',()=>{
+  document.getElementById('qEditPanel').style.display='none';
+  editingQuestionIdx=null;
+});
+
+function renderQuestionList(modId){
+  const wrap=document.getElementById('qListWrap');
+  if(!modId){
+    wrap.innerHTML='<div class="no-module"><div class="ico">📝</div><div>Select a module above to view and edit its questions.</div></div>';
+    document.getElementById('qCount').textContent='';
+    return;
+  }
+  const cfg=moduleConfigs[modId]||{};
+  const bank=cfg.quiz_bank||(m&&m.modules.find(x=>x.id===modId)&&m.modules.find(x=>x.id===modId).quiz&&m.modules.find(x=>x.id===modId).quiz.bank)||[];
+  document.getElementById('qCount').textContent=bank.length+' question'+(bank.length===1?'':'s');
+
+  if(!bank.length){
+    wrap.innerHTML='<div class="no-module"><div class="ico">📊</div><div>No questions yet. Upload a quiz file on the Modules tab or use the + Add button.</div></div>';
+    return;
+  }
+
+  const letters=['A','B','C','D'];
+  wrap.innerHTML='<div class="q-list" id="qList"></div>';
+  const list=document.getElementById('qList');
+  bank.forEach((q,i)=>{
+    const item=document.createElement('div');
+    item.className='q-item'+(editingQuestionIdx===i?' active':'');
+    item.innerHTML=
+      '<div class="q-num">'+(i+1)+'</div>'+
+      '<div class="q-text">'+esc(q.prompt)+'</div>'+
+      '<div class="q-correct">'+letters[q.answer]+'</div>'+
+      '<div class="q-del" title="Delete">✕</div>';
+    item.querySelector('.q-text').addEventListener('click',()=>openQEditor(i));
+    item.querySelector('.q-num').addEventListener('click',()=>openQEditor(i));
+    item.querySelector('.q-del').addEventListener('click',async e=>{
+      e.stopPropagation();
+      if(!confirm('Delete this question?'))return;
+      await deleteQuestion(modId,i);
+    });
+    list.appendChild(item);
+  });
+}
+
+function openQEditor(idx){
+  const modId=activeQuestionModId;
+  if(!modId)return;
+  const cfg=moduleConfigs[modId]||{};
+  const bank=(cfg.quiz_bank||[]).slice();
+  editingQuestionIdx=idx;
+
+  const panel=document.getElementById('qEditPanel');
+  panel.style.display='block';
+  document.getElementById('qEditTitle').textContent=idx===null?'New Question':'Edit Question '+(idx+1);
+
+  const q=idx!==null?bank[idx]:{prompt:'',options:['','','',''],answer:0,explanation:''};
+  document.getElementById('qPrompt').value=q.prompt||'';
+  document.getElementById('qOptA').value=q.options[0]||'';
+  document.getElementById('qOptB').value=q.options[1]||'';
+  document.getElementById('qOptC').value=q.options[2]||'';
+  document.getElementById('qOptD').value=q.options[3]||'';
+  document.querySelectorAll('input[name="qCorrect"]').forEach(r=>{r.checked=parseInt(r.value)===q.answer});
+  document.getElementById('qExpl').value=q.explanation||'';
+  document.getElementById('qSaveMsg').textContent='';
+
+  // Highlight active in list
+  document.querySelectorAll('.q-item').forEach((el,i)=>el.classList.toggle('active',i===idx));
+}
+
+document.getElementById('qSaveBtn').addEventListener('click',async function(){
+  const modId=activeQuestionModId;if(!modId)return;
+  const prompt=document.getElementById('qPrompt').value.trim();
+  if(!prompt){document.getElementById('qSaveMsg').style.color='var(--red)';document.getElementById('qSaveMsg').textContent='Question text is required.';return}
+  const opts=[
+    document.getElementById('qOptA').value.trim(),
+    document.getElementById('qOptB').value.trim(),
+    document.getElementById('qOptC').value.trim(),
+    document.getElementById('qOptD').value.trim()
+  ];
+  if(opts.some(o=>!o)){document.getElementById('qSaveMsg').style.color='var(--red)';document.getElementById('qSaveMsg').textContent='All four options are required.';return}
+  const correct=parseInt(document.querySelector('input[name="qCorrect"]:checked')?.value??'0');
+  const expl=document.getElementById('qExpl').value.trim();
+
+  const cfg=moduleConfigs[modId]||{};
+  const bank=(cfg.quiz_bank||[]).slice();
+  const q={id:modId+'-q'+(editingQuestionIdx!==null?editingQuestionIdx+1:bank.length+1)+'-'+Date.now(),prompt,options:opts,answer:correct};
+  if(expl)q.explanation=expl;
+
+  if(editingQuestionIdx!==null){bank[editingQuestionIdx]=q}else{bank.push(q)}
+
+  this.disabled=true;this.textContent='Saving…';
+  try{
+    if(!window.RSPCloud||!window.RSPCloud.isConfigured)throw new Error('Supabase not connected');
+    await window.RSPCloud.setModuleConfig(modId,{quiz_bank:bank,updated_by:'admin'});
+    moduleConfigs[modId]=Object.assign({},cfg,{quiz_bank:bank});
+    document.getElementById('qSaveMsg').style.color='var(--green)';
+    document.getElementById('qSaveMsg').textContent='✓ Saved';
+    renderQuestionList(modId);
+    if(editingQuestionIdx===null){
+      editingQuestionIdx=bank.length-1;
+      document.getElementById('qEditTitle').textContent='Edit Question '+bank.length;
+    }
+  }catch(e){document.getElementById('qSaveMsg').style.color='var(--red)';document.getElementById('qSaveMsg').textContent='Error: '+e.message;}
+  finally{this.disabled=false;this.textContent='Save Question →';}
+});
+
+async function deleteQuestion(modId,idx){
+  const cfg=moduleConfigs[modId]||{};
+  const bank=(cfg.quiz_bank||[]).slice();
+  bank.splice(idx,1);
+  try{
+    if(!window.RSPCloud||!window.RSPCloud.isConfigured)throw new Error('Supabase not connected');
+    await window.RSPCloud.setModuleConfig(modId,{quiz_bank:bank,updated_by:'admin'});
+    moduleConfigs[modId]=Object.assign({},cfg,{quiz_bank:bank});
+    if(editingQuestionIdx===idx){document.getElementById('qEditPanel').style.display='none';editingQuestionIdx=null}
+    else if(editingQuestionIdx>idx){editingQuestionIdx--}
+    renderQuestionList(modId);
+    renderModulesTab();
+  }catch(e){alert('Delete failed: '+e.message)}
+}
+
+/* ══════════════════════════════════════
+   TAB 3 — LEARNERS
+══════════════════════════════════════ */
+function modStatus(p){if(!p)return 'new';if(p.completedAt)return 'completed';if((p.totalXP||0)>0||(p.attempts||0)>0)return 'progress';return 'new'}
+
+// Legacy quiz rows may have correct=0 and total set to the flipbook page
+// count even though best_pct / attempt_history contain the real quiz score.
+// Resolve one authoritative percentage for both the table and profile drawer.
+function progressScorePct(p){
+  if(!p||Number(p.attempts||0)<=0)return null;
+  const history=Array.isArray(p.attemptHistory)?p.attemptHistory:(Array.isArray(p.attempt_history)?p.attempt_history:[]);
+  const candidates=[];
+  const best=p.bestPct!=null?p.bestPct:p.best_pct;
+  if(best!=null&&Number.isFinite(Number(best)))candidates.push(Number(best));
+  history.forEach(function(a){if(a&&a.pct!=null&&Number.isFinite(Number(a.pct)))candidates.push(Number(a.pct))});
+  if(candidates.length)return Math.max.apply(Math,candidates);
+  if(Number(p.total)>0&&Number.isFinite(Number(p.correct)))return Math.round(Number(p.correct)/Number(p.total)*100);
+  return null;
+}
+
+function progressScoreDetail(p){
+  const history=Array.isArray(p.attemptHistory)?p.attemptHistory:(Array.isArray(p.attempt_history)?p.attempt_history:[]);
+  const latest=history.length?history[history.length-1]:null;
+  const pct=progressScorePct(p);
+  if(latest&&latest.score!=null&&latest.total!=null){
+    return{correct:Number(latest.score),total:Number(latest.total),pct:pct};
+  }
+  const cfg=moduleConfigs[p.module_id]||{};
+  const quizTotal=Array.isArray(cfg.quiz_bank)?cfg.quiz_bank.length:0;
+  if(quizTotal>0&&pct!=null){
+    return{correct:Math.round(quizTotal*pct/100),total:quizTotal,pct:pct};
+  }
+  if(Number(p.total)>0&&Number(p.correct)>0){
+    return{correct:Number(p.correct),total:Number(p.total),pct:pct};
+  }
+  return{correct:null,total:null,pct:pct};
+}
+
+function badgeDisplay(badgeId,hub){
+  hub=hub||'product_mastery';
+  if(String(badgeId).indexOf('module-')===0){
+    const moduleId=String(badgeId).slice(7);
+    let mod=null;
+    Object.keys(window.RSP_HUBS||{}).some(function(candidateHub){
+      mod=hubModulesSorted(candidateHub).find(function(item){return item.id===moduleId});
+      return !!mod;
+    });
+    if(mod)return{icon:mod.icon||'🏅',name:mod.name+' Mastery'};
+  }
+  const special=(window.RSP_SPECIAL_BADGES&&window.RSP_SPECIAL_BADGES[hub]||[]).find(function(item){return item.id===badgeId});
+  if(special)return{icon:special.icon||'🏅',name:special.name||badgeId};
+  const tier=(window.RSP_TIERS&&window.RSP_TIERS[hub]||[]).find(function(item){return 'tier-'+hub+'-'+item.id===badgeId});
+  if(tier)return{icon:tier.icon||'🏅',name:tier.name+' Tier'};
+  const readable=String(badgeId||'Badge').replace(/^module-|^tier-[^-]+-/,'').replace(/[-_]+/g,' ').replace(/\b\w/g,function(letter){return letter.toUpperCase()});
+  return{icon:'🏅',name:readable};
+}
+
+function renderStats(){
+  const learners=Object.values(ledger);
+  const modIds=activeHubFilter?new Set(visibleModules().map(function(x){return x.id})):null;
+  let comp=0,scoreSum=0,scoreCnt=0,activeWk=0;
+  const weekAgo=Date.now()-7*86400000;
+  learners.forEach(l=>{
+    Object.entries(l.modules||{}).forEach(([mid,p])=>{
+      if(modIds&&!modIds.has(mid))return;
+      if(p.completedAt)comp++;
+      const score=progressScorePct(p);if(score!=null){scoreSum+=score;scoreCnt++}
+    });
+    if((l._latest||l.startedAt||0)>weekAgo)activeWk++;
+  });
+  document.getElementById('sLearnersL').textContent=learners.length;
+  document.getElementById('sCompletions').textContent=comp;
+  document.getElementById('sAvg').textContent=scoreCnt>0?Math.round(scoreSum/scoreCnt)+'%':'—';
+  document.getElementById('sActive').textContent=activeWk;
+}
+
+function populateModuleFilter(){
+  const sel=document.getElementById('moduleFilter');
+  const prev=sel.value;
+  sel.innerHTML='<option value="">All modules</option>';
+  visibleModules().forEach(function(mod){
+    const o=document.createElement('option');o.value=mod.id;o.textContent=mod.name;sel.appendChild(o);
+  });
+  if(Array.from(sel.options).some(function(o){return o.value===prev}))sel.value=prev;
+}
+
+function renderLedger(){
+  const tbody=document.getElementById('ledgerBody');
+  const search=document.getElementById('searchBox').value.toLowerCase();
+  const modFilter=document.getElementById('moduleFilter').value;
+  const statusFilter=document.getElementById('statusFilter').value;
+  const userStatusFilter=document.getElementById('userStatusFilter').value;
+
+  let learners=Object.values(ledger);
+  if(search)learners=learners.filter(l=>(l.name||'').toLowerCase().includes(search)||(l.id||'').toLowerCase().includes(search));
+  if(userStatusFilter)learners=learners.filter(l=>(l.status||'active')===userStatusFilter);
+  if(modFilter){
+    learners=learners.filter(l=>l.modules&&l.modules[modFilter]);
+    if(statusFilter)learners=learners.filter(l=>modStatus(l.modules[modFilter])===statusFilter);
+  } else if(statusFilter){
+    learners=learners.filter(l=>visibleModules().some(mod=>modStatus((l.modules||{})[mod.id])===statusFilter));
+  }
+
+  const modIdSet=activeHubFilter?new Set(visibleModules().map(function(x){return x.id})):null;
+  learners.forEach(l=>{
+    const allMods=l.modules||{};
+    const mods={};
+    Object.keys(allMods).forEach(function(id){ if(!modIdSet||modIdSet.has(id)) mods[id]=allMods[id]; });
+    l._lifetimeXP=Object.values(mods).reduce((s,p)=>s+(p.totalXP||0),0);
+    l._completions=Object.values(mods).filter(p=>p.completedAt).length;
+    const scores=Object.values(mods).map(progressScorePct).filter(function(score){return score!=null});
+    l._avgScore=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):null;
+    l._latest=Math.max(...Object.values(allMods).map(p=>p.lastUpdate||p.completedAt||0),l.startedAt||0,0);
+  });
+
+  learners.sort((a,b)=>{
+    let av,bv;
+    switch(sortKey){
+      case 'name':return sortDir*(a.name||'').localeCompare(b.name||'');
+      case 'started':av=a.startedAt||0;bv=b.startedAt||0;break;
+      case 'xp':av=a._lifetimeXP;bv=b._lifetimeXP;break;
+      case 'completions':av=a._completions;bv=b._completions;break;
+      case 'avgScore':av=a._avgScore||0;bv=b._avgScore||0;break;
+      default:av=0;bv=0;
+    }
+    return sortDir*(av-bv);
+  });
+
+  if(!learners.length){tbody.innerHTML='<tr><td colspan="7"><div class="empty">No learners match those filters.</div></td></tr>';return}
+  const published=visibleModules();
+  const progressHubs=activeHubFilter?[activeHubFilter]:Object.keys(window.RSP_HUBS||{});
+  tbody.innerHTML='';
+  learners.forEach(l=>{
+    const mods=l.modules||{};
+    const moduleRows=progressHubs.map(function(hub){
+      const hubCfg=(window.RSP_HUBS&&window.RSP_HUBS[hub])||{shortLabel:hub,icon:'📚'};
+      const hubMods=published.filter(function(mod){return moduleHub(mod)===hub});
+      if(!hubMods.length)return'';
+      const completed=hubMods.filter(function(mod){return modStatus(mods[mod.id])==='completed'}).length;
+      const dots=hubMods.map(function(mod,index){
+        const status=modStatus(mods[mod.id]);
+        return '<span class="m-dot '+status+'" title="'+esc(mod.name)+' — '+esc(status.replace('_',' '))+'">'+(index+1)+'</span>';
+      }).join('');
+      return '<div class="module-hub-row">'+
+        '<div class="module-hub-label">'+esc(hubCfg.icon)+' '+esc(hubCfg.shortLabel||hubCfg.label||hub)+'</div>'+
+        '<div class="module-dot-list">'+dots+'</div>'+
+        '<div class="module-hub-count">'+completed+'/'+hubMods.length+'</div>'+
+      '</div>';
+    }).join('');
+    const tierCls=l._completions===0&&l._lifetimeXP===0?'tier-new':l._completions===published.length?'tier-gold':l._completions>0?'tier-silver':'tier-progress';
+    const tierLabel=l._completions===0&&l._lifetimeXP===0?'NEW':l._completions===published.length?'COMPLETE':l._completions>0?'PARTIAL':'IN PROG';
+    const avatarSvg=window.renderAvatar?window.renderAvatar(l.avatar||'sparky',36):'';
+    const tr=document.createElement('tr');
+    tr.className='clickable';tr.dataset.user=l.name;
+    tr.innerHTML=
+      '<td><span class="lb-avatar">'+avatarSvg+'</span><b>'+esc(l.name||'?')+'</b>'+
+        ' <span class="status-pill status-'+(l.status||'active')+'">'+(l.status||'active').replace('_',' ').toUpperCase()+'</span>'+
+        '<br><span style="color:#64748B;font-size:11px;margin-left:44px">'+esc(l.id||'no id')+'</span></td>'+
+      '<td>'+(l.startedAt?new Date(l.startedAt).toLocaleDateString():'—')+'</td>'+
+      '<td><div class="modules-cell">'+moduleRows+'</div></td>'+
+      '<td><b>'+l._lifetimeXP+'</b></td>'+
+      '<td>'+l._completions+' / '+published.length+'</td>'+
+      '<td>'+(l._avgScore!==null?l._avgScore+'%':'—')+'</td>'+
+      '<td><span class="tier-pill '+tierCls+'">'+tierLabel+'</span><br><span style="color:#64748B;font-size:10px">'+timeAgo(l._latest||Date.now())+'</span></td>';
+    tr.addEventListener('click',()=>openProfile(l.name));
+    tbody.appendChild(tr);
+  });
+}
+
+function renderHeatmap(){
+  const root=document.getElementById('heatmap');
+  const learners=Object.values(ledger);
+  const hubMods=visibleModules();
+  if(!learners.length||!hubMods.length){root.innerHTML='<div class="empty">No data yet.</div>';return}
+  let html='<table style="width:100%"><thead><tr><th>MODULE</th><th>NEW</th><th>IN PROGRESS</th><th>COMPLETED</th><th style="min-width:200px">COMPLETION</th></tr></thead><tbody>';
+  hubMods.forEach(mod=>{
+    let n=0,p=0,c=0;
+    learners.forEach(l=>{const s=modStatus((l.modules||{})[mod.id]);if(s==='completed')c++;else if(s==='progress')p++;else n++});
+    const total=learners.length,pct=total>0?Math.round(c/total*100):0;
+    html+='<tr><td><b>'+esc(mod.icon)+' '+esc(mod.name)+'</b></td><td>'+n+'</td><td>'+p+'</td><td>'+c+'</td>'+
+      '<td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;background:#0F172A;height:10px;border-radius:5px;overflow:hidden;border:1px solid var(--s3)"><div style="height:100%;width:'+pct+'%;background:var(--green)"></div></div><span style="font-size:11px;color:var(--s9);width:30px">'+pct+'%</span></div></td></tr>';
+  });
+  html+='</tbody></table>';root.innerHTML=html;
+}
+
+document.getElementById('searchBox').addEventListener('input',renderLedger);
+document.getElementById('moduleFilter').addEventListener('change',renderLedger);
+document.getElementById('statusFilter').addEventListener('change',renderLedger);
+document.getElementById('userStatusFilter').addEventListener('change',renderLedger);
+document.querySelectorAll('table th[data-sort]').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const k=th.dataset.sort;
+    if(sortKey===k)sortDir=-sortDir;else{sortKey=k;sortDir=-1}
+    renderLedger();
+  });
+});
+
+/* ── profile drawer ── */
+document.getElementById('drawerOverlay').addEventListener('click',closeDrawer);
+document.getElementById('drawerClose').addEventListener('click',closeDrawer);
+function closeDrawer(){document.getElementById('drawerOverlay').classList.remove('show');document.getElementById('drawer').classList.remove('open')}
+
+async function openProfile(userName){
+  const content=document.getElementById('drawerContent');
+  content.innerHTML='<div class="empty">Loading…</div>';
+  document.getElementById('drawerOverlay').classList.add('show');
+  document.getElementById('drawer').classList.add('open');
+
+  let detail=null;
+  if(window.RSPCloud&&window.RSPCloud.isConfigured){
+    try{detail=await withTimeout(window.RSPCloud.getUserDetail(userName),12000,'Learner profile')}
+    catch(e){console.warn('Learner detail load failed; using the cached learner record:',e)}
+  }
+  try{
+  const local=ledger[userName]||{};
+  const u=(detail&&detail.user)||{name:local.name,employee_id:local.id,avatar:local.avatar||'sparky',status:local.status||'active',notes:local.notes||'',earned_tiers:local.earnedTiers||[],earned_badges:local.earnedBadges||[],roles:local.roles||[]};
+  const pList=(detail&&detail.progress)||Object.entries(local.modules||{}).map(([id,p])=>({module_id:id,module_name:p.moduleName||id,module_icon:p.moduleIcon||'⚡',hub:p.hub||window.RSP_MANIFEST.hubOf(id,moduleConfigs),total_xp:p.totalXP,correct:p.correct,total:p.total,completed_at:p.completedAt?new Date(p.completedAt).toISOString():null,last_update:p.lastUpdate?new Date(p.lastUpdate).toISOString():null,attempts:p.attempts||0,best_pct:p.bestPct||0,attempt_history:p.attemptHistory||[]}));
+  const kudosR=(detail&&detail.kudosReceived)||[];
+  const kudosS=(detail&&detail.kudosSent)||[];
+  const grants=(detail&&detail.grants)||[];
+
+  const xp=pList.reduce((s,p)=>s+(p.total_xp||0),0);
+  const comp=pList.filter(p=>p.completed_at).length;
+  // Tiers are per-hub — compute one chip per hub instead of a single
+  // combined tier, so onboarding and product mastery ranks never mix.
+  const hubTierChips=Object.keys(window.RSP_HUBS||{}).map(function(hub){
+    const hubXP=pList.filter(function(p){return (p.hub||moduleHub({id:p.module_id}))===hub;}).reduce(function(s,p){return s+(p.total_xp||0)},0);
+    const info=window.computeTier?window.computeTier(hub,hubXP,u.earned_tiers||[]):{current:null};
+    return {hub:hub,info:info};
+  });
+
+  let html='<div class="d-header">';
+  html+='<div class="d-avatar">'+(window.renderAvatar?window.renderAvatar(u.avatar||'sparky',72):'')+'</div>';
+  html+='<div><h2>'+esc(u.name||userName)+'</h2>';
+  html+='<div style="color:var(--s9);font-size:12px;margin-top:2px">'+esc(u.employee_id||'no employee ID')+'</div>';
+  html+='<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">';
+  html+='<span class="status-pill status-'+(u.status||'active')+'">'+(u.status||'active').replace('_',' ').toUpperCase()+'</span>';
+  hubTierChips.forEach(function(hc){
+    const ct=hc.info.current;
+    const hubTag='<span style="color:var(--s9);font-size:9px;font-weight:800;margin-right:3px">'+esc(hubLabel(hc.hub))+'</span>';
+    if(ct)html+='<span>'+hubTag+'<span style="color:'+ct.color+';border:1px solid '+ct.color+';padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800">'+ct.icon+' '+ct.name.toUpperCase()+'</span></span>';
+  });
+  html+='</div></div></div>';
+
+  html+='<div class="d-stats">';
+  html+='<div class="d-stat"><div class="dl">XP</div><div class="dn">'+xp.toLocaleString()+'</div></div>';
+  html+='<div class="d-stat"><div class="dl">DONE</div><div class="dn">'+comp+'</div></div>';
+  html+='<div class="d-stat"><div class="dl">BADGES</div><div class="dn">'+(u.earned_badges||[]).length+'</div></div>';
+  html+='<div class="d-stat"><div class="dl">KUDOS</div><div class="dn">'+kudosR.length+'</div></div>';
+  html+='</div>';
+
+  // ── Role assignment ──
+  // Roles are additive: the learner's required set is the union of every
+  // path ticked here. Assigning a role never locks anything away — off-path
+  // modules stay browsable, just unmarked.
+  const rolePaths=window.RSPPaths.sortPaths(paths.filter(function(p){return p.is_role}));
+  const currentRoles=window.RSPPaths.rolesOf(u);
+  html+='<div class="d-section"><h3>ROLE / LEARNER PATH</h3>';
+  if(!rolePaths.length){
+    html+='<div class="empty" style="padding:16px;font-size:12px">No assignable roles yet. Create one on the Paths tab and tick “Assignable role”.</div>';
+  }else{
+    html+='<div class="role-picker">';
+    rolePaths.forEach(function(p){
+      const on=currentRoles.indexOf(p.id)!==-1;
+      const count=window.RSPPaths.moduleIds(p).length;
+      html+='<label class="role-opt'+(on?' on':'')+'" data-role-opt="'+esc(p.id)+'">'+
+        '<input type="checkbox" data-role-id="'+esc(p.id)+'"'+(on?' checked':'')+'>'+
+        '<span>'+esc(p.icon||'🎯')+' '+esc(p.label)+'</span>'+
+        '<span class="rc">'+count+' module'+(count===1?'':'s')+'</span>'+
+      '</label>';
+    });
+    html+='</div>';
+    html+='<div style="display:flex;gap:8px;align-items:center;margin-top:10px">'+
+      '<button class="btn btn-purple btn-sm" id="saveRolesBtn">Save roles</button>'+
+      '<span class="field-msg" id="rolesMsg" style="margin-top:0"></span></div>';
+
+    // Progress against the assigned paths, so a trainer can see at a glance
+    // how far through their required training this learner is.
+    if(currentRoles.length){
+      const learnerMods={};
+      pList.forEach(function(p){
+        learnerMods[p.module_id]={completedAt:p.completed_at?Date.parse(p.completed_at):null,totalXP:p.total_xp||0};
+      });
+      html+='<div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">';
+      window.RSPPaths.assignedPaths(u,paths).forEach(function(p){
+        const resolved=window.RSPPaths.resolvePath(p,moduleConfigs);
+        const prog=window.RSPPaths.pathProgress(resolved,learnerMods);
+        html+='<div style="background:#0F172A;border:1px solid var(--s3);border-radius:9px;padding:10px 12px">'+
+          '<div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:#CBD5E1">'+
+            '<span>'+esc(p.icon||'🎯')+' '+esc(p.label)+'</span>'+
+            '<span style="color:'+(prog.complete?'var(--green)':'var(--s9)')+'">'+prog.completed+' / '+prog.total+' · '+prog.pct+'%</span></div>'+
+          '<div style="background:#1E293B;height:6px;border-radius:3px;overflow:hidden;margin-top:6px">'+
+            '<div style="height:100%;width:'+prog.pct+'%;background:'+(prog.complete?'var(--green)':esc(p.accent||'#8B5CF6'))+'"></div></div>'+
+        '</div>';
+      });
+      html+='</div>';
+    }
+  }
+  html+='</div>';
+
+  html+='<div class="d-section"><h3>MODULE PROGRESS</h3>';
+  if(!pList.length){html+='<div class="empty" style="padding:16px;font-size:12px">No activity yet.</div>'}
+  else Object.keys(window.RSP_HUBS||{}).sort(function(a,b){
+    function weight(hub){return pList.filter(function(p){return (p.hub||moduleHub({id:p.module_id}))===hub}).reduce(function(sum,p){return sum+(p.completed_at?100000:0)+Number(p.total_xp||0)},0)}
+    return weight(b)-weight(a);
+  }).forEach(function(hub){
+    const hubRows=pList.filter(function(p){return (p.hub||moduleHub({id:p.module_id}))===hub});
+    if(!hubRows.length)return;
+    const ordered=hubModulesSorted(hub);
+    const order={};ordered.forEach(function(mod,index){order[mod.id]=index});
+    hubRows.sort(function(a,b){return (order[a.module_id]??9999)-(order[b.module_id]??9999)});
+    const hubCfg=window.RSP_HUBS[hub]||{icon:'📚',shortLabel:hub};
+    const hubDone=hubRows.filter(function(p){return !!p.completed_at}).length;
+    html+='<div class="profile-hub-title"><span>'+esc(hubCfg.icon)+' '+esc(hubCfg.shortLabel||hubCfg.label||hub)+'</span><span>'+hubDone+'/'+hubRows.length+' completed</span></div>';
+    hubRows.forEach(function(p){
+      const hist=Array.isArray(p.attempt_history)?p.attempt_history:[];
+      const score=progressScoreDetail(p);
+      const hasAttempt=Number(p.attempts||0)>0;
+      const attStr=p.attempts?(' · '+p.attempts+' attempt'+(p.attempts===1?'':'s')+(p.best_pct?' · best '+p.best_pct+'%':'')):'';
+      html+='<div class="mod-row-d '+(p.completed_at?'done':'')+'">';
+      html+='<div class="ico">'+esc(p.module_icon||'⚡')+'</div>';
+      html+='<div style="flex:1">';
+      html+='<div class="nm">'+esc(p.module_name||p.module_id)+(p.completed_at?' ✓':'')+'</div>';
+      if(hasAttempt){
+        const scoreLabel=score.total>0?(score.correct+'/'+score.total+' correct'):'Quiz attempted';
+        html+='<div class="meta-d">'+scoreLabel+' · '+(score.pct!=null?score.pct:0)+'%'+attStr+'</div>';
+      }else{
+        html+='<div class="meta-d">'+(p.completed_at?'Completed · no quiz attempt recorded':'No quiz attempt recorded')+'</div>';
+      }
+      if(hist.length){
+        html+='<div class="attempt-hist">';
+        hist.forEach(function(a,i){
+          const cls=a.passed?'ah-pass':'ah-fail';
+          const mark=a.passed?'✓':'✗';
+          html+='<span class="ah-entry '+cls+'" title="'+fmtDate(a.finishedAt||a.finished_at)+'">'+mark+' #'+(i+1)+' '+a.pct+'%</span>';
+        });
+        html+='</div>';
+      }
+      html+='</div>';
+      html+='<div class="xp-d">'+(p.total_xp||0)+' XP</div></div>';
+    });
+  });
+  html+='</div>';
+
+  const badges=u.earned_badges||[];
+  html+='<div class="d-section"><h3>BADGES</h3>';
+  if(!badges.length){html+='<div class="empty" style="padding:16px;font-size:12px">No badges yet.</div>'}
+  else{
+    const grantedIds=new Set(grants.map(g=>g.badge_id));
+    html+='<div class="badges-grid">';
+    badges.forEach(eb=>{
+      const id=eb.badge_id||eb;
+      const isManual=grantedIds.has(id);
+      const badgeHub=typeof eb==='string'?'product_mastery':(eb.hub||'product_mastery');
+      const display=badgeDisplay(id,badgeHub);
+      html+='<div class="badge-tile'+(isManual?' manual':'')+'"><div class="bico">'+esc(display.icon)+'</div><div class="bnm">'+esc(display.name)+'</div><div class="manual-tag" style="color:var(--s9)">'+esc(hubLabel(badgeHub))+'</div>'+(isManual?'<div class="manual-tag">GRANTED</div>':'')+'</div>';
+    });
+    html+='</div>';
+  }
+  html+='</div>';
+
+  if(kudosR.length||kudosS.length){
+    html+='<div class="d-section"><h3>KUDOS</h3>';
+    kudosR.slice(0,5).forEach(k=>{html+='<div class="kudo-row"><span style="color:var(--s9);font-size:10px">From <b style="color:#fff">'+esc(k.from_user)+'</b></span> '+esc(k.message||'')+'</div>'});
+    html+='</div>';
+  }
+
+  html+='<div class="drawer-actions">';
+  html+='<button class="btn btn-purple btn-sm" id="dGrantBtn">🏅 Grant Badge</button>';
+  html+='<button class="btn btn-secondary btn-sm" id="dStatusBtn">✏️ Edit Status</button>';
+  html+='<button class="btn btn-danger btn-sm" id="dDeleteBtn">🗑 Delete Learner</button>';
+  html+='</div>';
+
+  html+='<div id="grantForm" class="inline-form" style="display:none">';
+  html+='<label>BADGE NAME</label><input id="grantBadgeName" placeholder="e.g. Trainer of the Quarter">';
+  html+='<label>ICON (emoji)</label><input id="grantBadgeIcon" maxlength="3" placeholder="🏆">';
+  html+='<label>MESSAGE (optional)</label><textarea id="grantMessage" placeholder="Why are they getting this?"></textarea>';
+  html+='<div class="form-actions"><button class="btn btn-ghost btn-sm" id="grantCancel">Cancel</button><button class="btn btn-primary btn-sm" id="grantConfirm">Grant</button></div></div>';
+
+  html+='<div id="statusForm" class="inline-form" style="display:none">';
+  html+='<label>STATUS</label><select id="statusValue">';
+  ['active','on_leave','trainer','inactive','terminated'].forEach(s=>{html+='<option value="'+s+'"'+(((u.status||'active')===s)?' selected':'')+'>'+s.replace('_',' ').toUpperCase()+'</option>'});
+  html+='</select><label>NOTES</label><textarea id="statusNotes">'+esc(u.notes||'')+'</textarea>';
+  html+='<div class="form-actions"><button class="btn btn-ghost btn-sm" id="statusCancel">Cancel</button><button class="btn btn-primary btn-sm" id="statusConfirm">Save</button></div></div>';
+
+  content.innerHTML=html;
+
+  // Role checkboxes: highlight immediately, persist on Save.
+  content.querySelectorAll('[data-role-id]').forEach(function(box){
+    box.addEventListener('change',function(){
+      const label=box.closest('.role-opt');
+      if(label)label.classList.toggle('on',box.checked);
+    });
+  });
+  const saveRolesBtn=document.getElementById('saveRolesBtn');
+  if(saveRolesBtn){
+    saveRolesBtn.addEventListener('click',async function(){
+      const picked=Array.from(content.querySelectorAll('[data-role-id]'))
+        .filter(function(b){return b.checked}).map(function(b){return b.dataset.roleId});
+      this.disabled=true;
+      await saveLearnerRoles(userName,picked,document.getElementById('rolesMsg'));
+      this.disabled=false;
+      openProfile(userName);   // refresh the path-progress bars
+    });
+  }
+
+  document.getElementById('dGrantBtn').addEventListener('click',()=>{document.getElementById('grantForm').style.display='block';document.getElementById('statusForm').style.display='none'});
+  document.getElementById('dStatusBtn').addEventListener('click',()=>{document.getElementById('statusForm').style.display='block';document.getElementById('grantForm').style.display='none'});
+  document.getElementById('dDeleteBtn').addEventListener('click',async function(){
+    const typed=prompt('PERMANENTLY DELETE LEARNER?\n\nThis removes '+userName+' and all of their progress, presence, kudos, and manual badge grants. This cannot be undone.\n\nType the learner name exactly to confirm:');
+    if(typed!==userName){if(typed!==null)alert('Name did not match. Nothing was deleted.');return}
+    if(!(window.RSPCloud&&window.RSPCloud.isConfigured)){alert('Cloud is unavailable. The learner was not deleted.');return}
+    this.disabled=true;this.textContent='Deleting…';
+    try{
+      await window.RSPCloud.deleteLearner(userName);
+      delete ledger[userName];
+      lsSet(KEY_LEDGER,JSON.stringify(ledger));
+      closeDrawer();
+      renderStats();renderLedger();renderHeatmap();
+      alert('✓ '+userName+' was permanently removed from the learner list.');
+    }catch(e){
+      this.disabled=false;this.textContent='🗑 Delete Learner';
+      alert('Delete failed. No success was recorded; retry after checking the cloud connection.\n\n'+(e.message||e));
+    }
+  });
+  document.getElementById('grantCancel').addEventListener('click',()=>document.getElementById('grantForm').style.display='none');
+  document.getElementById('statusCancel').addEventListener('click',()=>document.getElementById('statusForm').style.display='none');
+  document.getElementById('grantConfirm').addEventListener('click',async()=>{
+    const name=document.getElementById('grantBadgeName').value.trim();
+    const icon=document.getElementById('grantBadgeIcon').value.trim()||'🏅';
+    const msg=document.getElementById('grantMessage').value.trim();
+    if(!name){alert('Enter a badge name.');return}
+    const badgeId='manual-'+name.toLowerCase().replace(/[^a-z0-9]+/g,'-')+'-'+Date.now();
+    try{
+      if(window.RSPCloud&&window.RSPCloud.isConfigured){
+        await window.RSPCloud.grantManualBadge(userName,badgeId,'Admin',icon+' '+name+(msg?' — '+msg:''));
+        alert('✓ Granted "'+name+'" to '+userName);
+        await load();openProfile(userName);
+      }else alert('Cloud not configured.');
+    }catch(e){alert('Failed: '+(e.message||e))}
+  });
+  document.getElementById('statusConfirm').addEventListener('click',async()=>{
+    const ns=document.getElementById('statusValue').value;
+    const nn=document.getElementById('statusNotes').value;
+    try{
+      if(window.RSPCloud&&window.RSPCloud.isConfigured){
+        await window.RSPCloud.updateUserStatus(userName,ns,nn);
+        await load();openProfile(userName);
+      }else alert('Cloud not configured.');
+    }catch(e){alert('Failed: '+(e.message||e))}
+  });
+  }catch(e){
+    console.error('Learner profile render failed:',e);
+    content.innerHTML='<div class="empty"><div style="font-size:28px;margin-bottom:10px">⚠️</div><b style="color:#fff">Could not display this learner</b><p style="margin-top:8px">'+esc(e.message||e)+'</p><button class="btn btn-secondary btn-sm" id="retryLearnerBtn" style="margin-top:14px">Retry</button></div>';
+    const retry=document.getElementById('retryLearnerBtn');
+    if(retry)retry.addEventListener('click',function(){openProfile(userName)});
+  }
+}
+
+/* ══════════════════════════════════════
+   TAB 4 — SETTINGS
+══════════════════════════════════════ */
+function renderSettingsTab(){
+  const tbody=document.getElementById('settingsBody');
+  if(!m||!tbody)return;
+  tbody.innerHTML='';
+  visibleModules().forEach(mod=>{
+    const cfg=moduleConfigs[mod.id]||{};
+    const xp=cfg.xp!=null?cfg.xp:mod.xp;
+    const pass=cfg.pass_pct!=null?cfg.pass_pct:(mod.quiz&&mod.quiz.passPct)||80;
+    const pub=cfg.published!=null?cfg.published:mod.published;
+    const tr=document.createElement('tr');
+    tr.innerHTML=
+      '<td><b>'+esc(mod.icon)+' '+esc(mod.name)+'</b></td>'+
+      '<td><input type="number" class="set-xp" value="'+xp+'" min="0" max="9999"></td>'+
+      '<td><input type="number" class="set-pass" value="'+pass+'" min="1" max="100"></td>'+
+      '<td><label class="toggle"><input type="checkbox" class="set-pub"'+(pub?' checked':'')+'><span class="toggle-slider"></span></label></td>'+
+      '<td><button class="btn btn-ghost btn-sm set-save-btn">Save</button><span class="set-msg" style="font-size:11px;color:var(--s5);margin-left:8px"></span></td>';
+    tr.querySelector('.set-save-btn').addEventListener('click',async function(){
+      const xpVal=parseInt(tr.querySelector('.set-xp').value)||mod.xp;
+      const passVal=parseInt(tr.querySelector('.set-pass').value)||80;
+      const pubVal=tr.querySelector('.set-pub').checked;
+      const msgEl=tr.querySelector('.set-msg');
+      this.disabled=true;this.textContent='…';
+      try{
+        if(!window.RSPCloud||!window.RSPCloud.isConfigured)throw new Error('Supabase not connected');
+        await window.RSPCloud.setModuleConfig(mod.id,{xp:xpVal,pass_pct:passVal,published:pubVal,updated_by:'admin'});
+        moduleConfigs[mod.id]=Object.assign({module_id:mod.id},moduleConfigs[mod.id]||{},{xp:xpVal,pass_pct:passVal,published:pubVal});
+        persistModuleConfigCache();
+        msgEl.style.color='var(--green)';msgEl.textContent='✓ Saved';
+        setTimeout(()=>{msgEl.textContent=''},2000);
+      }catch(e){msgEl.style.color='var(--red)';msgEl.textContent=e.message}
+      finally{this.disabled=false;this.textContent='Save'}
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PATHS TAB — learner paths (tags & roles)
+
+   A path is a cross-hub set of modules. It never owns XP, tiers, or
+   badges: a module always scores in its own hub no matter how many
+   paths reference it. See paths.js for the rules.
+   ══════════════════════════════════════════════════════════════ */
+
+let openPathId=null;          // which path's editor is expanded
+const pathDrafts={};          // unsaved field edits, keyed by path id
+
+function pathsMsg(text,ok){
+  const el=document.getElementById('pathsMsg');
+  if(!el)return;
+  el.style.color=ok?'var(--green)':'var(--red)';
+  el.textContent=text;
+  if(ok)setTimeout(function(){if(el.textContent===text)el.textContent=''},3000);
+}
+
+async function loadPathsFromCloud(){
+  if(!(window.RSPCloud&&window.RSPCloud.isConfigured))return;
+  try{
+    paths=await window.RSPPaths.loadPaths({current:paths});
+  }catch(e){
+    console.warn('Path load failed; using last-known-good paths:',e);
+    pathsMsg('Paths could not be loaded from Supabase — showing the last known copy. Run supabase-migration-v11.sql if you have not yet.',false);
+  }
+  renderPathsTab();
+}
+
+function draftFor(path){
+  if(!pathDrafts[path.id]){
+    pathDrafts[path.id]={
+      label:path.label||'',
+      description:path.description||'',
+      icon:path.icon||'🎯',
+      accent:path.accent||'#8B5CF6',
+      sort_order:path.sort_order==null?'':String(path.sort_order),
+      is_role:!!path.is_role,
+      show_on_home:!!path.show_on_home,
+      sequential:!!path.sequential,
+      module_ids:window.RSPPaths.moduleIds(path).slice()
+    };
+  }
+  return pathDrafts[path.id];
+}
+
+function renderPathsTab(){
+  const root=document.getElementById('pathsList');
+  if(!root)return;
+  const ordered=window.RSPPaths.sortPaths(paths);
+  if(!ordered.length){
+    root.innerHTML='<div class="no-module"><div class="ico">🎯</div><div style="font-weight:800;color:#CBD5E1">No paths yet</div>'+
+      '<div style="font-size:12px;margin-top:6px">Create one to group modules across hubs into a role path or a browsable collection.</div></div>';
+    return;
+  }
+  root.innerHTML='';
+  ordered.forEach(function(path){
+    root.appendChild(buildPathCard(path));
+  });
+}
+
+function buildPathCard(path){
+  const draft=draftFor(path);
+  const resolved=window.RSPPaths.resolvePath({module_ids:draft.module_ids},moduleConfigs,{includeUnpublished:true});
+  const card=document.createElement('div');
+  card.className='path-card'+(openPathId===path.id?' open':'');
+
+  const tags=[];
+  if(draft.is_role)tags.push('<span class="tag tag-blue">ROLE</span>');
+  if(draft.show_on_home)tags.push('<span class="tag tag-green">ON HOME</span>');
+  if(draft.sequential)tags.push('<span class="tag tag-amber">STEP BY STEP</span>');
+  if(!tags.length)tags.push('<span class="tag tag-grey">HIDDEN</span>');
+  const holders=Object.values(ledger).filter(function(l){
+    return window.RSPPaths.rolesOf(l).indexOf(path.id)!==-1;
+  }).length;
+
+  const head=document.createElement('div');
+  head.className='path-row';
+  head.innerHTML=
+    '<div class="path-ico">'+esc(draft.icon)+'</div>'+
+    '<div class="path-info">'+
+      '<div class="path-name">'+esc(draft.label||path.id)+'</div>'+
+      '<div class="path-sub">'+draft.module_ids.length+' module'+(draft.module_ids.length===1?'':'s')+
+        (resolved.missingIds.length?(' · <span style="color:#FCA5A5">'+resolved.missingIds.length+' unresolved</span>'):'')+
+        (draft.is_role?(' · '+holders+' learner'+(holders===1?'':'s')+' assigned'):'')+
+        ' · <code style="color:var(--s5)">'+esc(path.id)+'</code></div>'+
+      '<div class="mod-tags">'+tags.join('')+'</div>'+
+    '</div>'+
+    '<div class="mod-chevron">⌄</div>';
+  head.addEventListener('click',function(){
+    openPathId=(openPathId===path.id)?null:path.id;
+    renderPathsTab();
+  });
+  card.appendChild(head);
+
+  const edit=document.createElement('div');
+  edit.className='path-edit';
+  edit.innerHTML=
+    '<div class="path-grid-fields">'+
+      '<div><div class="field-label">LABEL</div><input class="field-input" data-f="label" value="'+esc(draft.label)+'"></div>'+
+      '<div><div class="field-label">ICON</div><input class="field-input" data-f="icon" value="'+esc(draft.icon)+'" maxlength="4" style="text-align:center;font-size:18px"></div>'+
+      '<div><div class="field-label">ACCENT</div><input class="field-input" data-f="accent" value="'+esc(draft.accent)+'" placeholder="#8B5CF6"></div>'+
+      '<div><div class="field-label">ORDER</div><input class="field-input" data-f="sort_order" value="'+esc(draft.sort_order)+'" placeholder="10" inputmode="numeric"></div>'+
+    '</div>'+
+    '<div style="margin-bottom:14px"><div class="field-label">DESCRIPTION</div>'+
+      '<input class="field-input" data-f="description" value="'+esc(draft.description)+'" placeholder="Shown on the path card and page"></div>'+
+    '<div class="switch-row">'+
+      '<label class="switch"><input type="checkbox" data-f="show_on_home"'+(draft.show_on_home?' checked':'')+'> Show on home <span class="why">— gets a card on the portal home screen</span></label>'+
+      '<label class="switch"><input type="checkbox" data-f="is_role"'+(draft.is_role?' checked':'')+'> Assignable role <span class="why">— can be assigned to learners</span></label>'+
+      '<label class="switch"><input type="checkbox" data-f="sequential"'+(draft.sequential?' checked':'')+'> Step by step <span class="why">— modules unlock in order</span></label>'+
+    '</div>'+
+    '<div class="field-label">MODULES IN THIS PATH ('+draft.module_ids.length+')</div>'+
+    '<div class="pm-list" data-role="pmlist"></div>'+
+    '<div class="pm-add">'+
+      '<select data-role="pmadd"></select>'+
+      '<button class="btn btn-secondary btn-sm" data-role="pmaddbtn">+ Add module</button>'+
+    '</div>'+
+    '<div class="path-actions">'+
+      '<button class="btn btn-primary btn-sm" data-role="save">Save path</button>'+
+      '<a class="btn btn-ghost btn-sm" href="path.html?id='+encodeURIComponent(path.id)+'" target="_blank" rel="noopener">Preview →</a>'+
+      '<button class="btn btn-danger btn-sm" data-role="delete" style="margin-left:auto">Delete path</button>'+
+    '</div>'+
+    '<div class="field-msg" data-role="msg"></div>';
+  card.appendChild(edit);
+
+  // Field edits update the draft only — nothing is written until Save.
+  edit.querySelectorAll('[data-f]').forEach(function(input){
+    const field=input.dataset.f;
+    const isCheck=input.type==='checkbox';
+    input.addEventListener(isCheck?'change':'input',function(){
+      draft[field]=isCheck?input.checked:input.value;
+      if(isCheck)renderPathsTab();
+    });
+  });
+
+  renderPathModuleList(edit,path,draft);
+  populatePathModuleSelect(edit,draft);
+
+  edit.querySelector('[data-role="pmaddbtn"]').addEventListener('click',function(){
+    const sel=edit.querySelector('[data-role="pmadd"]');
+    const id=sel.value;
+    if(!id)return;
+    if(draft.module_ids.indexOf(id)!==-1){
+      edit.querySelector('[data-role="msg"]').textContent='That module is already in this path.';
+      return;
+    }
+    draft.module_ids.push(id);
+    renderPathsTab();
+  });
+  edit.querySelector('[data-role="save"]').addEventListener('click',function(){ savePath(path,draft,this,edit); });
+  edit.querySelector('[data-role="delete"]').addEventListener('click',function(){ deletePathFlow(path,this,edit); });
+
+  return card;
+}
+
+function renderPathModuleList(edit,path,draft){
+  const list=edit.querySelector('[data-role="pmlist"]');
+  const index=window.RSP_MANIFEST.moduleIndex(moduleConfigs,true);
+  if(!draft.module_ids.length){
+    list.innerHTML='<div style="color:var(--s5);font-size:12px;padding:10px 2px">No modules yet — add one below.</div>';
+    return;
+  }
+  list.innerHTML='';
+  draft.module_ids.forEach(function(id,i){
+    const mod=index[id];
+    const row=document.createElement('div');
+    row.className='pm-item'+(mod?'':' missing');
+    const hubCfg=mod?((window.RSP_HUBS&&window.RSP_HUBS[mod.hub])||{}):{};
+    row.innerHTML=
+      '<span class="pm-pos">'+(i+1)+'</span>'+
+      '<span class="pm-move">'+
+        '<button data-mv="up"'+(i===0?' disabled':'')+' title="Move up">▲</button>'+
+        '<button data-mv="down"'+(i===draft.module_ids.length-1?' disabled':'')+' title="Move down">▼</button>'+
+      '</span>'+
+      '<span class="pm-name">'+(mod
+          ? (esc(mod.icon)+' '+esc(mod.name))
+          : ('<span style="color:#FCA5A5">⚠️ Unresolved module — '+esc(id)+'</span>'))+'</span>'+
+      (mod?('<span class="pm-hub">'+esc(hubCfg.icon||'📘')+' '+esc(hubCfg.shortLabel||mod.hub)+'</span>'):'')+
+      (mod&&mod.published===false?'<span class="pm-hub" style="color:#FCD34D;border-color:#451A03">UNPUBLISHED</span>':'')+
+      '<button class="pm-del" title="Remove from path">✕</button>';
+    row.querySelector('[data-mv="up"]').addEventListener('click',function(){
+      if(i===0)return;
+      const t=draft.module_ids[i-1];draft.module_ids[i-1]=draft.module_ids[i];draft.module_ids[i]=t;
+      renderPathsTab();
+    });
+    row.querySelector('[data-mv="down"]').addEventListener('click',function(){
+      if(i===draft.module_ids.length-1)return;
+      const t=draft.module_ids[i+1];draft.module_ids[i+1]=draft.module_ids[i];draft.module_ids[i]=t;
+      renderPathsTab();
+    });
+    row.querySelector('.pm-del').addEventListener('click',function(){
+      draft.module_ids.splice(i,1);
+      renderPathsTab();
+    });
+    list.appendChild(row);
+  });
+}
+
+function populatePathModuleSelect(edit,draft){
+  const sel=edit.querySelector('[data-role="pmadd"]');
+  const chosen={};
+  draft.module_ids.forEach(function(id){chosen[id]=true});
+  sel.innerHTML='<option value="">Add a module…</option>';
+  Object.keys(window.RSP_HUBS||{}).forEach(function(hub){
+    const mods=window.RSP_MANIFEST.hubModulesSorted(hub,moduleConfigs,true).filter(function(m){return !chosen[m.id]});
+    if(!mods.length)return;
+    const group=document.createElement('optgroup');
+    group.label=hubLabel(hub);
+    mods.forEach(function(mod){
+      const opt=document.createElement('option');
+      opt.value=mod.id;
+      opt.textContent=mod.icon+' '+mod.name+(mod.published===false?'  (unpublished)':'');
+      group.appendChild(opt);
+    });
+    sel.appendChild(group);
+  });
+}
+
+async function savePath(path,draft,button,edit){
+  const msg=edit.querySelector('[data-role="msg"]');
+  const label=String(draft.label||'').trim();
+  if(!label){ msg.style.color='var(--red)'; msg.textContent='A label is required.'; return; }
+  const order=String(draft.sort_order||'').trim();
+  if(order&&!/^-?\d+$/.test(order)){ msg.style.color='var(--red)'; msg.textContent='Order must be a whole number.'; return; }
+  const accent=String(draft.accent||'').trim();
+  if(accent&&!/^#[0-9a-f]{3,8}$/i.test(accent)){ msg.style.color='var(--red)'; msg.textContent='Accent must be a hex colour like #8B5CF6.'; return; }
+
+  button.disabled=true; button.textContent='Saving…';
+  try{
+    if(!(window.RSPCloud&&window.RSPCloud.isConfigured))throw new Error('Supabase not connected');
+    await window.RSPCloud.upsertPath(path.id,{
+      label:label,
+      description:String(draft.description||'').trim()||null,
+      icon:String(draft.icon||'').trim()||'🎯',
+      accent:accent||'#8B5CF6',
+      sort_order:order?Number(order):null,
+      is_role:!!draft.is_role,
+      show_on_home:!!draft.show_on_home,
+      sequential:!!draft.sequential,
+      module_ids:draft.module_ids,
+      updated_by:adminName()
+    });
+    delete pathDrafts[path.id];
+    await loadPathsFromCloud();
+    pathsMsg('✓ "'+label+'" saved.',true);
+  }catch(e){
+    msg.style.color='var(--red)';
+    msg.textContent='Error: '+(e&&e.message?e.message:e);
+  }finally{
+    button.disabled=false; button.textContent='Save path';
+  }
+}
+
+async function deletePathFlow(path,button,edit){
+  const holders=Object.values(ledger).filter(function(l){
+    return window.RSPPaths.rolesOf(l).indexOf(path.id)!==-1;
+  });
+  const warning=holders.length
+    ? '\n\nThis path is assigned to '+holders.length+' learner'+(holders.length===1?'':'s')+
+      ' ('+holders.slice(0,5).map(function(l){return l.name}).join(', ')+(holders.length>5?'…':'')+
+      '). They will be unassigned.\n\nModule progress and XP are NOT affected.'
+    : '\n\nModule progress and XP are NOT affected.';
+  if(!confirm('Delete the path "'+(path.label||path.id)+'"?'+warning))return;
+  const msg=edit.querySelector('[data-role="msg"]');
+  button.disabled=true; button.textContent='Deleting…';
+  try{
+    if(!(window.RSPCloud&&window.RSPCloud.isConfigured))throw new Error('Supabase not connected');
+    await window.RSPCloud.deletePath(path.id);
+    delete pathDrafts[path.id];
+    if(openPathId===path.id)openPathId=null;
+    holders.forEach(function(l){
+      l.roles=window.RSPPaths.rolesOf(l).filter(function(id){return id!==path.id});
+    });
+    await loadPathsFromCloud();
+    pathsMsg('✓ Path deleted.',true);
+  }catch(e){
+    msg.style.color='var(--red)';
+    msg.textContent='Error: '+(e&&e.message?e.message:e);
+    button.disabled=false; button.textContent='Delete path';
+  }
+}
+
+async function createPathFlow(){
+  const label=prompt('Name the new path (for example "AR Role Path"):');
+  if(label==null)return;
+  const trimmed=label.trim();
+  if(!trimmed){ pathsMsg('A label is required.',false); return; }
+  const id=window.RSPPaths.uniqueSlug(trimmed,paths);
+  try{
+    if(!(window.RSPCloud&&window.RSPCloud.isConfigured))throw new Error('Supabase not connected');
+    const maxOrder=paths.reduce(function(max,p){
+      const n=Number(p.sort_order);
+      return Number.isFinite(n)&&n>max?n:max;
+    },0);
+    await window.RSPCloud.upsertPath(id,{
+      label:trimmed, description:null, icon:'🎯', accent:'#8B5CF6',
+      is_role:false, show_on_home:false, sequential:false,
+      sort_order:maxOrder+10, module_ids:[], updated_by:adminName()
+    });
+    await loadPathsFromCloud();
+    openPathId=id;
+    renderPathsTab();
+    pathsMsg('✓ "'+trimmed+'" created — add modules, then Save.',true);
+  }catch(e){
+    pathsMsg('Error: '+(e&&e.message?e.message:e),false);
+  }
+}
+
+function adminName(){
+  try{ const u=JSON.parse(lsGet('rsp_user')||'null'); return (u&&u.name)||'Admin'; }
+  catch(e){ return 'Admin'; }
+}
+
+/* ── role assignment (rendered inside the learner profile drawer) ── */
+async function saveLearnerRoles(userName,roleIds,msgEl){
+  msgEl.style.color='var(--s5)';
+  msgEl.textContent='Saving…';
+  try{
+    if(!(window.RSPCloud&&window.RSPCloud.isConfigured))throw new Error('Supabase not connected');
+    await window.RSPCloud.setUserRoles(userName,roleIds);
+    if(ledger[userName])ledger[userName].roles=roleIds.slice();
+    lsSet(KEY_LEDGER,JSON.stringify(ledger));
+    msgEl.style.color='var(--green)';
+    msgEl.textContent=roleIds.length
+      ? '✓ Saved — '+roleIds.length+' role'+(roleIds.length===1?'':'s')+' assigned.'
+      : '✓ Saved — no roles assigned.';
+    renderPathsTab();
+    renderLedger();
+  }catch(e){
+    msgEl.style.color='var(--red)';
+    msgEl.textContent='Error: '+(e&&e.message?e.message:e);
+  }
+}
+
+/* ── admin users ── */
+function getAdminUsers(){try{return JSON.parse(lsGet(KEY_ADMIN_USERS)||'null')||DEFAULT_ADMIN_USERS}catch(e){return DEFAULT_ADMIN_USERS}}
+function saveAdminUsers(arr){lsSet(KEY_ADMIN_USERS,JSON.stringify(arr))}
+function renderAdminUsers(){
+  const list=document.getElementById('adminUsersList');
+  const users=getAdminUsers();
+  list.innerHTML=users.map((u,i)=>
+    '<div style="display:flex;justify-content:space-between;align-items:center;background:#0F172A;border:1px solid var(--s3);border-radius:7px;padding:8px 12px;font-size:13px">'+
+      '<span>'+esc(u)+'</span>'+
+      '<span style="cursor:pointer;color:var(--s5);font-size:16px" data-idx="'+i+'">✕</span>'+
+    '</div>'
+  ).join('');
+  list.querySelectorAll('[data-idx]').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      const users=getAdminUsers();users.splice(parseInt(this.dataset.idx),1);saveAdminUsers(users);renderAdminUsers();
+    });
+  });
+}
+document.getElementById('addAdminBtn').addEventListener('click',()=>{
+  const input=document.getElementById('newAdminInput');
+  const val=input.value.trim().toLowerCase();
+  if(!val)return;
+  const users=getAdminUsers();
+  if(!users.includes(val)){users.push(val);saveAdminUsers(users);}
+  input.value='';
+  renderAdminUsers();
+  document.getElementById('adminUsersMsg').style.color='var(--green)';
+  document.getElementById('adminUsersMsg').textContent='✓ Added — reload portal pages to apply.';
+  setTimeout(()=>{document.getElementById('adminUsersMsg').textContent=''},3000);
+});
+document.getElementById('newAdminInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('addAdminBtn').click()});
+
+/* ── export / wipe ── */
+function doExport(){
+  if(!m)return;
+  const exportModules=[];
+  Object.keys(window.RSP_HUBS||{}).forEach(function(hub){exportModules.push.apply(exportModules,hubModulesSorted(hub))});
+  const headers=['Name','Employee ID','Started'].concat(exportModules.map(x=>x.name+' (XP)')).concat(['Total XP','Completions']);
+  const rows=Object.values(ledger).map(l=>{
+    const r=[l.name||'',l.id||'',l.startedAt?new Date(l.startedAt).toISOString():''];
+    let total=0,comp=0;
+    exportModules.forEach(mod=>{const p=(l.modules||{})[mod.id],xp=p?(p.totalXP||0):0;r.push(xp);total+=xp;if(p&&p.completedAt)comp++});
+    r.push(total);r.push(comp);return r;
+  });
+  const csv=[headers,...rows].map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.href=url;
+  a.download='rsp_portal_'+new Date().toISOString().slice(0,10)+'.csv';a.click();setTimeout(function(){URL.revokeObjectURL(url)},0);
+}
+async function doWipe(){
+  alert('Bulk learner deletion is disabled on the live portal to protect active learner progress. Use a server-authenticated, backed-up maintenance process if deletion is ever required.');
+  return;
+  const cloud=window.RSPCloud&&window.RSPCloud.isConfigured;
+  const scope=cloud?'BOTH the cloud database AND this device':'this device only';
+  const typed=prompt('WIPE ALL TRAINING DATA?\n\nDeletes from '+scope+':\n• Every learner profile\n• All module progress\n• All kudos, presence, earned tiers and badges\n\nModule content (quiz questions, Flipsnack URLs) is preserved.\n\nType WIPE EVERYTHING to confirm.');
+  if(typed!=='WIPE EVERYTHING'){alert('Wipe cancelled.');return}
+  try{
+    lsSet(KEY_LEDGER,'{}');
+    if(cloud)await window.RSPCloud.wipeAllCloud();
+    alert('✓ All learner data wiped.');
+    await load();
+  }catch(e){alert('Wipe failed: '+(e.message||e))}
+}
+document.getElementById('exportCsvBtn').addEventListener('click',doExport);
+document.getElementById('exportCsvBtn2').addEventListener('click',doExport);
+document.getElementById('wipeBtn').addEventListener('click',doWipe);
+document.getElementById('wipeBtn2').addEventListener('click',doWipe);
+
+/* ── Create Module ── */
+const CM_EMOJIS=['⚡','🔌','🔧','🔩','⚙️','🔋','📦','🧯','🏗️','🌡️','📡','🤖','🔁','📏','💡','🌐','📊','📈','🛡️','⚠️','☀️','🔬','🎛️','🧲','🪢','🏭','🔦','🪛','🗜️','📐','📚','📋','📝','📄','🎯','🎓','🏆','✅','🔍','🧠','💻','📱','🖥️','🚀','💎','⭐','🌟','🎉','🔴','🟡','🟢','🔵','⛽','🔐','🏅','📌','🗂️','🧾','🔂','🛠️','🏷️'];
+let selectedEmoji=null;
+let selectedHub=null;
+
+function openCreateModal(){
+  selectedEmoji=null;
+  // Default to whichever hub the admin is currently filtered to, if any.
+  selectedHub=activeHubFilter||null;
+  document.querySelectorAll('.hub-pick-btn').forEach(function(btn){
+    btn.classList.toggle('selected',btn.dataset.hub===selectedHub);
+  });
+  const grid=document.getElementById('emojiPickerGrid');
+  grid.innerHTML=CM_EMOJIS.map(e=>'<button class="emoji-btn" data-emoji="'+e+'">'+e+'</button>').join('');
+  grid.querySelectorAll('.emoji-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      grid.querySelectorAll('.emoji-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedEmoji=btn.dataset.emoji;
+      document.getElementById('confirmCreateBtn').disabled=!(selectedEmoji&&selectedHub);
+    });
+  });
+  document.getElementById('confirmCreateBtn').disabled=!(selectedEmoji&&selectedHub);
+  document.getElementById('createModuleOverlay').classList.remove('hidden');
+}
+document.querySelectorAll('.hub-pick-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.hub-pick-btn').forEach(function(b){b.classList.remove('selected')});
+    btn.classList.add('selected');
+    selectedHub=btn.dataset.hub;
+    document.getElementById('confirmCreateBtn').disabled=!(selectedEmoji&&selectedHub);
+  });
+});
+function closeCreateModal(){
+  document.getElementById('createModuleOverlay').classList.add('hidden');
+  selectedEmoji=null;
+  selectedHub=null;
+}
+async function doCreateModule(){
+  if(!selectedEmoji||!selectedHub)return;
+  const id='mod'+Math.random().toString(36).substr(2,8);
+  const defaultCat=window.RSP_MANIFEST.categories.find(function(c){return (c.hub||'product_mastery')===selectedHub;});
+  const meta={name:'New Module',icon:selectedEmoji,category:(defaultCat&&defaultCat.id)||'Basics',hub:selectedHub,description:'',xp:100,estTime:30};
+  const hubAtCreate=selectedHub;
+  const hubListAtCreate=hubModulesSorted(hubAtCreate);
+  const hasLegacyUnsetOrder=hubListAtCreate.some(function(mod){return (moduleConfigs[mod.id]||{}).sort_order==null});
+  const highestOrder=hubListAtCreate.reduce(function(max,mod){
+    const value=(moduleConfigs[mod.id]||{}).sort_order;
+    return value!=null&&Number(value)>max?Number(value):max;
+  },-10);
+  // Keep a new module after legacy unset-order modules. Once an admin uses the
+  // reorder controls, that hub is normalized and all future modules get a
+  // durable explicit position immediately.
+  const newSortOrder=hasLegacyUnsetOrder?null:(Math.max(highestOrder,(hubListAtCreate.length-1)*10)+10);
+  closeCreateModal();
+  try{
+    if(!window.RSPCloud||!window.RSPCloud.isConfigured)throw new Error('Supabase not connected');
+    const createConfig={module_meta:meta,hub:hubAtCreate,updated_by:'admin'};
+    if(newSortOrder!=null)createConfig.sort_order=newSortOrder;
+    await window.RSPCloud.setModuleConfig(id,createConfig);
+    moduleConfigs[id]={module_id:id,hub:hubAtCreate,module_meta:meta};
+    if(newSortOrder!=null)moduleConfigs[id].sort_order=newSortOrder;
+    renderModulesTab();
+    populateQuestionModuleSelect();
+    populateModuleFilter();
+    // Auto-expand the new card
+    const newCard=document.querySelector('.mod-card[data-id="'+id+'"]');
+    if(newCard){newCard.classList.add('open');newCard.scrollIntoView({behavior:'smooth',block:'center'});}
+  }catch(e){alert('Failed to create module: '+e.message);}
+}
+document.getElementById('createModuleBtn').addEventListener('click',openCreateModal);
+document.getElementById('cancelCreateBtn').addEventListener('click',closeCreateModal);
+document.getElementById('confirmCreateBtn').addEventListener('click',doCreateModule);
+document.getElementById('createModuleOverlay').addEventListener('click',function(e){if(e.target===this)closeCreateModal();});
+
+/* ── init ── */
+document.getElementById('newPathBtn').addEventListener('click',createPathFlow);
+populateModuleFilter();
+setTimeout(()=>document.getElementById('adminPwd').focus(),100);
+
+})();
+</script>
+</body>
+</html>
