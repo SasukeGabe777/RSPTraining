@@ -154,11 +154,21 @@ extracts it from the site can read names/XP and write progress — not destroy
 or tamper.
 
 **The service_role key** (Supabase → Project Settings → API) bypasses all
-policies. The admin dashboard prompts for it at unlock; `training.html`'s
-inline editors prompt when needed. It is held in memory only and dies with
-the tab — never committed, never in local/session storage. The dashboard
-shows 🔓 Full access / 🔒 Read-only so you always know which mode you're in.
-Don't paste it on a machine you don't trust.
+policies and unlocks admin operations. **One-time setup:** enter it at the
+admin gate with "remember this key on this device" ticked. It is stored
+encrypted (AES-GCM, key derived from the admin password) and from then on
+every admin page — dashboard and inline module editors — unlocks itself
+silently, so day-to-day admin work feels exactly like it did before the
+lockdown. The plaintext key is never committed and never stored; the
+dashboard shows 🔓 Full access / 🔒 Read-only, and clicking the badge lets
+you forget the key from a device.
+
+Honest limit: the remembered key is only as protected as the admin password
+(which ships with the deployed site), so "remember" defends against remote
+scrapers and casual inspection — not against someone with full access to
+that browser profile. Leave it unticked on shared machines; the key then
+lives in memory for that tab only. Learner devices never store it either
+way.
 
 Verify the lockdown end to end with `node tests/rls-verify.js` — it proves
 17 destructive/tampering operations are denied while the learner flow works.

@@ -43,17 +43,16 @@ const KUDOS_TO_PUMBLE = true;
     .replace(/\/rest\/v1$/, ''); // accidentally pasted /rest/v1
 
   // ============================================================
-  // ADMIN KEY — elevated credential, memory only
+  // ADMIN KEY — elevated credential
   // ============================================================
   // After supabase-migration-v12.sql the public anon key can read the learner
   // surface and write progress, but cannot delete anything or modify quizzes,
-  // module config, or paths. Those operations need the service-role key, which
-  // the admin dashboard prompts for once per session.
+  // module config, or paths. Those operations need the service-role key.
   //
-  // It is deliberately held in a closure variable and NEVER written to
-  // localStorage or sessionStorage: persisting it would leave an all-powerful
-  // credential on disk for any later visitor to the same browser profile. It
-  // dies with the tab.
+  // The ACTIVE key lives in this closure variable — plaintext is never
+  // written to localStorage or sessionStorage. Persistence across sessions
+  // is opt-in via the encrypted store further down ("remember on this
+  // device"), which autoElevate() unlocks silently on admin surfaces.
   let adminKey = null;
 
   function setAdminKey(key){
@@ -66,6 +65,106 @@ const KUDOS_TO_PUMBLE = true;
 
   /** The credential to send: the elevated key when set, otherwise the public one. */
   function activeKey(){ return adminKey || SUPABASE_KEY; }
+
+  /**
+   * Pre-flight for admin-only operations. Failing HERE, before the network,
+   * turns a cryptic PostgREST "violates row-level security" into an
+   * actionable message. Every operation below that anon cannot perform after
+   * supabase-migration-v12.sql calls this first.
+   */
+  function requireAdminKey(action){
+    if(adminKey) return;
+    throw new Error('Read-only session — ' + action + ' needs the admin unlock. ' +
+      'Open the admin dashboard and enter the Supabase service key once ' +
+      '("remember on this device" keeps it), or use the unlock notice on this page.');
+  }
+
+  // ============================================================
+  // REMEMBERED ADMIN KEY — one-time setup per browser
+  // ============================================================
+  // The in-memory key above dies with the tab, which proved too much
+  // friction for day-to-day admin work. Opt-in fix: store the service key
+  // in localStorage encrypted (AES-GCM, key derived from the admin password
+  // via PBKDF2) and auto-unlock on pages that have the password loaded.
+  //
+  // Honest limits of this protection: the admin password ships in
+  // config.local.js on the deployed site, so the encryption keeps the key
+  // safe from remote scrapers and casual storage inspection — NOT from
+  // someone with full access to this browser profile who also knows the
+  // password. Leave "remember" off on shared machines. The alternative that
+  // removes key handling entirely is real Supabase Auth for admins.
+
+  const ADMIN_KEY_STORE = 'rsp_admin_key_v1';
+
+  function cryptoAvailable(){
+    return typeof crypto !== 'undefined' && crypto.subtle && typeof TextEncoder !== 'undefined';
+  }
+  function bytesToB64(bytes){ return btoa(String.fromCharCode.apply(null, Array.from(bytes))); }
+  function b64ToBytes(s){ return Uint8Array.from(atob(s), function(c){ return c.charCodeAt(0); }); }
+
+  async function deriveKek(password, salt){
+    const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+    return crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt: salt, iterations: 310000, hash: 'SHA-256' },
+      material, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+  }
+
+  /** Encrypt the currently loaded service key and remember it on this device. */
+  async function rememberAdminKey(password){
+    if(!adminKey) throw new Error('No service key loaded to remember');
+    if(!password) throw new Error('An admin password is required to protect the stored key');
+    if(!cryptoAvailable()) throw new Error('This browser cannot store the key securely');
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const kek = await deriveKek(password, salt);
+    const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, kek, new TextEncoder().encode(adminKey)));
+    try{
+      localStorage.setItem(ADMIN_KEY_STORE, JSON.stringify({ v: 1, salt: bytesToB64(salt), iv: bytesToB64(iv), ct: bytesToB64(ct) }));
+    }catch(e){ throw new Error('Could not persist the key on this device: ' + e.message); }
+    return true;
+  }
+
+  function hasStoredAdminKey(){
+    try{ return !!localStorage.getItem(ADMIN_KEY_STORE); }catch(e){ return false; }
+  }
+  function forgetStoredAdminKey(){
+    try{ localStorage.removeItem(ADMIN_KEY_STORE); }catch(e){}
+  }
+
+  /**
+   * Decrypt the remembered key and load it for this tab. Returns false (never
+   * throws) on wrong password, corrupt blob, missing WebCrypto, or a stored
+   * key the server no longer accepts — callers just stay read-only.
+   */
+  async function restoreAdminKey(password){
+    if(adminKey) return true;
+    if(!password || !cryptoAvailable()) return false;
+    let raw = null;
+    try{ raw = localStorage.getItem(ADMIN_KEY_STORE); }catch(e){}
+    if(!raw) return false;
+    try{
+      const rec = JSON.parse(raw);
+      const kek = await deriveKek(password, b64ToBytes(rec.salt));
+      const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64ToBytes(rec.iv) }, kek, b64ToBytes(rec.ct));
+      await verifyAdminKey(new TextDecoder().decode(pt));
+      return true;
+    }catch(e){
+      return false;
+    }
+  }
+
+  /**
+   * One-call elevation for admin surfaces: if a remembered key exists and the
+   * page has the admin password from config.local.js, load it silently. This
+   * is what makes the portal feel like it did before the lockdown — after a
+   * one-time "remember", admin pages elevate themselves with zero prompts.
+   */
+  async function autoElevate(){
+    if(adminKey) return true;
+    if(!hasStoredAdminKey()) return false;
+    const pw = (typeof window !== 'undefined' && window.RSP_CONFIG && window.RSP_CONFIG.adminPassword) || '';
+    return restoreAdminKey(pw);
+  }
 
   /**
    * Confirm an elevated key really is elevated before the UI trusts it.
@@ -249,6 +348,7 @@ const KUDOS_TO_PUMBLE = true;
   // ADMIN — user management
   // ============================================================
   async function updateUserStatus(userName, status, notes){
+    requireAdminKey('changing a learner status');
     const body = { status: status };
     if(notes !== undefined) body.notes = notes;
     return sb('/users?name=eq.' + encodeURIComponent(userName), {
@@ -263,6 +363,7 @@ const KUDOS_TO_PUMBLE = true;
    * row is removed last so a partial failure remains visible and retryable.
    */
   async function deleteLearner(userName){
+    requireAdminKey('deleting a learner');
     if(!isConfigured) throw new Error('Cloud not configured');
     const encoded = encodeURIComponent(userName);
     await Promise.all([
@@ -289,6 +390,7 @@ const KUDOS_TO_PUMBLE = true;
   }
 
   async function grantManualBadge(userName, badgeId, grantedBy, message){
+    requireAdminKey('granting a badge');
     if(!isConfigured) throw new Error('Cloud not configured');
     // 1) Insert grant log
     await sb('/manual_grants', {
@@ -475,6 +577,7 @@ const KUDOS_TO_PUMBLE = true;
   }
 
   async function setModuleConfig(moduleId,config){
+    requireAdminKey('saving module settings');
     if(!isConfigured) throw new Error('Cloud not configured');
     const body={module_id:moduleId,updated_at:new Date().toISOString()};
     if(config.hub!==undefined)          body.hub=config.hub;
@@ -508,6 +611,7 @@ const KUDOS_TO_PUMBLE = true;
   // is authoritative when present; a no-cache GET confirms unusual/empty
   // responses and prevents a stale local cache from showing a blank on reload.
   async function setModuleCodeword(moduleId,codeword,updatedBy){
+    requireAdminKey('saving a codeword');
     const normalized=String(codeword==null?'':codeword).trim().toUpperCase();
     const expected=normalized||null;
     const result=await setModuleConfig(moduleId,{codeword:expected,updated_by:updatedBy});
@@ -535,6 +639,7 @@ const KUDOS_TO_PUMBLE = true;
   }
 
   async function deleteModuleConfig(moduleId){
+    requireAdminKey('deleting module configuration');
     return sb('/module_config?module_id=eq.'+encodeURIComponent(moduleId),{method:'DELETE'});
   }
 
@@ -564,6 +669,7 @@ const KUDOS_TO_PUMBLE = true;
    * so callers can save a reorder without resending the whole record.
    */
   async function upsertPath(pathId, patch){
+    requireAdminKey('saving a path');
     if(!isConfigured) throw new Error('Cloud not configured');
     if(!pathId) throw new Error('A path id is required');
     const body = { id: pathId, updated_at: new Date().toISOString() };
@@ -583,6 +689,7 @@ const KUDOS_TO_PUMBLE = true;
    * and the operation safely retryable.
    */
   async function deletePath(pathId){
+    requireAdminKey('deleting a path');
     if(!isConfigured) throw new Error('Cloud not configured');
     const holders = await sb('/users?select=name,roles&roles=cs.' + encodeURIComponent(JSON.stringify([pathId])));
     await Promise.all((holders || []).map(function(u){
@@ -595,6 +702,7 @@ const KUDOS_TO_PUMBLE = true;
 
   /** Replace a learner's assigned role ids (array of path ids). */
   async function setUserRoles(userName, roleIds){
+    requireAdminKey('assigning roles');
     if(!isConfigured) throw new Error('Cloud not configured');
     const clean = Array.from(new Set((roleIds || []).filter(Boolean).map(String)));
     return sb('/users?name=eq.' + encodeURIComponent(userName), {
@@ -622,6 +730,7 @@ const KUDOS_TO_PUMBLE = true;
    * (e.g. re-converting a module) overwrites cleanly. Returns the public URL.
    */
   async function uploadFlipbookAsset(path, body, contentType){
+    requireAdminKey('uploading a PDF/flipbook');
     if(!isConfigured) throw new Error('Supabase not configured');
     // Storage writes are service-role only after v12 — reads stay public.
     const key = activeKey();
@@ -648,6 +757,7 @@ const KUDOS_TO_PUMBLE = true;
   // Goes through the same upsert path setModuleConfig uses, but lets us write
   // just the flipbook JSON without disturbing embed_url / quiz_bank.
   async function setFlipbook(moduleId, flipbook){
+    requireAdminKey('saving a flipbook');
     if(!isConfigured) throw new Error('Cloud not configured');
     return sb('/module_config?on_conflict=module_id', {
       method: 'POST',
@@ -675,6 +785,7 @@ const KUDOS_TO_PUMBLE = true;
    * (tier_settings, badge_definitions). Cannot be undone.
    */
   async function wipeAllCloud(){
+    requireAdminKey('wiping cloud data');
     if(!isConfigured) throw new Error('Cloud not configured');
     // PostgREST requires a filter on every DELETE for safety.
     // Use a "name not equal to an impossible value" filter to match all rows.
@@ -815,11 +926,16 @@ const KUDOS_TO_PUMBLE = true;
   // ============================================================
   window.RSPCloud = {
     isConfigured: isConfigured,
-    // Admin elevation — memory only, dies with the tab (see setAdminKey above)
+    // Admin elevation — active key in memory; optional encrypted remember
     setAdminKey: setAdminKey,
     verifyAdminKey: verifyAdminKey,
     hasAdminKey: hasAdminKey,
     clearAdminKey: clearAdminKey,
+    rememberAdminKey: rememberAdminKey,
+    restoreAdminKey: restoreAdminKey,
+    hasStoredAdminKey: hasStoredAdminKey,
+    forgetStoredAdminKey: forgetStoredAdminKey,
+    autoElevate: autoElevate,
     upsertUser: upsertUser,
     listUsers: listUsers,
     getUser: getUser,

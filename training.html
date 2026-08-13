@@ -644,6 +644,12 @@ function render(){
 /* ── admin: Video pages bar + quiz drop zone ── */
 function renderAdminControls(quizReady){
   document.getElementById('videoPageBar').classList.add('show');
+  // A key remembered via the admin dashboard elevates this page silently, so
+  // editing works immediately with no prompt. Only without one do the
+  // controls lock and the unlock notice appear.
+  if(window.RSPCloud&&window.RSPCloud.autoElevate){
+    window.RSPCloud.autoElevate().then(function(){ renderAdminKeyNotice(); });
+  }
   renderAdminKeyNotice();
 
   // Codeword
@@ -707,33 +713,52 @@ function renderAdminControls(quizReady){
 /**
  * Content edits (codewords, quiz uploads, PDF flipbooks, video pages) write
  * module_config, which the public key can no longer touch after
- * supabase-migration-v12.sql. Admins elevate this tab by pasting the
- * service_role key — held in memory only, forgotten when the tab closes.
+ * supabase-migration-v12.sql. While this tab has no admin key, every admin
+ * control is dimmed and disabled — not left active to fail with a raw
+ * Supabase error — behind one notice that unlocks (and optionally remembers)
+ * the key. With a remembered key, autoElevate() means none of this renders.
  */
+function setAdminEditingLocked(locked){
+  ['videoPageBar','flipbookBar','quizUploadArea'].forEach(function(id){
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.style.opacity=locked?'.45':'';
+    el.style.pointerEvents=locked?'none':'';
+  });
+}
+
 function renderAdminKeyNotice(){
   const bar=document.getElementById('videoPageBar');
   if(!bar)return;
   let note=document.getElementById('adminKeyNotice');
   const elevated=!!(window.RSPCloud&&window.RSPCloud.hasAdminKey&&window.RSPCloud.hasAdminKey());
+  setAdminEditingLocked(!elevated);
   if(elevated){ if(note)note.remove(); return; }
   if(note)return;
   note=document.createElement('div');
   note.id='adminKeyNotice';
-  note.style.cssText='background:rgba(250,204,21,.08);border:1px solid rgba(250,204,21,.3);border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:#FCD34D;display:flex;align-items:center;gap:10px;flex-wrap:wrap';
-  note.innerHTML='<span>🔒 Saving content changes requires the Supabase service key for this tab.</span>';
+  note.style.cssText='background:rgba(250,204,21,.08);border:1px solid rgba(250,204,21,.35);border-radius:10px;padding:12px 16px;margin-bottom:12px;font-size:12px;color:#FCD34D;display:flex;align-items:center;gap:12px;flex-wrap:wrap';
+  note.innerHTML='<span>🔒 <strong>Admin editing is locked on this tab.</strong> Enter the Supabase service key once — choose “remember” and this notice never appears again on this machine.</span>';
   const btn=document.createElement('button');
   btn.className='save-btn';
-  btn.textContent='Enter key';
+  btn.textContent='Unlock editing';
   btn.addEventListener('click',async function(){
-    const svc=prompt('Paste the Supabase service_role key (Project Settings → API).\n\nHeld in memory for this tab only:');
+    const svc=prompt('Paste the Supabase service_role key (Supabase → Project Settings → API):');
     if(svc==null||!svc.trim())return;
     try{
       await window.RSPCloud.verifyAdminKey(svc.trim());
-      renderAdminKeyNotice();
-    }catch(e){ alert(e.message||'Key rejected.'); }
+    }catch(e){ alert(e.message||'Key rejected.'); return; }
+    if(confirm('Key accepted. Remember it on this device (encrypted) so admin pages unlock automatically?')){
+      const pw=(window.RSP_CONFIG&&window.RSP_CONFIG.adminPassword)||'';
+      try{ await window.RSPCloud.rememberAdminKey(pw); }
+      catch(e){ alert('Editing is unlocked for this tab, but remembering failed: '+(e.message||e)); }
+    }
+    renderAdminKeyNotice();
   });
   note.appendChild(btn);
-  bar.insertBefore(note,bar.firstChild);
+  // Sits above the locked sections (which are pointer-events:none) so the
+  // unlock button itself stays clickable.
+  bar.parentNode.insertBefore(note,bar);
 }
 
 function renderInlineVideoPages(){
